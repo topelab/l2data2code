@@ -1,0 +1,39 @@
+using L2Data2Code.BaseGenerator.Entities;
+using L2Data2Code.SchemaReader.Schema;
+using L2Data2Code.SharedLib.Configuration;
+using System.Collections.Generic;
+
+namespace L2Data2CodeUI.Shared.Adapters
+{
+    public interface IGeneratorAdapter
+    {
+        AreasConfiguration AreasConfiguration { get; }
+        CanStartDbSchemaServerConfiguration CanStartDbSchemaServer { get; }
+        Dictionary<string, object> CompiledVars { get; }
+        string GeneratorApplication { get; set; }
+        string GeneratorVersion { get; set; }
+        string InputSourceType { get; }
+        ModulesConfiguration ModulesConfiguration { get; }
+        string OutputPath { get; set; }
+        string SelectedArea { get; }
+        string SelectedModule { get; }
+        string SelectedTemplate { get; }
+        string SelectedVars { get; }
+        AppSettingsConfiguration SettingsConfiguration { get; }
+        string SlnFile { get; }
+        string SolutionType { get; set; }
+        Tables Tables { get; }
+        TemplatesConfiguration TemplatesConfiguration { get; }
+        VarsConfiguration VarsConfiguration { get; }
+        IEnumerable<Table> GetAllTables();
+        IEnumerable<string> GetAreaList();
+        IEnumerable<string> GetModuleList(string selectedArea);
+        IEnumerable<string> GetTemplateList();
+        IEnumerable<string> GetVarsList(string selectedTemplate);
+        void SetCurrentArea(string selectedArea);
+        void SetCurrentModule(string selectedModule, bool triggered = false);
+        void SetCurrentTemplate(string selectedTemplate, bool triggered = false);
+        void SetCurrentVars(string selectedVars, bool triggered = false);
+        void Run(CodeGeneratorDto baseOptions);
+    }
+}

@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="CannotGenerateCode" xml:space="preserve">
+    <value>Cannot generate code while {0} is open by an IDE, close IDE to activate Generate button</value>
+  </data>
+  <data name="CodeGeneratedOK" xml:space="preserve">
+    <value>Successful code generation</value>
+  </data>
+  <data name="ConfigChanged" xml:space="preserve">
+    <value>Be careful, the settings have changed! The application will restart ... Do you want to continue?</value>
+  </data>
+  <data name="DeleteContents" xml:space="preserve">
+    <value>Are you sure you want to delete the contents of folder {0}?</value>
+  </data>
+  <data name="EditTemplates" xml:space="preserve">
+    <value>Edit templates</value>
+  </data>
+  <data name="EmptyFolders" xml:space="preserve">
+    <value>Empty folders before generating code</value>
+  </data>
+  <data name="ErrorDb" xml:space="preserve">
+    <value>Unable to access local database</value>
+  </data>
+  <data name="ErrorDBSchema" xml:space="preserve">
+    <value>Description server (DbSchema) not available, ask to one of these people:</value>
+  </data>
+  <data name="ErrorDbSchemaButFile" xml:space="preserve">
+    <value>Description server (DbSchema) not available, but local copy of descriptions is available</value>
+  </data>
+  <data name="ErrorSlnOpened" xml:space="preserve">
+    <value>The solution is open and cannot be modified</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="GenerateOnlyJson" xml:space="preserve">
+    <value>Only genereate JSON file</value>
+  </data>
+  <data name="MessageBoard" xml:space="preserve">
+    <value>Message board</value>
+  </data>
+  <data name="Module" xml:space="preserve">
+    <value>Module</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NoTablesSelected" xml:space="preserve">
+    <value>There are no tables selected. Do you want to continue?</value>
+  </data>
+  <data name="NothingToDelete" xml:space="preserve">
+    <value>Only elements will be added, nothing will be deleted</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="OpenGeneratedFolder" xml:space="preserve">
+    <value>Open generated folder</value>
+  </data>
+  <data name="OpenPSCommand" xml:space="preserve">
+    <value>Open PowerShell at output directory</value>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Open app settings</value>
+  </data>
+  <data name="OpenVarsWindow" xml:space="preserve">
+    <value>Open vars window</value>
+  </data>
+  <data name="OpenVSC" xml:space="preserve">
+    <value>Open output with Visual Studio Code</value>
+  </data>
+  <data name="OpenVSSolution" xml:space="preserve">
+    <value>Open solution file with Visual Studio</value>
+  </data>
+  <data name="OutputFolderNotCreated" xml:space="preserve">
+    <value>Output folder not created</value>
+  </data>
+  <data name="RelatedTables" xml:space="preserve">
+    <value>Related Tables</value>
+  </data>
+  <data name="SaveAt" xml:space="preserve">
+    <value>Save at...</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="SelectRelatedTables" xml:space="preserve">
+    <value>Automatically select related tables</value>
+  </data>
+  <data name="Tables" xml:space="preserve">
+    <value>Tables</value>
+  </data>
+  <data name="TablesViews" xml:space="preserve">
+    <value>Tables &amp; Views</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>L2 Data2Code</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Vars" xml:space="preserve">
+    <value>Template Configuration</value>
+  </data>
+  <data name="VarsTitle" xml:space="preserve">
+    <value>Variables</value>
+  </data>
+  <data name="Views" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+</root>

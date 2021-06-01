@@ -1,0 +1,86 @@
+using L2Data2Code.BaseGenerator.Extensions;
+using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.SharedLib.Extensions;
+using Stubble.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace L2Data2Code.BaseGenerator.Services
+{
+    public class MustacheRenderizer : IMustacheRenderizer
+    {
+        private static Dictionary<string, MethodInfo> _methods;
+        private readonly Stubble.Core.StubbleVisitorRenderer _mustache;
+        private readonly Stubble.Core.Settings.RenderSettings _settings;
+        private readonly MustacheHelpers _helpers;
+
+        public MustacheRenderizer()
+        {
+            if (_methods == null)
+            {
+                _methods = new Dictionary<string, MethodInfo>();
+                var types = Assembly.GetCallingAssembly().GetTypes().ToList();
+                types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
+                types.AddRange(Assembly.GetAssembly(typeof(StringExtensions)).GetTypes());
+
+                foreach (var type in types)
+                {
+                    foreach (var method in type.GetMethods())
+                    {
+                        var methodParams = method.GetParameters();
+
+                        var IsMethodOk = method.IsStatic
+                            && methodParams.Length == 1
+                            && methodParams[0].ParameterType == typeof(string);
+
+                        if (IsMethodOk)
+                        {
+                            if (!_methods.ContainsKey(method.Name))
+                            {
+                                _methods.Add(method.Name, method);
+                            }
+                        }
+                    }
+                }
+            }
+            _helpers = new MustacheHelpers();
+
+            _settings = new Stubble.Core.Settings.RenderSettings()
+            {
+                SkipHtmlEncoding = true,
+            };
+
+            _mustache = new Stubble.Core.Builders.StubbleBuilder()
+                .Configure(s => s
+                    .AddValueGetter(typeof(string), (o, k, i) =>
+                        {
+                            var isMethodOk = _methods.TryGetValue(k, out var method) && method.GetParameters()[0].ParameterType == o.GetType();
+                            return !isMethodOk ? string.Empty : method.Invoke(null, new[] { o });
+                        })
+                    .AddHelpers(_helpers)
+                ).Build();
+        }
+
+        public string Render(string template, object view)
+        {
+            if (template.Contains("{{"))
+            {
+                var result = template.Replace("+{", "(***OPEN***)").Replace("+}", "(***CLOSE***)");
+                _helpers.SetDictionary(view as IDictionary<string, object>);
+                return _mustache.Render(result, view, _settings).Replace("(***OPEN***)", "{").Replace("(***CLOSE***)", "}");
+            }
+            return template;
+        }
+
+        public void SetIsoLanguaje(string isoLang)
+        {
+            StringExtensions.CurrentLang = isoLang;
+        }
+
+
+
+
+    }
+}

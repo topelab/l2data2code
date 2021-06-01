@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddedCodeToGit" xml:space="preserve">
+    <value>Codi afegit a Git</value>
+  </data>
+  <data name="CodeGeneratedOK" xml:space="preserve">
+    <value>Codi generat correctament</value>
+  </data>
+  <data name="ConfigChanged" xml:space="preserve">
+    <value>Compte, ha canviat la configuració! Es reiniciarà l'aplicació ... Voleu continuar?</value>
+  </data>
+  <data name="ErrorCannotRemoveFolders" xml:space="preserve">
+    <value>La configuració de la plantilla no permet esborrar els directoris abans de la generació</value>
+  </data>
+  <data name="ErrorConnectToDb" xml:space="preserve">
+    <value>No es pot connectar a la base de dades</value>
+  </data>
+  <data name="ErrorDb" xml:space="preserve">
+    <value>Error de base de dades</value>
+  </data>
+  <data name="ErrorDBSchema" xml:space="preserve">
+    <value>El servidor de descripció (DbSchema) no està disponible</value>
+  </data>
+  <data name="ErrorDbSchemaButFile" xml:space="preserve">
+    <value>El servidor de descripció (DbSchema) no està disponible, però la còpia local de les descripcions, sí</value>
+  </data>
+  <data name="ErrorFindPath" xml:space="preserve">
+    <value>No s'ha pogut trobar part de la ruta '{0}'</value>
+  </data>
+  <data name="ErrorGeneratingCode" xml:space="preserve">
+    <value>Error en generar codi</value>
+  </data>
+  <data name="ErrorGettingTemplatePath" xml:space="preserve">
+    <value>Error en intentar obtenir la ruta de la plantilla</value>
+  </data>
+  <data name="ErrorLoadingTemplate" xml:space="preserve">
+    <value>No es pot carregar la plantilla, potser les variables tenen un format defectuós o els noms de les plantilles no són consistents. Obre plantilles per trobar el problema</value>
+  </data>
+  <data name="ErrorLoadingWordList" xml:space="preserve">
+    <value>No s'ha pogut llegir la llista de paraules (wordlist.txt)</value>
+  </data>
+  <data name="ErrorReadingSchema" xml:space="preserve">
+    <value>Error en llegir l'esquema</value>
+  </data>
+  <data name="ErrorRemovingFolders" xml:space="preserve">
+    <value>Error en eliminar carpetes</value>
+  </data>
+  <data name="ErrorResourceNotFound" xml:space="preserve">
+    <value>Error recurs {0} no trobat al directori {1}</value>
+  </data>
+  <data name="ErrorSerializingOptions" xml:space="preserve">
+    <value>Error en serialitzar opcions</value>
+  </data>
+  <data name="ErrorSlnOpened" xml:space="preserve">
+    <value>La solució està oberta i no es pot modificar</value>
+  </data>
+  <data name="ErrorWithGit" xml:space="preserve">
+    <value>Git no està en aquest sistema o té problemes</value>
+  </data>
+  <data name="NoGitRepo" xml:space="preserve">
+    <value>Repositori git no trobat</value>
+  </data>
+  <data name="NoTablesSelected" xml:space="preserve">
+    <value>No hi ha taules seleccionades Vols continuar?</value>
+  </data>
+  <data name="NothingToDelete" xml:space="preserve">
+    <value>Només s'agregaran elements, no s'eliminarà res</value>
+  </data>
+  <data name="ParametrizedContinueMessage" xml:space="preserve">
+    <value>{0} continurà funcionant en segon pla</value>
+  </data>
+  <data name="ParametrizedErrorMessage" xml:space="preserve">
+    <value>{0} no està en aquest sistema o té problemes</value>
+  </data>
+  <data name="ParametrizedKillingMessage" xml:space="preserve">
+    <value>Matant el procés de {0} perquè encara no ha acabat</value>
+  </data>
+  <data name="ParametrizedSlowMessage" xml:space="preserve">
+    <value>{0} està treballant força... esperant altres 10 segons...</value>
+  </data>
+  <data name="ParametrizedStartingProcess" xml:space="preserve">
+    <value>{0} està iniciant</value>
+  </data>
+  <data name="ParametrizedStoppingProcess" xml:space="preserve">
+    <value>{0} ha acabat la execució</value>
+  </data>
+  <data name="TableProcessed" xml:space="preserve">
+    <value>La taula {0} s'ha processat</value>
+  </data>
+  <data name="TemplateNotFound" xml:space="preserve">
+    <value>Error el recurs de plantilla no s'ha trobat a la llibreria de plantilles</value>
+  </data>
+  <data name="WarnGitSlow" xml:space="preserve">
+    <value>El procés de Git està treballant força... esperant altres 10 segons ...</value>
+  </data>
+  <data name="WarnKillingGit" xml:space="preserve">
+    <value>Matant el procés de Git perquè encara no ha acabat</value>
+  </data>
+</root>
