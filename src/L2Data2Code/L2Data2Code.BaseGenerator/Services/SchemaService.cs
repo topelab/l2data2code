@@ -32,16 +32,13 @@ namespace L2Data2Code.BaseGenerator.Services
 
                 if (!connectionsStringsReady.ContainsKey(options.ConnectionStringName))
                 {
-                    var schemaReader = SchemaFactory.Create(options.ConnectionStringName, salida, options.ConnectionNameForDescriptions);
+                    var schemaReader = SchemaFactory.Create(new SchemaOptions(options.ConnectionStringName, salida, options.ConnectionNameForDescriptions));
                     if (schemaReader == null)
                     {
                         throw new Exception($"Cannot create schema reader. Reason: {LogService.LastError}");
                     }
 
-                    var tables = schemaReader.ReadSchema(
-                        removeFirstWord: Config.ShouldRemoveWord1(options.ConnectionStringName),
-                        alternativeDescriptions: alternativeDescriptions,
-                        resolver: tableNameResolver);
+                    var tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(options.ConnectionStringName), alternativeDescriptions, tableNameResolver));
 
                     if (schemaReader.HasErrorMessage())
                     {

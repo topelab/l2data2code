@@ -40,7 +40,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     Name = column.PropertyName.Equals(table.ClassName)
                         ? (StringExtensions.CurrentLang == "es" ? $"Nombre{column.PropertyName}" : $"{column.PropertyName}Name")
                         : column.PropertyName,
-                    Type = column.PropertyType + column.CheckNullable(),
+                    Type = column.PropertyType + (column.IsNullable && Constants.NullableTypes.Contains(column.PropertyType) ? "?" : string.Empty),
                     IsNull = column.IsNullable,
                     Size = column.Precision,
                     Precision = column.Precision,

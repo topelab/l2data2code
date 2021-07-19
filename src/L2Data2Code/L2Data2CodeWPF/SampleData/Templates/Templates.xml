@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TemplateLibrary
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Global Vars="
+		Version=1.0.0;
+		VersionSuffix=;
+		ApplicationName={{Area}}.{{Module}};
+		ApplicationTitle={{Company}} {{Area.Humanize}} {{Module}};
+
+		if database=mysql UseDB=MySql;
+		  .UsingMySqlDB=1;
+		if database=sqlserver UseDB=SqlServer;
+		  .UsingSqlServerDB=1;
+		if database=fake UseDB=Sqlite;
+		  .UsingSqliteDB=1;
+		if database=json UseDB=Sqlite;
+		  .UsingSqliteDB=1;
+		if database=sqlite UseDB=Sqlite;
+		  .UsingSqliteDB=1;
+		if database=object UseDB=Sqlite;
+		  .UsingSqliteDB=1;
+
+		SetDomain=;SetAdapters=;SetBusiness=;SetServices=;SetUseCases=;SetWebApiControllers=;SetWebApi=;
+		SetUCDelete=;SetUCGet=;SetUCGetList=;SetUCInsert=;SetUCUpdate=;
+    SetDefaultModels=1;
+		"
+	  FinalVars="
+		if SetWebApi=1 SetWebApiControllers=1;
+		if SetWebApiControllers=1 SetUseCases=1;
+		if SetUseCases=1 SetBusiness=1;
+		if SetServices=1 SetBusiness=1;
+		if SetBusiness=1 SetAdapters=1;
+    if SetServices=1 SetModels={{SetDefaultModels}};
+		if SetAdapters=1 SetDomain=1;
+		"
+		/>
+	<Templates>
+		<Template Name="Test template (global)"
+			  ResourcesFolder="GlobalFiles"
+        NextResource = "ItemFiles"
+			  IsGeneral = "true"
+			  Company="TestCompany"
+			  Area="TestArea"
+			  Module="TestModule"
+			  SavePath="c:\src\tmp\{{Company}}\{{Area}}.{{Module}}"
+			  SolutionType = "vsc,*.md,code.cmd,{directory}">
+		</Template>
+		<Template Name="Test template (items)"
+			  ResourcesFolder="ItemFiles"
+			  Company="TestCompany"
+			  Area="TestArea"
+			  Module="TestModule"
+			  SavePath="c:\src\tmp\{{Company}}\{{Area}}.{{Module}}"
+			  SolutionType = "vsc,*.md,code.cmd,{directory}">
+			<PostCommands>
+				<Command Name="Build" Directory="{{SavePath}}" Exec="start ." ShowWindow="false" />
+			</PostCommands>
+		</Template>
+	</Templates>
+</TemplateLibrary>

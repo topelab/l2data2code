@@ -3,6 +3,7 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Json;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.MySql;
+using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SchemaReader.SqlServer;
 using L2Data2Code.SharedLib.Helpers;
@@ -28,7 +29,8 @@ namespace L2Data2Code.BaseGenerator.Entities
             { "System.Data.JsonClient", new ProviderDefinition {Key = "json", Type = typeof(JsonSchemaReader)} },
             { "Microsoft.Data.Sqlite", new ProviderDefinition { Key = "sqlite", Type = typeof(JsonSchemaReader),
                 Conversions = new Dictionary<string, string>() {
-                    { "decimal", "NUMERIC" } } } }
+                    { "decimal", "NUMERIC" } } } },
+            { "System.Data.ObjectClient", new ProviderDefinition {Key = "object", Type = typeof(ObjectSchemaReader)} },
             //{ "Oracle.ManagedDataAccess.Client", typeof(OracleSchemaReader) },
 
         };
@@ -40,14 +42,15 @@ namespace L2Data2Code.BaseGenerator.Entities
             return providers.TryGetValue(connection.Provider, out ProviderDefinition providerDefinition) ? providerDefinition.Key : null;
         }
 
-        public static ISchemaReader Create(string connectionStringKey, StringBuilderWriter summaryWriter, string connectionStringForObjectDescriptions = null)
+        public static ISchemaReader Create(SchemaOptions schemaOptions)
         {
             Connection connection;
             Connection commentConnection;
             try
             {
-                connection = new Connection(connectionStringKey);
-                commentConnection = connectionStringForObjectDescriptions == null ? null : new Connection(connectionStringForObjectDescriptions);
+                connection = new Connection(schemaOptions.ConnectionStringKey);
+                schemaOptions.ConnectionString = connection.ConnectionString;
+                commentConnection = schemaOptions.ConnectionStringForObjectDescriptionsKey == null ? null : new Connection(schemaOptions.ConnectionStringForObjectDescriptionsKey);
             }
             catch (Exception ex)
             {
@@ -57,12 +60,13 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             if (commentConnection != null && providers.ContainsKey(commentConnection.Provider))
             {
-                connectionStringForObjectDescriptions = commentConnection.ConnectionString;
+                schemaOptions.ConnectionStringForObjectDescriptions = commentConnection.ConnectionString;
             }
 
             if (providers.TryGetValue(connection.Provider, out ProviderDefinition providerDefinition))
             {
-                return (ISchemaReader)Activator.CreateInstance(providerDefinition.Type, connection.ConnectionString, summaryWriter, connectionStringForObjectDescriptions);
+
+                return (ISchemaReader)Activator.CreateInstance(providerDefinition.Type, schemaOptions);
             }
             else
             {

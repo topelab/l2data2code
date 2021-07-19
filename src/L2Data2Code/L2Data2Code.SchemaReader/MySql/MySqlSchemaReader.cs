@@ -13,20 +13,19 @@ namespace L2Data2Code.SchemaReader.MySql
 {
     public class MySqlSchemaReader : Schema.SchemaReader
     {
-        private Dictionary<string, string> _columnsDescriptions = new Dictionary<string, string>();
         private readonly string _connectionString;
         private MySqlConnection _connection;
         private INameResolver _resolver;
 
 
-        public MySqlSchemaReader(string connectionString, StringBuilderWriter summaryWriter, string connectionStringForObjectDescriptions = null) : base(summaryWriter)
+        public MySqlSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = connectionString;
+            _connectionString = options.ConnectionString;
         }
 
-        public override Tables ReadSchema(Regex tableRegex = null, bool removeFirstWord = false, Dictionary<string, string> alternativeDescriptions = null, INameResolver resolver = null)
+        public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = resolver ?? new DefaultNameResolver();
+            _resolver = options.NameResolver ?? new DefaultNameResolver();
             var result = new Tables();
 
             using (_connection = new MySqlConnection(_connectionString))
@@ -36,16 +35,16 @@ namespace L2Data2Code.SchemaReader.MySql
                 string[] schema = new string[4] { null, _connection.Database, null, null };
 
                 var tables = _connection.GetSchema("Tables", schema);
-                AddItems(tableRegex, alternativeDescriptions, result, tables, false);
+                AddItems(options.TableRegex, options.AlternativeDescriptions, result, tables, false);
 
                 var views = _connection.GetSchema("Views", schema);
-                AddItems(tableRegex, alternativeDescriptions, result, views, true);
+                AddItems(options.TableRegex, options.AlternativeDescriptions, result, views, true);
 
                 try
                 {
                     foreach (var tbl in result.Values)
                     {
-                        tbl.Columns = LoadColumns(tbl, removeFirstWord, alternativeDescriptions);
+                        tbl.Columns = LoadColumns(tbl, options.RemoveFirstWord, options.AlternativeDescriptions);
 
                         // Mark the primary key
                         var PrimaryKey = GetPK(tbl.Name);

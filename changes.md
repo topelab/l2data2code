@@ -1,3 +1,8 @@
+### 2.7.121.703
+
+- SchemaReader refactor
+- Added **new** ObjectSchemaReader that can read type infos from .net dll
+
 ### 2.6.1021.422
 
 - Big internal refactor.

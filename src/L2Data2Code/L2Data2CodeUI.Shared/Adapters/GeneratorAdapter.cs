@@ -386,7 +386,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             connectionStringName = AreasConfiguration.ConnectionStringKey(SelectedArea);
             connectionStringNameToDbSchema = AreasConfiguration.CommentConnectionStringKey(SelectedArea);
             outputConnectionString = AreasConfiguration.OutputConnectionStringKey(SelectedArea);
-            schemaReader = SchemaFactory.Create(connectionStringName, writer, connectionStringNameToDbSchema);
+            schemaReader = SchemaFactory.Create(new SchemaOptions(connectionStringName, writer, connectionStringNameToDbSchema));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);
@@ -406,10 +406,8 @@ namespace L2Data2CodeUI.Shared.Adapters
             try
             {
                 var tableNameResolver = new NameResolver(connectionStringName);
-                tables = schemaReader.ReadSchema(
-                    removeFirstWord: Config.ShouldRemoveWord1(connectionStringName),
-                    alternativeDescriptions: _alternativeDictionary,
-                    resolver: tableNameResolver) ?? new Tables();
+                tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(connectionStringName), _alternativeDictionary, tableNameResolver))
+                    ?? new Tables();
 
                 messageService.Clear(MessageCodes.READ_SCHEMA);
             }

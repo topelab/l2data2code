@@ -148,24 +148,6 @@ namespace L2Data2Code.SchemaReader.Schema
         /// The full name with owner.
         /// </value>
         public string FullNameWithOwner => $"{Owner}.{FullName}";
-
-        /// <summary>
-        /// Checks the nullable.
-        /// </summary>
-        /// <returns></returns>
-        public string CheckNullable()
-        {
-            string result = "";
-            if (IsNullable &&
-            PropertyType != "byte[]" &&
-            PropertyType != "string" &&
-            PropertyType != "Microsoft.SqlServer.Types.SqlGeography" &&
-            PropertyType != "Microsoft.SqlServer.Types.SqlGeometry"
-            )
-                result = "?";
-            return result;
-        }
-
     }
 
 }

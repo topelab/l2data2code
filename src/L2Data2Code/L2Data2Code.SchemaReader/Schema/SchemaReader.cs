@@ -8,7 +8,7 @@ namespace L2Data2Code.SchemaReader.Schema
     public abstract class SchemaReader : ISchemaReader
     {
         private readonly StringBuilderWriter _outputWriter;
-        public abstract Tables ReadSchema(Regex tableRegex = null, bool removeFirstWord = false, Dictionary<string, string> alternativeDescriptions = null, INameResolver resolver = null);
+        public abstract Tables ReadSchema(SchemaReaderOptions schemaReaderOptions);
         protected SchemaReader(StringBuilderWriter outputWriter)
         {
             _outputWriter = outputWriter;

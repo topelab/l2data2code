@@ -13,7 +13,13 @@ A simple definition would be a code generator. But is more than a simple code ge
 A template is a set of files with a special syntax based on Mustache to define the result.
 Normally, a template set is composed by a `templates.xml` file on the project root and then one or more directories where templates of files are located.
 
-Example:
+You can see a sample structure with some files at `SampleData` at current execution path of this application.
+
+## Build solution
+
+You can load sln file with Visual Studio 2019 (Community it's OK) or run `dotnet build` from cmd line at directory containing sln file.
+
+## Sample files
 
 _.\\templates.xml_
 
@@ -247,8 +253,12 @@ Area combo will be filled with information supplied at this section:
 
 Schema definition (defined with a **name**):
 
-- **ConnectionString**: string that defines the connection for data source that can be a data base, a json file with a specific configuration, or blank.
-- **Provider** `System.Data.[FakeClient | SqlClient | MySqlClient | JsonClient]`: provider for data source.
+- **ConnectionString**: string that defines the connection for data source that can be a data base, a json file with a specific configuration, a path to a dll file, or blank.
+- **Provider** `System.Data.[FakeClient | SqlClient | MySqlClient | JsonClient | ObjectClient]`: provider for data source. Every provider has its own syntax for connection string:
+  - `FakeClient`: blank string.
+  - `SqlClient | MySqlClient`: normal connection string used with this providers.
+  - `JsonClient`: path to json file (special format)
+  - `ObjectClient: path to .net assembly (dll) and optional, a namespace to filter types separate from path with a semicolon.
 - **TableNameLanguage** `(en)|es`: table and column names language on data source. This is used on gender and number functions.
 - **RemoveFirstWordOnColumnNames** `true|(false)`: If column names start with a word and an underscore, for example `ta_code`, setting this property to `true`will remove that first word, in our case `ta_` will be removed.
 - **DescriptionsFile**: path to tab separate file on each line defines description for a table or a column:
@@ -271,25 +281,23 @@ Schema definition (defined with a **name**):
             "DescriptionsFile": null,
             "RenameTables": null
         },
-        "topelabms": {
-            "ConnectionString": "Server=.;Database=TopeLab;Trusted_Connection=True;",
-            "Provider": "System.Data.SqlClient",
-            "TableNameLanguage": "es",
-            "RemoveFirstWordOnColumnNames": false,
-            "DescriptionsFile": null,
-            "RenameTables": "tiposanalisis=tipos_analisis_muestras;tiposhojas=tipos_hojas",
-            "RenameColumns": "idzona=IdZona",
-            "CanCreateDB": "true",
-            "NormalizedNames": "true"
-        },
-        "topelabjson": {
-            "ConnectionString": "C:\\arc\\src\\LinqPad\\config\\topelab-des\\topelabdes-dbinfo.json",
+        "northwindtest": {
+            "ConnectionString": "SampleData\\northwind-dbinfo.json",
             "Provider": "System.Data.JsonClient",
-            "TableNameLanguage": "es",
+            "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,
             "DescriptionsFile": null,
-            "RenameTables": "tiposanalisis=tipos_analisis_muestras;tiposhojas=tipos_hojas",
-            "RenameColumns": "idzona=IdZona"
+            "RenameTables": null,
+            "RenamaColumns": null
+        },
+        "northwind-entities": {
+            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Entities",
+            "Provider": "System.Data.ObjectClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
         }
     },
 
@@ -307,36 +315,38 @@ Is possible to define a conditional assignation: `if var1=value1 var2=value2;`. 
 
 ```xml
 	<Global Vars="
-		Version=2.2.6;
+		Version=1.0.0;
 		VersionSuffix=;
 		ApplicationName={{Area}}.{{Module}};
 		ApplicationTitle={{Company}} {{Area.Humanize}} {{Module}};
-		Nuget_Microsoft_AspNetCore_Mvc_Core=Microsoft.AspNetCore.Mvc.Core;
-		Nuget_Microsoft_AspNetCore_Mvc_Core_Version=2.2.5;
-		Nuget_Microsoft_EntityFrameworkCore_Version=5.0.2;
-		if database=mysql NugetToUse=Pomelo.EntityFrameworkCore.MySql;
-		  .NugetToUseVersion=5.0.0-alpha.2;
-		  .UseDB=MySql;
+
+		if database=mysql UseDB=MySql;
 		  .UsingMySqlDB=1;
-		if database=sqlserver NugetToUse=Microsoft.EntityFrameworkCore.SqlServer;
-		  .NugetToUseVersion={{Nuget_Microsoft_EntityFrameworkCore_Version}};
-		  .UseDB=SqlServer;
+		if database=sqlserver UseDB=SqlServer;
 		  .UsingSqlServerDB=1;
-		if database=fake NugetToUse=Microsoft.EntityFrameworkCore.Sqlite;
-		  .NugetToUseVersion={{Nuget_Microsoft_EntityFrameworkCore_Version}};
-		  .UseDB=Sqlite;
+		if database=fake UseDB=Sqlite;
 		  .UsingSqliteDB=1;
-		if database=json NugetToUse=Microsoft.EntityFrameworkCore.Sqlite;
-		  .NugetToUseVersion={{Nuget_Microsoft_EntityFrameworkCore_Version}};
-		  .UseDB=Sqlite;
+		if database=json UseDB=Sqlite;
 		  .UsingSqliteDB=1;
-		if database=sqlite NugetToUse=Microsoft.EntityFrameworkCore.Sqlite;
-		  .NugetToUseVersion={{Nuget_Microsoft_EntityFrameworkCore_Version}};
-		  .UseDB=Sqlite;
+		if database=sqlite UseDB=Sqlite;
 		  .UsingSqliteDB=1;
+		if database=object UseDB=Sqlite;
+		  .UsingSqliteDB=1;
+
 		SetDomain=;SetAdapters=;SetBusiness=;SetServices=;SetUseCases=;SetWebApiControllers=;SetWebApi=;
 		SetUCDelete=;SetUCGet=;SetUCGetList=;SetUCInsert=;SetUCUpdate=;
-		">
+    SetDefaultModels=1;
+		"
+	  FinalVars="
+		if SetWebApi=1 SetWebApiControllers=1;
+		if SetWebApiControllers=1 SetUseCases=1;
+		if SetUseCases=1 SetBusiness=1;
+		if SetServices=1 SetBusiness=1;
+		if SetBusiness=1 SetAdapters=1;
+    if SetServices=1 SetModels={{SetDefaultModels}};
+		if SetAdapters=1 SetDomain=1;
+		"
+		/>
 
 ```
 

@@ -20,10 +20,10 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private IDbConnection _connection;
 
 
-        public SqlServerSchemaReader(string connectionString, StringBuilderWriter summaryWriter, string connectionStringForObjectDescriptions = null) : base(summaryWriter)
+        public SqlServerSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = connectionString;
-            _connectionStringForObjectDescriptions = connectionStringForObjectDescriptions ?? connectionString;
+            _connectionString = options.ConnectionString;
+            _connectionStringForObjectDescriptions = options.ConnectionStringForObjectDescriptions ?? options.ConnectionString;
         }
 
         public override bool CanConnect(bool includeCommentServer = false)
@@ -57,10 +57,10 @@ namespace L2Data2Code.SchemaReader.SqlServer
             }
         }
 
-        public override Tables ReadSchema(Regex tableRegex = null, bool removeFirstWord = false, Dictionary<string, string> alternativeDescriptions = null, INameResolver resolver = null)
+        public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = resolver ?? new DefaultNameResolver();
-            _columnsDescriptions = alternativeDescriptions ?? GetTableDescriptions(_connectionStringForObjectDescriptions);
+            _resolver = options.NameResolver ?? new DefaultNameResolver();
+            _columnsDescriptions = options.AlternativeDescriptions ?? GetTableDescriptions(_connectionStringForObjectDescriptions);
             var result = new Tables();
 
             using (_connection = new SqlConnection(_connectionString))
@@ -81,7 +81,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                                 Name = (string)rdr["TABLE_NAME"]
                             };
 
-                            if (tableRegex != null && !tableRegex.IsMatch(tbl.Name))
+                            if (options.TableRegex != null && !options.TableRegex.IsMatch(tbl.Name))
                             {
                                 continue;
                             }
@@ -106,7 +106,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                                 Name = (string)rdr["TABLE_NAME"]
                             };
 
-                            if (tableRegex != null && !tableRegex.IsMatch(tbl.Name))
+                            if (options.TableRegex != null && !options.TableRegex.IsMatch(tbl.Name))
                             {
                                 continue;
                             }
@@ -128,7 +128,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 {
                     foreach (var tbl in result.Values)
                     {
-                        tbl.Columns = LoadColumns(tbl, removeFirstWord);
+                        tbl.Columns = LoadColumns(tbl, options.RemoveFirstWord);
 
                         // Mark the primary key
                         var PrimaryKey = GetPK(tbl.Name);

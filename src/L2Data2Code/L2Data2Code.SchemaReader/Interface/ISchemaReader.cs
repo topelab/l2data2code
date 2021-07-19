@@ -6,7 +6,7 @@ namespace L2Data2Code.SchemaReader.Interface
 {
     public interface ISchemaReader
     {
-        Tables ReadSchema(Regex tableRegex = null, bool removeFirstWord = false, Dictionary<string, string> alternativeDescriptions = null, INameResolver resolver = null);
+        Tables ReadSchema(SchemaReaderOptions schemaReaderOptions);
         void WriteLine(string msg);
         void HasErrorMessage(bool setError);
         bool HasErrorMessage();

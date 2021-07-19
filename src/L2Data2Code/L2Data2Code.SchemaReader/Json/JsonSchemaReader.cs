@@ -17,23 +17,22 @@ namespace L2Data2Code.SchemaReader.Json
         private readonly string _connectionString;
         private INameResolver _resolver;
 
-        public JsonSchemaReader(string connectionString, StringBuilderWriter summaryWriter, [CallerMemberName] string callerMember = null) : base(summaryWriter)
+        public JsonSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = connectionString;
+            _connectionString = options.ConnectionString;
             if (!File.Exists(_connectionString))
             {
-                throw new Exception($"JSON file {_connectionString} doesn't exist, called from {callerMember}");
+                throw new Exception($"JSON file {_connectionString} doesn't exist");
             }
         }
 
-        public override Tables ReadSchema(Regex tableRegex = null, bool removeFirstWord = false, Dictionary<string, string> alternativeDescriptions = null, INameResolver resolver = null)
+        public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = resolver ?? new DefaultNameResolver();
-            var result = new Tables();
+            _resolver = options.NameResolver ?? new DefaultNameResolver();
 
             var content = File.ReadAllText(_connectionString);
             var tableList = JsonConvert.DeserializeObject<List<Table>>(content);
-            return Resolve(tableList, removeFirstWord, tableRegex);
+            return Resolve(tableList, options.RemoveFirstWord, options.TableRegex);
         }
 
         /// <summary>

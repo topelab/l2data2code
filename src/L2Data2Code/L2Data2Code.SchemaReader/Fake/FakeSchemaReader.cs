@@ -11,16 +11,16 @@ namespace L2Data2Code.SchemaReader.Fake
     {
         private INameResolver _resolver;
 
-        public FakeSchemaReader(string connectionString, StringBuilderWriter summaryWriter, string connectionStringForObjectDescriptions = null) : base(summaryWriter)
+        public FakeSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
         }
 
-        public override Tables ReadSchema(Regex tableRegex = null, bool removeFirstWord = false, Dictionary<string, string> alternativeDescriptions = null, INameResolver resolver = null)
+        public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = resolver ?? new DefaultNameResolver();
+            _resolver = options.NameResolver ?? new DefaultNameResolver();
             var result = new Tables();
-            AddFakeTable("first_table", result, removeFirstWord);
-            AddFakeTable("second_table", result, removeFirstWord);
+            AddFakeTable("first_table", result, options.RemoveFirstWord);
+            AddFakeTable("second_table", result, options.RemoveFirstWord);
 
             return result;
         }

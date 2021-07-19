@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>2.6.1021.422</Version>
+    <Version>2.7.121.703</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseGenerator\L2Data2Code.BaseGenerator.csproj" />

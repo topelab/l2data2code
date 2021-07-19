@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
     /// <summary>
-    /// Tables
+    /// Dictionary generalization of tables
     /// </summary>
     /// <seealso cref="System.Collections.Generic.Dictionary{System.String, L2Data2Code.SchemaReader.Schema.Table}" />
     [Serializable]
@@ -51,7 +51,6 @@ namespace L2Data2Code.SchemaReader.Schema
                 return GetTable(tableName);
             }
         }
-
     }
 
 }

@@ -3,9 +3,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>2.6.1021.422</Version>
+    <Version>2.7.121.703</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="SampleData\**" />
+    <EmbeddedResource Remove="SampleData\**" />
+    <None Remove="SampleData\**"/>
+    <Page Remove="SampleData\**" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\images\2021-04-01-07-35-08.png" Link="images\2021-04-01-07-35-08.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -59,6 +65,9 @@
     </None>
     <None Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleData\**">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
