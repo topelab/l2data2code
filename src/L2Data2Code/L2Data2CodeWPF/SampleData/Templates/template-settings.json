@@ -1,0 +1,130 @@
+{
+    "Templates": {
+        "Test Demo": {
+            "Name": "Test template (global)",
+            "ResourcesFolder": "GlobalFiles",
+            "ItemsResources": [ "ItemFiles" ],
+            "IsGeneral": "true",
+            "Company": "TestCompany",
+            "Area": "TestArea",
+            "Module": "TestModule",
+            "SavePath": "c:\\src\\tmp\\{{Company}}\\{{Area}}.{{Module}}",
+            "SolutionType": "vsc,*.md,code.cmd,{directory}",
+            "PostCommands": [
+                {
+                    "Name": "Buid",
+                    "Directory": "{{SavePath}}",
+                    "Exec": "start .",
+                    "ShowWindow": "false"
+                }
+            ],
+            "Vars": {
+                "Version": "1.0.0",
+                "VersionSuffix": "",
+                "ApplicationName": "{{Area}}.{{Module}}",
+                "ApplicationTitle": "{{Company}} {{Area.Humanize}} {{Module}}",
+                "SetDomain": "",
+                "SetAdapters": "",
+                "SetBusiness": "",
+                "SetServices": "",
+                "SetUseCases": "",
+                "SetWebApiControllers": "",
+                "SetWebApi": "",
+                "SetUCDelete": "",
+                "SetUCGet": "",
+                "SetUCGetList": "",
+                "SetUCInsert": "",
+                "SetUCUpdate": "",
+                "SetDefaultModels": "1"
+            },
+            "Configurations": {
+                "Services (no UseCases)": "SetServices=1;",
+                "Business (no UseCases)": "SetBusiness=1;",
+                "Adapters (no UseCases)": "SetAdapters=1;",
+                "Web Api (only GetList)": "SetWebApi=1;SetUCGetList=1;",
+                "Api Controllers (only GetList)": "SetWebApiControllers=1;SetUCGetList=1;",
+                "UseCases (only GetList)": "SetUseCases=1;SetUCGetList=1;",
+                "Domain (only GetList)": "SetDomain=1;SetUCGetList=1;",
+                "Web Api": "SetWebApi=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
+                "Api Controllers": "SetWebApiControllers=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
+                "Adapters": "SetAdapters=1;SetUseCases=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
+                "UseCases": "SetUseCases=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
+                "Domain": "SetDomain=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;"
+            },
+            "FinalVars": {
+                "if database=mysql UseDB": "MySql; .UsingMySqlDB=1;",
+                "if database=sqlserver UseDB": "SqlServer; .UsingSqlServerDB=1;",
+                "if database=sqlite UseDB": "Sqlite; .UsingSqliteDB=1;",
+                "if database=fake UseDB": "Sqlite; .UsingSqliteDB=1;",
+                "if database=json UseDB": "Sqlite; .UsingSqliteDB=1;",
+                "if database=object UseDB": "Sqlite; .UsingSqliteDB=1;",
+                "if SetWebApi=1 SetWebApiControllers": "1",
+                "if SetWebApiControllers=1 SetUseCases": "1",
+                "if SetUseCases=1 SetBusiness": "1",
+                "if SetServices=1 SetBusiness": "1; .SetModels={{SetDefaultModels}};",
+                "if SetBusiness=1 SetAdapters": "1",
+                "if SetAdapters=1 SetDomain": "1"
+            }
+        }
+    },
+    "Schemas": {
+        "northwindtest": {
+            "ConnectionString": "SampleData\\northwind-dbinfo.json",
+            "Provider": "System.Data.JsonClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
+        },
+        "northwind-entities": {
+            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Entities",
+            "Provider": "System.Data.ObjectClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
+        },
+        "northwind-dtos": {
+            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Dtos",
+            "Provider": "System.Data.ObjectClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
+        },
+        "northwind-collections": {
+            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Collections",
+            "Provider": "System.Data.ObjectClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
+        }
+    },
+    "Areas": {
+        "Northwind (json file)": {
+            "Name": "Northwind",
+            "Schema": "northwindtest"
+        },
+        "Northwind (assembly entities)": {
+            "Name": "Northwind",
+            "Schema": "northwind-entities"
+        },
+        "Northwind (assembly dtos)": {
+            "Name": "Northwind",
+            "Schema": "northwind-dtos"
+        },
+        "Demo": {
+            "Name": "Demo",
+            "Schema": "general"
+        }
+    },
+    "Modules": {
+        "Northwind.Test": { "Name": "Test" },
+        "Demo.Test": { "Name": "Test" }
+    }
+}

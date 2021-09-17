@@ -8,10 +8,10 @@ namespace L2Data2Code.BaseGenerator.Entities
         private Dictionary<string, string> _tableNames = null;
         private Dictionary<string, string> _columnNames = null;
 
-        public NameResolver(string connectionName)
+        public NameResolver(string schemaName)
         {
-            _tableNames = Config.GetTableRenames(connectionName);
-            _columnNames = Config.GetColumnRenames(connectionName);
+            _tableNames = Config.GetTableRenames(schemaName);
+            _columnNames = Config.GetColumnRenames(schemaName);
         }
 
         public string ResolveTableName(string originalTableName) =>

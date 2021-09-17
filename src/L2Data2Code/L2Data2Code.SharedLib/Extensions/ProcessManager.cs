@@ -1,3 +1,4 @@
+using L2Data2Code.SharedLib.Helpers;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
+using Unity;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
@@ -21,7 +23,7 @@ namespace L2Data2Code.SharedLib.Extensions
     public static class ProcessManager
     {
         private static Dictionary<string, Process> runningProcess = new Dictionary<string, Process>();
-        private static ILogger logger = LogManager.GetCurrentClassLogger();
+        private static ILogger logger;
 
         public static void Run(this string program) => Run(program, null, null, null);
 
@@ -37,6 +39,8 @@ namespace L2Data2Code.SharedLib.Extensions
             {
                 return;
             }
+
+            logger ??= ContainerManager.Container.Resolve<ILogger>();
 
             var key = GetKey(program, arguments);
             logger.Info($"Running {key}");

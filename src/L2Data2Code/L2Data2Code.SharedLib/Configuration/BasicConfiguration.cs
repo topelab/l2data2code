@@ -1,26 +1,32 @@
 using L2Data2Code.SharedLib.Helpers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 
 namespace L2Data2Code.SharedLib.Configuration
 {
-    public class BasicConfiguration<T> where T : class
+    public class BasicConfiguration<T> : IBasicConfiguration<T> where T : class
     {
         private readonly Dictionary<string, T> _values;
+        private readonly string list;
+        private IJsonSetting jsonSetting;
 
-        public BasicConfiguration(JToken token)
+        public BasicConfiguration(IJsonSetting jsonSetting, string list)
         {
+            this.jsonSetting = jsonSetting;
+            this.list = list;
             _values = new Dictionary<string, T>();
-            foreach (JProperty item in token)
-            {
-                _values.Add(item.Name, item.Value.ToObject<T>());
-            }
+            SetupValues(jsonSetting.Config[list]);
+
+            jsonSetting.PropertyChanged += JsonSetting_PropertyChanged;
         }
 
-        public BasicConfiguration(string list) : this(ConfigHelper.Config[list])
+        private void JsonSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(JsonSetting.Config))
+            {
+                SetupValues(jsonSetting.Config[list]);
+            }
         }
 
         public IEnumerable<string> GetKeys()
@@ -36,6 +42,18 @@ namespace L2Data2Code.SharedLib.Configuration
         public int Count => _values?.Count ?? 0;
 
         public T this[string key] { get => _values.ContainsKey(key) ? _values[key] : null; set => _values[key] = value; }
+
+        private void SetupValues(JToken token)
+        {
+            _values.Clear();
+            if (token != null)
+            {
+                foreach (JProperty item in token)
+                {
+                    _values.Add(item.Name, item.Value.ToObject<T>());
+                }
+            }
+        }
 
     }
 }

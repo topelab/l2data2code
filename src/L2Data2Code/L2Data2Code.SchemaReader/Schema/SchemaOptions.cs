@@ -1,20 +1,23 @@
 using L2Data2Code.SchemaReader.Lib;
+using L2Data2Code.SharedLib.Configuration;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
     public class SchemaOptions
     {
-        public string ConnectionStringKey { get; set; }
+        public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; set; }
+        public string SchemaName { get; set; }
         public string ConnectionString { get; set; }
         public StringBuilderWriter SummaryWriter { get; set; }
-        public string ConnectionStringForObjectDescriptionsKey { get; set; }
-        public string ConnectionStringForObjectDescriptions { get; set; }
+        public string DescriptionsSchemaName { get; set; }
+        public string DescriptionsConnectionString { get; set; }
 
-        public SchemaOptions(string connectionStringKey, StringBuilderWriter summaryWriter, string connectionStringForObjectDescriptionsKey)
+        public SchemaOptions(IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName)
         {
-            ConnectionStringKey = connectionStringKey;
+            SchemasConfiguration = schemasConfiguration;
+            SchemaName = schemaName;
             SummaryWriter = summaryWriter;
-            ConnectionStringForObjectDescriptionsKey = connectionStringForObjectDescriptionsKey;
+            DescriptionsSchemaName = descriptionsSchemaName;
         }
     }
 }

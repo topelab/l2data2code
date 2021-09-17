@@ -3,6 +3,9 @@ using L2Data2CodeWPF.ViewModel;
 using Unity;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.SharedLib.Helpers;
+using L2Data2Code.SharedLib.Configuration;
+using NLog;
 
 namespace L2Data2CodeWPF
 {
@@ -26,6 +29,14 @@ namespace L2Data2CodeWPF
 
         private static IUnityContainer Register(IUnityContainer container)
         {
+            container.RegisterSingleton<IJsonSetting, JsonSetting>();
+            container.RegisterSingleton<IBasicNameValueConfiguration, AppSettingsConfiguration>(nameof(AppSettingsConfiguration));
+            container.RegisterSingleton<IAreasConfiguration, AreasConfiguration>();
+            container.RegisterSingleton<IGlobalsConfiguration, GlobalsConfiguration>();
+            container.RegisterSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>();
+            container.RegisterSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>();
+            container.RegisterSingleton<ITemplatesConfiguration, TemplatesConfiguration>();
+
             container.RegisterType<MainWindowViewModel>(TypeLifetime.PerContainer);
             container.RegisterType<IMessagesViewModel, MessagesViewModel>(TypeLifetime.PerContainer);
             container.RegisterType<IMessageService, MessageService>(TypeLifetime.PerContainer);
@@ -36,6 +47,10 @@ namespace L2Data2CodeWPF
             container.RegisterType<IGitService, GitService>(TypeLifetime.PerContainer);
             container.RegisterType<ISchemaService, SchemaService>(TypeLifetime.PerContainer);
             container.RegisterType<ICodeGeneratorService, CodeGeneratorService>(TypeLifetime.PerContainer);
+
+            container.RegisterType<IFileMonitorService, FileMonitorService>(TypeLifetime.PerResolve);
+
+            container.RegisterInstance<ILogger>(LogManager.GetCurrentClassLogger());
             return container;
         }
     }

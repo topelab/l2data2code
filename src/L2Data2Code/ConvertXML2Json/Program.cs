@@ -2,10 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Xml;
 
 namespace ConvertXML2Json
@@ -32,69 +29,83 @@ namespace ConvertXML2Json
 
                 if (item.Contains("\"@Vars\": "))
                 {
-                    var conditionals = new StringBuilder();
-                    var vars = item.Split("\"@Vars\": ")[1];
-                    vars = vars.Trim('"').Replace("\\r\\n", string.Empty).Replace("\\t", string.Empty);
-                    var allVars = vars.Split(';');
-                    json.AppendLine("\t\t\"Vars\": {");
-                    bool inConditional = false;
-
-                    foreach (var elem in allVars)
-                    {
-                        var text = elem.Trim();
-                        if (!text.Contains("="))
-                        {
-                            continue;
-                        }
-
-                        if (text.StartsWith("."))
-                        {
-                            text = text.Trim('.');
-                            var thenPart = "\"" + text.Replace("=", "\": \"") + "\",";
-                            conditionals.AppendLine($"\t\t\t\t\t{thenPart}");
-                            continue;
-                        }
-                        else
-                        {
-                            if (inConditional)
-                            {
-                                conditionals.AppendLine("\t\t\t\t},\n\t\t\t},");
-                            }
-                            inConditional = false;
-                        }
-
-                        if (text.StartsWith("if "))
-                        {
-                            var condition = text.Split(' ')[1];
-                            var thenPart = "\"" + string.Join(' ', text.Split(' ').Skip(2)).Replace("=", "\": \"") + "\",";
-                            inConditional = true;
-                            conditionals.AppendLine($"\t\t\t{{\n\t\t\t\t\"if\": \"{condition}\",");
-                            conditionals.AppendLine($"\t\t\t\t\"then\": {{");
-                            conditionals.AppendLine($"\t\t\t\t\t{thenPart}");
-                            continue;
-                        }
-
-                        var variable = text.Split('=')[0].Trim();
-                        var value = text.Split('=')[1].Trim();
-                        json.AppendLine($"\t\t\t\"{variable}\": \"{value}\",");
-                    }
-                    json.AppendLine("\t\t},");
-                    if (inConditional)
-                    {
-                        conditionals.AppendLine("\t\t\t\t},\n\t\t\t},");
-                    }
-                    json.AppendLine("\t\t\"Conditions\": [");
-                    json.Append(conditionals);
-                    json.AppendLine("\t\t]");
+                    var resul = ExtractVars("Vars", item.Trim());
+                    json.Append(resul);
+                    continue;
                 }
-                else
+
+                if (item.Contains("\"@FinalVars\": "))
                 {
-                    json.AppendLine(item.Replace("\"@", "\""));
+                    var result = ExtractVars("FinalVars", item.Trim());
+                    json.Append(result);
+                    continue;
                 }
+
+                json.AppendLine(item.Replace("\"@", "\""));
             }
 
 
             File.WriteAllText(jsonFile, json.ToString());
+        }
+
+        private static StringBuilder ExtractVars(string section, string item)
+        {
+            var conditionals = new StringBuilder();
+            var json = new StringBuilder();
+            var vars = item.Split($"\"@{section}\": ")[1];
+            vars = vars.Trim(',').Trim('"').Replace("\\r\\n", string.Empty).Replace("\\t", string.Empty);
+            var allVars = vars.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            json.AppendLine($"\t\t\"{section}\": {{");
+            bool inConditional = false;
+            var lastElem = allVars.Last();
+
+            foreach (var elem in allVars)
+            {
+                var text = elem.Trim();
+                if (!text.Contains("="))
+                {
+                    continue;
+                }
+
+                if (text.StartsWith("."))
+                {
+                    conditionals.Append($"; {text}");
+                    continue;
+                }
+
+                CheckConditionals(conditionals, json, inConditional, false);
+
+                inConditional = false;
+                if (text.StartsWith("if "))
+                {
+                    var condition = string.Join('=', text.Split('=').Take(2));
+                    var thenPart = string.Join('=', text.Split('=').Skip(2));
+                    conditionals.Append($"\t\t\t\"{condition}\": \"{thenPart}");
+                    inConditional = true;
+                    continue;
+                }
+
+                var variable = text.Split('=')[0].Trim();
+                var value = text.Split('=')[1].Trim();
+                json.Append($"\t\t\t\"{variable}\": \"{value}\"");
+                json.AppendLine(lastElem == elem ? string.Empty : ",");
+            }
+
+            CheckConditionals(conditionals, json, inConditional, true);
+            json.Append("\t\t}");
+            json.AppendLine(item.Last() == ',' ? "," : string.Empty);
+            return json;
+        }
+
+        private static void CheckConditionals(StringBuilder conditionals, StringBuilder json, bool inConditional, bool atLastItem)
+        {
+            if (inConditional)
+            {
+                conditionals.Append('"');
+                json.Append(conditionals);
+                json.AppendLine(atLastItem ? string.Empty : ",");
+                conditionals.Clear();
+            }
         }
     }
 }

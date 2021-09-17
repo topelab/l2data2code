@@ -14,8 +14,12 @@ using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using Unity;
+using Unity.Resolution;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -23,12 +27,12 @@ namespace L2Data2CodeUI.Shared.Adapters
     {
         #region Private Fields
 
-        private readonly string connectionStringNameToFake = "general";
-        private readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private readonly string schemaNameToFake = "general";
+        private readonly ILogger logger;
         private Dictionary<string, string> _alternativeDictionary = new Dictionary<string, string>();
-        private string connectionStringName = "localserver";
-        private string connectionStringNameToDbSchema = "commentserver";
-        private string outputConnectionString = "localserver";
+        private string schemaName = "localserver";
+        private string descriptionsSchemaName = "commentserver";
+        private string outputSchemaName = "localserver";
         private ISchemaReader schemaReader;
         private IEnumerable<string> slnFiles;
         private readonly IAppService appService;
@@ -36,6 +40,8 @@ namespace L2Data2CodeUI.Shared.Adapters
         private readonly ICommandService commandService;
         private readonly IGitService gitService;
         private readonly ICodeGeneratorService codeGeneratorService;
+        private readonly IFileMonitorService fileMonitorService;
+        private readonly IJsonSetting jsonSetting;
         private Tables tables;
         private StringBuilderWriter writer = new StringBuilderWriter();
 
@@ -47,7 +53,11 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 IAppService appService,
                                 ICommandService commandService,
                                 IGitService gitService,
-                                ICodeGeneratorService codeGeneratorService)
+                                ICodeGeneratorService codeGeneratorService,
+                                IJsonSetting jsonSetting,
+                                IUnityContainer container,
+                                IFileMonitorService fileMonitorService,
+                                ILogger logger)
         {
             this.messageService = messageService;
             OutputPath = @"c:\src\tmp\";
@@ -55,26 +65,43 @@ namespace L2Data2CodeUI.Shared.Adapters
             this.commandService = commandService;
             this.gitService = gitService;
             this.codeGeneratorService = codeGeneratorService;
+            this.fileMonitorService = fileMonitorService;
+            this.jsonSetting = jsonSetting;
+            this.logger = logger;
+
+            SettingsConfiguration = container.Resolve<IBasicNameValueConfiguration>(nameof(AppSettingsConfiguration));
+            jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
+            SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
+            SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
+
+            GlobalsConfiguration = container.Resolve<IGlobalsConfiguration>();
+            AreasConfiguration = container.Resolve<IAreasConfiguration>();
+            ModulesConfiguration = container.Resolve<IBasicConfiguration<ModuleConfiguration>>();
+            SchemasConfiguration = container.Resolve<IBasicConfiguration<SchemaConfiguration>>();
+            TemplatesConfiguration = container.Resolve<ITemplatesConfiguration>();
+
+            this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration["TemplatesBasePath"], "*.json");
         }
 
         #endregion Public Constructors
 
         #region Public Properties
 
-        public AreasConfiguration AreasConfiguration { get; } = new AreasConfiguration();
-        public CanStartDbSchemaServerConfiguration CanStartDbSchemaServer { get; } = new CanStartDbSchemaServerConfiguration();
-        public ModulesConfiguration ModulesConfiguration { get; } = new ModulesConfiguration();
+        public Action OnConfigurationChanged { get; set; }
+        public IBasicNameValueConfiguration SettingsConfiguration { get; }
+        public IAreasConfiguration AreasConfiguration { get; }
+        public IBasicConfiguration<ModuleConfiguration> ModulesConfiguration { get; }
+        public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; }
+        public ITemplatesConfiguration TemplatesConfiguration { get; }
+        public IGlobalsConfiguration GlobalsConfiguration { get; }
         public string OutputPath { get; set; }
         public string SelectedArea { get; private set; }
         public string SelectedModule { get; private set; }
         public string SelectedTemplate { get; private set; }
         public string SelectedVars { get; private set; }
-        public AppSettingsConfiguration SettingsConfiguration { get; } = new AppSettingsConfiguration();
         public string SlnFile => slnFiles?.FirstOrDefault() ?? $"{OutputPath?.TrimPathSeparator()}\\{SelectedModule}.sln".ToLower();
         public string SolutionType { get; set; }
         public Tables Tables { get => tables ?? new Tables(); }
-        public TemplatesConfiguration TemplatesConfiguration { get; } = new TemplatesConfiguration();
-        public VarsConfiguration VarsConfiguration { get; } = new VarsConfiguration();
         public Dictionary<string, object> CompiledVars { get; private set; } = new Dictionary<string, object>();
         public string GeneratorApplication { get; set; }
         public string GeneratorVersion { get; set; }
@@ -97,7 +124,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             => TemplatesConfiguration.GetKeys();
 
         public IEnumerable<string> GetVarsList(string selectedTemplate)
-            => VarsConfiguration.GetKeys().Where(s => s.StartsWith(selectedTemplate + ".")).Select(s => s.Replace(selectedTemplate + ".", string.Empty));
+            => TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable();
 
         public void Run(CodeGeneratorDto baseOptions)
         {
@@ -118,8 +145,8 @@ namespace L2Data2CodeUI.Shared.Adapters
                 GenerateReferenced = baseOptions.GenerateReferenced,
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
                 OutputPath = baseOptions.OutputPath.AddPathSeparator(),
-                CreatedFromConnectionStringName = outputConnectionString,
-                UserVariables = (VarsConfiguration[SelectedTemplate] ?? string.Empty) + VarsConfiguration[SelectedTemplate + "." + SelectedVars],
+                CreatedFromSchemaName = outputSchemaName,
+                UserVariables = TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
                 TemplatePath = Path.Combine(basePath, templatePath),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
                 GeneratorApplication = baseOptions.GeneratorApplication,
@@ -127,6 +154,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 GeneateOnlyJson = baseOptions.GeneateOnlyJson,
                 Encoding = SettingsConfiguration[nameof(CodeGeneratorDto.Encoding)] ?? "utf8",
                 EndOfLine = SettingsConfiguration[nameof(CodeGeneratorDto.EndOfLine)] ?? Environment.NewLine,
+                SchemasConfiguration = SchemasConfiguration,
             };
 
             logger.Info("Starting generation");
@@ -173,7 +201,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             try
             {
                 var processedTemplates = new HashSet<string>();
-                var library = TemplateExtensions.TryLoad(options.TemplatePath, options.TemplateResource);
+                var library = options.TemplatePath.TryLoad(options.TemplateResource);
 
                 if (library == null)
                 {
@@ -185,6 +213,8 @@ namespace L2Data2CodeUI.Shared.Adapters
 
                 var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
 
+                bool isFirst = true;
+
                 while (template != null)
                 {
                     if (processedTemplates.Contains(template.ResourcesFolder))
@@ -195,19 +225,26 @@ namespace L2Data2CodeUI.Shared.Adapters
 
                     options.TemplateResource = template.ResourcesFolder;
                     options.LastPass = template.NextResource.IsEmpty();
-                    options.ConnectionStringName = template.IsGeneral ? connectionStringNameToFake : connectionStringName;
-                    options.ConnectionNameForDescriptions = template.IsGeneral ? connectionStringNameToFake : connectionStringNameToDbSchema;
+                    options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
+                    options.DescriptionsSchemaName = template.IsGeneral ? schemaNameToFake : descriptionsSchemaName;
                     options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
                     options.GenerateJsonInfo = template.IsGeneral ? false : bool.TryParse(SettingsConfiguration["generateJsonInfo"], out bool result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
-                    template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+                    if (isFirst)
+                    {
+                        template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+                        isFirst = false;
+                    }
 
                     codeGeneratorService.Initialize(options, library, CompiledVars);
                     codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
                                                        template.IsGeneral ? null : _alternativeDictionary);
 
-                    template.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+                    if (options.LastPass)
+                    {
+                        template.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+                    }
 
                     template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(template.NextResource, StringComparison.CurrentCultureIgnoreCase));
                 }
@@ -244,7 +281,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SetupInitial();
             SetupTables();
             SetCurrentModule(GetModuleList(selectedArea).FirstOrDefault(), true);
-            InputSourceType = SchemaFactory.GetProviderDefinitionKey(connectionStringName);
+            InputSourceType = SchemaFactory.GetProviderDefinitionKey(schemaName);
         }
 
         public void SetCurrentModule(string selectedModule, bool triggered = false)
@@ -277,13 +314,24 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         #region Private Methods
 
+        private void CheckTemplateFileChanges(string obj)
+        {
+            Thread.Sleep(500);
+            jsonSetting.ReloadSettings();
+            jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
+            SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
+            SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
+            SetCurrentTemplate(SelectedTemplate, true);
+            OnConfigurationChanged?.Invoke();
+        }
+
         private bool CheckConnection()
         {
             try
             {
                 var canConnectToDb = schemaReader?.CanConnect(includeCommentServer: false) ?? false;
                 var canConnectToDbSchema = schemaReader?.CanConnect(includeCommentServer: true) ?? false;
-                _alternativeDictionary = Config.GetSchemaDictionaryFromFile(connectionStringNameToDbSchema);
+                _alternativeDictionary = Config.GetSchemaDictionaryFromFile(descriptionsSchemaName);
 
                 if (canConnectToDb)
                 {
@@ -346,22 +394,23 @@ namespace L2Data2CodeUI.Shared.Adapters
                 Module = ModulesConfiguration[SelectedModule].Name,
                 GenerateReferenced = false,
                 OutputPath = null,
-                CreatedFromConnectionStringName = outputConnectionString,
-                UserVariables = (VarsConfiguration[SelectedTemplate] ?? string.Empty) + VarsConfiguration[SelectedTemplate + "." + SelectedVars ?? string.Empty],
+                CreatedFromSchemaName = outputSchemaName,
+                UserVariables = TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
                 TemplatePath = Path.Combine(basePath, template),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
-                ConnectionStringName = connectionStringNameToFake,
-                ConnectionNameForDescriptions = connectionStringNameToFake,
+                SchemaName = schemaNameToFake,
+                DescriptionsSchemaName = schemaNameToFake,
                 TableList = new List<string>() { "first_table" },
                 GeneratorApplication = GeneratorApplication,
                 GeneratorVersion = GeneratorVersion,
                 Encoding = SettingsConfiguration[nameof(CodeGeneratorDto.Encoding)] ?? "utf8",
                 EndOfLine = SettingsConfiguration[nameof(CodeGeneratorDto.EndOfLine)] ?? Environment.NewLine,
+                SchemasConfiguration = SchemasConfiguration,
             };
 
             try
             {
-                var library = TemplateExtensions.TryLoad(options.TemplatePath, options.TemplateResource);
+                var library = options.TemplatePath.TryLoad(options.TemplateResource);
                 codeGeneratorService.Initialize(options, library);
                 CompiledVars.ClearAndAddRange(codeGeneratorService.GetVars());
                 CompiledVars.TryGetValue("SavePath", out object savePath);
@@ -383,10 +432,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private void SetupInitial()
         {
-            connectionStringName = AreasConfiguration.ConnectionStringKey(SelectedArea);
-            connectionStringNameToDbSchema = AreasConfiguration.CommentConnectionStringKey(SelectedArea);
-            outputConnectionString = AreasConfiguration.OutputConnectionStringKey(SelectedArea);
-            schemaReader = SchemaFactory.Create(new SchemaOptions(connectionStringName, writer, connectionStringNameToDbSchema));
+            schemaName = AreasConfiguration.Schema(SelectedArea);
+            descriptionsSchemaName = AreasConfiguration.CommentSchema(SelectedArea);
+            outputSchemaName = AreasConfiguration.OutputSchema(SelectedArea);
+            schemaReader = SchemaFactory.Create(new SchemaOptions(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);
@@ -405,8 +454,8 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var tableNameResolver = new NameResolver(connectionStringName);
-                tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(connectionStringName), _alternativeDictionary, tableNameResolver))
+                var tableNameResolver = new NameResolver(schemaName);
+                tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(schemaName), _alternativeDictionary, tableNameResolver))
                     ?? new Tables();
 
                 messageService.Clear(MessageCodes.READ_SCHEMA);

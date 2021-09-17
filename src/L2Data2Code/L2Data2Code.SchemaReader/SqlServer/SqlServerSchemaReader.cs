@@ -23,7 +23,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
         public SqlServerSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
             _connectionString = options.ConnectionString;
-            _connectionStringForObjectDescriptions = options.ConnectionStringForObjectDescriptions ?? options.ConnectionString;
+            _connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;
         }
 
         public override bool CanConnect(bool includeCommentServer = false)

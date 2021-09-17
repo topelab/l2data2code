@@ -1,30 +1,32 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Configuration;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
     public interface IGeneratorAdapter
     {
-        AreasConfiguration AreasConfiguration { get; }
-        CanStartDbSchemaServerConfiguration CanStartDbSchemaServer { get; }
+        Action OnConfigurationChanged { get; set; }
+        IBasicNameValueConfiguration SettingsConfiguration { get; }
+        IAreasConfiguration AreasConfiguration { get; }
+        IBasicConfiguration<ModuleConfiguration> ModulesConfiguration { get; }
+        IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; }
+        ITemplatesConfiguration TemplatesConfiguration { get; }
         Dictionary<string, object> CompiledVars { get; }
         string GeneratorApplication { get; set; }
         string GeneratorVersion { get; set; }
         string InputSourceType { get; }
-        ModulesConfiguration ModulesConfiguration { get; }
         string OutputPath { get; set; }
         string SelectedArea { get; }
         string SelectedModule { get; }
         string SelectedTemplate { get; }
         string SelectedVars { get; }
-        AppSettingsConfiguration SettingsConfiguration { get; }
         string SlnFile { get; }
         string SolutionType { get; set; }
         Tables Tables { get; }
-        TemplatesConfiguration TemplatesConfiguration { get; }
-        VarsConfiguration VarsConfiguration { get; }
         IEnumerable<Table> GetAllTables();
         IEnumerable<string> GetAreaList();
         IEnumerable<string> GetModuleList(string selectedArea);

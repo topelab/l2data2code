@@ -1,7 +1,9 @@
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Helpers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity;
 
 namespace L2Data2Code.BaseGenerator.Entities
 {
@@ -9,31 +11,32 @@ namespace L2Data2Code.BaseGenerator.Entities
     {
         private static readonly string DefaultLang = "en";
         private static readonly bool Remove1stDefaultValue = false;
+        private static readonly IBasicConfiguration<SchemaConfiguration> schemas = schemas ?? ContainerManager.Container.Resolve<IBasicConfiguration<SchemaConfiguration>>();
 
-        public static string GetLang(string connectionName)
+        public static string GetLang(string schemaName)
         {
-            return ConfigHelper.Schemas[connectionName]?.TableNameLanguage ?? DefaultLang;
+            return schemas[schemaName]?.TableNameLanguage ?? DefaultLang;
         }
 
-        public static bool ShouldRemoveWord1(string connectionName)
+        public static bool ShouldRemoveWord1(string schemaName)
         {
-            return ConfigHelper.Schemas[connectionName]?.RemoveFirstWordOnColumnNames ?? Remove1stDefaultValue;
+            return schemas[schemaName]?.RemoveFirstWordOnColumnNames ?? Remove1stDefaultValue;
         }
 
-        public static bool NormalizedNames(string connectionName)
+        public static bool NormalizedNames(string schemaName)
         {
-            return ConfigHelper.Schemas[connectionName]?.NormalizedNames ?? false;
+            return schemas[schemaName]?.NormalizedNames ?? false;
         }
 
-        public static bool CanCreateDB(string connectionName)
+        public static bool CanCreateDB(string schemaName)
         {
-            return ConfigHelper.Schemas[connectionName]?.CanCreateDB ?? false;
+            return schemas[schemaName]?.CanCreateDB ?? false;
         }
 
-        public static Dictionary<string, string> GetSchemaDictionaryFromFile(string connectionName)
+        public static Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName)
         {
             var schemaDictionary = new Dictionary<string, string>();
-            var descriptionFile = ConfigHelper.Schemas[connectionName]?.DescriptionsFile;
+            var descriptionFile = schemas[schemaName]?.DescriptionsFile;
             if (descriptionFile == null || !File.Exists(descriptionFile))
             {
                 return schemaDictionary;
@@ -57,9 +60,9 @@ namespace L2Data2Code.BaseGenerator.Entities
             return schemaDictionary;
         }
 
-        public static (string ConnectionString, string Provider) GetConnectionString(string connectionName)
+        public static (string ConnectionString, string Provider) GetConnectionString(string schemaName)
         {
-            var schemaInfo = ConfigHelper.Schemas[connectionName];
+            var schemaInfo = schemas[schemaName];
             string connectionString = schemaInfo?.ConnectionString;
             string provider = schemaInfo?.Provider;
             if (provider.Equals("System.Data.FakeClient") || provider.Equals("System.Data.JsonClient"))
@@ -70,10 +73,10 @@ namespace L2Data2Code.BaseGenerator.Entities
             return (connectionString, provider);
         }
 
-        public static Dictionary<string, string> GetTableRenames(string connectionName)
+        public static Dictionary<string, string> GetTableRenames(string schemaName)
         {
             var renameTable = new Dictionary<string, string>();
-            var renameDescriptions = ConfigHelper.Schemas[connectionName]?.RenameTables;
+            var renameDescriptions = schemas[schemaName]?.RenameTables;
             if (renameDescriptions == null)
             {
                 return renameTable;
@@ -86,10 +89,10 @@ namespace L2Data2Code.BaseGenerator.Entities
             return renameTable;
         }
 
-        public static Dictionary<string, string> GetColumnRenames(string connectionName)
+        public static Dictionary<string, string> GetColumnRenames(string schemaName)
         {
             var renameColumn = new Dictionary<string, string>();
-            var renameDescriptions = ConfigHelper.Schemas[connectionName]?.RenameColumns;
+            var renameDescriptions = schemas[schemaName]?.RenameColumns;
             if (renameDescriptions == null)
             {
                 return renameColumn;

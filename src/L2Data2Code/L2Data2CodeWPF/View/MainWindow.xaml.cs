@@ -1,9 +1,9 @@
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.ViewModel;
 using MahApps.Metro.Controls;
-using MahApps.Metro.IconPacks;
 using System;
-using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +19,7 @@ namespace L2Data2CodeWPF
     public partial class MainWindow : MetroWindow
     {
         private readonly MainWindowViewModel viewModel;
+        private readonly IFileMonitorService fileMonitorService;
         private Dispatcher dispatcher => Application.Current?.Dispatcher;
 
         public Timer CheckOpenedTimer { get; private set; }
@@ -26,6 +27,7 @@ namespace L2Data2CodeWPF
         public MainWindow()
         {
             viewModel = SetupDI.Container.Resolve<MainWindowViewModel>();
+            fileMonitorService = SetupDI.Container.Resolve<IFileMonitorService>();
             DataContext = viewModel;
             InitializeComponent();
             StartMonitorConfig();
@@ -53,35 +55,27 @@ namespace L2Data2CodeWPF
             e.Handled = true;
         }
 
-        private FileSystemWatcher fsw;
         private void StartMonitorConfig()
         {
             var appBasePath = AppDomain.CurrentDomain.BaseDirectory.TrimPathSeparator();
-            fsw = new FileSystemWatcher(appBasePath);
-            fsw.NotifyFilter = NotifyFilters.LastWrite;
-            var config = $"{appBasePath}\\appsettings.json";
-            fsw.Changed += (s, e) => ReStartApplication(e, fsw, config);
-            fsw.EnableRaisingEvents = true;
-
+            fileMonitorService.StartMonitoring(ReStartApplication, appBasePath, FileLabels.APP_SETTINGS_FILE);
             CheckOpenedTimer = new Timer(viewModel.CheckOpenedTimerCallBack, null, 1000, 1000);
         }
 
-        private void ReStartApplication(FileSystemEventArgs e, FileSystemWatcher fsw, string config)
+        private void ReStartApplication(string fileChanged)
         {
-            if (e.FullPath.Equals(config, StringComparison.CurrentCultureIgnoreCase))
+            if (fileChanged.Equals(FileLabels.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
             {
-                fsw.EnableRaisingEvents = false;
                 dispatcher?.Invoke(() =>
                 {
-                    this.Activate();
+                    Activate();
                     var result = MessageBox.Show(this, Strings.ConfigChanged, Strings.Warning, MessageBoxButton.OKCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Cancel)
                     {
-                        fsw.EnableRaisingEvents = true;
                         return;
                     }
                     App.RestartApp = true;
-                    this.Close();
+                    Close();
                 });
             }
         }

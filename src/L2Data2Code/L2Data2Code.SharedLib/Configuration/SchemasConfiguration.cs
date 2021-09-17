@@ -6,11 +6,7 @@ namespace L2Data2Code.SharedLib.Configuration
 {
     public class SchemasConfiguration : BasicConfiguration<SchemaConfiguration>
     {
-        public SchemasConfiguration() : base(SectionLabels.SCHEMA)
-        {
-        }
-
-        public SchemasConfiguration(JToken token) : base(token)
+        public SchemasConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, SectionLabels.SCHEMA)
         {
         }
     }

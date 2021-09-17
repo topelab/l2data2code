@@ -6,6 +6,7 @@ using L2Data2Code.SchemaReader.MySql;
 using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SchemaReader.SqlServer;
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Helpers;
 using System;
 using System.Collections.Generic;
@@ -35,10 +36,11 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         };
 
+        private static IBasicConfiguration<SchemaConfiguration> schemasConfiguration;
+
         public static string GetProviderDefinitionKey(string connectionStringKey)
         {
-            var connection = new Connection(connectionStringKey);
-
+            var connection = new Connection(schemasConfiguration, connectionStringKey);
             return providers.TryGetValue(connection.Provider, out ProviderDefinition providerDefinition) ? providerDefinition.Key : null;
         }
 
@@ -48,9 +50,10 @@ namespace L2Data2Code.BaseGenerator.Entities
             Connection commentConnection;
             try
             {
-                connection = new Connection(schemaOptions.ConnectionStringKey);
+                schemasConfiguration = schemaOptions.SchemasConfiguration;
+                connection = new Connection(schemasConfiguration, schemaOptions.SchemaName);
                 schemaOptions.ConnectionString = connection.ConnectionString;
-                commentConnection = schemaOptions.ConnectionStringForObjectDescriptionsKey == null ? null : new Connection(schemaOptions.ConnectionStringForObjectDescriptionsKey);
+                commentConnection = schemaOptions.DescriptionsSchemaName == null ? null : new Connection(schemasConfiguration, schemaOptions.DescriptionsSchemaName);
             }
             catch (Exception ex)
             {
@@ -60,7 +63,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             if (commentConnection != null && providers.ContainsKey(commentConnection.Provider))
             {
-                schemaOptions.ConnectionStringForObjectDescriptions = commentConnection.ConnectionString;
+                schemaOptions.DescriptionsConnectionString = commentConnection.ConnectionString;
             }
 
             if (providers.TryGetValue(connection.Provider, out ProviderDefinition providerDefinition))

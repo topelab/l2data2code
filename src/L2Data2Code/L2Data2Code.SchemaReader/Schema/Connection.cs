@@ -12,27 +12,26 @@ namespace L2Data2Code.SchemaReader.Schema
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class.
         /// </summary>
-        /// <param name="connectionStringKey">The connection string key.</param>
+        /// <param name="schema">The schema configuration.</param>
+        /// <param name="schemaName">The schema name.</param>
         /// <exception cref="ConfigurationErrorsException">
         /// Not found \"{SectionLabels.SCHEMA}\" section in appsettings.json file.
         /// or
-        /// Section \"{SectionLabels.SCHEMA}\" does not contain connection key \"{connectionStringKey}\" defined in appsettings.json file.
+        /// Section \"{SectionLabels.SCHEMA}\" does not contain connection key \"{schemaName}\" defined in appsettings.json file.
         /// </exception>
-        public Connection(string connectionStringKey)
+        public Connection(IBasicConfiguration<SchemaConfiguration> schema, string schemaName)
         {
-            var schema = ConfigHelper.Schemas;
-
             if (schema.Count == 0)
             {
                 throw new ConfigurationErrorsException($"Not found \"{SectionLabels.SCHEMA}\" section in appsettings.json file.");
             }
 
-            if (schema[connectionStringKey] == null)
+            if (schema[schemaName] == null)
             {
-                throw new ConfigurationErrorsException($"Section \"{SectionLabels.SCHEMA}\" does not contain connection key \"{connectionStringKey}\" defined in appsettings.json file.");
+                throw new ConfigurationErrorsException($"Section \"{SectionLabels.SCHEMA}\" does not contain connection key \"{schemaName}\" defined in appsettings.json file.");
             }
 
-            var schemaInfo = schema[connectionStringKey];
+            var schemaInfo = schema[schemaName];
             ConnectionString = schemaInfo.ConnectionString;
             Provider = schemaInfo.Provider;
             RemoveFirstWordOnColumnNames = schemaInfo.RemoveFirstWordOnColumnNames;

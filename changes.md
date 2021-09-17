@@ -1,7 +1,17 @@
-### 2.7.121.703
+### 2.8.221.908
+
+- DataSource (inside Areas.Name) renamed to Schema
+
+### 2.8.121.801
+
+- **New**: Removes templates.xml and transform to json file. Now only `appsettings.json` and json specified at *TemplateSettings* will be needed to set configurations for templates.
+- **New**: Template definition are now in json format.
+
+### 2.7.221.730
 
 - SchemaReader refactor
 - Added **new** ObjectSchemaReader that can read type infos from .net dll
+- **New**: Separation for settings. Added new property at `appsettings.json` called *TemplateSttings* where you can specify path for template configurations.
 
 ### 2.6.1021.422
 

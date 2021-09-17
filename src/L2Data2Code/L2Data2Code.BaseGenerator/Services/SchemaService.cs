@@ -12,13 +12,14 @@ namespace L2Data2Code.BaseGenerator.Services
     public class SchemaService : ISchemaService
     {
         private readonly IMustacheRenderizer mustacheRenderizer;
-        private readonly ILogger logger = LogManager.GetCurrentClassLogger();
-        private readonly Dictionary<string, Tables> connectionsStringsReady;
+        private readonly ILogger logger;
+        private readonly Dictionary<string, Tables> schemaNamesCached;
 
-        public SchemaService(IMustacheRenderizer mustacheRenderizer)
+        public SchemaService(IMustacheRenderizer mustacheRenderizer, ILogger logger)
         {
             this.mustacheRenderizer = mustacheRenderizer;
-            connectionsStringsReady = new();
+            this.logger = logger;
+            schemaNamesCached = new();
         }
 
         public Tables Read(CodeGeneratorDto options, Dictionary<string, string> alternativeDescriptions = null)
@@ -27,28 +28,28 @@ namespace L2Data2Code.BaseGenerator.Services
 
             try
             {
-                mustacheRenderizer.SetIsoLanguaje(Config.GetLang(options.CreatedFromConnectionStringName));
-                var tableNameResolver = new NameResolver(options.CreatedFromConnectionStringName);
+                mustacheRenderizer.SetIsoLanguaje(Config.GetLang(options.CreatedFromSchemaName));
+                var tableNameResolver = new NameResolver(options.CreatedFromSchemaName);
 
-                if (!connectionsStringsReady.ContainsKey(options.ConnectionStringName))
+                if (!schemaNamesCached.ContainsKey(options.SchemaName))
                 {
-                    var schemaReader = SchemaFactory.Create(new SchemaOptions(options.ConnectionStringName, salida, options.ConnectionNameForDescriptions));
+                    var schemaReader = SchemaFactory.Create(new SchemaOptions(options.SchemasConfiguration, options.SchemaName, salida, options.DescriptionsSchemaName));
                     if (schemaReader == null)
                     {
                         throw new Exception($"Cannot create schema reader. Reason: {LogService.LastError}");
                     }
 
-                    var tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(options.ConnectionStringName), alternativeDescriptions, tableNameResolver));
+                    var tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(options.SchemaName), alternativeDescriptions, tableNameResolver));
 
                     if (schemaReader.HasErrorMessage())
                     {
                         logger.Error($"\"{salida.OutputStringBuilder}\"");
                     }
 
-                    connectionsStringsReady.Add(options.ConnectionStringName, tables);
+                    schemaNamesCached.Add(options.SchemaName, tables);
                 }
 
-                return connectionsStringsReady[options.ConnectionStringName];
+                return schemaNamesCached[options.SchemaName];
             }
             catch (Exception ex)
             {

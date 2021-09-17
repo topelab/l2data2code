@@ -328,6 +328,11 @@ namespace L2Data2CodeWPF.ViewModel
             AreaChanged();
 
             AllMessages.CollectionChanged += AllMessages_CollectionChanged;
+            this.generatorAdapter.OnConfigurationChanged = () =>
+            {
+                TemplateChanged();
+                AreaChanged();
+            };
         }
 
         private void ClearMessages(string code)
@@ -377,35 +382,8 @@ namespace L2Data2CodeWPF.ViewModel
             EmptyFolders = generatorAdapter.TemplatesConfiguration.HasToRemoveFolders(SelectedTemplate);
             OutputPath = generatorAdapter.OutputPath;
             SlnFile = generatorAdapter.SlnFile;
-            StartMonitorTemplateFile(SelectedTemplate);
 
             Working = false;
-        }
-
-        private FileSystemWatcher systemWatcher;
-        private void StartMonitorTemplateFile(string selectedTemplate)
-        {
-            string basePath = generatorAdapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            string template = generatorAdapter.TemplatesConfiguration[selectedTemplate].Path;
-
-            if (systemWatcher == null)
-            {
-                systemWatcher = new FileSystemWatcher();
-                systemWatcher.Path = Path.Combine(basePath, template);
-                systemWatcher.Filter = "Templates.xml";
-
-                systemWatcher.Changed += (s, e) =>
-                {
-                    systemWatcher.EnableRaisingEvents = false;
-                    dispatcher?.Invoke(() => TemplateChanged(true));
-                    systemWatcher.EnableRaisingEvents = true;
-                };
-                systemWatcher.EnableRaisingEvents = true;
-            }
-            else
-            {
-                systemWatcher.Path = Path.Combine(basePath, template);
-            }
         }
 
         private void AreaChanged()

@@ -1,33 +1,32 @@
-using L2Data2Code.SharedLib.Extensions;
-using System.Linq;
+using L2Data2Code.SharedLib.Helpers;
 
 namespace L2Data2Code.SharedLib.Configuration
 {
-    public class AreasConfiguration : BasicConfiguration<AreaConfiguration>
+    public class AreasConfiguration : BasicConfiguration<AreaConfiguration>, IAreasConfiguration
     {
         private const string DEFAULT_KEY = "localserver";
-        public AreasConfiguration() : base(SectionLabels.AREAS)
+        public AreasConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, SectionLabels.AREAS)
         {
         }
 
-        public string ConnectionStringKey(string key)
+        public string Schema(string key)
         {
             var value = this[key];
-            return value?.DataSource ?? DEFAULT_KEY;
+            return value?.Schema ?? DEFAULT_KEY;
         }
 
-        public string CommentConnectionStringKey(string key)
+        public string CommentSchema(string key)
         {
             var value = this[key];
-            var defaultKey = ConnectionStringKey(key);
-            return value?.DescriptionsDataSource ?? defaultKey;
+            var defaultKey = Schema(key);
+            return value?.DescriptionsSchema ?? defaultKey;
         }
 
-        public string OutputConnectionStringKey(string key)
+        public string OutputSchema(string key)
         {
             var value = this[key];
-            var defaultKey = ConnectionStringKey(key);
-            return value?.OutputDataSource ?? defaultKey;
+            var defaultKey = Schema(key);
+            return value?.OutputSchema ?? defaultKey;
         }
     }
 }

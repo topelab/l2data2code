@@ -17,7 +17,7 @@ namespace L2Data2Code.BaseGenerator.Services
 {
     public class CodeGeneratorService : ICodeGeneratorService
     {
-        private readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly ISchemaService schemaService;
 
@@ -76,10 +76,11 @@ namespace L2Data2Code.BaseGenerator.Services
         /// </summary>
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService)
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
+            this.logger = logger;
             referencedTables = new();
             templateFiles = new();
             internalVars = new();
@@ -210,7 +211,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private ReplacementResult[] GenerarCodigos(EntityTable tabla)
         {
-            mustacheRenderizer.SetIsoLanguaje(Config.GetLang(Options.CreatedFromConnectionStringName));
+            mustacheRenderizer.SetIsoLanguaje(Config.GetLang(Options.CreatedFromSchemaName));
 
             var replacement = GetReplacementData(tabla);
 
@@ -332,7 +333,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 nameof(Key.ColumnReferencing)
                 );
 
-            var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.ConnectionStringName.ToSlug()}-dbinfo.json";
+            var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
 
             FileService.Write(fileName, JsonConvert.SerializeObject(processTables, Formatting.Indented,
                 new JsonSerializerSettings
@@ -517,13 +518,14 @@ namespace L2Data2Code.BaseGenerator.Services
             var variables = $"{Library.Global?.Vars ?? string.Empty}";
             variables += $";{Template.UserVariables ?? string.Empty}";
             variables += $";{Options.UserVariables ?? string.Empty}";
+            variables += $";{Template.FinalVariables ?? string.Empty}";
             variables += $";{Library.Global?.FinalVars ?? string.Empty}";
 
-            var allVars = variables.ReplaceEndOfLine(";").Split(';');
+            var allVars = variables.ReplaceEndOfLine(";").Split(';', StringSplitOptions.RemoveEmptyEntries);
 
             internalVars.Clear();
 
-            internalVars.Add("database", SchemaFactory.GetProviderDefinitionKey(Options.CreatedFromConnectionStringName));
+            internalVars.Add("database", SchemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
             internalVars.Add(nameof(Template.Company), Template.Company);
             internalVars.Add(nameof(Template.Area), Template.Area);
             internalVars.Add(nameof(Template.Module), Template.Module);
@@ -574,10 +576,10 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private Replacement GetReplacementData(EntityTable table)
         {
-            var connectionStringSettings = Config.GetConnectionString(Options.CreatedFromConnectionStringName);
+            var connectionStringSettings = Config.GetConnectionString(Options.CreatedFromSchemaName);
 
             var tableName = table.TableName;
-            var normalizeNames = Config.NormalizedNames(Options.CreatedFromConnectionStringName);
+            var normalizeNames = Config.NormalizedNames(Options.CreatedFromSchemaName);
 
             var properties =
                 table.Columns.Select(
@@ -623,7 +625,7 @@ namespace L2Data2Code.BaseGenerator.Services
             var entity = new Entity
             {
                 Name = table.ClassName,
-                UseSpanish = Config.GetLang(Options.CreatedFromConnectionStringName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
+                UseSpanish = Config.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
             };
 
@@ -645,7 +647,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 UnfilteredColumns = properties,
                 GenerateBase = false,
                 Vars = internalVars,
-                CanCreateDB = Config.CanCreateDB(Options.CreatedFromConnectionStringName),
+                CanCreateDB = Config.CanCreateDB(Options.CreatedFromSchemaName),
             };
 
             return currentReplacement;

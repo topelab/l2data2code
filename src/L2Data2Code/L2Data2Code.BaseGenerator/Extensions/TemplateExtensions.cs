@@ -1,11 +1,12 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using System;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
+using Unity;
 
 namespace L2Data2Code.BaseGenerator.Extensions
 {
@@ -13,47 +14,16 @@ namespace L2Data2Code.BaseGenerator.Extensions
     {
         public static string GetPath(this Template template)
         {
-            return Path.Combine(Path.GetDirectoryName(template.Parent.FilePath), template.ResourcesFolder).AddPathSeparator();
+            return Path.Combine(template.Parent.FilePath, template.ResourcesFolder).AddPathSeparator();
         }
 
-        public static void SaveAs(this TemplateLibrary library, string fileName)
+        public static TemplateLibrary TryLoad(this string templatePath, string templateResource)
         {
-            var serializer = new XmlSerializer(library.GetType());
-            using (var writer = XmlWriter.Create(fileName))
-            {
-                serializer.Serialize(writer, library);
-            }
-            library.FilePath = fileName;
-        }
+            ITemplatesConfiguration templatesConfiguration = ContainerManager.Container.Resolve<ITemplatesConfiguration>();
 
-        public static void Save(this TemplateLibrary library)
-        {
-            library.SaveAs(library.FilePath);
-        }
-
-        public static TemplateLibrary Load(string fileName)
-        {
-            var serializer = new XmlSerializer(typeof(TemplateLibrary));
-            using (var reader = XmlReader.Create(fileName))
-            {
-                var library = (TemplateLibrary)serializer.Deserialize(reader);
-                foreach (var item in library.Templates)
-                {
-                    item.Parent = library;
-                }
-
-                library.FilePath = fileName;
-
-                return library;
-            }
-        }
-
-        public static TemplateLibrary TryLoad(string templatePath, string templateResource)
-        {
-            TemplateLibrary library = null;
             try
             {
-                library = Load(Path.Combine(templatePath, "Templates.xml"));
+                TemplateLibrary library = Initialize(templatePath, templatesConfiguration);
                 if (library.HasTemplate(templateResource))
                 {
                     return library;
@@ -69,10 +39,74 @@ namespace L2Data2Code.BaseGenerator.Extensions
             catch (Exception)
             {
                 throw new CodeGeneratorException(
-                    $"Template library {Path.Combine(templatePath, "Templates.xml")} not found",
+                    $"Template library {templatePath} not found",
                     CodeGeneratorExceptionType.ErrorLoadingTemplate);
             }
         }
 
+        private static TemplateLibrary Initialize(string templatePath, ITemplatesConfiguration templatesConfiguration)
+        {
+            IGlobalsConfiguration globalsConfiguration = ContainerManager.Container.Resolve<IGlobalsConfiguration>();
+
+            TemplateLibrary library = new();
+
+            library.FilePath = templatePath;
+            library.Global = new Global
+            {
+                Vars = globalsConfiguration.Vars.ToSemiColonSeparatedString(),
+                FinalVars = string.Empty
+            };
+
+            foreach (var key in templatesConfiguration.GetKeys())
+            {
+                var template = templatesConfiguration[key];
+                library.Templates.Add(new Template
+                {
+                    Area = template.Area,
+                    Company = template.Company,
+                    IgnoreColumns = template.IgnoreColumns,
+                    IsGeneral = template.IsGeneral,
+                    Module = template.Module,
+                    Name = template.Name,
+                    NextResource = template.NextResource ?? template.ItemsResources.FirstOrDefault(),
+                    PostCommands = template.PostCommands,
+                    PreCommands =template.PreCommands,
+                    ResourcesFolder = template.ResourcesFolder,
+                    SavePath = template.SavePath,
+                    SolutionType = template.SolutionType,
+                    UserVariables = template.Vars.ToSemiColonSeparatedString(),
+                    FinalVariables = template.FinalVars.ToSemiColonSeparatedString(),
+                    Parent = library
+                });
+
+                int lastIndexOfItemsResorces = template.ItemsResources.Count - 1;
+                foreach (var item in template.ItemsResources)
+                {
+                    int index = template.ItemsResources.IndexOf(item);
+
+                    library.Templates.Add(new Template
+                    {
+                        Area = template.Area,
+                        Company = template.Company,
+                        IgnoreColumns = template.IgnoreColumns,
+                        IsGeneral = false,
+                        Module = template.Module,
+                        Name = template.Name,
+                        NextResource = index + 1 < lastIndexOfItemsResorces ? template.ItemsResources[index + 1] : null,
+                        PostCommands = template.PostCommands,
+                        PreCommands = template.PreCommands,
+                        ResourcesFolder = item,
+                        SavePath = template.SavePath,
+                        SolutionType = template.SolutionType,
+                        UserVariables = template.Vars.ToSemiColonSeparatedString(),
+                        Parent = library
+                    });
+                }
+            }
+
+            library.Global.FinalVars += globalsConfiguration.FinalVars.ToSemiColonSeparatedString();
+
+            return library;
+        }
     }
 }

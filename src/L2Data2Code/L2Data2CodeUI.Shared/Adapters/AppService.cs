@@ -13,7 +13,7 @@ namespace L2Data2CodeUI.Shared.Adapters
     {
         public const string FILE_PATTERN = "{file}";
         public const string DIRECTORY_PATTERN = "{directory}";
-        public const string PARENT_PATTEEN = "{parent}";
+        public const string PARENT_PATTERN = "{parent}";
         private AppDto AppDto { get; set; } = new AppDto();
         private IMessageService messageService;
 
@@ -83,11 +83,11 @@ namespace L2Data2CodeUI.Shared.Adapters
             cmdLine = cmdLine
                 .Replace(FILE_PATTERN, file)
                 .Replace(DIRECTORY_PATTERN, Path.GetDirectoryName(file))
-                .Replace(PARENT_PATTEEN, Path.GetDirectoryName(Path.GetDirectoryName(file)));
+                .Replace(PARENT_PATTERN, Path.GetDirectoryName(Path.GetDirectoryName(file)));
             cmdArguments = cmdArguments
                 .Replace(FILE_PATTERN, file)
                 .Replace(DIRECTORY_PATTERN, Path.GetDirectoryName(file))
-                .Replace(PARENT_PATTEEN, Path.GetDirectoryName(Path.GetDirectoryName(file)));
+                .Replace(PARENT_PATTERN, Path.GetDirectoryName(Path.GetDirectoryName(file)));
 
             ProcessManager.Run(cmdLine, cmdArguments);
         }

@@ -1,3 +1,4 @@
+using L2Data2Code.SharedLib.Configuration;
 using System.Collections.Generic;
 
 namespace L2Data2Code.BaseGenerator.Entities
@@ -6,8 +7,8 @@ namespace L2Data2Code.BaseGenerator.Entities
     {
         public string TemplatePath { get; set; }
         public string TemplateResource { get; set; }
-        public string ConnectionStringName { get; set; }
-        public string ConnectionNameForDescriptions { get; set; }
+        public string SchemaName { get; set; }
+        public string DescriptionsSchemaName { get; set; }
         public string OutputPath { get; set; }
         public string DefaultOutputPath { get => "c:\\src\\tmp\\"; }
         public List<string> TableList { get; set; }
@@ -18,7 +19,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool NoEntities { get; set; }
         public bool GenerateReferenced { get; set; }
         public bool RemoveFolders { get; set; }
-        public string CreatedFromConnectionStringName { get; set; }
+        public string CreatedFromSchemaName { get; set; }
         public bool CleanEndOfCodeLine { get; set; } = true;
         public bool LastPass { get; set; }
         public string GeneratorApplication { get; set; }
@@ -28,5 +29,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool GeneateOnlyJson { get; set; }
         public string Encoding { get; set; }
         public string EndOfLine { get; set; }
+        public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; set; }
     }
 }
