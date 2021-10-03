@@ -7,7 +7,7 @@ namespace L2Data2Code.SharedLib.Inflector
 	public class DefaultTableizeRuleApplier : IRuleApplier
 	{
 		private readonly IInflector inflector;
-		private readonly Regex WhiteSpaces = new Regex(@"[_\s]", RegexOptions.Compiled);
+		private readonly Regex WhiteSpaces = new(@"[_\s]", RegexOptions.Compiled);
 
 		public DefaultTableizeRuleApplier(IInflector inflector)
 		{

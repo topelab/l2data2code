@@ -5,8 +5,8 @@ namespace L2Data2Code.BaseGenerator.Entities
 {
     public class NameResolver : INameResolver
     {
-        private Dictionary<string, string> _tableNames = null;
-        private Dictionary<string, string> _columnNames = null;
+        private readonly Dictionary<string, string> _tableNames = null;
+        private readonly Dictionary<string, string> _columnNames = null;
 
         public NameResolver(string schemaName)
         {

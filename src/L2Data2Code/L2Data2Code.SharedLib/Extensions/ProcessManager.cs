@@ -22,7 +22,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
     public static class ProcessManager
     {
-        private static Dictionary<string, Process> runningProcess = new Dictionary<string, Process>();
+        private static readonly Dictionary<string, Process> runningProcess = new();
         private static ILogger logger;
 
         public static void Run(this string program) => Run(program, null, null, null);
@@ -99,7 +99,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static void Activate(IntPtr hWnd) => SetForegroundWindow(hWnd);
 
-        public static bool IsRunning(this string program) => program != null && runningProcess.ContainsKey(program.ToLower());
+        public static bool IsRunning(string program) => program != null && runningProcess.ContainsKey(program.ToLower());
 
         [SupportedOSPlatform("windows")]
         public async static Task<Process> CheckSolutionOpened(string slnFile = null, Action ifSolutionOpened = null, Action onExit = null)
@@ -161,8 +161,8 @@ namespace L2Data2Code.SharedLib.Extensions
         }
 
         [SupportedOSPlatform("windows")]
-        private static ManagementObjectSearcher ProcessSearcher =
-            new ManagementObjectSearcher("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine IS NOT NULL AND (Name = 'devenv.exe' OR Name = 'Code.exe')");
+        private static readonly ManagementObjectSearcher ProcessSearcher =
+            new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine IS NOT NULL AND (Name = 'devenv.exe' OR Name = 'Code.exe')");
 
         private static IEnumerable<ProcessSearched> _allRunningEditors;
 
@@ -182,12 +182,10 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             await Task.Run(() =>
             {
-                using (ManagementObjectCollection objects = ProcessSearcher.Get())
-                {
-                    _allRunningEditors = objects.Cast<ManagementBaseObject>()
-                        .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
-                        .ToList();
-                }
+                using ManagementObjectCollection objects = ProcessSearcher.Get();
+                _allRunningEditors = objects.Cast<ManagementBaseObject>()
+                    .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
+                    .ToList();
             });
         }
 
@@ -196,13 +194,11 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             return await Task.Run<IEnumerable<ProcessSearched>>(() =>
             {
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name like '" + processName + "%' AND CommandLine IS NOT NULL"))
-                using (ManagementObjectCollection objects = searcher.Get())
-                {
-                    return objects.Cast<ManagementBaseObject>()
-                        .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
-                        .ToList();
-                }
+                using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name like '" + processName + "%' AND CommandLine IS NOT NULL");
+                using ManagementObjectCollection objects = searcher.Get();
+                return objects.Cast<ManagementBaseObject>()
+                    .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
+                    .ToList();
             });
         }
 
@@ -239,7 +235,7 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string FindPS()
         {
             var pwsh = WhereIsFile("PowerShell", "pwsh.exe");
-            return pwsh != null ? pwsh : WhereIsFile("PowerShell", "powershell.exe");
+            return pwsh ?? WhereIsFile("PowerShell", "powershell.exe");
         }
 
         public static string FindVSCode()
@@ -252,7 +248,7 @@ namespace L2Data2Code.SharedLib.Extensions
             var firstPos = result.IndexOf(search);
             if (firstPos > -1)
             {
-                return result.Substring(firstPos + search.Length).Trim();
+                return result[(firstPos + search.Length)..].Trim();
             }
             else
             {

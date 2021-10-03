@@ -8,7 +8,7 @@ namespace L2Data2CodeWPF.ViewModel
 {
     public class TableViewModel : BaseViewModel
     {
-        Table _table;
+        readonly Table _table;
         private bool isSelected;
         private bool isRelated;
         private bool isVisible = true;

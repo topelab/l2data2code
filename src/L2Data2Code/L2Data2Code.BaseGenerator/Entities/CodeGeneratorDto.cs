@@ -5,12 +5,13 @@ namespace L2Data2Code.BaseGenerator.Entities
 {
     public class CodeGeneratorDto
     {
+        public const string DefaultOutputPath = "c:\\src\\tmp\\";
+
         public string TemplatePath { get; set; }
         public string TemplateResource { get; set; }
         public string SchemaName { get; set; }
         public string DescriptionsSchemaName { get; set; }
         public string OutputPath { get; set; }
-        public string DefaultOutputPath { get => "c:\\src\\tmp\\"; }
         public List<string> TableList { get; set; }
         public string Company { get; set; }
         public string Area { get; set; }

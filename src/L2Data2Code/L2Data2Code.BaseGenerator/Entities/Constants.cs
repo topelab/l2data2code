@@ -44,8 +44,9 @@ namespace L2Data2Code.BaseGenerator.Entities
             public const string Collection = "*";
         }
 
-        public static string[] NullableTypes = { "bool", "char", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "float", "double", "decimal", "DateTime", "TimeSpan" };
+        private static readonly string[] nullabeTypes = { "bool", "char", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "float", "double", "decimal", "DateTime", "TimeSpan" };
 
+        public static string[] NullableTypes { get => nullabeTypes; }
     }
 
 }

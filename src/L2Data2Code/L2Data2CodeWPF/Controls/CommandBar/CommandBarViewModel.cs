@@ -42,7 +42,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The open folder command.
         /// </value>
-        public DelegateCommand OpenFolderCommand => new DelegateCommand(OnOpenFolderCommand, CanOpenFolderCommand);
+        public DelegateCommand OpenFolderCommand => new(OnOpenFolderCommand, CanOpenFolderCommand);
 
         private bool CanOpenFolderCommand(object arg)
         {
@@ -62,7 +62,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The edit template command.
         /// </value>
-        public DelegateCommand EditTemplateCommand => new DelegateCommand(OnEditTemplateCommand, CanEditTemplateCommand);
+        public DelegateCommand EditTemplateCommand => new(OnEditTemplateCommand, CanEditTemplateCommand);
 
         private bool CanEditTemplateCommand(object arg)
         {
@@ -80,7 +80,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The open settings command.
         /// </value>
-        public DelegateCommand OpenSettingsCommand => new DelegateCommand(OnOpenSettingsCommand, CanOpenSettingsCommand);
+        public DelegateCommand OpenSettingsCommand => new(OnOpenSettingsCommand, CanOpenSettingsCommand);
 
         private bool CanOpenSettingsCommand(object arg)
         {
@@ -98,7 +98,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The open vs command.
         /// </value>
-        public DelegateCommand OpenVSCommand => new DelegateCommand(OnOpenVSCommand, CanOpenVSCommand);
+        public DelegateCommand OpenVSCommand => new(OnOpenVSCommand, CanOpenVSCommand);
 
         private bool CanOpenVSCommand(object arg)
         {
@@ -119,7 +119,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The open vs command.
         /// </value>
-        public DelegateCommand OpenVSCodeCommand => new DelegateCommand(OnOpenVSCodeCommand, CanOpenVSCodeCommand);
+        public DelegateCommand OpenVSCodeCommand => new(OnOpenVSCodeCommand, CanOpenVSCodeCommand);
 
         private bool CanOpenVSCodeCommand(object arg)
         {
@@ -140,7 +140,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The open ps command.
         /// </value>
-        public DelegateCommand OpenPSCommand => new DelegateCommand(OnOpenPSCommand, CanOpenPSCommand);
+        public DelegateCommand OpenPSCommand => new(OnOpenPSCommand, CanOpenPSCommand);
 
         private bool CanOpenPSCommand(object arg)
         {
@@ -161,7 +161,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         /// <value>
         /// The open vars window.
         /// </value>
-        public DelegateCommand OpenVarsWindow => new DelegateCommand(OnOpenVarsWindow, CanOpenVarsWindow);
+        public DelegateCommand OpenVarsWindow => new(OnOpenVarsWindow, CanOpenVarsWindow);
 
         private bool CanOpenVarsWindow(object arg)
         {

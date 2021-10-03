@@ -18,7 +18,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
     public static class LogService
     {
-        private static readonly Dictionary<LogType, Action<string>> logAction = new Dictionary<LogType, Action<string>>();
+        private static readonly Dictionary<LogType, Action<string>> logAction = new();
 
         private static ILogger logger = null;
         public static ILogger Logger

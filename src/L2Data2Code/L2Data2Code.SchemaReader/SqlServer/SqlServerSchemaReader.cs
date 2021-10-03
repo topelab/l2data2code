@@ -14,7 +14,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
     public class SqlServerSchemaReader : Schema.SchemaReader
     {
         private INameResolver _resolver;
-        private Dictionary<string, string> _columnsDescriptions = new Dictionary<string, string>();
+        private Dictionary<string, string> _columnsDescriptions = new();
         private readonly string _connectionString;
         private readonly string _connectionStringForObjectDescriptions;
         private IDbConnection _connection;

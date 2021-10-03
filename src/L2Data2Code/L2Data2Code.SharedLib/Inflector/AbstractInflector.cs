@@ -13,11 +13,11 @@ namespace L2Data2Code.SharedLib.Inflector
 	/// </remarks>
 	public abstract class AbstractInflector : IInflector
 	{
-		private readonly List<IRuleApplier> plurals = new List<IRuleApplier>();
-		private readonly List<IRuleApplier> singulars = new List<IRuleApplier>();
-		private readonly HashSet<string> uncountables = new HashSet<string>();
-		private readonly HashSet<IRuleApplier> unaccentRules = new HashSet<IRuleApplier>();
-		private readonly List<IRuleApplier> dataDictionaryRules = new List<IRuleApplier>();
+		private readonly List<IRuleApplier> plurals = new();
+		private readonly List<IRuleApplier> singulars = new();
+		private readonly HashSet<string> uncountables = new();
+		private readonly HashSet<IRuleApplier> unaccentRules = new();
+		private readonly List<IRuleApplier> dataDictionaryRules = new();
 
 		protected AbstractInflector()
 		{

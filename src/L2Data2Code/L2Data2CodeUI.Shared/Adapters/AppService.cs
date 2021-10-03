@@ -15,7 +15,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         public const string DIRECTORY_PATTERN = "{directory}";
         public const string PARENT_PATTERN = "{parent}";
         private AppDto AppDto { get; set; } = new AppDto();
-        private IMessageService messageService;
+        private readonly IMessageService messageService;
 
         public AppType AppType => AppDto.AppType;
 

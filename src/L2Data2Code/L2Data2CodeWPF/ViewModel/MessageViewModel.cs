@@ -48,8 +48,8 @@ namespace L2Data2CodeWPF.ViewModel
         public string Code { get => _code; set => SetProperty(ref _code, value, () => Pinned = !string.IsNullOrWhiteSpace(value)); }
         public bool IsGoingToDie { get => !_pinned && _viewed && DateTime.Now > _created + _timeOfLife; }
 
-        private SolidColorBrush ColorBlack = new SolidColorBrush(Colors.Black);
-        private SolidColorBrush ColorRed = new SolidColorBrush(Colors.Red);
+        private readonly SolidColorBrush ColorBlack = new(Colors.Black);
+        private readonly SolidColorBrush ColorRed = new(Colors.Red);
 
         public SolidColorBrush Color => _pinned ? ColorRed : ColorBlack;
 

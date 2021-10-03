@@ -53,7 +53,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string NextSample => GetSampleValue(Type, true);
 
         private static int _sampleValue = 1;
-        private string GetSampleValue(string type, bool anotherOne = false)
+        private static string GetSampleValue(string type, bool anotherOne = false)
         {
             _sampleValue += anotherOne ? 1 : 0;
 

@@ -5,6 +5,7 @@ using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Controls.CommandBar;
 using L2Data2CodeWPF.Controls.TablePanel;
+using L2Data2CodeWPF.SharedLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,13 +24,12 @@ namespace L2Data2CodeWPF.ViewModel
 {
     public class MainWindowViewModel : BaseViewModel
     {
-        private bool _initialGenerateOnlyJsonVisible;
+        private readonly bool initialGenerateOnlyJsonVisible;
         private readonly IGeneratorAdapter generatorAdapter;
         private readonly IMessagesViewModel messagesViewModel;
         private readonly IMessageService messageService;
         private readonly IAppService appService;
-
-        private Dispatcher dispatcher => Application.Current?.Dispatcher;
+        private readonly IDispatcherWrapper dispatcher;
 
         public CommandBarViewModel CommandBarViewModel { get; internal set;}
         public TablePanelViewModel TablePanelViewModel { get; internal set; }
@@ -191,7 +191,7 @@ namespace L2Data2CodeWPF.ViewModel
         /// <value>
         /// The generate code command.
         /// </value>
-        public DelegateCommand GenerateCodeCommand => new DelegateCommand(OnGenerateCodeCommand, CanGenerateCodeCommand);
+        public DelegateCommand GenerateCodeCommand => new(OnGenerateCodeCommand, CanGenerateCodeCommand);
 
         private bool CanGenerateCodeCommand(object arg)
         {
@@ -200,7 +200,7 @@ namespace L2Data2CodeWPF.ViewModel
                 return false;
             }
             bool existSln = CommandBarViewModel.CheckCanOpenVS(OutputPath, out var slnFile);
-            bool runnig = slnFile.IsRunning();
+            bool runnig = ProcessManager.IsRunning(slnFile);
             bool anyItems = TablePanelViewModel.AllDataItems.Any(k => k.Value.IsSelected);
 
             bool result = !RunningGenerateCode && (!existSln || (existSln && !runnig)) && anyItems;
@@ -282,12 +282,14 @@ namespace L2Data2CodeWPF.ViewModel
         public MainWindowViewModel(IMessagesViewModel messagesViewModel,
                                    IMessageService messageService,
                                    IAppService appService,
-                                   IGeneratorAdapter generatorAdapter)
+                                   IGeneratorAdapter generatorAdapter,
+                                   IDispatcherWrapper dispatcher)
         {
             this.generatorAdapter = generatorAdapter;
             this.appService = appService;
             this.messageService = messageService;
             this.messagesViewModel = messagesViewModel;
+            this.dispatcher = dispatcher;
 
             this.messageService.SetActions(ShowMessage, ClearMessages);
 
@@ -306,7 +308,7 @@ namespace L2Data2CodeWPF.ViewModel
             TablePanelViewModel = new TablePanelViewModel(this);
 
             ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out bool showVarsWindow) && showVarsWindow;
-            _initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out bool generateJsonInfo) && generateJsonInfo
+            initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out bool generateJsonInfo) && generateJsonInfo
                 && this.generatorAdapter.SettingsConfiguration[nameof(CodeGeneratorDto.JsonGeneratedPath)].NotEmpty();
 
             EmptyFolders = true;
@@ -403,7 +405,7 @@ namespace L2Data2CodeWPF.ViewModel
                     OnPropertyChanged(nameof(ModuleList));
                     OutputPath = generatorAdapter.OutputPath;
                     SlnFile = generatorAdapter.SlnFile;
-                    GenerateOnlyJsonVisible = _initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
+                    GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
                 });
             }).ContinueWith((t) =>
             {

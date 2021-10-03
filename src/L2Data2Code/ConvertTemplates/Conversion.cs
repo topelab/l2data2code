@@ -9,7 +9,7 @@ namespace ConvertTemplates
     internal class Conversion
     {
         private static string[] templates;
-        private static Dictionary<string, string> conversions = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> conversions = new()
         {
             { "Entidad", "Entity" },
             { "Libreria", "Module" },
@@ -44,7 +44,7 @@ namespace ConvertTemplates
             { "NombreColumnaDiferente", "IsNameDifferentToColumnName" },
         };
 
-        private static Dictionary<string, string> conversionsExtensions = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> conversionsExtensions = new()
         {
             { "Nombre", "Name" },
             { "UsarCastellano", "UseSpanish" },
@@ -57,7 +57,7 @@ namespace ConvertTemplates
             { "NombreColumnaDiferente", "IsNameDifferentToColumnName" },
         };
 
-        private static Dictionary<string, string> conversionsFiles = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> conversionsFiles = new()
         {
             { "Entidad", "Entity" },
             { "Libreria", "Module" },

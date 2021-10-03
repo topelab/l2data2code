@@ -443,10 +443,10 @@ namespace L2Data2Code.BaseGenerator.Services
             return content;
         }
 
-        private CommentLine GetCommentLine(string fileExtension) =>
+        private static CommentLine GetCommentLine(string fileExtension) =>
             commentByExtension.ContainsKey(fileExtension) ? commentByExtension[fileExtension] : commentCsStyle;
 
-        private Regex GetMarkRegex(string fileExtension) =>
+        private static Regex GetMarkRegex(string fileExtension) =>
             markByExtension.ContainsKey(fileExtension) ? markByExtension[fileExtension] : csMarkPart;
 
         private string TemplateFileName(string templatesPath, string filePath, Replacement replacement)
@@ -462,10 +462,10 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 var itag = iwhen + "when{{".Length;
                 var ewhen = partialName.IndexOf("}}", itag);
-                var tag = partialName.Substring(itag, ewhen - itag);
+                var tag = partialName[itag..ewhen];
                 if (!CheckTemplateName(tag, replacement))
                     return null;
-                partialName = partialName.Substring(0, iwhen) + partialName.Substring(ewhen + "}}".Length);
+                partialName = partialName[..iwhen] + partialName[(ewhen + "}}".Length)..];
                 iwhen = partialName.IndexOf("when{{");
             }
 
@@ -477,7 +477,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private static bool CheckTemplateName(string tag, Replacement replacement)
         {
-            return tag.Contains("=") ? CheckTemplateNameConditionIsTrue(tag, replacement) : CheckTemplateNameIsTrue(tag, replacement);
+            return tag.Contains('=') ? CheckTemplateNameConditionIsTrue(tag, replacement) : CheckTemplateNameIsTrue(tag, replacement);
         }
 
         private static bool CheckTemplateNameIsTrue(string tag, Replacement replacement)
@@ -538,7 +538,7 @@ namespace L2Data2Code.BaseGenerator.Services
             foreach (var item in allVars.Select(s => s.Trim()))
             {
                 var itemLine = item;
-                if (string.IsNullOrWhiteSpace(item) || !item.Contains("=")) continue;
+                if (string.IsNullOrWhiteSpace(item) || !item.Contains('=')) continue;
                 var matchCondition = templateCondition.Match(item);
                 if (matchCondition.Success)
                 {
@@ -558,7 +558,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 if (itemLine.StartsWith("."))
                 {
                     if (lastConditionResult)
-                        itemLine = itemLine.Substring(1);
+                        itemLine = itemLine[1..];
                     else
                         continue;
                 }
@@ -643,7 +643,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 TableName = tableName,
                 TableNameOrEntity = normalizeNames ? entity.Name : tableName,
                 GenerateReferences = Options.GenerateReferenced,
-                IgnoreColumns = Template.IgnoreColumns == null ? new string[] { } : Template.IgnoreColumns.Replace(" ", "").Split(Path.PathSeparator),
+                IgnoreColumns = Template.IgnoreColumns == null ? Array.Empty<string>() : Template.IgnoreColumns.Replace(" ", "").Split(Path.PathSeparator),
                 UnfilteredColumns = properties,
                 GenerateBase = false,
                 Vars = internalVars,
@@ -653,7 +653,7 @@ namespace L2Data2Code.BaseGenerator.Services
             return currentReplacement;
         }
 
-        private string DecodeCSharpType(string type) =>
-            type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type.Substring(1) : type;
+        private static string DecodeCSharpType(string type) =>
+            type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type[1..] : type;
     }
 }

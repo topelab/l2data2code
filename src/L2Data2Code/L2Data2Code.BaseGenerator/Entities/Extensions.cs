@@ -1,4 +1,4 @@
-﻿namespace L2Data2Code.BaseGenerator.Entities
+namespace L2Data2Code.BaseGenerator.Entities
 {
     using System;
     using System.Collections.Generic;
@@ -17,9 +17,9 @@
             int i = 0;
             var e = collection.GetEnumerator();
             bool has1 = e.MoveNext();
-            T current = has1 ? e.Current : default(T);
+            T current = has1 ? e.Current : default;
             bool hasOther = e.MoveNext();
-            T next = hasOther ? e.Current : default(T);
+            T next = hasOther ? e.Current : default;
             while (has1)
             {
                 R result = selector(current, i, isFirst, !hasOther);
@@ -29,7 +29,7 @@
                 has1 = hasOther;
                 current = next;
                 hasOther = e.MoveNext();
-                next = hasOther ? e.Current : default(T);
+                next = hasOther ? e.Current : default;
             }
         }
 

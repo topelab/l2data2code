@@ -102,7 +102,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             private IgnoreCaseComparer() { }
             private static IgnoreCaseComparer _instance = null;
-            private static object _syncRoot = new object();
+            private static readonly object _syncRoot = new();
 
             public static IEqualityComparer<string> Instance
             {

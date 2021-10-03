@@ -9,7 +9,7 @@ namespace L2Data2Code.SharedLib.Configuration
     {
         private readonly Dictionary<string, T> _values;
         private readonly string list;
-        private IJsonSetting jsonSetting;
+        private readonly IJsonSetting jsonSetting;
 
         public BasicConfiguration(IJsonSetting jsonSetting, string list)
         {

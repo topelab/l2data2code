@@ -9,8 +9,8 @@ namespace L2Data2Code.SharedLib.Extensions
     public static class StringExtensions
     {
         private const string DEFAULT_ISO_LANG = "en";
-        private static IInflector _esInflector = new SpanishInflector();
-        private static IInflector _enInflector = new EnglishInflector();
+        private static readonly IInflector _esInflector = new SpanishInflector();
+        private static readonly IInflector _enInflector = new EnglishInflector();
 
         static StringExtensions()
         {

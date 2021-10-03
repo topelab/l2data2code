@@ -15,7 +15,7 @@ namespace L2Data2Code.SharedLib.Configuration
         private readonly string list;
 
         private NameValueCollection valueCollection;
-        private static readonly Regex ENVIRONMENT_VAR = new Regex(
+        private static readonly Regex ENVIRONMENT_VAR = new(
             @"(?<var>%[A-Za-z0-9]+%)",
             RegexOptions.Singleline | RegexOptions.Compiled
             );

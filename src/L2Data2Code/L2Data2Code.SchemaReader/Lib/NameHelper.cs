@@ -13,7 +13,7 @@ namespace L2Data2Code.SchemaReader.Lib
         #region Singular & Plural
 
         /// <summary>The regex camel case</summary>
-        private static readonly Regex regexCamelCase = new Regex("(?<word>[A-Z]{2,}|[A-Z][^A-Z]*?|^[^A-Z]*?)(?=[A-Z]|$)", RegexOptions.Compiled);
+        private static readonly Regex regexCamelCase = new("(?<word>[A-Z]{2,}|[A-Z][^A-Z]*?|^[^A-Z]*?)(?=[A-Z]|$)", RegexOptions.Compiled);
 
         /// <summary>Gets the name of the singular.</summary>
         /// <param name="name">The name.</param>
@@ -176,7 +176,7 @@ namespace L2Data2Code.SchemaReader.Lib
         #region Name Prefix
 
         /// <summary>The name prefixes</summary>
-        private static readonly List<string> NamePrefixes = new List<string>() {
+        private static readonly List<string> NamePrefixes = new() {
             "first",
             "second",
             "third",
@@ -253,7 +253,7 @@ namespace L2Data2Code.SchemaReader.Lib
         }
 
         /// <summary>The conjugated verbs</summary>
-        private static readonly List<ConjugatedVerb> _conjugatedVerbs = new List<ConjugatedVerb>()
+        private static readonly List<ConjugatedVerb> _conjugatedVerbs = new()
         {
             new ConjugatedVerb("insert", "inserted"),
             new ConjugatedVerb("update", "updated"),
@@ -265,7 +265,7 @@ namespace L2Data2Code.SchemaReader.Lib
         };
 
         /// <summary>The verb variations</summary>
-        private static readonly List<string> _verbVariations = new List<string>()
+        private static readonly List<string> _verbVariations = new()
         {
             "{0}",
             "{0}by",

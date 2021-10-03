@@ -20,7 +20,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
     /// <seealso cref="L2Data2CodeWPF.Base.BaseControlViewModel" />
     public class TablePanelViewModel : BaseControlViewModel
     {
-        private IGeneratorAdapter adapter;
+        private readonly IGeneratorAdapter adapter;
         private readonly MainWindowViewModel mainWindowViewModel;
         private Dispatcher dispatcher => Application.Current?.Dispatcher;
 

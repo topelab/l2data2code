@@ -29,7 +29,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private readonly string schemaNameToFake = "general";
         private readonly ILogger logger;
-        private Dictionary<string, string> _alternativeDictionary = new Dictionary<string, string>();
+        private Dictionary<string, string> _alternativeDictionary = new();
         private string schemaName = "localserver";
         private string descriptionsSchemaName = "commentserver";
         private string outputSchemaName = "localserver";
@@ -43,7 +43,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         private readonly IFileMonitorService fileMonitorService;
         private readonly IJsonSetting jsonSetting;
         private Tables tables;
-        private StringBuilderWriter writer = new StringBuilderWriter();
+        private readonly StringBuilderWriter writer = new();
 
         #endregion Private Fields
 

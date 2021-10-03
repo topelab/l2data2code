@@ -14,7 +14,7 @@ namespace L2Data2CodeWPF.ViewModel
 
     public class VarsViewModel : BaseViewModel
     {
-        private ObservableCollection<Variable> _vars = new ObservableCollection<Variable>();
+        private ObservableCollection<Variable> _vars = new();
 
         public ObservableCollection<Variable> Variables
         {

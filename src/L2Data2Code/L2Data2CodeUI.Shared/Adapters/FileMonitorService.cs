@@ -5,7 +5,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 {
     public class FileMonitorService : IFileMonitorService
     {
-        private FileSystemWatcher fileSystemWatcher;
+        private readonly FileSystemWatcher fileSystemWatcher;
         private Action<string> action;
 
         public FileMonitorService()

@@ -8,18 +8,18 @@ namespace L2Data2Code.BaseGenerator.Entities
 {
     public class FileService
     {
-        private static Encoding defaultEncoding = new UTF8Encoding(false);
+        private static readonly Encoding defaultEncoding = new UTF8Encoding(false);
         private static Encoding encoding = defaultEncoding;
         private static string endOfLine = Environment.NewLine;
 
-        private static Dictionary<string, Encoding> defaultEncodings = new()
+        private static readonly Dictionary<string, Encoding> defaultEncodings = new()
         {
             { "utf8", new UTF8Encoding(false) },
             { "latin1", Encoding.Latin1 },
             { "utf8-bom", new UTF8Encoding(true) }
         };
 
-        private static Dictionary<string, string> defaultEndingLines = new()
+        private static readonly Dictionary<string, string> defaultEndingLines = new()
         {
             { "crlf", "\r\n" },
             { "lf", "\n" }

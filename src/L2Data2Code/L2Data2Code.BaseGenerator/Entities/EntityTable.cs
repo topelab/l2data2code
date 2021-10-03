@@ -15,9 +15,9 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool MultiplePKColumns { get; private set; }
         public string Description { get; private set; }
 
-        public List<EntityColumn> Columns = new List<EntityColumn>();
-        public List<Relation> OneToMany = new List<Relation>();
-        public List<Relation> ManyToOne = new List<Relation>();
+        public List<EntityColumn> Columns = new();
+        public List<Relation> OneToMany = new();
+        public List<Relation> ManyToOne = new();
 
         public int NumeroCamposPK { get; set; }
 

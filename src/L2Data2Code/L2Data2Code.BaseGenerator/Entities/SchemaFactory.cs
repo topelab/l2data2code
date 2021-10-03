@@ -1,7 +1,6 @@
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Json;
-using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.MySql;
 using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.Schema;
@@ -22,16 +21,23 @@ namespace L2Data2Code.BaseGenerator.Entities
             public Dictionary<string, string> Conversions { get; set; }
         }
 
-        private static readonly Dictionary<string, ProviderDefinition> providers = new Dictionary<string, ProviderDefinition>()
+        private static readonly Dictionary<string, ProviderDefinition> providers = new()
         {
-            { "System.Data.SqlClient", new ProviderDefinition{ Key = "sqlserver", Type = typeof(SqlServerSchemaReader) } },
-            { "MySql.Data.MySqlClient", new ProviderDefinition{ Key = "mysql", Type = typeof(MySqlSchemaReader) } },
-            { "System.Data.FakeClient", new ProviderDefinition{ Key = "fake", Type = typeof(FakeSchemaReader) } },
-            { "System.Data.JsonClient", new ProviderDefinition {Key = "json", Type = typeof(JsonSchemaReader)} },
-            { "Microsoft.Data.Sqlite", new ProviderDefinition { Key = "sqlite", Type = typeof(JsonSchemaReader),
-                Conversions = new Dictionary<string, string>() {
-                    { "decimal", "NUMERIC" } } } },
-            { "System.Data.ObjectClient", new ProviderDefinition {Key = "object", Type = typeof(ObjectSchemaReader)} },
+            { "System.Data.SqlClient", new ProviderDefinition { Key = "sqlserver", Type = typeof(SqlServerSchemaReader) } },
+            { "MySql.Data.MySqlClient", new ProviderDefinition { Key = "mysql", Type = typeof(MySqlSchemaReader) } },
+            { "System.Data.FakeClient", new ProviderDefinition { Key = "fake", Type = typeof(FakeSchemaReader) } },
+            { "System.Data.JsonClient", new ProviderDefinition { Key = "json", Type = typeof(JsonSchemaReader) } },
+            {
+                "Microsoft.Data.Sqlite",
+                new ProviderDefinition
+                {
+                    Key = "sqlite",
+                    Type = typeof(JsonSchemaReader),
+                    Conversions = new Dictionary<string, string>() {
+                    { "decimal", "NUMERIC" } }
+                }
+            },
+            { "System.Data.ObjectClient", new ProviderDefinition { Key = "object", Type = typeof(ObjectSchemaReader) } },
             //{ "Oracle.ManagedDataAccess.Client", typeof(OracleSchemaReader) },
 
         };

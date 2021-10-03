@@ -6,6 +6,7 @@ using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.SharedLib.Helpers;
 using L2Data2Code.SharedLib.Configuration;
 using NLog;
+using L2Data2CodeWPF.SharedLib;
 
 namespace L2Data2CodeWPF
 {
@@ -49,6 +50,7 @@ namespace L2Data2CodeWPF
             container.RegisterType<ICodeGeneratorService, CodeGeneratorService>(TypeLifetime.PerContainer);
 
             container.RegisterType<IFileMonitorService, FileMonitorService>(TypeLifetime.PerResolve);
+            container.RegisterType<IDispatcherWrapper, DispatcherWrapper>(TypeLifetime.PerResolve);
 
             container.RegisterInstance<ILogger>(LogManager.GetCurrentClassLogger());
             return container;
