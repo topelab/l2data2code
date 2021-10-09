@@ -3,7 +3,6 @@ using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Configuration;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {

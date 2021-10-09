@@ -2,7 +2,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace L2Data2Code.SharedLib.Helpers

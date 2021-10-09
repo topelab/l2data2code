@@ -1,7 +1,5 @@
 using L2Data2CodeUI.Shared.Dto;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {

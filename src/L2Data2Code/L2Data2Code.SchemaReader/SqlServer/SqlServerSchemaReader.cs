@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SchemaReader.SqlServer
 {
@@ -40,13 +39,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 }
                 if (includeCommentServer && !_connectionString.Equals(_connectionStringForObjectDescriptions))
                 {
-                    using (var connection = new SqlConnection(_connectionStringForObjectDescriptions))
+                    using var connection = new SqlConnection(_connectionStringForObjectDescriptions);
+                    connection.Open();
+                    if (connection.State == ConnectionState.Open)
                     {
-                        connection.Open();
-                        if (connection.State == ConnectionState.Open)
-                        {
-                            connection.Close();
-                        }
+                        connection.Close();
                     }
                 }
                 return true;
@@ -188,81 +185,77 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true)
         {
 
-            using (var cmd = _connection.CreateCommand())
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = COLUMNS_SQL;
+
+            var p = cmd.CreateParameter();
+            p.ParameterName = "@tableName";
+            p.Value = tbl.Name;
+            cmd.Parameters.Add(p);
+
+            p = cmd.CreateParameter();
+            p.ParameterName = "@schemaName";
+            p.Value = tbl.Schema;
+            cmd.Parameters.Add(p);
+
+            var result = new List<Column>();
+            using (IDataReader rdr = cmd.ExecuteReader())
             {
-                cmd.CommandText = COLUMNS_SQL;
-
-                var p = cmd.CreateParameter();
-                p.ParameterName = "@tableName";
-                p.Value = tbl.Name;
-                cmd.Parameters.Add(p);
-
-                p = cmd.CreateParameter();
-                p.ParameterName = "@schemaName";
-                p.Value = tbl.Schema;
-                cmd.Parameters.Add(p);
-
-                var result = new List<Column>();
-                using (IDataReader rdr = cmd.ExecuteReader())
+                while (rdr.Read())
                 {
-                    while (rdr.Read())
+                    Column col = new Column
                     {
-                        Column col = new Column
-                        {
-                            Table = tbl,
-                            TableName = tbl.Name,
-                            Owner = (string)rdr["Owner"],
-                            Name = (string)rdr["ColumnName"]
-                        };
-                        col.PropertyName = _resolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
-                        col.PropertyType = GetPropertyType((string)rdr["DataType"]);
-                        col.IsNullable = (string)rdr["IsNullable"] == "YES";
-                        col.IsAutoIncrement = ((int)rdr["IsIdentity"]) == 1;
-                        col.Description = _columnsDescriptions.ContainsKey(col.FullName) ? _columnsDescriptions[col.FullName] : null;
-                        col.Precision = (int)rdr["Precision"];
-                        col.NumericScale = (int)rdr["NumericScale"];
-                        col.IsNumeric = rdr["NUMERIC_PRECISION"].IfNull(0) > 0;
-                        col.IsComputed = tbl.IsView || (int)rdr["IsComputed"] != 0 || ((string)rdr["DataType"]).Equals("timestamp");
-                        result.Add(col);
-                    }
+                        Table = tbl,
+                        TableName = tbl.Name,
+                        Owner = (string)rdr["Owner"],
+                        Name = (string)rdr["ColumnName"]
+                    };
+                    col.PropertyName = _resolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
+                    col.PropertyType = GetPropertyType((string)rdr["DataType"]);
+                    col.IsNullable = (string)rdr["IsNullable"] == "YES";
+                    col.IsAutoIncrement = ((int)rdr["IsIdentity"]) == 1;
+                    col.Description = _columnsDescriptions.ContainsKey(col.FullName) ? _columnsDescriptions[col.FullName] : null;
+                    col.Precision = (int)rdr["Precision"];
+                    col.NumericScale = (int)rdr["NumericScale"];
+                    col.IsNumeric = rdr["NUMERIC_PRECISION"].IfNull(0) > 0;
+                    col.IsComputed = tbl.IsView || (int)rdr["IsComputed"] != 0 || ((string)rdr["DataType"]).Equals("timestamp");
+                    result.Add(col);
                 }
-
-                return result;
             }
+
+            return result;
         }
 
         private List<Key> LoadRelations(Tables tables)
         {
-            using (var cmd = _connection.CreateCommand())
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = ALL_FOREIGN_KEYS;
+
+            var result = new List<Key>();
+            using (IDataReader rdr = cmd.ExecuteReader())
             {
-                cmd.CommandText = ALL_FOREIGN_KEYS;
-
-                var result = new List<Key>();
-                using (IDataReader rdr = cmd.ExecuteReader())
+                while (rdr.Read())
                 {
-                    while (rdr.Read())
-                    {
-                        var key = new Key();
-                        var referencingTable = (string)rdr["ReferencingTable"];
-                        var referencingColumn = (string)rdr["ReferencingColumn"];
-                        var referencedTable = (string)rdr["ReferencedTable"];
-                        var referencedColumn = (string)rdr["ReferencedColumn"];
+                    var key = new Key();
+                    var referencingTable = (string)rdr["ReferencingTable"];
+                    var referencingColumn = (string)rdr["ReferencingColumn"];
+                    var referencedTable = (string)rdr["ReferencedTable"];
+                    var referencedColumn = (string)rdr["ReferencedColumn"];
 
-                        WriteLine($"// referencedColumn: {referencedColumn}, referencingColumn: {referencingColumn}");
+                    WriteLine($"// referencedColumn: {referencedColumn}, referencingColumn: {referencingColumn}");
 
-                        var tableReferencing = tables[referencingTable];
-                        var tableReferenced = tables[referencedTable];
+                    var tableReferencing = tables[referencingTable];
+                    var tableReferenced = tables[referencedTable];
 
-                        key.Name = rdr["Name"].ToString();
-                        key.ColumnReferencing = tableReferencing.GetColumn(referencingColumn);
-                        key.ColumnReferenced = tableReferenced.GetColumn(referencedColumn);
+                    key.Name = rdr["Name"].ToString();
+                    key.ColumnReferencing = tableReferencing.GetColumn(referencingColumn);
+                    key.ColumnReferenced = tableReferenced.GetColumn(referencedColumn);
 
-                        result.Add(key);
-                    }
+                    result.Add(key);
                 }
-
-                return result;
             }
+
+            return result;
         }
 
         private Dictionary<string, int> GetPK(string table)
@@ -286,12 +279,10 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 p.Value = table;
                 cmd.Parameters.Add(p);
 
-                using (IDataReader rdr = cmd.ExecuteReader())
+                using IDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
                 {
-                    while (rdr.Read())
-                    {
-                        result.Add(rdr.GetString(0), rdr.GetInt32(1));
-                    }
+                    result.Add(rdr.GetString(0), rdr.GetInt32(1));
                 }
 
             }
@@ -372,12 +363,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
             try
             {
-                using (var conn = new SqlConnection(connectionString))
+                using var conn = new SqlConnection(connectionString);
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = @"select 
+                    cmd.CommandText = @"select 
     st.name + '.' + sc.name as [Column], sep.value as [Description]
 from sys.tables st
 inner join sys.columns sc on st.object_id = sc.object_id
@@ -396,21 +386,18 @@ WHERE sys.objects.name NOT IN ('sysdiagrams')
 ORDER by [Column]
 ";
 
-                        using (IDataReader rdr = cmd.ExecuteReader())
+                    using IDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        if (!rdr.IsDBNull(1))
                         {
-                            while (rdr.Read())
-                            {
-                                if (!rdr.IsDBNull(1))
-                                {
-                                    result.Add(rdr.GetString(0), rdr.GetString(1));
-                                }
-                            }
+                            result.Add(rdr.GetString(0), rdr.GetString(1));
                         }
-
                     }
 
-                    conn.Close();
                 }
+
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -466,33 +453,6 @@ ORDER by [Column]
             ON pt.referenced_column_id = rc.column_id
             AND pt.referenced_object_id = rc.[object_id]
 ";
-        private const string OUTER_KEYS_SQL = @"SELECT 
-		      FK = OBJECT_NAME(pt.constraint_object_id),
-		      Referenced_tbl = OBJECT_NAME(pt.referenced_object_id),
-		      Referencing_col = pc.name, 
-		      Referenced_col = rc.name
-		      FROM sys.foreign_key_columns AS pt
-		      INNER JOIN sys.columns AS pc
-		      ON pt.parent_object_id = pc.[object_id]
-		      AND pt.parent_column_id = pc.column_id
-		      INNER JOIN sys.columns AS rc
-		      ON pt.referenced_column_id = rc.column_id
-		      AND pt.referenced_object_id = rc.[object_id]
-		      WHERE pt.parent_object_id = OBJECT_ID(@tableName);";
-        private const string INNER_KEYS_SQL = @"SELECT 
-			    [Schema] = OBJECT_SCHEMA_NAME(pt.parent_object_id),
-			    Referencing_tbl = OBJECT_NAME(pt.parent_object_id),
-			    FK = OBJECT_NAME(pt.constraint_object_id),
-			    Referencing_col = pc.name, 
-			    Referenced_col = rc.name
-		      FROM sys.foreign_key_columns AS pt
-		      INNER JOIN sys.columns AS pc
-		      ON pt.parent_object_id = pc.[object_id]
-		      AND pt.parent_column_id = pc.column_id
-		      INNER JOIN sys.columns AS rc
-		      ON pt.referenced_column_id = rc.column_id
-		      AND pt.referenced_object_id = rc.[object_id]
-		      WHERE pt.referenced_object_id = OBJECT_ID(@tableName);";
 
     }
 

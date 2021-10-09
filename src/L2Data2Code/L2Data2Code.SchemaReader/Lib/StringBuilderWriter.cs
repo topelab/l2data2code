@@ -1,15 +1,14 @@
-﻿using System;
-using System.Text;
 using L2Data2Code.SharedLib.Extensions;
+using System;
+using System.Text;
 
 namespace L2Data2Code.SchemaReader.Lib
 {
     /// <summary>String Builder Writer</summary>
     public class StringBuilderWriter
     {
-        /// <summary>Gets or sets the output string builder.</summary>
-        /// <value>The output string builder.</value>
-        private StringBuilder outputStringBuilder { get; set; }
+        private readonly StringBuilder outputStringBuilder;
+
         /// <summary>Gets the output string builder.</summary>
         /// <value>The output string builder.</value>
         public string OutputStringBuilder { get => outputStringBuilder.ToString(); }

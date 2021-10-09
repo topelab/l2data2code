@@ -29,7 +29,7 @@ namespace L2Data2Code.SchemaReader.Schema
             get => _referencing ?? $"{ColumnReferencing.Table.Name}.{ColumnReferencing.Name}";
             set => _referencing = value;
         }
-            
+
     }
 
 }

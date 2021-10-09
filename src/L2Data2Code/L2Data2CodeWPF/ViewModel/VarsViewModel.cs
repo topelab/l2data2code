@@ -1,8 +1,6 @@
 using L2Data2CodeWPF.Base;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace L2Data2CodeWPF.ViewModel
 {

@@ -1,5 +1,4 @@
 using L2Data2Code.BaseGenerator.Entities;
-using L2Data2Code.SchemaReader.Schema;
 using System;
 using System.Collections.Generic;
 

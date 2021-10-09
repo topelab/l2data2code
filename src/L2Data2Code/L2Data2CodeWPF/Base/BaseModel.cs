@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace L2Data2CodeWPF.Base
 {
@@ -11,12 +9,12 @@ namespace L2Data2CodeWPF.Base
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
+        public void SetProperty<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
         {
-            return SetProperty(ref field, newValue, null, propertyName);
+            SetProperty(ref field, newValue, null, propertyName);
         }
 
-        public bool SetProperty<T>(ref T field, T newValue, Action onChange, [CallerMemberName] string propertyName = null)
+        public void SetProperty<T>(ref T field, T newValue, Action onChange, [CallerMemberName] string propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -24,9 +22,7 @@ namespace L2Data2CodeWPF.Base
                 field = newValue;
                 onChange?.Invoke();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-                return true;
             }
-            return false;
         }
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

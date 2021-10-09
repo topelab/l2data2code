@@ -1,6 +1,5 @@
 using L2Data2CodeWPF.Base;
 using System;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace L2Data2CodeWPF.ViewModel

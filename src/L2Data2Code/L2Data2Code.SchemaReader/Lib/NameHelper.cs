@@ -1,9 +1,9 @@
+using L2Data2Code.SharedLib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using L2Data2Code.SharedLib.Extensions;
 
 namespace L2Data2Code.SchemaReader.Lib
 {
@@ -176,7 +176,8 @@ namespace L2Data2Code.SchemaReader.Lib
         #region Name Prefix
 
         /// <summary>The name prefixes</summary>
-        private static readonly List<string> NamePrefixes = new() {
+        private static readonly List<string> NamePrefixes = new()
+        {
             "first",
             "second",
             "third",

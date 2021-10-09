@@ -70,7 +70,7 @@ namespace L2Data2Code.BaseGenerator.Extensions
                     Name = template.Name,
                     NextResource = template.NextResource ?? template.ItemsResources.FirstOrDefault(),
                     PostCommands = template.PostCommands,
-                    PreCommands =template.PreCommands,
+                    PreCommands = template.PreCommands,
                     ResourcesFolder = template.ResourcesFolder,
                     SavePath = template.SavePath,
                     SolutionType = template.SolutionType,

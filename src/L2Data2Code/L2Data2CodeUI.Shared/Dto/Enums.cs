@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace L2Data2CodeUI.Shared.Dto
 {
     public enum MessageType

@@ -1,8 +1,5 @@
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2CodeWPF.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace L2Data2CodeWPF.ViewModel
 {
@@ -24,7 +21,7 @@ namespace L2Data2CodeWPF.ViewModel
         {
             _table = table;
             IsSelected = isSelected;
-            IsRelated = IsRelated;
+            IsRelated = isRelated;
         }
 
     }

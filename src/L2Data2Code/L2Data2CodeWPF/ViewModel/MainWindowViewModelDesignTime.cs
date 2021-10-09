@@ -1,11 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using L2Data2Code.SharedLib.Configuration;
-using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.Base;
 
 namespace L2Data2CodeWPF.ViewModel

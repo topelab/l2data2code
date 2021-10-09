@@ -1,7 +1,5 @@
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SchemaReader.Schema
 {

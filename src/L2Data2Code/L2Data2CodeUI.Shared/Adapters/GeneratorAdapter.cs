@@ -14,12 +14,10 @@ using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using Unity;
-using Unity.Resolution;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -228,7 +226,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
                     options.DescriptionsSchemaName = template.IsGeneral ? schemaNameToFake : descriptionsSchemaName;
                     options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
-                    options.GenerateJsonInfo = template.IsGeneral ? false : bool.TryParse(SettingsConfiguration["generateJsonInfo"], out bool result) && result;
+                    options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out bool result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
                     if (isFirst)

@@ -1,6 +1,4 @@
 using L2Data2Code.SchemaReader.Schema;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SchemaReader.Interface
 {

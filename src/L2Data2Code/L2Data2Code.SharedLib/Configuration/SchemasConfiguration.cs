@@ -1,6 +1,4 @@
 using L2Data2Code.SharedLib.Helpers;
-using Newtonsoft.Json.Linq;
-using System.Collections.Specialized;
 
 namespace L2Data2Code.SharedLib.Configuration
 {

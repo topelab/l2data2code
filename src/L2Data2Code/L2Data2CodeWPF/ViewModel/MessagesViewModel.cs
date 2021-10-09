@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -20,8 +19,10 @@ namespace L2Data2CodeWPF.ViewModel
         {
             dispatcher = Application.Current.Dispatcher;
             AllMessages = new ObservableCollection<MessageViewModel>();
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(250);
+            DispatcherTimer timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(250)
+            };
             timer.Tick += Timer_Tick;
             timer.Start();
         }

@@ -1,7 +1,6 @@
 using L2Data2Code.SharedLib.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 

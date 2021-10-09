@@ -2,7 +2,6 @@ using L2Data2Code.BaseGenerator.Extensions;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
 using Stubble.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;

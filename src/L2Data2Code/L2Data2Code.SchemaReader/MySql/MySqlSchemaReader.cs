@@ -119,7 +119,7 @@ namespace L2Data2Code.SchemaReader.MySql
 
                 tbl.Schema = (string)row["TABLE_SCHEMA"];
                 tbl.IsView = fromViews;
-                tbl.IsUpdatable = fromViews ? (string)row["IS_UPDATABLE"] == "YES" : true;
+                tbl.IsUpdatable = !fromViews || (string)row["IS_UPDATABLE"] == "YES";
                 tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name)

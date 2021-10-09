@@ -9,16 +9,9 @@ using L2Data2CodeWPF.SharedLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-using Unity;
-using Unity.Resolution;
 
 namespace L2Data2CodeWPF.ViewModel
 {
@@ -31,9 +24,9 @@ namespace L2Data2CodeWPF.ViewModel
         private readonly IAppService appService;
         private readonly IDispatcherWrapper dispatcher;
 
-        public CommandBarViewModel CommandBarViewModel { get; internal set;}
+        public CommandBarViewModel CommandBarViewModel { get; internal set; }
         public TablePanelViewModel TablePanelViewModel { get; internal set; }
-        public string GeneratorApplication { get => generatorAdapter.GeneratorApplication ; set => generatorAdapter.GeneratorApplication = value; }
+        public string GeneratorApplication { get => generatorAdapter.GeneratorApplication; set => generatorAdapter.GeneratorApplication = value; }
         public string GeneratorVersion { get => generatorAdapter.GeneratorVersion; set => generatorAdapter.GeneratorVersion = value; }
         public IGeneratorAdapter Adapter => generatorAdapter;
 
@@ -130,7 +123,7 @@ namespace L2Data2CodeWPF.ViewModel
         public bool GenerateOnlyJsonVisible
         {
             get { return _generateOnlyJsonVisible; }
-            set { SetProperty(ref _generateOnlyJsonVisible,  value); }
+            set { SetProperty(ref _generateOnlyJsonVisible, value); }
         }
 
         private string _outputPath;
@@ -446,7 +439,7 @@ namespace L2Data2CodeWPF.ViewModel
             CommandBarViewModel.OnPropertyChanged(nameof(CommandBarViewModel.OpenVSCodeCommand));
         }
 
-        public async void CheckOpenedTimerCallBack(object state)
+        public async void CheckOpenedTimerCallBack(object _)
         {
             if (PauseTimer) return;
             PauseTimer = true;

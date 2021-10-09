@@ -1,8 +1,7 @@
+using L2Data2Code.SharedLib.Inflector;
 using System;
 using System.IO;
 using System.Text;
-using System.Web;
-using L2Data2Code.SharedLib.Inflector;
 
 namespace L2Data2Code.SharedLib.Extensions
 {

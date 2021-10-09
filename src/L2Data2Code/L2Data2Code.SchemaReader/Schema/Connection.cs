@@ -1,6 +1,4 @@
 using L2Data2Code.SharedLib.Configuration;
-using L2Data2Code.SharedLib.Helpers;
-using System;
 using System.Configuration;
 
 namespace L2Data2Code.SchemaReader.Schema
