@@ -53,7 +53,7 @@ namespace L2Data2Code.SharedLib.Inflector
 
 			if (!uncountables.Contains(word.ToLower()))
 			{
-				rules.Reverse().FirstOrDefault(r => (result = r.Apply(word)) != null);
+                _ = rules.Reverse().FirstOrDefault(r => (result = r.Apply(word)) != null);
 			}
 			return result??word;
 		}
@@ -70,8 +70,8 @@ namespace L2Data2Code.SharedLib.Inflector
 
 		protected virtual void AddIrregular(string singular, string plural)
 		{
-			AddPlural("(" + singular[0] + ")" + singular.Substring(1) + "$", "$1" + plural.Substring(1));
-			AddSingular("(" + plural[0] + ")" + plural.Substring(1) + "$", "$1" + singular.Substring(1));
+			AddPlural("(" + singular[0] + ")" + singular[1..] + "$", "$1" + plural[1..]);
+			AddSingular("(" + plural[0] + ")" + plural[1..] + "$", "$1" + singular[1..]);
 		}
 
 		protected virtual void AddUncountable(string word)
@@ -103,7 +103,7 @@ namespace L2Data2Code.SharedLib.Inflector
 		{
 			if (ruleApplier == null)
 			{
-				throw new ArgumentNullException("ruleApplier");
+				throw new ArgumentNullException(nameof(ruleApplier));
 			}
 			dataDictionaryRules.Add(ruleApplier);
 		}
@@ -150,14 +150,14 @@ namespace L2Data2Code.SharedLib.Inflector
 		{
             if (string.IsNullOrWhiteSpace(word))
                 return string.Empty;
-            return word.Substring(0, 1).ToUpper() + word.Substring(1).ToLower();
+            return word.Substring(0, 1).ToUpper() + word[1..].ToLower();
 		}
 
 		public string Uncapitalize(string word)
 		{
             if (string.IsNullOrWhiteSpace(word))
                 return string.Empty;
-            return word.Substring(0, 1).ToLower() + word.Substring(1);
+            return word.Substring(0, 1).ToLower() + word[1..];
 		}
 
 		public abstract string Ordinalize(string number);

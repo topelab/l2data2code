@@ -62,7 +62,7 @@ namespace ConvertXML2Json
             foreach (var elem in allVars)
             {
                 var text = elem.Trim();
-                if (!text.Contains("="))
+                if (!text.Contains('='))
                 {
                     continue;
                 }

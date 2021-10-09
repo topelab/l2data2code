@@ -222,7 +222,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
             }
         }
 
-        public bool CanOpenSettings()
+        public static bool CanOpenSettings()
         {
             var appBasePath = AppDomain.CurrentDomain.BaseDirectory.TrimPathSeparator();
             var config = $"{appBasePath}\\appsettings.json";

@@ -213,7 +213,7 @@ namespace L2Data2Code.SchemaReader.MySql
             return result;
         }
 
-        private string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
+        private static string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
         {
             string sysType = "string";
             switch (sqlType)

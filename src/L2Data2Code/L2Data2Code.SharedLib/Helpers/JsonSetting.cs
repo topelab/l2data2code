@@ -48,7 +48,7 @@ namespace L2Data2Code.SharedLib.Helpers
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Config)));
         }
 
-        private JObject GetSettings(string settingsFile)
+        private static JObject GetSettings(string settingsFile)
         {
             JObject config;
 

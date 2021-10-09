@@ -61,7 +61,7 @@ namespace L2Data2Code.SharedLib.Configuration
         {
             foreach (var item in GetKeys())
             {
-                if (this[item].Contains("%"))
+                if (this[item].Contains('%'))
                 {
                     var matches = ENVIRONMENT_VAR.Matches(this[item]);
                     foreach (Match element in matches)

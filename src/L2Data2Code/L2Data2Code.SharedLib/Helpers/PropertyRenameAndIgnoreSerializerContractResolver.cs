@@ -61,9 +61,8 @@ namespace L2Data2Code.SharedLib.Helpers
 
         private bool IsRenamed(Type type, string jsonPropertyName, out string newJsonPropertyName)
         {
-            Dictionary<string, string> renames;
 
-            if (!_renames.TryGetValue(type, out renames) || !renames.TryGetValue(jsonPropertyName, out newJsonPropertyName))
+            if (!_renames.TryGetValue(type, out var renames) || !renames.TryGetValue(jsonPropertyName, out newJsonPropertyName))
             {
                 newJsonPropertyName = null;
                 return false;

@@ -299,7 +299,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
             return result;
         }
 
-        private string GetPropertyType(string sqlType)
+        private static string GetPropertyType(string sqlType)
         {
             string sysType = "string";
             switch (sqlType)

@@ -8,6 +8,7 @@ indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = false
 charset = utf-8
+csharp_style_prefer_switch_expression=true:silent
 
 # Xml files
 [*.xml]

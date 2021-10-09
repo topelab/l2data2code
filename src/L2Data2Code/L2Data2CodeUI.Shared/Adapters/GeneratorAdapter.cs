@@ -359,7 +359,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
         }
 
-        private void EmptyOutputPath(string path)
+        private static void EmptyOutputPath(string path)
         {
             if (!Directory.Exists(path))
             {

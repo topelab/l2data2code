@@ -1,6 +1,7 @@
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
+using L2Data2CodeWPF.SharedLib;
 using L2Data2CodeWPF.ViewModel;
 using MahApps.Metro.Controls;
 using System;
@@ -20,7 +21,7 @@ namespace L2Data2CodeWPF
     {
         private readonly MainWindowViewModel viewModel;
         private readonly IFileMonitorService fileMonitorService;
-        private Dispatcher dispatcher => Application.Current?.Dispatcher;
+        private readonly IDispatcherWrapper dispatcher;
 
         public Timer CheckOpenedTimer { get; private set; }
 
@@ -28,6 +29,7 @@ namespace L2Data2CodeWPF
         {
             viewModel = SetupDI.Container.Resolve<MainWindowViewModel>();
             fileMonitorService = SetupDI.Container.Resolve<IFileMonitorService>();
+            dispatcher = SetupDI.Container.Resolve<IDispatcherWrapper>();
             DataContext = viewModel;
             InitializeComponent();
             StartMonitorConfig();

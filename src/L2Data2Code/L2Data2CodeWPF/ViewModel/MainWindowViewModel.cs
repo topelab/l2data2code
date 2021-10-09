@@ -305,7 +305,7 @@ namespace L2Data2CodeWPF.ViewModel
             this.generatorAdapter.GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
             CommandBarViewModel = new CommandBarViewModel(this);
-            TablePanelViewModel = new TablePanelViewModel(this);
+            TablePanelViewModel = new TablePanelViewModel(this, dispatcher);
 
             ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out bool showVarsWindow) && showVarsWindow;
             initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out bool generateJsonInfo) && generateJsonInfo

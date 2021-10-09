@@ -105,7 +105,7 @@ namespace L2Data2Code.SchemaReader.Object
             return columns;
         }
 
-        private bool IsNullable(Type type)
+        private static bool IsNullable(Type type)
         {
             var typeCode = Type.GetTypeCode(type);
             bool isNullable = type.ToString().StartsWith("System.Nullable")
@@ -115,13 +115,13 @@ namespace L2Data2Code.SchemaReader.Object
             return isNullable;
         }
 
-        private bool CanBeCollectected(Type type)
+        private static bool CanBeCollectected(Type type)
         {
             var typeCode = Type.GetTypeCode(type);
             return typeCode != TypeCode.Empty && typeCode != TypeCode.DBNull;
         }
 
-        private string GetFriendlyTypeName(Type t, string nameSpace)
+        private static string GetFriendlyTypeName(Type t, string nameSpace)
         {
             string typeName;
             using (var provider = new CSharpCodeProvider())

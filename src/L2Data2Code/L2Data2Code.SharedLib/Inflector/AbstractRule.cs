@@ -11,11 +11,11 @@ namespace L2Data2Code.SharedLib.Inflector
 		{
 			if (string.IsNullOrEmpty(pattern))
 			{
-				throw new ArgumentNullException("pattern");
+				throw new ArgumentNullException(nameof(pattern));
 			}
 			if (replacement == null)
 			{
-				throw new ArgumentNullException("replacement");
+				throw new ArgumentNullException(nameof(replacement));
 			}
 			Pattern = pattern;
 			Replacement = replacement;

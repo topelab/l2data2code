@@ -20,7 +20,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static IInflector Service(string isoLang = null)
         {
-            isoLang = isoLang ?? CurrentLang;
+            isoLang ??= CurrentLang;
             return isoLang.Equals("es") ? _esInflector : _enInflector;
         }
 
@@ -119,7 +119,7 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             for (int i = 0; i < indent; i++)
             {
-                output.Append("\t");
+                output.Append('\t');
             }
             return output;
         }
@@ -295,13 +295,13 @@ namespace L2Data2Code.SharedLib.Extensions
                     }
 
                     sCleanUrl += CharToAdd;
-                    fileName = fileName.Substring(1);
+                    fileName = fileName[1..];
                 }
             }
 
             while (sCleanUrl.Length > 0 && sCleanUrl[0] == '-')
             {
-                sCleanUrl = sCleanUrl.Substring(1);
+                sCleanUrl = sCleanUrl[1..];
             }
 
             int lon = sCleanUrl.Length;

@@ -41,7 +41,7 @@ namespace L2Data2Code.SchemaReader.Fake
             tables.Add(tbl.Name, tbl);
         }
 
-        private List<Column> LoadFakeColumns(Table tbl, bool removeFirstWord = true)
+        private static List<Column> LoadFakeColumns(Table tbl, bool removeFirstWord = true)
         {
             var result = new List<Column>() {
                 new Column {

@@ -576,7 +576,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private Replacement GetReplacementData(EntityTable table)
         {
-            var connectionStringSettings = Config.GetConnectionString(Options.CreatedFromSchemaName);
+            var (ConnectionString, Provider) = Config.GetConnectionString(Options.CreatedFromSchemaName);
 
             var tableName = table.TableName;
             var normalizeNames = Config.NormalizedNames(Options.CreatedFromSchemaName);
@@ -597,7 +597,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             IsLast = isLast,
                             DefaultValue = column.GetDefaultValue(),
                             Type = type,
-                            OverrideDbType = SchemaFactory.GetConversion(connectionStringSettings.Provider, type),
+                            OverrideDbType = SchemaFactory.GetConversion(Provider, type),
                             Description = string.IsNullOrWhiteSpace(column.Description) ? null : column.Description.ReplaceEndOfLine(),
                             IsCollection = column.IsCollection,
                             IsForeignKey = column.IsForeignKey,
@@ -635,8 +635,8 @@ namespace L2Data2Code.BaseGenerator.Services
                 IsView = table.IsView,
                 IsUpdatable = table.IsUpdatable,
                 Description = string.IsNullOrWhiteSpace(table.Description) ? null : table.Description.ReplaceEndOfLine(),
-                ConnectionString = connectionStringSettings.ConnectionString,
-                DataProvider = connectionStringSettings.Provider,
+                ConnectionString = ConnectionString,
+                DataProvider = Provider,
                 Module = Template.Module,
                 Area = Template.Area,
                 Company = Template.Company,

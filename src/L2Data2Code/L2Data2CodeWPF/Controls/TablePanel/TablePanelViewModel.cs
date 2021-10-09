@@ -1,5 +1,6 @@
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.Base;
+using L2Data2CodeWPF.SharedLib;
 using L2Data2CodeWPF.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -22,16 +23,18 @@ namespace L2Data2CodeWPF.Controls.TablePanel
     {
         private readonly IGeneratorAdapter adapter;
         private readonly MainWindowViewModel mainWindowViewModel;
-        private Dispatcher dispatcher => Application.Current?.Dispatcher;
+        private readonly IDispatcherWrapper dispatcher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TablePanelViewModel"/> class.
         /// </summary>
         /// <param name="baseViewModel">The base view model.</param>
-        public TablePanelViewModel(IBaseViewModel baseViewModel) : base(baseViewModel)
+        public TablePanelViewModel(IBaseViewModel baseViewModel,
+                                   IDispatcherWrapper dispatcher) : base(baseViewModel)
         {
             mainWindowViewModel = (MainWindowViewModel)baseViewModel;
             adapter = mainWindowViewModel.Adapter;
+            this.dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
         }
 
         public ObservableCollection<TableViewModel> AllTables { get; set; } = new ObservableCollection<TableViewModel>();
@@ -105,7 +108,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
                 PopulateDataItems(includeTablesRegex, excludeTablesRegex);
             }).ContinueWith((t) =>
             {
-                dispatcher?.Invoke(() =>
+                dispatcher.Invoke(() =>
                 {
                     LoadingTables = false;
                     Working = false;
@@ -152,12 +155,12 @@ namespace L2Data2CodeWPF.Controls.TablePanel
                 {
                     element.IsVisible = !excludeTablesRegex.IsMatch(element.Name);
                 }
-                dispatcher?.Invoke(() =>
+                dispatcher.Invoke(() =>
                 {
                     AddToViews(element);
                 });
             }
-            dispatcher?.Invoke(() => ViewsVisible = AllViews.Any());
+            dispatcher.Invoke(() => ViewsVisible = AllViews.Any());
             App.Logger.Info("All items populated");
         }
 

@@ -5,6 +5,7 @@
     <UseWPF>true</UseWPF>
     <Version>2.9.121.1002</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SampleData\**" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,13 +43,13 @@ namespace L2Data2Code.SchemaReader.Lib
             string word = name;
             int index = 0;
 
-            if (word.Length > 0 && word[word.Length - 1] != '_')
+            if (word.Length > 0 && word[^1] != '_')
             {
                 int index1 = word.LastIndexOf('_');
                 if (index1 != -1)
                 {
                     index = index1 + 1;
-                    word = word.Substring(index);
+                    word = word[index..];
                 }
             }
 
@@ -68,7 +68,7 @@ namespace L2Data2Code.SchemaReader.Lib
             if (name.Length == word.Length)
                 return quantifiedWord;
 
-            return name.Substring(0, index) + quantifiedWord;
+            return string.Concat(name.AsSpan(0, index), quantifiedWord);
         }
 
         #endregion
@@ -112,7 +112,7 @@ namespace L2Data2Code.SchemaReader.Lib
             foreach (string word in words)
             {
                 if (isCamelCase)
-                    transformedName.Append(word.Substring(0, 1).ToUpper() + word.Substring(1).ToLower());
+                    transformedName.Append(word.Substring(0, 1).ToUpper() + word[1..].ToLower());
                 else if (isUpperCase)
                     transformedName.Append(word.ToUpper());
                 else if (isLowerCase)
@@ -218,7 +218,7 @@ namespace L2Data2Code.SchemaReader.Lib
             string columnNameLower = columnName.ToLower();
             string prefix = NamePrefixes.OrderByDescending(p => p.Length).FirstOrDefault(p => columnNameLower.StartsWith(p));
             if (!string.IsNullOrEmpty(prefix))
-                name = columnName.Substring(0, prefix.Length) + name;
+                name = string.Concat(columnName.AsSpan(0, prefix.Length), name);
             return name;
         }
 
@@ -378,7 +378,7 @@ namespace L2Data2Code.SchemaReader.Lib
             // verb
             int index = name.IndexOf(conjugations.Verb, StringComparison.CurrentCultureIgnoreCase);
             if (index != -1)
-                return conjugations.PastParticipleVerb.Substring(0, 1).ToUpper() + conjugations.PastParticipleVerb.Substring(1).ToLower() + "By";
+                return conjugations.PastParticipleVerb.Substring(0, 1).ToUpper() + conjugations.PastParticipleVerb[1..].ToLower() + "By";
 
             return name;
         }

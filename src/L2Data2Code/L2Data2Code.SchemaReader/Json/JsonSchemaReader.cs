@@ -64,7 +64,7 @@ namespace L2Data2Code.SchemaReader.Json
         /// </summary>
         /// <param name="keys">The keys.</param>
         /// <param name="tables">The tables.</param>
-        private void ResolveKeys(IEnumerable<Key> keys, Dictionary<string, Table> tables)
+        private static void ResolveKeys(IEnumerable<Key> keys, Dictionary<string, Table> tables)
         {
             foreach (var item in keys)
             {
@@ -79,9 +79,9 @@ namespace L2Data2Code.SchemaReader.Json
         /// <param name="tables">The tables to search.</param>
         /// <param name="reference">The table.column string reference.</param>
         /// <returns></returns>
-        private Column GetColum(Dictionary<string, Table> tables, string reference)
+        private static Column GetColum(Dictionary<string, Table> tables, string reference)
         {
-            if (reference.IsEmpty() || !reference.Contains("."))
+            if (reference.IsEmpty() || !reference.Contains('.'))
             {
                 return null;
             }

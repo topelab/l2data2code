@@ -51,7 +51,7 @@ namespace L2Data2Code.SchemaReader.Schema
 
         /// <summary>Gets the data directory.</summary>
         /// <returns></returns>
-        public string GetDataDirectory()
+        public static string GetDataDirectory()
         {
             return System.IO.Directory.GetCurrentDirectory() + "\\App_Data\\";
         }
