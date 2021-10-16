@@ -31,12 +31,34 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             return Type switch
             {
-                Constants.DataBase.Binary or Constants.DataBase.Varbinary or Constants.DataBase.Image => "null",
-                Constants.DataBase.Date or Constants.DataBase.Datetime or Constants.DataBase.Timestamp => IsNull ? "null" : "new DateTime(1900,1,1)",
+                Constants.DataBase.Binary
+                or Constants.DataBase.Varbinary
+                or Constants.DataBase.Image => "null",
+
+                Constants.DataBase.Date
+                or Constants.DataBase.Datetime
+                or Constants.DataBase.Timestamp => IsNull ? "null" : "new DateTime(1900,1,1)",
+
                 Constants.DataBase.Time => IsNull ? "null" : "TimeSpan.Zero",
+
                 Constants.DataBase.Bit => IsNull ? "null" : "false",
-                Constants.DataBase.Bigint or Constants.DataBase.Int or Constants.DataBase.Smallint or Constants.DataBase.Tinyint or Constants.DataBase.Money or Constants.DataBase.Numeric or Constants.DataBase.Float or Constants.DataBase.Decimal => IsNull ? "null" : "0",
-                Constants.DataBase.Char or Constants.DataBase.Text or Constants.DataBase.Varchar or Constants.DataBase.Nchar or Constants.DataBase.Nvarchar or Constants.DataBase.Ntext => IsNull ? "null" : "string.Empty",
+
+                Constants.DataBase.Bigint
+                or Constants.DataBase.Int
+                or Constants.DataBase.Smallint
+                or Constants.DataBase.Tinyint
+                or Constants.DataBase.Money
+                or Constants.DataBase.Numeric
+                or Constants.DataBase.Float
+                or Constants.DataBase.Decimal => IsNull ? "null" : "0",
+
+                Constants.DataBase.Char
+                or Constants.DataBase.Text
+                or Constants.DataBase.Varchar
+                or Constants.DataBase.Nchar
+                or Constants.DataBase.Nvarchar
+                or Constants.DataBase.Ntext => IsNull ? "null" : "string.Empty",
+
                 _ => "null",
             };
         }
@@ -45,17 +67,39 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             return Type switch
             {
-                Constants.DataBase.Binary or Constants.DataBase.Varbinary or Constants.DataBase.Image => "byte[]",
-                Constants.DataBase.Date or Constants.DataBase.Datetime or Constants.DataBase.Timestamp => "DateTime" + (IsNull ? "?" : string.Empty),
+                Constants.DataBase.Binary
+                or Constants.DataBase.Varbinary
+                or Constants.DataBase.Image => "byte[]",
+
+                Constants.DataBase.Date
+                or Constants.DataBase.Datetime
+                or Constants.DataBase.Timestamp => "DateTime" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Time => "TimeSpan" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Bit => "bool" + (IsNull ? "?" : string.Empty),
-                Constants.DataBase.Money or Constants.DataBase.Numeric or Constants.DataBase.Decimal => "decimal" + (IsNull ? "?" : string.Empty),
+
+                Constants.DataBase.Money
+                or Constants.DataBase.Numeric
+                or Constants.DataBase.Decimal => "decimal" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Float => "double" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Bigint => "long" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Int => "int" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Smallint => "short" + (IsNull ? "?" : string.Empty),
+
                 Constants.DataBase.Tinyint => "byte" + (IsNull ? "?" : string.Empty),
-                Constants.DataBase.Char or Constants.DataBase.Text or Constants.DataBase.Varchar or Constants.DataBase.Nchar or Constants.DataBase.Nvarchar or Constants.DataBase.Ntext => "string",
+
+                Constants.DataBase.Char
+                or Constants.DataBase.Text
+                or Constants.DataBase.Varchar
+                or Constants.DataBase.Nchar
+                or Constants.DataBase.Nvarchar
+                or Constants.DataBase.Ntext => "string",
+
                 _ => Type,
             };
         }
