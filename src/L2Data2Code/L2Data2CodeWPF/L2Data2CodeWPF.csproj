@@ -41,8 +41,8 @@
   <ItemGroup>
     <PackageReference Include="LambdaConverters" Version="4.0.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.7" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.9.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks.SimpleIcons" Version="4.9.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.10.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.SimpleIcons" Version="4.10.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
