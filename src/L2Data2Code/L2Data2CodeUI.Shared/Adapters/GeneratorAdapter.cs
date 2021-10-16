@@ -364,7 +364,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 return;
             }
 
-            DirectoryInfo directory = new DirectoryInfo(path);
+            DirectoryInfo directory = new(path);
 
             foreach (FileInfo file in directory.GetFiles().Where(f => !f.Name.StartsWith(".git")))
             {

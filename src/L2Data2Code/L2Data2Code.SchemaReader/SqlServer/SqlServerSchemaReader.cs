@@ -73,7 +73,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     {
                         while (rdr.Read())
                         {
-                            Table tbl = new Table
+                            Table tbl = new()
                             {
                                 Name = (string)rdr["TABLE_NAME"]
                             };
@@ -98,7 +98,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     {
                         while (rdr.Read())
                         {
-                            Table tbl = new Table
+                            Table tbl = new()
                             {
                                 Name = (string)rdr["TABLE_NAME"]
                             };
@@ -203,7 +203,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
             {
                 while (rdr.Read())
                 {
-                    Column col = new Column
+                    Column col = new()
                     {
                         Table = tbl,
                         TableName = tbl.Name,
@@ -261,7 +261,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private Dictionary<string, int> GetPK(string table)
         {
 
-            Dictionary<string, int> result = new Dictionary<string, int>();
+            Dictionary<string, int> result = new();
 
             string sql = @"SELECT c.name AS ColumnName, ic.index_column_id as ""Order""
                 FROM sys.indexes AS i 
@@ -368,23 +368,22 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"select 
-    st.name + '.' + sc.name as [Column], sep.value as [Description]
-from sys.tables st
-inner join sys.columns sc on st.object_id = sc.object_id
-left join sys.extended_properties sep on st.object_id = sep.major_id
+                        st.name + '.' + sc.name as [Column], sep.value as [Description]
+                        from sys.tables st
+                        inner join sys.columns sc on st.object_id = sc.object_id
+                        left join sys.extended_properties sep on st.object_id = sep.major_id
                                         and sc.column_id = sep.minor_id
                                         and sep.name = 'MS_Description'
-union
-SELECT sys.objects.name AS [Column],
-       ep.value AS [Description]
-FROM sys.objects
-CROSS APPLY fn_listextendedproperty(default,
-                                    'SCHEMA', schema_name(schema_id),
-                                    'TABLE', name, null, null) ep
-WHERE sys.objects.name NOT IN ('sysdiagrams')
-	and ep.name = 'MS_Description'
-ORDER by [Column]
-";
+                        union
+                        SELECT sys.objects.name AS [Column],
+                               ep.value AS [Description]
+                        FROM sys.objects
+                        CROSS APPLY fn_listextendedproperty(default,
+                                                            'SCHEMA', schema_name(schema_id),
+                                                            'TABLE', name, null, null) ep
+                        WHERE sys.objects.name NOT IN ('sysdiagrams')
+                            and ep.name = 'MS_Description'
+                        ORDER by [Column]";
 
                     using IDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
@@ -415,28 +414,31 @@ ORDER by [Column]
         }
 
         private const string TABLES_SQL = @"SELECT *
-		      FROM  INFORMATION_SCHEMA.TABLES
-		      WHERE TABLE_TYPE='BASE TABLE'
-          ORDER BY TABLE_TYPE, TABLE_NAME";
+            FROM  INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_TYPE='BASE TABLE'
+            ORDER BY TABLE_TYPE, TABLE_NAME";
+
         private const string VIEWS_SQL = @"SELECT *
-		      FROM  INFORMATION_SCHEMA.VIEWS
-          ORDER BY TABLE_NAME";
+            FROM  INFORMATION_SCHEMA.VIEWS
+            ORDER BY TABLE_NAME";
+
         private const string COLUMNS_SQL = @"SELECT 
-		      TABLE_CATALOG AS [Database],
-		      TABLE_SCHEMA AS Owner, 
-		      TABLE_NAME AS TableName, 
-		      COLUMN_NAME AS ColumnName, 
-		      ORDINAL_POSITION AS OrdinalPosition, 
-		      COLUMN_DEFAULT AS DefaultSetting, 
-		      IS_NULLABLE AS IsNullable, DATA_TYPE AS DataType, 
-		      COALESCE(CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION, 0) AS [Precision],
-			  COALESCE(NUMERIC_SCALE, 0) AS [NumericScale],
-		      COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsIdentity') AS IsIdentity,
-		      COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed,
-              NUMERIC_PRECISION
-		      FROM  INFORMATION_SCHEMA.COLUMNS
-		      WHERE TABLE_NAME=@tableName AND TABLE_SCHEMA=@schemaName
-		      ORDER BY OrdinalPosition ASC";
+            TABLE_CATALOG AS [Database],
+            TABLE_SCHEMA AS Owner, 
+            TABLE_NAME AS TableName, 
+            COLUMN_NAME AS ColumnName, 
+            ORDINAL_POSITION AS OrdinalPosition, 
+            COLUMN_DEFAULT AS DefaultSetting, 
+            IS_NULLABLE AS IsNullable, DATA_TYPE AS DataType, 
+            COALESCE(CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION, 0) AS [Precision],
+            COALESCE(NUMERIC_SCALE, 0) AS [NumericScale],
+            COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsIdentity') AS IsIdentity,
+            COLUMNPROPERTY(object_id('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'), COLUMN_NAME, 'IsComputed') as IsComputed,
+            NUMERIC_PRECISION
+            FROM  INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME=@tableName AND TABLE_SCHEMA=@schemaName
+            ORDER BY OrdinalPosition ASC";
+
         private const string ALL_FOREIGN_KEYS = @"SELECT 
             [Name] = OBJECT_NAME(pt.constraint_object_id),
             [ReferencingSchema] = OBJECT_SCHEMA_NAME(pt.parent_object_id),
@@ -451,8 +453,7 @@ ORDER by [Column]
             AND pt.parent_column_id = pc.column_id
             INNER JOIN sys.columns AS rc
             ON pt.referenced_column_id = rc.column_id
-            AND pt.referenced_object_id = rc.[object_id]
-";
+            AND pt.referenced_object_id = rc.[object_id]";
 
     }
 

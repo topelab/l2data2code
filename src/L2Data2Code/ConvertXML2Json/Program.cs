@@ -14,11 +14,11 @@ namespace ConvertXML2Json
             var xmlFile = args.Length > 0 ? args[0] : "Templates.xml";
 
             var xml = File.ReadAllText(xmlFile);
-            XmlDocument doc = new XmlDocument();
+            XmlDocument doc = new();
             doc.LoadXml(xml);
             var jsonFile = Path.ChangeExtension(xmlFile, "json");
             var jsonLines = JsonConvert.SerializeXmlNode(doc.ChildNodes[1], Newtonsoft.Json.Formatting.Indented, true).Split(Environment.NewLine);
-            var json = new StringBuilder();
+            StringBuilder json = new();
 
             foreach (var item in jsonLines)
             {
@@ -50,13 +50,13 @@ namespace ConvertXML2Json
 
         private static StringBuilder ExtractVars(string section, string item)
         {
-            var conditionals = new StringBuilder();
-            var json = new StringBuilder();
+            StringBuilder conditionals = new();
+            StringBuilder json = new();
             var vars = item.Split($"\"@{section}\": ")[1];
             vars = vars.Trim(',').Trim('"').Replace("\\r\\n", string.Empty).Replace("\\t", string.Empty);
             var allVars = vars.Split(';', StringSplitOptions.RemoveEmptyEntries);
             json.AppendLine($"\t\t\"{section}\": {{");
-            bool inConditional = false;
+            var inConditional = false;
             var lastElem = allVars.Last();
 
             foreach (var elem in allVars)

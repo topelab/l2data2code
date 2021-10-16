@@ -150,14 +150,14 @@ namespace L2Data2Code.SharedLib.Inflector
         {
             if (string.IsNullOrWhiteSpace(word))
                 return string.Empty;
-            return word.Substring(0, 1).ToUpper() + word[1..].ToLower();
+            return word[..1].ToUpper() + word[1..].ToLower();
         }
 
         public string Uncapitalize(string word)
         {
             if (string.IsNullOrWhiteSpace(word))
                 return string.Empty;
-            return word.Substring(0, 1).ToLower() + word[1..];
+            return word[..1].ToLower() + word[1..];
         }
 
         public abstract string Ordinalize(string number);

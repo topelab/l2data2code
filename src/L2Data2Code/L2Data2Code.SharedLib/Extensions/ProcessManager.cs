@@ -194,7 +194,7 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             return await Task.Run<IEnumerable<ProcessSearched>>(() =>
             {
-                using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name like '" + processName + "%' AND CommandLine IS NOT NULL");
+                using ManagementObjectSearcher searcher = new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name like '" + processName + "%' AND CommandLine IS NOT NULL");
                 using ManagementObjectCollection objects = searcher.Get();
                 return objects.Cast<ManagementBaseObject>()
                     .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })

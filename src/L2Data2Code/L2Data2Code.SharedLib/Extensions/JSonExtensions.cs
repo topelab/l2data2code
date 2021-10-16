@@ -7,7 +7,7 @@ namespace L2Data2Code.SharedLib.Extensions
     {
         public static NameValueCollection ToNameValueCollection(this JToken source)
         {
-            NameValueCollection valueCollection = new NameValueCollection();
+            NameValueCollection valueCollection = new();
             if (source == null) return valueCollection;
 
             foreach (JProperty item in source)

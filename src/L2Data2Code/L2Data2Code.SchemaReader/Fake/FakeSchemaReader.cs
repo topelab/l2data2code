@@ -17,7 +17,7 @@ namespace L2Data2Code.SchemaReader.Fake
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
             _resolver = options.NameResolver ?? new DefaultNameResolver();
-            var result = new Tables();
+            Tables result = new();
             AddFakeTable("first_table", result, options.RemoveFirstWord);
             AddFakeTable("second_table", result, options.RemoveFirstWord);
 
@@ -26,7 +26,7 @@ namespace L2Data2Code.SchemaReader.Fake
 
         private void AddFakeTable(string tableName, Tables tables, bool removeFirstWord)
         {
-            var tbl = new Table
+            Table tbl = new()
             {
                 Name = tableName
             };
@@ -42,7 +42,7 @@ namespace L2Data2Code.SchemaReader.Fake
 
         private static List<Column> LoadFakeColumns(Table tbl, bool removeFirstWord = true)
         {
-            var result = new List<Column>() {
+            List<Column> result = new() {
                 new Column {
                     Table = tbl,
                     TableName = tbl.Name,

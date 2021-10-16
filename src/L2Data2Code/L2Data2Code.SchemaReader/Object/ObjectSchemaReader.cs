@@ -78,7 +78,7 @@ namespace L2Data2Code.SchemaReader.Object
         {
             var typeName = GetFriendlyTypeName(type, nameSpace);
 
-            Table table = new Table { ClassName = typeName, Name = typeName, CleanName = resolver.ResolveTableName(typeName) };
+            Table table = new() { ClassName = typeName, Name = typeName, CleanName = resolver.ResolveTableName(typeName) };
             table.Columns = LoadColumnsFromProperties(nameSpace, type, table, alternativeDescriptions);
             return table;
         }
@@ -89,7 +89,7 @@ namespace L2Data2Code.SchemaReader.Object
             foreach (var item in type.GetProperties().Where(p => CanBeCollectected(p.PropertyType)))
             {
                 var typeName = GetFriendlyTypeName(item.PropertyType, nameSpace);
-                Column column = new Column
+                Column column = new()
                 {
                     Table = table,
                     TableName = table.Name,

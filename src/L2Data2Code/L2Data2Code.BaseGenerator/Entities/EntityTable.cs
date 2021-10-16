@@ -33,7 +33,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var column in table.Columns)
             {
-                EntityColumn campo = new EntityColumn
+                EntityColumn campo = new()
                 {
                     Table = ClassName,
                     ColumnName = column.Name,
@@ -73,7 +73,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var item in OneToMany)
             {
-                EntityColumn campo = new EntityColumn
+                EntityColumn campo = new()
                 {
                     Table = ClassName,
                     Name = $"{item.Table}{byWord}{item.RelatedColumn}",
@@ -107,7 +107,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var item in ManyToOne)
             {
-                EntityColumn campo = new EntityColumn
+                EntityColumn campo = new()
                 {
                     Table = ClassName,
                     Name = $"{item.Table.ToPlural()}{withWord}{item.RelatedColumn}",

@@ -19,7 +19,7 @@ namespace L2Data2CodeWPF.ViewModel
         {
             dispatcher = Application.Current.Dispatcher;
             AllMessages = new ObservableCollection<MessageViewModel>();
-            DispatcherTimer timer = new DispatcherTimer
+            DispatcherTimer timer = new()
             {
                 Interval = TimeSpan.FromMilliseconds(250)
             };

@@ -26,13 +26,13 @@ namespace L2Data2Code.SchemaReader.MySql
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
             _resolver = options.NameResolver ?? new DefaultNameResolver();
-            var result = new Tables();
+            Tables result = new();
 
             using (_connection = new MySqlConnection(_connectionString))
             {
                 _connection.Open();
 
-                string[] schema = new string[4] { null, _connection.Database, null, null };
+                var schema = new string[4] { null, _connection.Database, null, null };
 
                 var tables = _connection.GetSchema("Tables", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, tables, false);
@@ -107,7 +107,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     continue;
                 }
 
-                var tbl = new Table
+                Table tbl = new()
                 {
                     Name = (string)row["TABLE_NAME"]
                 };
@@ -132,15 +132,15 @@ namespace L2Data2Code.SchemaReader.MySql
 
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true, Dictionary<string, string> alternativeDescriptions = null)
         {
-            var result = new List<Column>();
+            List<Column> result = new();
 
-            string[] schema = new string[4] { null, _connection.Database, tbl.Name, null };
+            var schema = new string[4] { null, _connection.Database, tbl.Name, null };
 
             // Columnas
-            DataTable SchemaTabla = _connection.GetSchema("Columns", schema);
+            var SchemaTabla = _connection.GetSchema("Columns", schema);
             foreach (DataRow row in SchemaTabla.Rows)
             {
-                Column col = new Column
+                Column col = new()
                 {
                     Table = tbl,
                     TableName = tbl.Name,
@@ -164,16 +164,16 @@ namespace L2Data2Code.SchemaReader.MySql
 
         private List<Key> LoadRelations(Tables tables)
         {
-            string SchemaName = _connection.Database;
-            string[] schema = new string[4] { null, SchemaName, null, null };
-            var result = new List<Key>();
+            var SchemaName = _connection.Database;
+            var schema = new string[4] { null, SchemaName, null, null };
+            List<Key> result = new();
 
             // Relaciones
             var fkeys = _connection.GetSchema("Foreign Key Columns", schema);
 
             foreach (DataRow row in fkeys.Rows)
             {
-                var key = new Key();
+                Key key = new();
                 var referencingTable = row["TABLE_NAME"].ToString();
                 var referencingColumn = row["COLUMN_NAME"].ToString();
                 var referencedTable = row["REFERENCED_TABLE_NAME"].ToString();
@@ -198,7 +198,7 @@ namespace L2Data2Code.SchemaReader.MySql
         private Dictionary<string, int> GetPK(string table)
         {
 
-            var result = new Dictionary<string, int>();
+            Dictionary<string, int> result = new();
 
             var databaseIndexColumns = _connection.GetSchema("IndexColumns", new string[4] { null, _connection.Database, table, null });
 
@@ -215,7 +215,7 @@ namespace L2Data2Code.SchemaReader.MySql
 
         private static string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
         {
-            string sysType = "string";
+            var sysType = "string";
             switch (sqlType)
             {
                 case "blob":

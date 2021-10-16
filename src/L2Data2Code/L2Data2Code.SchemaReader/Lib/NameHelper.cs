@@ -106,13 +106,13 @@ namespace L2Data2Code.SchemaReader.Lib
         {
             List<string> words = GetWords(name);
 
-            StringBuilder transformedName = new StringBuilder();
+            StringBuilder transformedName = new();
 
             int index = 0;
             foreach (string word in words)
             {
                 if (isCamelCase)
-                    transformedName.Append(word.Substring(0, 1).ToUpper() + word[1..].ToLower());
+                    transformedName.Append(word[..1].ToUpper() + word[1..].ToLower());
                 else if (isUpperCase)
                     transformedName.Append(word.ToUpper());
                 else if (isLowerCase)
@@ -133,7 +133,7 @@ namespace L2Data2Code.SchemaReader.Lib
         /// <returns></returns>
         public static List<string> GetWords(string name)
         {
-            List<string> camelCaseWords = new List<string>();
+            List<string> camelCaseWords = new();
 
             string[] words = name.Split(new char[] { '_', ' ' });
             foreach (string word in words)
@@ -379,7 +379,7 @@ namespace L2Data2Code.SchemaReader.Lib
             // verb
             int index = name.IndexOf(conjugations.Verb, StringComparison.CurrentCultureIgnoreCase);
             if (index != -1)
-                return conjugations.PastParticipleVerb.Substring(0, 1).ToUpper() + conjugations.PastParticipleVerb[1..].ToLower() + "By";
+                return conjugations.PastParticipleVerb[..1].ToUpper() + conjugations.PastParticipleVerb[1..].ToLower() + "By";
 
             return name;
         }

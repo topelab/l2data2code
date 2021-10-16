@@ -54,7 +54,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             try
             {
                 messageService.Clear(MessageCodes.FIND_SERVICE);
-                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                DirectoryInfo directoryInfo = new(path);
                 return directoryInfo.GetFiles(AppDto.SearchExpression, SearchOption.AllDirectories).Select(f => f.FullName);
             }
             catch (Exception ex)

@@ -35,7 +35,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public static Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName)
         {
-            var schemaDictionary = new Dictionary<string, string>();
+            Dictionary<string, string> schemaDictionary = new();
             var descriptionFile = schemas[schemaName]?.DescriptionsFile;
             if (descriptionFile == null || !File.Exists(descriptionFile))
             {
@@ -43,9 +43,9 @@ namespace L2Data2Code.BaseGenerator.Entities
             }
 
             var content = File.ReadAllLines(descriptionFile);
-            for (int i = 1; i < content.Length; i++)
+            for (var i = 1; i < content.Length; i++)
             {
-                string line = content[i].Trim();
+                var line = content[i].Trim();
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
@@ -63,8 +63,8 @@ namespace L2Data2Code.BaseGenerator.Entities
         public static (string ConnectionString, string Provider) GetConnectionString(string schemaName)
         {
             var schemaInfo = schemas[schemaName];
-            string connectionString = schemaInfo?.ConnectionString;
-            string provider = schemaInfo?.Provider;
+            var connectionString = schemaInfo?.ConnectionString;
+            var provider = schemaInfo?.Provider;
             if (provider.Equals("System.Data.FakeClient") || provider.Equals("System.Data.JsonClient"))
             {
                 connectionString = "Data Source=:memory:";
@@ -75,7 +75,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public static Dictionary<string, string> GetTableRenames(string schemaName)
         {
-            var renameTable = new Dictionary<string, string>();
+            Dictionary<string, string> renameTable = new();
             var renameDescriptions = schemas[schemaName]?.RenameTables;
             if (renameDescriptions == null)
             {
@@ -91,7 +91,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public static Dictionary<string, string> GetColumnRenames(string schemaName)
         {
-            var renameColumn = new Dictionary<string, string>();
+            Dictionary<string, string> renameColumn = new();
             var renameDescriptions = schemas[schemaName]?.RenameColumns;
             if (renameDescriptions == null)
             {

@@ -110,7 +110,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static string ToTabs(this int indent)
         {
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             return result.AddTabs(indent).ToString();
         }
 
@@ -270,16 +270,16 @@ namespace L2Data2Code.SharedLib.Extensions
             {
                 while (fileName.Length != 0)
                 {
-                    if (ValidChars.Contains(fileName.Substring(0, 1)))
+                    if (ValidChars.Contains(fileName[..1]))
                     {
-                        CharToAdd = fileName.Substring(0, 1);
+                        CharToAdd = fileName[..1];
                         PrevChar = CharToAdd;
                     }
                     else
                     {
-                        if (ReplaceableChars.Contains(fileName.Substring(0, 1)))
+                        if (ReplaceableChars.Contains(fileName[..1]))
                         {
-                            CharToAdd = ReplacingChars.Substring(ReplaceableChars.IndexOf(fileName.Substring(0, 1)), 1);
+                            CharToAdd = ReplacingChars[ReplaceableChars.IndexOf(fileName[..1])..1];
                             PrevChar = CharToAdd;
                         }
                         else
@@ -308,7 +308,7 @@ namespace L2Data2Code.SharedLib.Extensions
             {
                 while (sCleanUrl[lon - 1] == '-')
                 {
-                    sCleanUrl = sCleanUrl.Substring(0, lon - 1);
+                    sCleanUrl = sCleanUrl[..(lon - 1)];
                     lon--;
                     if (lon < 1)
                     {
