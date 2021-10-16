@@ -68,8 +68,8 @@ namespace L2Data2Code.BaseGenerator.Entities
                 CanBeNull = r.ColumnReferencing.IsNullable,
             }).ToList();
 
-            string byWord = StringExtensions.CurrentLang == "es" ? "Por" : "By";
-            string withWord = StringExtensions.CurrentLang == "es" ? "Con" : "With";
+            var byWord = StringExtensions.CurrentLang == "es" ? "Por" : "By";
+            var withWord = StringExtensions.CurrentLang == "es" ? "Con" : "With";
 
             foreach (var item in OneToMany)
             {

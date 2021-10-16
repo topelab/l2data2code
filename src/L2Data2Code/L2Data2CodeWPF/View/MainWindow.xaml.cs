@@ -85,7 +85,7 @@ namespace L2Data2CodeWPF
         {
             if (viewModel == null) return;
 
-            var expander = (Expander)sender;
+            Expander expander = (Expander)sender;
             if (expander.IsExpanded)
             {
                 expander.HorizontalAlignment = HorizontalAlignment.Stretch;

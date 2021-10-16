@@ -40,12 +40,12 @@ namespace L2Data2Code.SchemaReader.Lib
             if (string.IsNullOrEmpty(name))
                 return name;
 
-            string word = name;
-            int index = 0;
+            var word = name;
+            var index = 0;
 
             if (word.Length > 0 && word[^1] != '_')
             {
-                int index1 = word.LastIndexOf('_');
+                var index1 = word.LastIndexOf('_');
                 if (index1 != -1)
                 {
                     index = index1 + 1;
@@ -53,14 +53,14 @@ namespace L2Data2Code.SchemaReader.Lib
                 }
             }
 
-            Match match = regexCamelCase.Matches(word).Cast<Match>().LastOrDefault();
+            var match = regexCamelCase.Matches(word).Cast<Match>().LastOrDefault();
             if (match != null)
             {
                 word = match.Groups["word"].Value;
                 index += match.Groups["word"].Index;
             }
 
-            string quantifiedWord = quantifier(word);
+            var quantifiedWord = quantifier(word);
 
             if (quantifiedWord == word)
                 return name;
@@ -104,12 +104,12 @@ namespace L2Data2Code.SchemaReader.Lib
         /// <returns></returns>
         public static string TransformName(string name, string wordsSeparator = null, bool isCamelCase = true, bool isUpperCase = false, bool isLowerCase = false)
         {
-            List<string> words = GetWords(name);
+            var words = GetWords(name);
 
             StringBuilder transformedName = new();
 
-            int index = 0;
-            foreach (string word in words)
+            var index = 0;
+            foreach (var word in words)
             {
                 if (isCamelCase)
                     transformedName.Append(word[..1].ToUpper() + word[1..].ToLower());
@@ -135,8 +135,8 @@ namespace L2Data2Code.SchemaReader.Lib
         {
             List<string> camelCaseWords = new();
 
-            string[] words = name.Split(new char[] { '_', ' ' });
-            foreach (string word in words)
+            var words = name.Split(new char[] { '_', ' ' });
+            foreach (var word in words)
             {
                 if (string.IsNullOrWhiteSpace(word))
                 {
@@ -216,8 +216,8 @@ namespace L2Data2Code.SchemaReader.Lib
         /// <returns></returns>
         public static string AddNamePrefix(string name, string columnName)
         {
-            string columnNameLower = columnName.ToLower();
-            string prefix = NamePrefixes.OrderByDescending(p => p.Length).FirstOrDefault(p => columnNameLower.StartsWith(p));
+            var columnNameLower = columnName.ToLower();
+            var prefix = NamePrefixes.OrderByDescending(p => p.Length).FirstOrDefault(p => columnNameLower.StartsWith(p));
             if (!string.IsNullOrEmpty(prefix))
                 name = string.Concat(columnName.AsSpan(0, prefix.Length), name);
             return name;
@@ -322,22 +322,22 @@ namespace L2Data2Code.SchemaReader.Lib
         /// </returns>
         public static bool IsNameVerb(string name)
         {
-            bool hasTime = (name.IndexOf("time", StringComparison.CurrentCultureIgnoreCase) != -1);
+            var hasTime = (name.IndexOf("time", StringComparison.CurrentCultureIgnoreCase) != -1);
             if (hasTime)
                 return false;
 
-            bool hasDate = (name.IndexOf("date", StringComparison.CurrentCultureIgnoreCase) != -1);
-            bool hasShip = (name.IndexOf("ship", StringComparison.CurrentCultureIgnoreCase) != -1);
+            var hasDate = (name.IndexOf("date", StringComparison.CurrentCultureIgnoreCase) != -1);
+            var hasShip = (name.IndexOf("ship", StringComparison.CurrentCultureIgnoreCase) != -1);
             if (!hasDate && !hasShip)
                 return _variations.Any(variation => name.IndexOf(variation, StringComparison.CurrentCultureIgnoreCase) != -1);
 
             if (hasDate)
             {
-                bool hasUpdate = (name.IndexOf("update", StringComparison.CurrentCultureIgnoreCase) != -1);
+                var hasUpdate = (name.IndexOf("update", StringComparison.CurrentCultureIgnoreCase) != -1);
                 if (!hasUpdate)
                     return false;
 
-                int index = name.IndexOf("date", StringComparison.CurrentCultureIgnoreCase);
+                var index = name.IndexOf("date", StringComparison.CurrentCultureIgnoreCase);
                 do
                 {
                     hasUpdate =
@@ -354,7 +354,7 @@ namespace L2Data2Code.SchemaReader.Lib
 
             if (hasShip)
             {
-                bool hasShipment = (name.IndexOf("shipment", StringComparison.CurrentCultureIgnoreCase) != -1);
+                var hasShipment = (name.IndexOf("shipment", StringComparison.CurrentCultureIgnoreCase) != -1);
                 if (hasShipment)
                     return false;
             }
@@ -367,7 +367,7 @@ namespace L2Data2Code.SchemaReader.Lib
         /// <returns></returns>
         public static string ConjugateNameVerbToPastParticiple(string name)
         {
-            ConjugatedVerb conjugations = _conjugatedVerbs.FirstOrDefault(cv => cv.VerbVariations.Any(variation => name.IndexOf(variation, StringComparison.CurrentCultureIgnoreCase) != -1));
+            var conjugations = _conjugatedVerbs.FirstOrDefault(cv => cv.VerbVariations.Any(variation => name.IndexOf(variation, StringComparison.CurrentCultureIgnoreCase) != -1));
 
             if (conjugations == null)
                 return name;
@@ -377,7 +377,7 @@ namespace L2Data2Code.SchemaReader.Lib
                 return name;
 
             // verb
-            int index = name.IndexOf(conjugations.Verb, StringComparison.CurrentCultureIgnoreCase);
+            var index = name.IndexOf(conjugations.Verb, StringComparison.CurrentCultureIgnoreCase);
             if (index != -1)
                 return conjugations.PastParticipleVerb[..1].ToUpper() + conjugations.PastParticipleVerb[1..].ToLower() + "By";
 

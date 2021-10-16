@@ -24,12 +24,12 @@ namespace L2Data2Code.BaseGenerator.Services
 
         public Tables Read(CodeGeneratorDto options, Dictionary<string, string> alternativeDescriptions = null)
         {
-            var salida = new StringBuilderWriter();
+            StringBuilderWriter salida = new();
 
             try
             {
                 mustacheRenderizer.SetIsoLanguaje(Config.GetLang(options.CreatedFromSchemaName));
-                var tableNameResolver = new NameResolver(options.CreatedFromSchemaName);
+                NameResolver tableNameResolver = new(options.CreatedFromSchemaName);
 
                 if (!schemaNamesCached.ContainsKey(options.SchemaName))
                 {

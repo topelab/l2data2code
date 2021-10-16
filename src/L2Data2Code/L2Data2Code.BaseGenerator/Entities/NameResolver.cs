@@ -19,7 +19,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public string ResolveColumnName(string originalTableName, string originalColumnName)
         {
-            string key = $"{originalTableName}.{originalColumnName}";
+            var key = $"{originalTableName}.{originalColumnName}";
             return _columnNames.ContainsKey(key) ? _columnNames[key] : (_columnNames.ContainsKey(originalColumnName) ? _columnNames[originalColumnName] : originalColumnName);
         }
     }

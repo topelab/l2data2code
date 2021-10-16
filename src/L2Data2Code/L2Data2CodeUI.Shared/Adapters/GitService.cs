@@ -30,7 +30,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="path">Path where git repo resides.</param>
         public void GitAdd(string path)
         {
-            var command = new Command
+            Command command = new()
             {
                 Name = "git add",
                 Directory = path,
@@ -47,7 +47,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="path">Path where git repo resides.</param>
         public void GitCommit(string path)
         {
-            var command = new Command
+            Command command = new()
             {
                 Name = "git commit",
                 Directory = path,
@@ -64,7 +64,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="path">Path where git repo resides.</param>
         public void GitReset(string path)
         {
-            var command = new Command
+            Command command = new()
             {
                 Name = "git reset",
                 Directory = path,
@@ -83,7 +83,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             if (!Directory.Exists(Path.Combine(path, ".git")))
             {
-                var command = new Command
+                Command command = new()
                 {
                     Name = "git init",
                     Directory = path,

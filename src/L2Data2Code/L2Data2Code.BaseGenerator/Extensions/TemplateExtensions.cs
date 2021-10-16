@@ -19,11 +19,11 @@ namespace L2Data2Code.BaseGenerator.Extensions
 
         public static TemplateLibrary TryLoad(this string templatePath, string templateResource)
         {
-            ITemplatesConfiguration templatesConfiguration = ContainerManager.Container.Resolve<ITemplatesConfiguration>();
+            var templatesConfiguration = ContainerManager.Container.Resolve<ITemplatesConfiguration>();
 
             try
             {
-                TemplateLibrary library = Initialize(templatePath, templatesConfiguration);
+                var library = Initialize(templatePath, templatesConfiguration);
                 if (library.HasTemplate(templateResource))
                 {
                     return library;
@@ -46,7 +46,7 @@ namespace L2Data2Code.BaseGenerator.Extensions
 
         private static TemplateLibrary Initialize(string templatePath, ITemplatesConfiguration templatesConfiguration)
         {
-            IGlobalsConfiguration globalsConfiguration = ContainerManager.Container.Resolve<IGlobalsConfiguration>();
+            var globalsConfiguration = ContainerManager.Container.Resolve<IGlobalsConfiguration>();
 
             TemplateLibrary library = new();
 
@@ -79,10 +79,10 @@ namespace L2Data2Code.BaseGenerator.Extensions
                     Parent = library
                 });
 
-                int lastIndexOfItemsResorces = template.ItemsResources.Count - 1;
+                var lastIndexOfItemsResorces = template.ItemsResources.Count - 1;
                 foreach (var item in template.ItemsResources)
                 {
-                    int index = template.ItemsResources.IndexOf(item);
+                    var index = template.ItemsResources.IndexOf(item);
 
                     library.Templates.Add(new Template
                     {

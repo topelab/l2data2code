@@ -49,7 +49,7 @@ namespace L2Data2Code.SharedLib.Inflector
 
         protected virtual string ApplyFirstMatchRule(IEnumerable<IRuleApplier> rules, string word)
         {
-            string result = word;
+            var result = word;
 
             if (!uncountables.Contains(word.ToLower()))
             {
@@ -60,7 +60,7 @@ namespace L2Data2Code.SharedLib.Inflector
 
         protected virtual string ApplyRules(IEnumerable<IRuleApplier> rules, string word)
         {
-            string result = word;
+            var result = word;
             foreach (var rule in rules)
             {
                 result = rule.Apply(result);

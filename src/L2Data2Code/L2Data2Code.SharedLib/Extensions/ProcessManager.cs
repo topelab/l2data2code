@@ -112,8 +112,8 @@ namespace L2Data2Code.SharedLib.Extensions
                 try
                 {
                     var sln = item.Args.Trim('\"').ToLower();
-                    bool currentSlnOpened = slnFile != null && slnFile.Equals(sln);
-                    var proc = Process.GetProcessById((int)item.Id);
+                    var currentSlnOpened = slnFile != null && slnFile.Equals(sln);
+                    Process proc = Process.GetProcessById((int)item.Id);
                     if (currentSlnOpened)
                     {
                         currentProcess = proc;
@@ -144,8 +144,8 @@ namespace L2Data2Code.SharedLib.Extensions
                 try
                 {
                     var args = item.Args.Trim('\"');
-                    bool currentFileOpened = file != null && file.Equals(args, StringComparison.CurrentCultureIgnoreCase);
-                    var proc = Process.GetProcessById((int)item.Id);
+                    var currentFileOpened = file != null && file.Equals(args, StringComparison.CurrentCultureIgnoreCase);
+                    Process proc = Process.GetProcessById((int)item.Id);
                     Register(proc, GetKey(item.Program, args), currentFileOpened ? ifFileOpened : null, onExit);
                 }
                 catch (ArgumentException ex)
@@ -182,7 +182,7 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             await Task.Run(() =>
             {
-                using ManagementObjectCollection objects = ProcessSearcher.Get();
+                using var objects = ProcessSearcher.Get();
                 _allRunningEditors = objects.Cast<ManagementBaseObject>()
                     .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
                     .ToList();
@@ -195,7 +195,7 @@ namespace L2Data2Code.SharedLib.Extensions
             return await Task.Run<IEnumerable<ProcessSearched>>(() =>
             {
                 using ManagementObjectSearcher searcher = new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name like '" + processName + "%' AND CommandLine IS NOT NULL");
-                using ManagementObjectCollection objects = searcher.Get();
+                using var objects = searcher.Get();
                 return objects.Cast<ManagementBaseObject>()
                     .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
                     .ToList();
@@ -218,7 +218,7 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string GetArgs(this string commandLine)
         {
             var result = commandLine.Trim();
-            bool startWithQuotes = result.StartsWith("\"");
+            var startWithQuotes = result.StartsWith("\"");
             return result.Arguments(startWithQuotes ? "\" " : " ");
         }
 
@@ -258,7 +258,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         private static void RemoveFromRunning(Process proc, Action onExit = null)
         {
-            string key = runningProcess.Where(d => d.Value == proc).Select(d => d.Key).FirstOrDefault();
+            var key = runningProcess.Where(d => d.Value == proc).Select(d => d.Key).FirstOrDefault();
 
             if (key != null)
             {

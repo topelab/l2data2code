@@ -74,7 +74,7 @@ namespace ConvertTemplates
 
         private static bool ExistTemplate(string path)
         {
-            string currentPath = path ?? Directory.GetCurrentDirectory();
+            var currentPath = path ?? Directory.GetCurrentDirectory();
             templates = Directory.GetFiles(currentPath, "Templates.xml", SearchOption.AllDirectories);
             return templates.Length > 0;
         }
@@ -96,7 +96,7 @@ namespace ConvertTemplates
 
         private static void ChangeTemplate(string item)
         {
-            string content = File.ReadAllText(item);
+            var content = File.ReadAllText(item);
 
             content = content
                 .Replace("Libreria=", "Module=")
@@ -131,7 +131,7 @@ namespace ConvertTemplates
             var result = fileName;
             foreach (var item in conversionsFiles)
             {
-                var regex = new Regex(@"\b" + item.Key + @"\b", RegexOptions.Singleline);
+                Regex regex = new(@"\b" + item.Key + @"\b", RegexOptions.Singleline);
                 result = regex.Replace(result, item.Value);
             }
             return result;
@@ -139,7 +139,7 @@ namespace ConvertTemplates
 
         private static void ChangeFiles(string item)
         {
-            string path = Path.GetDirectoryName(item).AddPathSeparator();
+            var path = Path.GetDirectoryName(item).AddPathSeparator();
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
             foreach (var file in files)
             {
@@ -149,7 +149,7 @@ namespace ConvertTemplates
 
         private static void ChangeFile(string file)
         {
-            string newName = DoReplaceFileName(file);
+            var newName = DoReplaceFileName(file);
             var content = File.ReadAllText(file);
             var result = DoReplacement(content);
             if (!newName.Equals(file))
@@ -167,12 +167,12 @@ namespace ConvertTemplates
             var result = content;
             foreach (var item in conversions)
             {
-                var regex = new Regex(searchBase + item.Key + @"\b", RegexOptions.Singleline);
+                Regex regex = new(searchBase + item.Key + @"\b", RegexOptions.Singleline);
                 result = regex.Replace(result, replaceBase + item.Value);
             }
             foreach (var item in conversionsExtensions)
             {
-                var regex = new Regex(@"\.\b" + item.Key + @"\b", RegexOptions.Singleline);
+                Regex regex = new(@"\.\b" + item.Key + @"\b", RegexOptions.Singleline);
                 result = regex.Replace(result, "." + item.Value);
             }
             return result;

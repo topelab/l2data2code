@@ -134,9 +134,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
             gitService.GitInit(baseOptions.OutputPath);
 
-            string basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            string templatePath = TemplatesConfiguration[SelectedTemplate].Path;
-            var options = new CodeGeneratorDto
+            var basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var templatePath = TemplatesConfiguration[SelectedTemplate].Path;
+            CodeGeneratorDto options = new()
             {
                 Area = AreasConfiguration[SelectedArea].Name,
                 Module = ModulesConfiguration[SelectedModule].Name,
@@ -198,12 +198,12 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var processedTemplates = new HashSet<string>();
+                HashSet<string> processedTemplates = new();
                 var library = options.TemplatePath.TryLoad(options.TemplateResource);
 
                 if (library == null)
                 {
-                    string msg = string.Format(Messages.ErrorResourceNotFound, options.TemplateResource, options.TemplatePath);
+                    var msg = string.Format(Messages.ErrorResourceNotFound, options.TemplateResource, options.TemplatePath);
                     messageService.Error(msg, msg, MessageCodes.RUN_GENERATOR);
                     gitService.GitReset(path);
                     return;
@@ -211,7 +211,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
                 var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
 
-                bool isFirst = true;
+                var isFirst = true;
 
                 while (template != null)
                 {
@@ -226,7 +226,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
                     options.DescriptionsSchemaName = template.IsGeneral ? schemaNameToFake : descriptionsSchemaName;
                     options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
-                    options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out bool result) && result;
+                    options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
                     if (isFirst)
@@ -366,12 +366,12 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             DirectoryInfo directory = new(path);
 
-            foreach (FileInfo file in directory.GetFiles().Where(f => !f.Name.StartsWith(".git")))
+            foreach (var file in directory.GetFiles().Where(f => !f.Name.StartsWith(".git")))
             {
                 file.Delete();
             }
 
-            foreach (DirectoryInfo dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
+            foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
             {
                 dir.Delete(true);
             }
@@ -384,9 +384,9 @@ namespace L2Data2CodeUI.Shared.Adapters
                 return (null, null);
             }
 
-            string basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            string template = TemplatesConfiguration[SelectedTemplate].Path;
-            var options = new CodeGeneratorDto
+            var basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var template = TemplatesConfiguration[SelectedTemplate].Path;
+            CodeGeneratorDto options = new()
             {
                 Area = AreasConfiguration[SelectedArea].Name,
                 Module = ModulesConfiguration[SelectedModule].Name,
@@ -411,7 +411,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 var library = options.TemplatePath.TryLoad(options.TemplateResource);
                 codeGeneratorService.Initialize(options, library);
                 CompiledVars.ClearAndAddRange(codeGeneratorService.GetVars());
-                CompiledVars.TryGetValue("SavePath", out object savePath);
+                CompiledVars.TryGetValue("SavePath", out var savePath);
                 messageService.Clear(MessageCodes.LOADING_TEMPLATES);
 
                 return (savePath as string, codeGeneratorService.GetSolutionType());
@@ -452,7 +452,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var tableNameResolver = new NameResolver(schemaName);
+                NameResolver tableNameResolver = new(schemaName);
                 tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(schemaName), _alternativeDictionary, tableNameResolver))
                     ?? new Tables();
 

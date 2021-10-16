@@ -46,8 +46,8 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public static string GetProviderDefinitionKey(string connectionStringKey)
         {
-            var connection = new Connection(schemasConfiguration, connectionStringKey);
-            return providers.TryGetValue(connection.Provider, out ProviderDefinition providerDefinition) ? providerDefinition.Key : null;
+            Connection connection = new(schemasConfiguration, connectionStringKey);
+            return providers.TryGetValue(connection.Provider, out var providerDefinition) ? providerDefinition.Key : null;
         }
 
         public static ISchemaReader Create(SchemaOptions schemaOptions)
@@ -72,7 +72,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 schemaOptions.DescriptionsConnectionString = commentConnection.ConnectionString;
             }
 
-            if (providers.TryGetValue(connection.Provider, out ProviderDefinition providerDefinition))
+            if (providers.TryGetValue(connection.Provider, out var providerDefinition))
             {
 
                 return (ISchemaReader)Activator.CreateInstance(providerDefinition.Type, schemaOptions);

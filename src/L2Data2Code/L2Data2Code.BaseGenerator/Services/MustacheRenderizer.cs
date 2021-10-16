@@ -20,7 +20,7 @@ namespace L2Data2Code.BaseGenerator.Services
             if (_methods == null)
             {
                 _methods = new Dictionary<string, MethodInfo>();
-                var types = Assembly.GetCallingAssembly().GetTypes().ToList();
+                List<System.Type> types = Assembly.GetCallingAssembly().GetTypes().ToList();
                 types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
                 types.AddRange(Assembly.GetAssembly(typeof(StringExtensions)).GetTypes());
 

@@ -26,7 +26,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public AppService Set(string solutionType)
         {
-            var defaultAppDto = new AppDto();
+            AppDto defaultAppDto = new();
 
             if (solutionType.IsEmpty())
             {
@@ -38,14 +38,14 @@ namespace L2Data2CodeUI.Shared.Adapters
             AppDto.CommandArguments = values.Length > 3 ? values[3].Trim() : defaultAppDto.CommandArguments;
             AppDto.CommandLine = values.Length > 2 ? values[2].Trim() : defaultAppDto.CommandLine;
             AppDto.SearchExpression = values.Length > 1 ? values[1].Trim() : defaultAppDto.SearchExpression;
-            AppDto.AppType = values.Length > 0 ? (Enum.TryParse(typeof(AppTypeAbbr), values[0].Trim(), out object result) ? (AppType)((int)result) : AppType.Undefined) : defaultAppDto.AppType;
+            AppDto.AppType = values.Length > 0 ? (Enum.TryParse(typeof(AppTypeAbbr), values[0].Trim(), out var result) ? (AppType)((int)result) : AppType.Undefined) : defaultAppDto.AppType;
 
             return this;
         }
 
         public IEnumerable<string> Find(string path)
         {
-            var emptyList = new List<string>();
+            List<string> emptyList = new();
             if (AppDto.SearchExpression.IsEmpty() || path.IsEmpty())
             {
                 return emptyList;

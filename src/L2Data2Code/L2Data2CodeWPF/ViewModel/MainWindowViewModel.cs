@@ -192,11 +192,11 @@ namespace L2Data2CodeWPF.ViewModel
             {
                 return false;
             }
-            bool existSln = CommandBarViewModel.CheckCanOpenVS(OutputPath, out var slnFile);
-            bool runnig = ProcessManager.IsRunning(slnFile);
-            bool anyItems = TablePanelViewModel.AllDataItems.Any(k => k.Value.IsSelected);
+            var existSln = CommandBarViewModel.CheckCanOpenVS(OutputPath, out var slnFile);
+            var runnig = ProcessManager.IsRunning(slnFile);
+            var anyItems = TablePanelViewModel.AllDataItems.Any(k => k.Value.IsSelected);
 
-            bool result = !RunningGenerateCode && (!existSln || (existSln && !runnig)) && anyItems;
+            var result = !RunningGenerateCode && (!existSln || (existSln && !runnig)) && anyItems;
 
             if (!RunningGenerateCode && anyItems && runnig)
             {
@@ -217,7 +217,7 @@ namespace L2Data2CodeWPF.ViewModel
             RunningGenerateCode = true;
             CheckButtonStates();
 
-            var options = new CodeGeneratorDto
+            CodeGeneratorDto options = new()
             {
                 GenerateReferenced = TablePanelViewModel.SetRelatedTables,
                 OutputPath = OutputPath.AddPathSeparator(),
@@ -300,8 +300,8 @@ namespace L2Data2CodeWPF.ViewModel
             CommandBarViewModel = new CommandBarViewModel(this);
             TablePanelViewModel = new TablePanelViewModel(this, dispatcher);
 
-            ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out bool showVarsWindow) && showVarsWindow;
-            initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out bool generateJsonInfo) && generateJsonInfo
+            ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
+            initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out var generateJsonInfo) && generateJsonInfo
                 && this.generatorAdapter.SettingsConfiguration[nameof(CodeGeneratorDto.JsonGeneratedPath)].NotEmpty();
 
             EmptyFolders = true;

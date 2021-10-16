@@ -13,16 +13,16 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public static IEnumerable<R> Select<T, R>(this IEnumerable<T> collection, Func<T, int, bool, bool, R> selector)
         {
-            bool isFirst = true;
-            int i = 0;
+            var isFirst = true;
+            var i = 0;
             var e = collection.GetEnumerator();
-            bool has1 = e.MoveNext();
-            T current = has1 ? e.Current : default;
-            bool hasOther = e.MoveNext();
-            T next = hasOther ? e.Current : default;
+            var has1 = e.MoveNext();
+            var current = has1 ? e.Current : default;
+            var hasOther = e.MoveNext();
+            var next = hasOther ? e.Current : default;
             while (has1)
             {
-                R result = selector(current, i, isFirst, !hasOther);
+                var result = selector(current, i, isFirst, !hasOther);
                 yield return result;
                 ++i;
                 isFirst = false;

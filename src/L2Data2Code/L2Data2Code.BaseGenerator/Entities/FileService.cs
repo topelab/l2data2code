@@ -32,7 +32,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public static string Read(string file, Func<string, string> conversionFunc)
         {
-            string content = Read(file);
+            var content = Read(file);
             return conversionFunc(content);
         }
 

@@ -20,7 +20,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void Error(string message, string showMessage = null, string code = null)
         {
-            bool callToUpdate = !string.IsNullOrWhiteSpace(message);
+            var callToUpdate = !string.IsNullOrWhiteSpace(message);
             if (callToUpdate)
             {
                 UpdateAction?.Invoke(MessageType.Error, message, showMessage, code);
@@ -29,7 +29,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void Warning(string showMessage, string code = null, string message = null)
         {
-            bool callToUpdate = !string.IsNullOrWhiteSpace(showMessage);
+            var callToUpdate = !string.IsNullOrWhiteSpace(showMessage);
             if (callToUpdate)
             {
                 UpdateAction?.Invoke(MessageType.Warning, message ?? showMessage, showMessage, code);

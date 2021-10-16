@@ -64,11 +64,11 @@ namespace L2Data2Code.SchemaReader.Object
 
         private Tables GetTables(string nameSpace, SchemaReaderOptions options)
         {
-            IEnumerable<Type> types = GetTypesFromAssembly(nameSpace);
+            var types = GetTypesFromAssembly(nameSpace);
             Tables result = new();
             foreach (var type in types.Where(t => options.TableRegex == null || options.TableRegex.IsMatch(t.Name)))
             {
-                Table table = CreateTableFromType(nameSpace, type, options.AlternativeDescriptions);
+                var table = CreateTableFromType(nameSpace, type, options.AlternativeDescriptions);
                 result.Add(table.Name, table);
             }
             return result;
@@ -108,7 +108,7 @@ namespace L2Data2Code.SchemaReader.Object
         private static bool IsNullable(Type type)
         {
             var typeCode = Type.GetTypeCode(type);
-            bool isNullable = type.ToString().StartsWith("System.Nullable")
+            var isNullable = type.ToString().StartsWith("System.Nullable")
                 || typeCode == TypeCode.Object
                 || typeCode == TypeCode.String;
 
@@ -124,14 +124,14 @@ namespace L2Data2Code.SchemaReader.Object
         private static string GetFriendlyTypeName(Type t, string nameSpace)
         {
             string typeName;
-            using (var provider = new CSharpCodeProvider())
+            using (CSharpCodeProvider provider = new())
             {
-                var typeRef = new CodeTypeReference(t);
+                CodeTypeReference typeRef = new(t);
                 typeName = provider.GetTypeOutput(typeRef);
 
                 if (!string.IsNullOrWhiteSpace(nameSpace))
                 {
-                    string supNameSpace = nameSpace.Replace(nameSpace.Split('.').Last(), string.Empty);
+                    var supNameSpace = nameSpace.Replace(nameSpace.Split('.').Last(), string.Empty);
                     if (typeName.StartsWith(supNameSpace))
                     {
                         typeName = typeName.Replace(typeName.Replace(typeName.Split('.').Last(), string.Empty), string.Empty);

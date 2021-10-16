@@ -156,7 +156,7 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 var tables = schemaService.Read(Options, alternativeDictionary);
 
-                var selectedTables = Options.TableList.Select(s => s.ToUpper()).ToHashSet();
+                HashSet<string> selectedTables = Options.TableList.Select(s => s.ToUpper()).ToHashSet();
                 var processTables = tables.Values
                     .Where(t => selectedTables.Contains(t.Name.ToUpper()))
                     .OrderBy(t => t.Name);
@@ -180,7 +180,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 foreach (var table in processTables)
                 {
                     logger.Info($"Processing table {table.Name}");
-                    var tabla = new EntityTable(table);
+                    EntityTable tabla = new(table);
                     if (!Options.GeneateOnlyJson)
                     {
                         var results = GenerarCodigos(tabla);
@@ -250,7 +250,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     var commentLine = GetCommentLine(fileExtension);
 
                     rawContent = templateFiles[templateFile];
-                    var replacementResult = new ReplacementResult(Path.GetFileName(filePath),
+                    ReplacementResult replacementResult = new(Path.GetFileName(filePath),
                                                                 filePath,
                                                                 filePath.Replace(outputBaseDir, ""),
                                                                 () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
@@ -276,7 +276,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     if (templateContent.Contains(INCLUDE_TEXT))
                     {
                         var lines = templateContent.Split('\n');
-                        var replacedLines = new List<string>();
+                        List<string> replacedLines = new();
                         var changed = false;
                         foreach (var line in lines)
                         {
@@ -316,7 +316,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private void GenerateJsonInfo(IEnumerable<Table> processTables)
         {
             // Para generar un json con cada una de las tablas
-            var jsonResolver = new PropertyRenameAndIgnoreSerializerContractResolver();
+            PropertyRenameAndIgnoreSerializerContractResolver jsonResolver = new();
             jsonResolver.IgnoreProperty(typeof(Column),
                 nameof(Column.Table),
                 nameof(Column.FullName),
@@ -352,7 +352,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 return;
             }
 
-            var tableList = new List<Table>();
+            List<Table> tableList = new();
             foreach (var item in selectedTables)
             {
                 var tableName = item.Name.ToUpper();
@@ -376,7 +376,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private void SaveFiles(ReplacementResult[] results, bool lastToProcess = false)
         {
-            var lastResults = new List<ReplacementResult>();
+            List<ReplacementResult> lastResults = new();
             foreach (var result in results)
             {
                 var path = Path.GetDirectoryName(result.FileName);
@@ -587,7 +587,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     {
                         var name = column.Name;
                         var type = DecodeCSharpType(column.Type);
-                        var property = new Property
+                        Property property = new()
                         {
                             Table = tableName,
                             Name = name,
@@ -622,14 +622,14 @@ namespace L2Data2Code.BaseGenerator.Services
                         return property;
                     }).ToArray();
 
-            var entity = new Entity
+            Entity entity = new()
             {
                 Name = table.ClassName,
                 UseSpanish = Config.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
             };
 
-            var currentReplacement = new Replacement
+            Replacement currentReplacement = new()
             {
                 Entity = entity,
                 IsView = table.IsView,

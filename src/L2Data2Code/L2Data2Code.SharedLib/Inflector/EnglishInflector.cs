@@ -71,8 +71,8 @@ namespace L2Data2Code.SharedLib.Inflector
 
         public override string Ordinalize(string number)
         {
-            int n = int.Parse(number);
-            int nMod100 = n % 100;
+            var n = int.Parse(number);
+            var nMod100 = n % 100;
 
             if (nMod100 >= 11 && nMod100 <= 13)
             {

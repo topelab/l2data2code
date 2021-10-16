@@ -29,7 +29,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new(_connectionString))
                 {
                     connection.Open();
                     if (connection.State == ConnectionState.Open)
@@ -39,7 +39,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 }
                 if (includeCommentServer && !_connectionString.Equals(_connectionStringForObjectDescriptions))
                 {
-                    using var connection = new SqlConnection(_connectionStringForObjectDescriptions);
+                    using SqlConnection connection = new(_connectionStringForObjectDescriptions);
                     connection.Open();
                     if (connection.State == ConnectionState.Open)
                     {
@@ -58,7 +58,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
         {
             _resolver = options.NameResolver ?? new DefaultNameResolver();
             _columnsDescriptions = options.AlternativeDescriptions ?? GetTableDescriptions(_connectionStringForObjectDescriptions);
-            var result = new Tables();
+            Tables result = new();
 
             using (_connection = new SqlConnection(_connectionString))
             {
@@ -198,8 +198,8 @@ namespace L2Data2Code.SchemaReader.SqlServer
             p.Value = tbl.Schema;
             cmd.Parameters.Add(p);
 
-            var result = new List<Column>();
-            using (IDataReader rdr = cmd.ExecuteReader())
+            List<Column> result = new();
+            using (var rdr = cmd.ExecuteReader())
             {
                 while (rdr.Read())
                 {
@@ -231,12 +231,12 @@ namespace L2Data2Code.SchemaReader.SqlServer
             using var cmd = _connection.CreateCommand();
             cmd.CommandText = ALL_FOREIGN_KEYS;
 
-            var result = new List<Key>();
-            using (IDataReader rdr = cmd.ExecuteReader())
+            List<Key> result = new();
+            using (var rdr = cmd.ExecuteReader())
             {
                 while (rdr.Read())
                 {
-                    var key = new Key();
+                    Key key = new();
                     var referencingTable = (string)rdr["ReferencingTable"];
                     var referencingColumn = (string)rdr["ReferencingColumn"];
                     var referencedTable = (string)rdr["ReferencedTable"];
@@ -263,7 +263,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
             Dictionary<string, int> result = new();
 
-            string sql = @"SELECT c.name AS ColumnName, ic.index_column_id as ""Order""
+            var sql = @"SELECT c.name AS ColumnName, ic.index_column_id as ""Order""
                 FROM sys.indexes AS i 
                 INNER JOIN sys.index_columns AS ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id 
                 INNER JOIN sys.objects AS o ON i.object_id = o.object_id 
@@ -279,7 +279,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 p.Value = table;
                 cmd.Parameters.Add(p);
 
-                using IDataReader rdr = cmd.ExecuteReader();
+                using var rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
                     result.Add(rdr.GetString(0), rdr.GetInt32(1));
@@ -292,7 +292,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         private static string GetPropertyType(string sqlType)
         {
-            string sysType = "string";
+            var sysType = "string";
             switch (sqlType)
             {
                 case "bigint":
@@ -359,11 +359,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         private Dictionary<string, string> GetTableDescriptions(string connectionString)
         {
-            var result = new Dictionary<string, string>();
+            Dictionary<string, string> result = new();
 
             try
             {
-                using var conn = new SqlConnection(connectionString);
+                using SqlConnection conn = new(connectionString);
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {

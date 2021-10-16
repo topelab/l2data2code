@@ -40,7 +40,7 @@ namespace L2Data2Code.SchemaReader.Schema
             if (ConnectionString.Contains("|DataDirectory|"))
             {
                 //have to replace it
-                string dataFilePath = GetDataDirectory();
+                var dataFilePath = GetDataDirectory();
                 ConnectionString = ConnectionString.Replace("|DataDirectory|", dataFilePath);
             }
 

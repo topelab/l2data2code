@@ -94,11 +94,11 @@ namespace L2Data2Code.SharedLib.Helpers
         private static string GetTraceInfo(int maxFrames = 4)
         {
 
-            var st = new StackTrace(true);
-            int frames = st.FrameCount > maxFrames + 2 ? maxFrames + 2 : st.FrameCount;
-            var sb = new StringBuilder();
+            StackTrace st = new(true);
+            var frames = st.FrameCount > maxFrames + 2 ? maxFrames + 2 : st.FrameCount;
+            StringBuilder sb = new();
 
-            for (int i = frames - 1; i > 1; i--)
+            for (var i = frames - 1; i > 1; i--)
             {
                 if (i < frames - 1)
                 {

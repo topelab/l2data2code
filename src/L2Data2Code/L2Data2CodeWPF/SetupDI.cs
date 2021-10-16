@@ -23,7 +23,7 @@ namespace L2Data2CodeWPF
 
         private static IUnityContainer Register()
         {
-            var container = new UnityContainer();
+            UnityContainer container = new();
             SetupDI.container = Register(container);
             return container;
         }

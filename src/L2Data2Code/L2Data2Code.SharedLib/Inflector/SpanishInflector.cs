@@ -85,7 +85,7 @@ namespace L2Data2Code.SharedLib.Inflector
         private void AddPluralForEach(string charectersToMatch, string charectersToReplace, char wildChar, string ruleTemplate,
                                       string replacementTemplate)
         {
-            IEnumerable<RuleReplacement> e = RulesReplacements(charectersToMatch, charectersToReplace, wildChar, ruleTemplate,
+            var e = RulesReplacements(charectersToMatch, charectersToReplace, wildChar, ruleTemplate,
                                                                replacementTemplate);
             foreach (var element in e)
             {
@@ -96,7 +96,7 @@ namespace L2Data2Code.SharedLib.Inflector
         private void AddSingularForEach(string charectersToMatch, string charectersToReplace, char wildChar,
                                         string ruleTemplate, string replacementTemplate)
         {
-            IEnumerable<RuleReplacement> e = RulesReplacements(charectersToMatch, charectersToReplace, wildChar, ruleTemplate,
+            var e = RulesReplacements(charectersToMatch, charectersToReplace, wildChar, ruleTemplate,
                                                                replacementTemplate);
             foreach (var element in e)
             {
@@ -112,10 +112,10 @@ namespace L2Data2Code.SharedLib.Inflector
             {
                 throw new ArgumentException("charectersToMatch and charectersToReplace must have same length", charectersToReplace);
             }
-            for (int i = 0; i < charectersToMatch.Length; i++)
+            for (var i = 0; i < charectersToMatch.Length; i++)
             {
-                string rule = ruleTemplate.Replace(wildChar, charectersToMatch[i]);
-                string replacement = replacementTemplate.Replace(wildChar, charectersToReplace[i]);
+                var rule = ruleTemplate.Replace(wildChar, charectersToMatch[i]);
+                var replacement = replacementTemplate.Replace(wildChar, charectersToReplace[i]);
                 yield return new RuleReplacement { Rule = rule, Replacement = replacement };
             }
         }

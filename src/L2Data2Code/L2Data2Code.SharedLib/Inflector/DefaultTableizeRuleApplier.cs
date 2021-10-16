@@ -16,10 +16,10 @@ namespace L2Data2Code.SharedLib.Inflector
 
         public string Apply(string className)
         {
-            var builder = new StringBuilder(className.Length);
-            var words = className.SplitWords().ToList();
+            StringBuilder builder = new(className.Length);
+            System.Collections.Generic.List<string> words = className.SplitWords().ToList();
             var toPluralizeIdx = words.FindLastIndex(word => !WhiteSpaces.IsMatch(word));
-            for (int i = 0; i < words.Count; i++)
+            for (var i = 0; i < words.Count; i++)
             {
                 var word = words[i];
                 if (i == toPluralizeIdx)

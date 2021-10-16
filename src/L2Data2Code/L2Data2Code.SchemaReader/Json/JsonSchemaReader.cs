@@ -41,8 +41,8 @@ namespace L2Data2Code.SchemaReader.Json
         /// <returns></returns>
         private Tables Resolve(IEnumerable<Table> tables, bool removeFirstWord, Regex tableRegex = null)
         {
-            var result = new Tables();
-            var tablesInfo = tables.ToDictionary(k => k.Name.ToUpper(), k => k);
+            Tables result = new();
+            Dictionary<string, Table> tablesInfo = tables.ToDictionary(k => k.Name.ToUpper(), k => k);
             foreach (var item in tables.Where(t => tableRegex == null || tableRegex.IsMatch(t.Name)))
             {
                 item.CleanName = _resolver.ResolveTableName(item.Name).PascalCamelCase(false);

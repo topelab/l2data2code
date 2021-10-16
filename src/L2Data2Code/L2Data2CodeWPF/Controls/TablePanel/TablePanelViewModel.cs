@@ -133,7 +133,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
             foreach (var item in adapter.Tables.OrderBy(k => k.Key))
             {
-                var element = new TableViewModel(item.Value);
+                TableViewModel element = new(item.Value);
                 element.PropertyChanged += TableViewModel_PropertyChanged;
                 AllDataItems.Add(element.Name, element);
             }
@@ -143,7 +143,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
         private void PopulateDataItems(Regex includeTablesRegex = null, Regex excludeTablesRegex = null)
         {
             App.Logger.Info("Populating tables and view lists");
-            dispatcher.Invoke(() => ClearDataItemsLists());
+            dispatcher.Invoke(ClearDataItemsLists);
 
             foreach (var element in AllDataItems.Values.OrderBy(k => k.Name))
             {
@@ -152,10 +152,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
                 {
                     element.IsVisible = !excludeTablesRegex.IsMatch(element.Name);
                 }
-                dispatcher.Invoke(() =>
-                {
-                    AddToViews(element);
-                });
+                dispatcher.Invoke(AddToViews, element);
             }
             dispatcher.Invoke(() => ViewsVisible = AllViews.Any());
             App.Logger.Info("All items populated");
@@ -165,7 +162,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
         {
             if (e.PropertyName == nameof(TableViewModel.IsSelected))
             {
-                var item = (TableViewModel)sender;
+                TableViewModel item = (TableViewModel)sender;
                 if (item.IsSelected)
                 {
                     App.Logger.Trace($"*** Table: {item.Name} has been selected");
@@ -183,7 +180,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
         private void SetTables(bool selected)
         {
-            var selection = (selected ? AllTables : AllDataItems.Values.Where(t => !t.Table.IsView)).ToList();
+            List<TableViewModel> selection = (selected ? AllTables : AllDataItems.Values.Where(t => !t.Table.IsView)).ToList();
             foreach (var item in selection)
             {
                 item.IsSelected = selected;
@@ -192,7 +189,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
         private void SetViews(bool selected)
         {
-            var selection = (selected ? AllViews : AllDataItems.Values.Where(t => t.Table.IsView)).ToList();
+            List<TableViewModel> selection = (selected ? AllViews : AllDataItems.Values.Where(t => t.Table.IsView)).ToList();
             foreach (var item in selection)
             {
                 item.IsSelected = selected;

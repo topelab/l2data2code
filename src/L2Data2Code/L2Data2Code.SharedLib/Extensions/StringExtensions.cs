@@ -33,10 +33,10 @@ namespace L2Data2Code.SharedLib.Extensions
             if (word.IsEmpty())
                 return string.Empty;
 
-            bool isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
+            var isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
             if (isUpperWord)
             {
-                string lowerWord = word.ToLower();
+                var lowerWord = word.ToLower();
                 return Service(isoLang).Singularize(lowerWord).ToUpper();
             }
 
@@ -53,10 +53,10 @@ namespace L2Data2Code.SharedLib.Extensions
             if (word.IsEmpty())
                 return string.Empty;
 
-            bool isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
+            var isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
             if (isUpperWord)
             {
-                string lowerWord = word.ToLower();
+                var lowerWord = word.ToLower();
                 return Service(isoLang).Pluralize(lowerWord).ToUpper();
             }
 
@@ -116,7 +116,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static StringBuilder AddTabs(this StringBuilder output, int indent)
         {
-            for (int i = 0; i < indent; i++)
+            for (var i = 0; i < indent; i++)
             {
                 output.Append('\t');
             }
@@ -125,8 +125,8 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static int LengthCompare(this string item1, string item2)
         {
-            int i1 = item1.Length;
-            int i2 = item2.Length;
+            var i1 = item1.Length;
+            var i2 = item2.Length;
 
             if (i1 == i2)
             {
@@ -256,15 +256,15 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string ToSlug(this string fileName, string validCharsToAdd)
         {
 
-            string ValidChars = "0123456789abcdefghijklmnopqrstuvwxyz" + validCharsToAdd;
+            var ValidChars = "0123456789abcdefghijklmnopqrstuvwxyz" + validCharsToAdd;
             const string ReplaceableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúàèìòùñÁÉÍÓÚÀÈÌÒÙÑäëïöüÄËÏÖÜâêîôûÂÊÎÔÛÇç";
             const string ReplacingChars = "abcdefghijklmnopqrstuvwxyzaeiouaeiounaeiouaeiounaeiouaeiouaeiouaeioucc";
             const string Separator = "-";
 
             string CharToAdd;
-            string PrevChar = string.Empty;
+            var PrevChar = string.Empty;
 
-            string sCleanUrl = string.Empty;
+            var sCleanUrl = string.Empty;
 
             if ((fileName ?? string.Empty) != string.Empty)
             {
@@ -303,7 +303,7 @@ namespace L2Data2Code.SharedLib.Extensions
                 sCleanUrl = sCleanUrl[1..];
             }
 
-            int lon = sCleanUrl.Length;
+            var lon = sCleanUrl.Length;
             if (lon > 1)
             {
                 while (sCleanUrl[lon - 1] == '-')

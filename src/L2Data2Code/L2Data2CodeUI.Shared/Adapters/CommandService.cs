@@ -40,11 +40,11 @@ namespace L2Data2CodeUI.Shared.Adapters
             var directorio = compiledVars != null ? mustacheRenderizer.Render(command.Directory, compiledVars) : command.Directory;
             var exec = compiledVars != null ? mustacheRenderizer.Render(command.Exec, compiledVars) : command.Exec ;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
-            var outputData = new StringBuilder();
+            StringBuilder outputData = new();
 
             try
             {
-                var process = new Process();
+                Process process = new();
                 process.StartInfo.FileName = "cmd";
                 process.StartInfo.Arguments = $"/c {exec}";
                 process.StartInfo.CreateNoWindow = !command.ShowWindow;

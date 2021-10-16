@@ -107,7 +107,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         private void OnOpenVSCommand(object obj)
         {
-            if (CheckCanOpenVS(mainWindowViewModel.OutputPath, out string slnFile))
+            if (CheckCanOpenVS(mainWindowViewModel.OutputPath, out var slnFile))
             {
                 appService.Open(slnFile);
             }
@@ -128,7 +128,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         private void OnOpenVSCodeCommand(object obj)
         {
-            if (CheckCanOpenVS(mainWindowViewModel.OutputPath, out string slnFile))
+            if (CheckCanOpenVS(mainWindowViewModel.OutputPath, out var slnFile))
             {
                 appService.Open(slnFile, mainWindowViewModel.VSCodePath, AppService.DIRECTORY_PATTERN);
             }
@@ -149,7 +149,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         private void OnOpenPSCommand(object obj)
         {
-            if (CheckCanOpenVS(mainWindowViewModel.OutputPath, out string slnFile))
+            if (CheckCanOpenVS(mainWindowViewModel.OutputPath, out var slnFile))
             {
                 appService.Open(slnFile, mainWindowViewModel.PSPath, $"-noexit -command \"cd {AppService.DIRECTORY_PATTERN}\"");
             }
@@ -170,8 +170,8 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         private void OnOpenVarsWindow(object obj)
         {
-            var varsViewModel = new VarsViewModel(adapter.CompiledVars);
-            var varsWindow = new VarsWindow(varsViewModel);
+            VarsViewModel varsViewModel = new(adapter.CompiledVars);
+            VarsWindow varsWindow = new(varsViewModel);
             varsWindow.ShowDialog();
         }
 
@@ -210,9 +210,9 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
             try
             {
-                string basePath = adapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-                string template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
-                string TemplatePath = Path.Combine(basePath, template);
+                var basePath = adapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+                var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
+                var TemplatePath = Path.Combine(basePath, template);
                 return Directory.Exists(TemplatePath);
             }
             catch (Exception ex)
@@ -245,9 +245,9 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         public void EditTemlate()
         {
-            string basePath = adapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            string template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
-            string TemplatePath = Path.Combine(basePath, template);
+            var basePath = adapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
+            var TemplatePath = Path.Combine(basePath, template);
             OpenWithEditor(TemplatePath);
         }
 
@@ -265,10 +265,10 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         private void OpenWithEditor(string file)
         {
-            string defaultEditor = mainWindowViewModel.VSCodePath;
+            var defaultEditor = mainWindowViewModel.VSCodePath;
 
-            string editor1 = adapter.SettingsConfiguration["Editor"];
-            string editor2 = adapter.SettingsConfiguration["Editor2"];
+            var editor1 = adapter.SettingsConfiguration["Editor"];
+            var editor2 = adapter.SettingsConfiguration["Editor2"];
 
             editor1 = editor1 == "VSCODE" ? defaultEditor : editor1;
             editor2 = editor2 == "VSCODE" ? defaultEditor : editor2;
