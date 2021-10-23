@@ -15,6 +15,9 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.BaseGenerator.Services
 {
+    /// <summary>
+    /// Code generator service
+    /// </summary>
     public class CodeGeneratorService : ICodeGeneratorService
     {
         private readonly ILogger logger;
@@ -76,6 +79,7 @@ namespace L2Data2Code.BaseGenerator.Services
         /// </summary>
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
+        /// <param name="logger">Logger service</param>
         public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
@@ -89,7 +93,6 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="options">Options for generator</param>
         /// <param name="library">Template library, that is the content for "Templates.xml" file.</param>
         /// <param name="vars">Current collection of vars</param>
@@ -150,6 +153,11 @@ namespace L2Data2Code.BaseGenerator.Services
             }
         }
 
+        /// <summary>
+        /// Process tables and call <paramref name="onTableProcessed"/> when a table is processed. It can use <paramref name="alternativeDictionary"/> to set column descriptions
+        /// </summary>
+        /// <param name="onTableProcessed">Action for every table processed</param>
+        /// <param name="alternativeDictionary">Alternative column descriptions</param>
         public void ProcessTables(Action<string> onTableProcessed = null, Dictionary<string, string> alternativeDictionary = null)
         {
             try
