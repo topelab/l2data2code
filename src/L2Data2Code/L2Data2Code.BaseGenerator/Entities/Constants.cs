@@ -1,11 +1,21 @@
 namespace L2Data2Code.BaseGenerator.Entities
 {
+    /// <summary>
+    /// Constants
+    /// </summary>
     public class Constants
     {
+        /// <summary>
+        /// Constant for Id
+        /// </summary>
         public const string ID = "Id";
 
+        /// <summary>
+        /// Database constants
+        /// </summary>
         public class DataBase
         {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public const string Bigint = "bigint";
             public const string Binary = "binary";
             public const string Bit = "bit";
@@ -36,16 +46,25 @@ namespace L2Data2Code.BaseGenerator.Entities
             public const string Uniqueidentifier = "uniqueidentifier";
             public const string Varbinary = "varbinary";
             public const string Varchar = "varchar";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
+        /// <summary>
+        /// Internal types constants
+        /// </summary>
         public class InternalTypes
         {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public const string ReferenceTo = "=";
             public const string Collection = "*";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
         private static readonly string[] nullabeTypes = { "bool", "char", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "float", "double", "decimal", "DateTime", "TimeSpan" };
 
+        /// <summary>
+        /// Nullable types constants
+        /// </summary>
         public static string[] NullableTypes { get => nullabeTypes; }
     }
 

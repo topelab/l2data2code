@@ -7,32 +7,55 @@ using Unity;
 
 namespace L2Data2Code.BaseGenerator.Entities
 {
+    /// <summary>
+    /// Configuration matters
+    /// </summary>
     public static class Config
     {
         private static readonly string DefaultLang = "en";
         private static readonly bool Remove1stDefaultValue = false;
         private static readonly IBasicConfiguration<SchemaConfiguration> schemas = schemas ?? ContainerManager.Container.Resolve<IBasicConfiguration<SchemaConfiguration>>();
 
+        /// <summary>
+        /// Get language for schema name
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static string GetLang(string schemaName)
         {
             return schemas[schemaName]?.TableNameLanguage ?? DefaultLang;
         }
 
+        /// <summary>
+        /// Should remove first word on table name's?
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static bool ShouldRemoveWord1(string schemaName)
         {
             return schemas[schemaName]?.RemoveFirstWordOnColumnNames ?? Remove1stDefaultValue;
         }
 
+        /// <summary>
+        /// Use normalized names?
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static bool NormalizedNames(string schemaName)
         {
             return schemas[schemaName]?.NormalizedNames ?? false;
         }
 
+        /// <summary>
+        /// Can create DB?
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static bool CanCreateDB(string schemaName)
         {
             return schemas[schemaName]?.CanCreateDB ?? false;
         }
 
+        /// <summary>
+        /// Get schema dictionary from file
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName)
         {
             Dictionary<string, string> schemaDictionary = new();
@@ -60,6 +83,10 @@ namespace L2Data2Code.BaseGenerator.Entities
             return schemaDictionary;
         }
 
+        /// <summary>
+        /// Get connection sting
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static (string ConnectionString, string Provider) GetConnectionString(string schemaName)
         {
             var schemaInfo = schemas[schemaName];
@@ -73,6 +100,10 @@ namespace L2Data2Code.BaseGenerator.Entities
             return (connectionString, provider);
         }
 
+        /// <summary>
+        /// Get tables renames
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static Dictionary<string, string> GetTableRenames(string schemaName)
         {
             Dictionary<string, string> renameTable = new();
@@ -89,6 +120,10 @@ namespace L2Data2Code.BaseGenerator.Entities
             return renameTable;
         }
 
+        /// <summary>
+        /// Get columns renames
+        /// </summary>
+        /// <param name="schemaName">Schema name key</param>
         public static Dictionary<string, string> GetColumnRenames(string schemaName)
         {
             Dictionary<string, string> renameColumn = new();
