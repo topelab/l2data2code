@@ -1,5 +1,4 @@
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2CodeWPF.ViewModel;
 using Unity;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseGenerator.Interfaces;
@@ -7,6 +6,7 @@ using L2Data2Code.SharedLib.Helpers;
 using L2Data2Code.SharedLib.Configuration;
 using NLog;
 using L2Data2CodeWPF.SharedLib;
+using L2Data2CodeWPF.Main;
 
 namespace L2Data2CodeWPF
 {
@@ -38,8 +38,8 @@ namespace L2Data2CodeWPF
             container.RegisterSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>();
             container.RegisterSingleton<ITemplatesConfiguration, TemplatesConfiguration>();
 
-            container.RegisterType<MainWindowViewModel>(TypeLifetime.PerContainer);
-            container.RegisterType<IMessagesViewModel, MessagesViewModel>(TypeLifetime.PerContainer);
+            container.RegisterType<MainWindowVM>(TypeLifetime.PerContainer);
+            container.RegisterType<IMessagesVM, MessagesVM>(TypeLifetime.PerContainer);
             container.RegisterType<IMessageService, MessageService>(TypeLifetime.PerContainer);
             container.RegisterType<IAppService, AppService>(TypeLifetime.PerContainer);
             container.RegisterType<ICommandService, CommandService>(TypeLifetime.PerContainer);

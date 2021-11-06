@@ -1,4 +1,4 @@
-using L2Data2CodeWPF.ViewModel;
+using L2Data2CodeWPF.Main;
 using MahApps.Metro.IconPacks;
 using System.Windows.Controls;
 
@@ -9,8 +9,8 @@ namespace L2Data2CodeWPF.Controls.CommandBar
     /// </summary>
     public partial class CommandBarUserControl : UserControl
     {
-        private readonly CommandBarViewModel viewModel;
-        private readonly MainWindowViewModel mainWindowViewModel;
+        private readonly CommandBarVM commandBarVM;
+        private readonly MainWindowVM mainWindowVM;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandBarUserControl"/> class.
@@ -20,18 +20,18 @@ namespace L2Data2CodeWPF.Controls.CommandBar
             InitializeComponent();
             if (App.Current.MainWindow != null)
             {
-                mainWindowViewModel = App.Current.MainWindow.DataContext as MainWindowViewModel;
-                viewModel = mainWindowViewModel.CommandBarViewModel;
-                DataContext = viewModel;
-                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+                mainWindowVM = App.Current.MainWindow.DataContext as MainWindowVM;
+                commandBarVM = mainWindowVM.CommandBarVM;
+                DataContext = commandBarVM;
+                commandBarVM.PropertyChanged += CommandBarVM_PropertyChanged;
             }
         }
 
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void CommandBarVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(viewModel.ChangeButtons))
+            if (e.PropertyName == nameof(commandBarVM.ChangeButtons))
             {
-                (OpenCmdButton.Content as PackIconSimpleIcons).Kind = mainWindowViewModel.AppType switch
+                (OpenCmdButton.Content as PackIconSimpleIcons).Kind = mainWindowVM.AppType switch
                 {
                     L2Data2CodeUI.Shared.Dto.AppType.VisualStudio => PackIconSimpleIconsKind.VisualStudio,
                     L2Data2CodeUI.Shared.Dto.AppType.VisualStudioCode => PackIconSimpleIconsKind.VisualStudioCode,
@@ -41,7 +41,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
                     _ => PackIconSimpleIconsKind.None
                 };
 
-                OpenCmdButton.ToolTip = mainWindowViewModel.AppType switch
+                OpenCmdButton.ToolTip = mainWindowVM.AppType switch
                 {
                     L2Data2CodeUI.Shared.Dto.AppType.VisualStudio => Strings.OpenVSSolution,
                     L2Data2CodeUI.Shared.Dto.AppType.VisualStudioCode => Strings.OpenVSC,

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>2.9.121.1002</Version>
+    <Version>2.9.221.1106</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Stubble.Core" Version="1.9.3" />
