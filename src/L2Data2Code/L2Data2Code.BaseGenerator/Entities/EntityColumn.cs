@@ -1,3 +1,5 @@
+using System;
+
 namespace L2Data2Code.BaseGenerator.Entities
 {
     public class EntityColumn
@@ -25,39 +27,23 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
 
-
-
         public string GetDefaultValue()
         {
             return Type switch
             {
-                Constants.DataBase.Binary
-                or Constants.DataBase.Varbinary
-                or Constants.DataBase.Image => "null",
+                nameof(DateTime) => "new DateTime(1,1,1)",
+                nameof(TimeSpan) => "TimeSpan.Zero",
+                "bool" => "false",
 
-                Constants.DataBase.Date
-                or Constants.DataBase.Datetime
-                or Constants.DataBase.Timestamp => IsNull ? "null" : "new DateTime(1900,1,1)",
+                "int" or "long" or "float"
+                or "double" or "decimal" or "short" or "byte"
+                or nameof(Int16)
+                or nameof(Int32)
+                or nameof(Int64)
+                or nameof(Double)
+                or nameof(Decimal) => "0",
 
-                Constants.DataBase.Time => IsNull ? "null" : "TimeSpan.Zero",
-
-                Constants.DataBase.Bit => IsNull ? "null" : "false",
-
-                Constants.DataBase.Bigint
-                or Constants.DataBase.Int
-                or Constants.DataBase.Smallint
-                or Constants.DataBase.Tinyint
-                or Constants.DataBase.Money
-                or Constants.DataBase.Numeric
-                or Constants.DataBase.Float
-                or Constants.DataBase.Decimal => IsNull ? "null" : "0",
-
-                Constants.DataBase.Char
-                or Constants.DataBase.Text
-                or Constants.DataBase.Varchar
-                or Constants.DataBase.Nchar
-                or Constants.DataBase.Nvarchar
-                or Constants.DataBase.Ntext => IsNull ? "null" : "string.Empty",
+                "char" => "'\0'",
 
                 _ => "null",
             };
