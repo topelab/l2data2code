@@ -2,6 +2,7 @@ using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
+using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
 using NLog;
 using System;
@@ -11,13 +12,11 @@ namespace L2Data2Code.BaseGenerator.Services
 {
     public class SchemaService : ISchemaService
     {
-        private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly ILogger logger;
         private readonly Dictionary<string, Tables> schemaNamesCached;
 
-        public SchemaService(IMustacheRenderizer mustacheRenderizer, ILogger logger)
+        public SchemaService(ILogger logger)
         {
-            this.mustacheRenderizer = mustacheRenderizer;
             this.logger = logger;
             schemaNamesCached = new();
         }
@@ -28,7 +27,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             try
             {
-                mustacheRenderizer.SetIsoLanguaje(Config.GetLang(options.CreatedFromSchemaName));
+                StringExtensions.CurrentLang = Config.GetLang(options.CreatedFromSchemaName);
                 NameResolver tableNameResolver = new(options.CreatedFromSchemaName);
 
                 if (!schemaNamesCached.ContainsKey(options.SchemaName))

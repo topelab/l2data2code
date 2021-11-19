@@ -1,10 +1,11 @@
+using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
 using Stubble.Helpers;
 using System.Collections.Generic;
 
-namespace L2Data2Code.BaseGenerator.Extensions
+namespace L2Data2Code.BaseMustache.Extensions
 {
-    internal class MustacheHelpers : Helpers
+    public class MustacheHelpers : Helpers, IMustacheHelpers
     {
         private IDictionary<string, object> keyValuePairs;
 

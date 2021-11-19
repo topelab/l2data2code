@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace L2Data2Code.BaseGenerator.Extensions
+namespace L2Data2Code.BaseMustache.Extensions
 {
     public static class DictionaryExtensions
     {

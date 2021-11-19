@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Data2CodeWPF", "L2Data2CodeWPF\L2Data2CodeWPF.csproj", "{CE377730-547D-47D8-8B13-3502F58B30F0}"
 EndProject
@@ -32,6 +32,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertTemplates", "ConvertTemplates\ConvertTemplates.csproj", "{6EAAFED9-3EB8-44E0-970E-45A385C2A19D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Data2CodeUI.Shared", "L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj", "{E0BEEEDC-B21B-4153-8635-A12C9A87A051}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mustache", "Mustache\Mustache.csproj", "{9BC84B3D-147B-4BD8-BD99-387463F54F6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Data2Code.BaseMustache", "L2Data2Code.BaseMustache\L2Data2Code.BaseMustache.csproj", "{A80F7648-F090-473D-B803-E85ABCF81239}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +71,14 @@ Global
 		{E0BEEEDC-B21B-4153-8635-A12C9A87A051}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0BEEEDC-B21B-4153-8635-A12C9A87A051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0BEEEDC-B21B-4153-8635-A12C9A87A051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BC84B3D-147B-4BD8-BD99-387463F54F6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BC84B3D-147B-4BD8-BD99-387463F54F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BC84B3D-147B-4BD8-BD99-387463F54F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BC84B3D-147B-4BD8-BD99-387463F54F6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A80F7648-F090-473D-B803-E85ABCF81239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80F7648-F090-473D-B803-E85ABCF81239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A80F7648-F090-473D-B803-E85ABCF81239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A80F7648-F090-473D-B803-E85ABCF81239}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +91,8 @@ Global
 		{AEE39D52-7ADD-4E84-AD83-D028CCD3A2ED} = {25439D5C-D60D-473B-99E3-128FEB3A862F}
 		{6EAAFED9-3EB8-44E0-970E-45A385C2A19D} = {25439D5C-D60D-473B-99E3-128FEB3A862F}
 		{E0BEEEDC-B21B-4153-8635-A12C9A87A051} = {25439D5C-D60D-473B-99E3-128FEB3A862F}
+		{9BC84B3D-147B-4BD8-BD99-387463F54F6F} = {25439D5C-D60D-473B-99E3-128FEB3A862F}
+		{A80F7648-F090-473D-B803-E85ABCF81239} = {4275BB58-B02F-4716-ADDF-CDEC33FC2E8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50C20FA4-9B10-4E98-B307-A9E9A3CDA0B3}

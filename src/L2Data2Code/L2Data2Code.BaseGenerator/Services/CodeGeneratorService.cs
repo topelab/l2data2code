@@ -2,6 +2,8 @@ using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
 using L2Data2Code.BaseGenerator.Extensions;
 using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.BaseMustache.Extensions;
+using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
@@ -219,7 +221,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private ReplacementResult[] GenerarCodigos(EntityTable tabla)
         {
-            mustacheRenderizer.SetIsoLanguaje(Config.GetLang(Options.CreatedFromSchemaName));
+            StringExtensions.CurrentLang = Config.GetLang(Options.CreatedFromSchemaName);
 
             var replacement = GetReplacementData(tabla);
 

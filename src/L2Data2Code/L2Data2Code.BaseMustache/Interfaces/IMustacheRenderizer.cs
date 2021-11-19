@@ -1,8 +1,7 @@
-namespace L2Data2Code.BaseGenerator.Interfaces
+namespace L2Data2Code.BaseMustache.Interfaces
 {
     public interface IMustacheRenderizer
     {
         string Render(string template, object view);
-        void SetIsoLanguaje(string isoLang);
     }
 }

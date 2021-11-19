@@ -7,6 +7,9 @@ using L2Data2Code.SharedLib.Configuration;
 using NLog;
 using L2Data2CodeWPF.SharedLib;
 using L2Data2CodeWPF.Main;
+using L2Data2Code.BaseMustache.Interfaces;
+using L2Data2Code.BaseMustache.Services;
+using L2Data2Code.BaseMustache.Extensions;
 
 namespace L2Data2CodeWPF
 {
@@ -37,6 +40,8 @@ namespace L2Data2CodeWPF
             container.RegisterSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>();
             container.RegisterSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>();
             container.RegisterSingleton<ITemplatesConfiguration, TemplatesConfiguration>();
+            container.RegisterSingleton<IMustacheHelpers, MustacheHelpers>();
+            container.RegisterSingleton<IMustacheRenderizer, MustacheRenderizer>();
 
             container.RegisterType<MainWindowVM>(TypeLifetime.PerContainer);
             container.RegisterType<IMessagesVM, MessagesVM>(TypeLifetime.PerContainer);
@@ -44,7 +49,6 @@ namespace L2Data2CodeWPF
             container.RegisterType<IAppService, AppService>(TypeLifetime.PerContainer);
             container.RegisterType<ICommandService, CommandService>(TypeLifetime.PerContainer);
             container.RegisterType<IGeneratorAdapter, GeneratorAdapter>(TypeLifetime.PerContainer);
-            container.RegisterType<IMustacheRenderizer, MustacheRenderizer>(TypeLifetime.PerContainer);
             container.RegisterType<IGitService, GitService>(TypeLifetime.PerContainer);
             container.RegisterType<ISchemaService, SchemaService>(TypeLifetime.PerContainer);
             container.RegisterType<ICodeGeneratorService, CodeGeneratorService>(TypeLifetime.PerContainer);
