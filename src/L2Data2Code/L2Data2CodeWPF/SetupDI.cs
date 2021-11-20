@@ -10,6 +10,7 @@ using L2Data2CodeWPF.Main;
 using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.BaseMustache.Extensions;
+using L2Data2Code.BaseGenerator.Configuration;
 
 namespace L2Data2CodeWPF
 {

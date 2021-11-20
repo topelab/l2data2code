@@ -1,14 +1,7 @@
-namespace L2Data2Code.SharedLib.Configuration
+namespace L2Data2Code.BaseGenerator.Configuration
 {
-    public static class FileLabels
+    public static class GeneratorSectionLabels
     {
-        public const string APP_SETTINGS_FILE = "appsettings.json";
-    }
-
-    public static class SectionLabels
-    {
-        public const string APP_SETTINGS = "appSettings";
-        public const string SCHEMA = "Schemas";
         public const string GLOBAL = "Global";
         public const string TEMPLATES = "Templates";
         public const string VARS = "Configurations";

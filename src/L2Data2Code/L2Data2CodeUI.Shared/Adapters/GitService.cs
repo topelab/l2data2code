@@ -1,4 +1,4 @@
-using L2Data2Code.SharedLib.Configuration;
+using L2Data2Code.BaseGenerator.Entities;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using System.IO;

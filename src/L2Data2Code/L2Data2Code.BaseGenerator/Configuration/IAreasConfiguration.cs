@@ -1,4 +1,6 @@
-namespace L2Data2Code.SharedLib.Configuration
+using L2Data2Code.SharedLib.Configuration;
+
+namespace L2Data2Code.BaseGenerator.Configuration
 {
     public interface IAreasConfiguration : IBasicConfiguration<AreaConfiguration>
     {

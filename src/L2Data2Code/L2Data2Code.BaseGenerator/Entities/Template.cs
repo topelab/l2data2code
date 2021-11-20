@@ -1,4 +1,3 @@
-using L2Data2Code.SharedLib.Configuration;
 using System.Collections.Generic;
 
 namespace L2Data2Code.BaseGenerator.Entities

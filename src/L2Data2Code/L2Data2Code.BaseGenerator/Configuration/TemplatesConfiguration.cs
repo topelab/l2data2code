@@ -1,11 +1,12 @@
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
 
-namespace L2Data2Code.SharedLib.Configuration
+namespace L2Data2Code.BaseGenerator.Configuration
 {
     public class TemplatesConfiguration : BasicConfiguration<TemplateConfiguration>, ITemplatesConfiguration
     {
-        public TemplatesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, SectionLabels.TEMPLATES)
+        public TemplatesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.TEMPLATES)
         {
             SetVars();
             jsonSetting.PropertyChanged += (s, e) =>

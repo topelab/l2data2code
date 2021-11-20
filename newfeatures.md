@@ -1,5 +1,57 @@
 # L2 Data2Code new features
 
+## Mustache CLI
+
+Think about an application for command line to execute a mustache transformation in tree of paths for every file.
+
+We have this in `data.json`
+
+```json
+{
+    "Dishes":[
+        {
+            "Dish": "Apple",
+            "Type": "Postre"
+        },
+        {
+            "Dish": "Melon",
+            "Type": "Postre"
+        },
+        {
+            "Dish": "Black rice",
+            "Type": "First course"
+        }
+    ]
+}
+```
+
+And these files:
+
+- templatedir
+    - file1.md
+    - file2.md
+    - {{Type}}
+        - {{Dish}}.md
+
+
+The idea is that when you run:
+```cmd
+Mustache data.json templatedir outputdir
+```
+
+It will generate:
+
+- outputdir
+    - file1.md
+    - file2.md
+    - Dish
+        - Apple.md
+        - Melon.md
+    - First course
+        - Black rice.md
+
+
+
 ## Reverse engineering
 
 Think about an application that gets a folder and convert it to templates. We will need this vars:

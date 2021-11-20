@@ -1,4 +1,4 @@
-namespace L2Data2Code.SharedLib.Configuration
+namespace L2Data2Code.BaseGenerator.Entities
 {
     public class Command
     {

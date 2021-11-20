@@ -1,11 +1,12 @@
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Helpers;
 
-namespace L2Data2Code.SharedLib.Configuration
+namespace L2Data2Code.BaseGenerator.Configuration
 {
     public class AreasConfiguration : BasicConfiguration<AreaConfiguration>, IAreasConfiguration
     {
         private const string DEFAULT_KEY = "localserver";
-        public AreasConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, SectionLabels.AREAS)
+        public AreasConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.AREAS)
         {
         }
 

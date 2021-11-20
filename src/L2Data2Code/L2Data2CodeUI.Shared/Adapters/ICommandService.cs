@@ -1,4 +1,4 @@
-using L2Data2Code.SharedLib.Configuration;
+using L2Data2Code.BaseGenerator.Entities;
 using System.Collections.Generic;
 
 namespace L2Data2CodeUI.Shared.Adapters

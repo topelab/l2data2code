@@ -1,16 +1,17 @@
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
 
-namespace L2Data2Code.SharedLib.Configuration
+namespace L2Data2Code.BaseGenerator.Configuration
 {
     public class GlobalsConfiguration : BasicConfiguration<JToken>, IGlobalsConfiguration
     {
         public NameValueCollection Vars { get; private set; }
         public NameValueCollection FinalVars { get; private set; }
 
-        public GlobalsConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, SectionLabels.GLOBAL)
+        public GlobalsConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.GLOBAL)
         {
             SetVars();
             jsonSetting.PropertyChanged += (s, e) =>
