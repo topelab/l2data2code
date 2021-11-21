@@ -1,6 +1,7 @@
 using L2Data2Code.BaseMustache.Extensions;
 using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using Stubble.Extensions.JsonNet;
 using Stubble.Helpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,7 @@ namespace L2Data2Code.BaseMustache.Services
                             var isMethodOk = _methods.TryGetValue(k, out var method) && method.GetParameters()[0].ParameterType == o.GetType();
                             return !isMethodOk ? string.Empty : method.Invoke(null, new[] { o });
                         })
+                    .AddJsonNet()
                     .AddHelpers((Helpers)_helpers)
                 ).Build();
         }
