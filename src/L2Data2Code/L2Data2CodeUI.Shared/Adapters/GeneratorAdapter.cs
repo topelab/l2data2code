@@ -60,7 +60,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 ILogger logger)
         {
             this.messageService = messageService;
-            OutputPath = @"c:\src\tmp\";
+            OutputPath = CodeGeneratorDto.DefaultOutputPath;
             this.appService = appService;
             this.commandService = commandService;
             this.gitService = gitService;

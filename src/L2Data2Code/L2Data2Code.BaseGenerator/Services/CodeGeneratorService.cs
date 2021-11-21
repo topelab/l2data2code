@@ -234,7 +234,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             var outputBaseDir = mustacheRenderizer.Render(Template.SavePath, replacement).AddPathSeparator();
             if (string.IsNullOrEmpty(outputBaseDir))
-                outputBaseDir = "C:\\src\\tmp\\";
+                outputBaseDir = CodeGeneratorDto.DefaultOutputPath;
 
             return templateFiles.Keys
                 .Select(templateFile =>
