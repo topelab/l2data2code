@@ -10,23 +10,13 @@ namespace Mustache
     {
         static void Main(string[] args)
         {
-            IJsonSetting jsonSetting = new JsonSetting(@"C:\arc\src\LinqPad\efcore\data.json");
+            var options = MustacheOptionsFactory.Create(args);
+            IJsonSetting jsonSetting = new JsonSetting(options.JsonDataFile);
             IMustacheHelpers helpers = new MustacheHelpers();
             IMustacheRenderizer mustacher = new MustacheRenderizer(helpers);
 
-            string resul = mustacher.Render(@"
----------
-Hello!
-    
-    {{#Dishes}}
-{{#Valid}}
-    {{Type.ToPlural}} - {{Dish.UnCapitalize}}
-{{/Valid}}
-    {{/Dishes}}
----------
-", jsonSetting.Config);
+            //string resul = mustacher.Render(options.TemplatePath, jsonSetting.Config);
 
-            Console.WriteLine(resul);
 
         }
     }
