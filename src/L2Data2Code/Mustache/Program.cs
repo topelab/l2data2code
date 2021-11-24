@@ -30,38 +30,48 @@ namespace Mustache
         {
             outputPath = outputPath.AddPathSeparator();
             sourcePath = sourcePath.AddPathSeparator();
+            var entities = string.IsNullOrWhiteSpace(entity) ? view : view.SelectToken(entity);
 
-            if (!Directory.Exists(outputPath))
+            if (entities != null)
             {
-                Directory.CreateDirectory(outputPath);
-            }
-
-            foreach (var item in view[entity])
-{
-                string destPath = mustacher.Render(path.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item);
-                if (!Directory.Exists(destPath))
+                if (!Directory.Exists(outputPath))
                 {
-                    Directory.CreateDirectory(destPath);
+                    Directory.CreateDirectory(outputPath);
+                }
+
+
+                foreach (var item in entities)
+                {
+                    string destPath = mustacher.Render(path.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item);
+                    if (!Directory.Exists(destPath))
+                    {
+                        Directory.CreateDirectory(destPath);
+                    }
                 }
             }
+
         }
 
         private static void MustacheToOutput(string file, JObject view, string sourcePath, string outputPath, string entity)
         {
             outputPath = outputPath.AddPathSeparator();
             sourcePath = sourcePath.AddPathSeparator();
+            var entities = string.IsNullOrWhiteSpace(entity) ? view : view.SelectToken(entity);
 
-            if (!Directory.Exists(outputPath))
+            if (entities != null)
             {
-                Directory.CreateDirectory(outputPath);
-            }
+                if (!Directory.Exists(outputPath))
+                {
+                    Directory.CreateDirectory(outputPath);
+                }
 
-            foreach (var item in view[entity])
-            {
-                string outpuFile = mustacher.Render(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item);
-                string text = mustacher.Render(File.ReadAllText(file), item);
-                File.WriteAllText(outpuFile, text);
-                Console.WriteLine(outpuFile);
+                foreach (var item in entities)
+                {
+                    string outpuFile = mustacher.Render(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item);
+                    string text = mustacher.Render(File.ReadAllText(file), item);
+                    File.WriteAllText(outpuFile, text);
+                    Console.WriteLine(outpuFile);
+                }
             }
         }
     }
