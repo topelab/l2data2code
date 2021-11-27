@@ -11,7 +11,7 @@ namespace Mustache
 
         public FileExecutor(string templatePath)
         {
-            this.templatePath = templatePath ?? throw new System.ArgumentNullException(nameof(templatePath));
+            this.templatePath = templatePath ?? throw new ArgumentNullException(nameof(templatePath));
             Initialize();
         }
 
