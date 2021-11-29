@@ -2,7 +2,7 @@
 
 ## Mustache CLI
 
-Think about an application for command line to execute a mustache transformation in tree of paths for every file.
+**Published on 2.9.321.1119:** Think about an application for command line to execute a mustache transformation in tree of paths for every file.
 
 We have this in `data.json`
 

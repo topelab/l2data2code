@@ -1,3 +1,55 @@
+### 2.9.321.1119
+
+- **New**: Mustache cli, a command line utility to execute a file name and content transformation (based on "mustache") in tree of paths for every path and file.
+
+    We have this in `data.json`
+
+    ```json
+    {
+        "Dishes":[
+            {
+                "Dish": "Apple",
+                "Type": "Postre"
+            },
+            {
+                "Dish": "Melon",
+                "Type": "Postre"
+            },
+            {
+                "Dish": "Black rice",
+                "Type": "First course"
+            }
+        ]
+    }
+    ```
+
+    And these files:
+
+    - templatedir
+        - file1.md
+        - file2.md
+        - {{Type}}
+            - {{Dish}}.md
+
+
+    The idea is that when you run:
+    ```cmd
+    Mustache data.json templatedir outputdir Dishes
+    ```
+
+    It will generate:
+
+    - outputdir
+        - file1.md
+        - file2.md
+        - Dish
+            - Apple.md
+            - Melon.md
+        - First course
+            - Black rice.md
+
+
+
 ### 2.8.221.908
 
 - DataSource (inside Areas.Name) renamed to Schema
@@ -139,8 +191,8 @@
 
 - When defining the schema, it is possible to override the types of the columns, for example, in Sqlite, the *decimal* type in c# is cast to TEXT. With this new version, it is possible to set *decimal* to become NUMERIC.
 - Added properties:
-	- *OverrideDbType* (string): Overwritten type to be used in the output DB.
-	- *DbTypeOverrided* (bool): Indicates whether the column type has been overridden.
+    - *OverrideDbType* (string): Overwritten type to be used in the output DB.
+    - *DbTypeOverrided* (bool): Indicates whether the column type has been overridden.
 - SchemaFactory provides a new provider but only for output data sources: sqlite
 
 ### 2.3.920.1010
@@ -329,10 +381,10 @@
     - field 3 (CommandLine): program to open solution. Default `{file}`
     - field 4 (*CommandArguments*): arguments for command line used. Default empty string
 
-	We can use replacement `{file}`, `{directory}` or `{parent}` on *CommandLine* and *CommandArguments*:
-	- `{file}` represents file or files finded with *SearchExpression*
-	- `{directory}` is the path for the file (without the file name)
-	- `{parent}` is the path for parent directory.
+    We can use replacement `{file}`, `{directory}` or `{parent}` on *CommandLine* and *CommandArguments*:
+    - `{file}` represents file or files finded with *SearchExpression*
+    - `{directory}` is the path for the file (without the file name)
+    - `{parent}` is the path for parent directory.
 
 ### 2.1.4.716
 
