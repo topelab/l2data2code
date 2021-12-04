@@ -35,7 +35,7 @@ namespace L2Data2CodeWPF
         private static IUnityContainer Register(IUnityContainer container)
         {
             container.RegisterSingleton<IJsonSetting, JsonSetting>();
-            container.RegisterSingleton<IBasicNameValueConfiguration, AppSettingsConfiguration>(nameof(AppSettingsConfiguration));
+            container.RegisterSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>();
             container.RegisterSingleton<IAreasConfiguration, AreasConfiguration>();
             container.RegisterSingleton<IGlobalsConfiguration, GlobalsConfiguration>();
             container.RegisterSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>();

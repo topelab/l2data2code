@@ -16,15 +16,15 @@ namespace L2Data2Code.SharedLib.Helpers
 
         public JsonSetting(string settingsFile)
         {
-            SettingsFile(settingsFile);
+            Initialize(settingsFile);
         }
 
         public JsonSetting()
         {
-            SettingsFile(SectionLabels.APP_SETTINGS_FILE);
+            Initialize(SectionLabels.APP_SETTINGS_FILE);
         }
 
-        public void SettingsFile(string settingsFile)
+        public void Initialize(string settingsFile)
         {
             this.settingsFile = settingsFile;
             config = GetSettings(settingsFile);

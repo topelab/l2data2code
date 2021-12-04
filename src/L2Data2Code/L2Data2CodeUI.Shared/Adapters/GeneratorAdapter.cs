@@ -57,7 +57,13 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 IJsonSetting jsonSetting,
                                 IUnityContainer container,
                                 IFileMonitorService fileMonitorService,
-                                ILogger logger)
+                                ILogger logger,
+                                IAppSettingsConfiguration settingsConfiguration,
+                                IGlobalsConfiguration globalsConfiguration,
+                                IAreasConfiguration areasConfiguration,
+                                IBasicConfiguration<ModuleConfiguration> modulesConfiguration,
+                                IBasicConfiguration<SchemaConfiguration> schemasConfiguration,
+                                ITemplatesConfiguration templatesConfiguration)
         {
             this.messageService = messageService;
             OutputPath = CodeGeneratorDto.DefaultOutputPath;
@@ -69,16 +75,16 @@ namespace L2Data2CodeUI.Shared.Adapters
             this.jsonSetting = jsonSetting;
             this.logger = logger;
 
-            SettingsConfiguration = container.Resolve<IBasicNameValueConfiguration>(nameof(AppSettingsConfiguration));
+            SettingsConfiguration = settingsConfiguration;
+            GlobalsConfiguration = globalsConfiguration;
+            AreasConfiguration = areasConfiguration;
+            ModulesConfiguration = modulesConfiguration;
+            SchemasConfiguration = schemasConfiguration;
+            TemplatesConfiguration = templatesConfiguration;
+
             jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
             SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
             SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
-
-            GlobalsConfiguration = container.Resolve<IGlobalsConfiguration>();
-            AreasConfiguration = container.Resolve<IAreasConfiguration>();
-            ModulesConfiguration = container.Resolve<IBasicConfiguration<ModuleConfiguration>>();
-            SchemasConfiguration = container.Resolve<IBasicConfiguration<SchemaConfiguration>>();
-            TemplatesConfiguration = container.Resolve<ITemplatesConfiguration>();
 
             this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration["TemplatesBasePath"], "*.json");
         }

@@ -4,25 +4,28 @@ using L2Data2Code.SharedLib.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
-using Unity;
-using Unity.Resolution;
 
 namespace Mustache
 {
     internal class MustacheAction : IMustacheAction
     {
-        private readonly MustacheOptions options;
         private readonly IMustacheRenderizer renderizer;
         private readonly IJsonSetting jsonSetting;
         private readonly IFileExecutor fileExecutor;
-        public MustacheAction(IUnityContainer container, IJsonSetting jsonSetting, IMustacheRenderizer renderizer, MustacheOptions options)
+        private MustacheOptions options;
+
+        public MustacheAction(IJsonSetting jsonSetting, IMustacheRenderizer renderizer, IFileExecutor fileExecutor)
         {
             this.jsonSetting = jsonSetting ?? throw new ArgumentNullException(nameof(jsonSetting));
             this.renderizer = renderizer ?? throw new ArgumentNullException(nameof(renderizer));
-            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            this.fileExecutor = fileExecutor ?? throw new ArgumentNullException(nameof(fileExecutor));
+        }
 
-            jsonSetting.SettingsFile(options.JsonDataFile);
-            fileExecutor = container.Resolve<IFileExecutor>(new ParameterOverride("templatePath", options.TemplatePath));
+        public void Initialize(MustacheOptions options)
+        {
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            jsonSetting.Initialize(options.JsonDataFile);
+            fileExecutor.Initialize(options.TemplatePath);
         }
 
         public void Run()

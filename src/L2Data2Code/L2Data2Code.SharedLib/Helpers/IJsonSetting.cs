@@ -9,6 +9,6 @@ namespace L2Data2Code.SharedLib.Helpers
 
         void AddSettingFiles(params string[] additionalSettingFiles);
         void ReloadSettings(params string[] additionalSettingFiles);
-        void SettingsFile(string settingsFile);
+        void Initialize(string settingsFile);
     }
 }

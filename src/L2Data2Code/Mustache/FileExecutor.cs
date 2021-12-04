@@ -5,18 +5,12 @@ namespace Mustache
 {
     internal class FileExecutor : IFileExecutor
     {
-        private readonly string templatePath;
         private string[] files;
         private string[] dirs;
 
-        public FileExecutor(string templatePath)
+        public void Initialize(string templatePath)
         {
-            this.templatePath = templatePath ?? throw new ArgumentNullException(nameof(templatePath));
-            Initialize();
-        }
-
-        private void Initialize()
-        {
+            templatePath = templatePath ?? throw new ArgumentNullException(nameof(templatePath));
             files = Directory.GetFiles(templatePath, "*.*", SearchOption.AllDirectories);
             dirs = Directory.GetDirectories(templatePath, "*.*", SearchOption.AllDirectories);
         }

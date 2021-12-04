@@ -28,7 +28,7 @@ namespace L2Data2CodeWPF
             var container = ContainerManager.SetupContainer(SetupDI.Container);
             Logger = container.Resolve<ILogger>();
 
-            var settings = container.Resolve<IBasicNameValueConfiguration>(nameof(AppSettingsConfiguration));
+            var settings = container.Resolve<IAppSettingsConfiguration>();
 
             var uiCulture = settings["UICulture"];
             if (uiCulture != null && !uiCulture.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
