@@ -1,7 +1,6 @@
 using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
-using L2Data2Code.BaseGenerator.Extensions;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseMustache.Extensions;
 using L2Data2Code.SchemaReader.Interface;
@@ -19,7 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Unity;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -44,6 +42,9 @@ namespace L2Data2CodeUI.Shared.Adapters
         private readonly IJsonSetting jsonSetting;
         private Tables tables;
         private readonly StringBuilderWriter writer = new();
+        private readonly ISchemaOptionsFactory schemaOptionsFactory;
+        private readonly ISchemaService schemaService;
+        private readonly ITemplateService templateService;
 
         #endregion Private Fields
 
@@ -55,7 +56,6 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 IGitService gitService,
                                 ICodeGeneratorService codeGeneratorService,
                                 IJsonSetting jsonSetting,
-                                IUnityContainer container,
                                 IFileMonitorService fileMonitorService,
                                 ILogger logger,
                                 IAppSettingsConfiguration settingsConfiguration,
@@ -63,7 +63,10 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 IAreasConfiguration areasConfiguration,
                                 IBasicConfiguration<ModuleConfiguration> modulesConfiguration,
                                 IBasicConfiguration<SchemaConfiguration> schemasConfiguration,
-                                ITemplatesConfiguration templatesConfiguration)
+                                ITemplatesConfiguration templatesConfiguration,
+                                ISchemaOptionsFactory schemaOptionsFactory,
+                                ISchemaService schemaService,
+                                ITemplateService templateService)
         {
             this.messageService = messageService;
             OutputPath = CodeGeneratorDto.DefaultOutputPath;
@@ -74,6 +77,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             this.fileMonitorService = fileMonitorService;
             this.jsonSetting = jsonSetting;
             this.logger = logger;
+            this.schemaOptionsFactory = schemaOptionsFactory;
+            this.schemaService = schemaService;
+            this.templateService = templateService;
 
             SettingsConfiguration = settingsConfiguration;
             GlobalsConfiguration = globalsConfiguration;
@@ -207,7 +213,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             try
             {
                 HashSet<string> processedTemplates = new();
-                var library = options.TemplatePath.TryLoad(options.TemplateResource);
+                var library = templateService.TryLoad(options.TemplatePath, options.TemplateResource);
 
                 if (library == null)
                 {
@@ -337,7 +343,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 var canConnectToDb = schemaReader?.CanConnect(includeCommentServer: false) ?? false;
                 var canConnectToDbSchema = schemaReader?.CanConnect(includeCommentServer: true) ?? false;
-                _alternativeDictionary = Config.GetSchemaDictionaryFromFile(descriptionsSchemaName);
+                _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(descriptionsSchemaName);
 
                 if (canConnectToDb)
                 {
@@ -416,7 +422,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var library = options.TemplatePath.TryLoad(options.TemplateResource);
+                var library = templateService.TryLoad(options.TemplatePath, options.TemplateResource);
                 codeGeneratorService.Initialize(options, library);
                 CompiledVars.ClearAndAddRange(codeGeneratorService.GetVars());
                 CompiledVars.TryGetValue("SavePath", out var savePath);
@@ -441,7 +447,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             schemaName = AreasConfiguration.Schema(SelectedArea);
             descriptionsSchemaName = AreasConfiguration.CommentSchema(SelectedArea);
             outputSchemaName = AreasConfiguration.OutputSchema(SelectedArea);
-            schemaReader = SchemaFactory.Create(new SchemaOptions(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
+            schemaReader = SchemaFactory.Create(schemaOptionsFactory.Create(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);
@@ -460,8 +466,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                NameResolver tableNameResolver = new(schemaName);
-                tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(schemaName), _alternativeDictionary, tableNameResolver))
+                tables = schemaReader.ReadSchema(new SchemaReaderOptions(schemaService.ShouldRemoveWord1(schemaName), _alternativeDictionary))
                     ?? new Tables();
 
                 messageService.Clear(MessageCodes.READ_SCHEMA);

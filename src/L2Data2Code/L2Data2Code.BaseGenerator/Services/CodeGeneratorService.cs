@@ -1,6 +1,5 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
-using L2Data2Code.BaseGenerator.Extensions;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseMustache.Extensions;
 using L2Data2Code.BaseMustache.Interfaces;
@@ -25,6 +24,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly ISchemaService schemaService;
+        private readonly ITemplateService templateService;
 
         private readonly Dictionary<string, string> templateFiles;
         private readonly HashSet<string> referencedTables;
@@ -82,11 +82,13 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
         /// <param name="logger">Logger service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger)
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
+
             referencedTables = new();
             templateFiles = new();
             internalVars = new();
@@ -221,11 +223,11 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private ReplacementResult[] GenerarCodigos(EntityTable tabla)
         {
-            StringExtensions.CurrentLang = Config.GetLang(Options.CreatedFromSchemaName);
+            StringExtensions.CurrentLang = schemaService.GetLang(Options.CreatedFromSchemaName);
 
             var replacement = GetReplacementData(tabla);
 
-            var templatesPath = Template.GetPath();
+            var templatesPath = templateService.GetPath(Template);
 
             if (!templateFiles.Any())
             {
@@ -277,7 +279,7 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 templateFiles.Clear();
 
-                var templatesPath = Template.GetPath();
+                var templatesPath = templateService.GetPath(Template);
 
                 var listOfTemplates = Directory.GetFiles(templatesPath, "*.*", SearchOption.AllDirectories);
                 foreach (var templateFile in listOfTemplates)
@@ -536,6 +538,7 @@ namespace L2Data2Code.BaseGenerator.Services
             internalVars.Clear();
 
             internalVars.Add("database", SchemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
+            internalVars.Add(nameof(Template), Template.Name);
             internalVars.Add(nameof(Template.Company), Template.Company);
             internalVars.Add(nameof(Template.Area), Template.Area);
             internalVars.Add(nameof(Template.Module), Template.Module);
@@ -586,10 +589,10 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private Replacement GetReplacementData(EntityTable table)
         {
-            var (ConnectionString, Provider) = Config.GetConnectionString(Options.CreatedFromSchemaName);
+            var (ConnectionString, Provider) = schemaService.GetConnectionString(Options.CreatedFromSchemaName);
 
             var tableName = table.TableName;
-            var normalizeNames = Config.NormalizedNames(Options.CreatedFromSchemaName);
+            var normalizeNames = schemaService.NormalizedNames(Options.CreatedFromSchemaName);
 
             var properties =
                 table.Columns.Select(
@@ -635,12 +638,13 @@ namespace L2Data2Code.BaseGenerator.Services
             Entity entity = new()
             {
                 Name = table.ClassName,
-                UseSpanish = Config.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
+                UseSpanish = schemaService.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
             };
 
             Replacement currentReplacement = new()
             {
+                Template = Template.Name,
                 Entity = entity,
                 IsView = table.IsView,
                 IsUpdatable = table.IsUpdatable,
@@ -657,7 +661,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 UnfilteredColumns = properties,
                 GenerateBase = false,
                 Vars = internalVars,
-                CanCreateDB = Config.CanCreateDB(Options.CreatedFromSchemaName),
+                CanCreateDB = schemaService.CanCreateDB(Options.CreatedFromSchemaName),
             };
 
             return currentReplacement;

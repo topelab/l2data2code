@@ -2,21 +2,24 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using System.Collections.Generic;
+using Unity;
 
 namespace L2Data2Code.SchemaReader.Fake
 {
     public class FakeSchemaReader : Schema.SchemaReader
     {
-        private INameResolver _resolver;
+        private readonly INameResolver _resolver;
 
         public FakeSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
+            _resolver = ContainerManager.Container.Resolve<INameResolver>();
+            _resolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
             Tables result = new();
             AddFakeTable("first_table", result, options.RemoveFirstWord);
             AddFakeTable("second_table", result, options.RemoveFirstWord);

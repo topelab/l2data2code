@@ -1,6 +1,7 @@
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using Microsoft.CSharp;
 using System;
 using System.CodeDom;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Unity;
 
 namespace L2Data2Code.SchemaReader.Object
 {
@@ -20,7 +22,7 @@ namespace L2Data2Code.SchemaReader.Object
         private readonly string assemblyPath;
         private readonly string nameSpace;
         private readonly List<string> nameSpacesCollection;
-        private INameResolver resolver;
+        private readonly INameResolver resolver;
 
         /// <summary>
         /// Contructor
@@ -40,6 +42,8 @@ namespace L2Data2Code.SchemaReader.Object
                 throw new Exception($"Assembly file {assemblyPath} doesn't exist");
             }
             nameSpacesCollection = new List<string>();
+            resolver = ContainerManager.Container.Resolve<INameResolver>();
+            resolver.Initialize(options.SchemaName);
         }
 
         /// <summary>
@@ -49,7 +53,6 @@ namespace L2Data2Code.SchemaReader.Object
         /// <returns>Collection of tables</returns>
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            resolver = options.NameResolver ?? new DefaultNameResolver();
             nameSpacesCollection.Clear();
             var tables = GetTables(nameSpace, options);
             return tables;

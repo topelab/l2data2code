@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 
 namespace L2Data2CodeWPF.Main
 {
-    public interface IMessagesVM
+    public interface IMessagePanelService
     {
         ObservableCollection<MessageVM> AllMessages { get; }
 

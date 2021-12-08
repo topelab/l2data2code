@@ -2,12 +2,14 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Unity;
 
 namespace L2Data2Code.SchemaReader.MySql
 {
@@ -15,17 +17,18 @@ namespace L2Data2Code.SchemaReader.MySql
     {
         private readonly string _connectionString;
         private MySqlConnection _connection;
-        private INameResolver _resolver;
+        private readonly INameResolver _resolver;
 
 
         public MySqlSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
             _connectionString = options.ConnectionString;
+            _resolver = ContainerManager.Container.Resolve<INameResolver>();
+            _resolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
             Tables result = new();
 
             using (_connection = new MySqlConnection(_connectionString))

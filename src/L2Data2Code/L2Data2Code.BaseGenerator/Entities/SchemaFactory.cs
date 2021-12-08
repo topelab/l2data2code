@@ -74,7 +74,6 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             if (providers.TryGetValue(connection.Provider, out var providerDefinition))
             {
-
                 return (ISchemaReader)Activator.CreateInstance(providerDefinition.Type, schemaOptions);
             }
             else

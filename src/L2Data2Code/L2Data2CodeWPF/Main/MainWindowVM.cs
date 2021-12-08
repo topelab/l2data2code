@@ -19,7 +19,7 @@ namespace L2Data2CodeWPF.Main
     {
         private readonly bool initialGenerateOnlyJsonVisible;
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly IMessagesVM messagesVM;
+        private readonly IMessagePanelService messagePanelService;
         private readonly IMessageService messageService;
         private readonly IAppService appService;
         private readonly IDispatcherWrapper dispatcher;
@@ -161,7 +161,7 @@ namespace L2Data2CodeWPF.Main
         public bool MessagePanelOpened
         {
             get { return _messagePanelOpened; }
-            set { SetProperty(ref _messagePanelOpened, value, () => { messagesVM.ViewAll(value); }); }
+            set { SetProperty(ref _messagePanelOpened, value, () => { messagePanelService.ViewAll(value); }); }
         }
 
         public bool MessagePanelVisible { get => AllMessages.Any(); }
@@ -200,11 +200,11 @@ namespace L2Data2CodeWPF.Main
 
             if (!RunningGenerateCode && anyItems && runnig)
             {
-                messagesVM.Add(string.Format(Strings.CannotGenerateCode, slnFile), MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
+                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, slnFile), MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
             }
             else
             {
-                messagesVM.ClearPinned(MessageCodes.CAN_GENERATE_CODE);
+                messagePanelService.ClearPinned(MessageCodes.CAN_GENERATE_CODE);
             }
             return result;
         }
@@ -237,7 +237,7 @@ namespace L2Data2CodeWPF.Main
 
         }
 
-        public ObservableCollection<MessageVM> AllMessages => messagesVM.AllMessages;
+        public ObservableCollection<MessageVM> AllMessages => messagePanelService.AllMessages;
         public bool PauseTimer { get; set; }
         public bool RunningGenerateCode
         {
@@ -272,16 +272,18 @@ namespace L2Data2CodeWPF.Main
 
         public string PSPath { get; set; }
 
-        public MainWindowVM(IMessagesVM messagesVM,
-                                   IMessageService messageService,
-                                   IAppService appService,
-                                   IGeneratorAdapter generatorAdapter,
-                                   IDispatcherWrapper dispatcher)
+        public IDispatcherWrapper Dispatcher => dispatcher;
+
+        public MainWindowVM(IMessagePanelService messagePanelService,
+                            IMessageService messageService,
+                            IAppService appService,
+                            IGeneratorAdapter generatorAdapter,
+                            IDispatcherWrapper dispatcher)
         {
             this.generatorAdapter = generatorAdapter;
             this.appService = appService;
             this.messageService = messageService;
-            this.messagesVM = messagesVM;
+            this.messagePanelService = messagePanelService;
             this.dispatcher = dispatcher;
 
             this.messageService.SetActions(ShowMessage, ClearMessages);
@@ -298,7 +300,7 @@ namespace L2Data2CodeWPF.Main
             this.generatorAdapter.GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
             CommandBarVM = new CommandBarVM(this);
-            TablePanelVM = new TablePanelVM(this, dispatcher);
+            TablePanelVM = new TablePanelVM(this);
 
             ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
             initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out var generateJsonInfo) && generateJsonInfo
@@ -332,14 +334,14 @@ namespace L2Data2CodeWPF.Main
 
         private void ClearMessages(string code)
         {
-            messagesVM.ClearPinned(code);
+            messagePanelService.ClearPinned(code);
         }
 
         private void ShowMessage(MessageType messageType, string message, string showMessage, string code)
         {
             if (showMessage.NotEmpty())
             {
-                messagesVM.Add(showMessage, MessagePanelOpened, code);
+                messagePanelService.Add(showMessage, MessagePanelOpened, code);
             }
 
             if (message.NotEmpty())

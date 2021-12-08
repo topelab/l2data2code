@@ -11,13 +11,5 @@ namespace L2Data2Code.SchemaReader.Schema
         public StringBuilderWriter SummaryWriter { get; set; }
         public string DescriptionsSchemaName { get; set; }
         public string DescriptionsConnectionString { get; set; }
-
-        public SchemaOptions(IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName)
-        {
-            SchemasConfiguration = schemasConfiguration;
-            SchemaName = schemaName;
-            SummaryWriter = summaryWriter;
-            DescriptionsSchemaName = descriptionsSchemaName;
-        }
     }
 }

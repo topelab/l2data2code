@@ -1,4 +1,3 @@
-using L2Data2CodeWPF.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,14 +7,14 @@ using System.Windows.Threading;
 
 namespace L2Data2CodeWPF.Main
 {
-    public class MessagesVM : BaseVM, IMessagesVM
+    public class MessagePanelService : IMessagePanelService
     {
         private bool runningPurger;
         private readonly Dispatcher dispatcher;
 
         public ObservableCollection<MessageVM> AllMessages { get; }
 
-        public MessagesVM()
+        public MessagePanelService()
         {
             dispatcher = Application.Current.Dispatcher;
             AllMessages = new ObservableCollection<MessageVM>();

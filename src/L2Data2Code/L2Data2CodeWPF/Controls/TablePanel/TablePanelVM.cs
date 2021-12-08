@@ -26,12 +26,11 @@ namespace L2Data2CodeWPF.Controls.TablePanel
         /// Initializes a new instance of the <see cref="TablePanelVM"/> class.
         /// </summary>
         /// <param name="baseVM">The base view model.</param>
-        public TablePanelVM(IBaseVM baseVM,
-                                   IDispatcherWrapper dispatcher) : base(baseVM)
+        public TablePanelVM(IBaseVM baseVM) : base(baseVM)
         {
             mainWindowVM = (MainWindowVM)baseVM;
             adapter = mainWindowVM.Adapter;
-            this.dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+            dispatcher = mainWindowVM.Dispatcher;
         }
 
         public ObservableCollection<TableVM> AllTables { get; set; } = new ObservableCollection<TableVM>();

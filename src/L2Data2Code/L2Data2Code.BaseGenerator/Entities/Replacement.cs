@@ -14,6 +14,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     .Where(p => !IgnoreColumns.Contains(p.Name, IgnoreCaseComparer.Instance))
                     .Where(p => !(IgnoreColumns.Contains(Constants.ID) && p.IsEntityId()));
 
+        public string Template { get; set; }
         public Entity Entity { get; set; }
         public string Module { get; set; }
         public string Area { get; set; }

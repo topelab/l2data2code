@@ -3,6 +3,7 @@ using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Main;
+using L2Data2CodeWPF.SharedLib;
 using L2Data2CodeWPF.Vars;
 using System;
 using System.ComponentModel;
@@ -16,7 +17,6 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         private readonly MainWindowVM mainWindowVM;
         private readonly IMessageService messageService;
         private readonly IAppService appService;
-
 
         public CommandBarVM(IBaseVM baseVM) : base(baseVM)
         {

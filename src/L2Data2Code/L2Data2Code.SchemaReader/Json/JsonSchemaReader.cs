@@ -2,19 +2,21 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Unity;
 
 namespace L2Data2Code.SchemaReader.Json
 {
     public class JsonSchemaReader : Schema.SchemaReader
     {
         private readonly string _connectionString;
-        private INameResolver _resolver;
+        private readonly INameResolver _resolver;
 
         public JsonSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
@@ -23,12 +25,12 @@ namespace L2Data2Code.SchemaReader.Json
             {
                 throw new Exception($"JSON file {_connectionString} doesn't exist");
             }
+            _resolver = ContainerManager.Container.Resolve<INameResolver>();
+            _resolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
-
             var content = File.ReadAllText(_connectionString);
             var tableList = JsonConvert.DeserializeObject<List<Table>>(content);
             return Resolve(tableList, options.RemoveFirstWord, options.TableRegex);

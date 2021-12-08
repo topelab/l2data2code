@@ -2,17 +2,19 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Unity;
 
 namespace L2Data2Code.SchemaReader.SqlServer
 {
     public class SqlServerSchemaReader : Schema.SchemaReader
     {
-        private INameResolver _resolver;
+        private readonly INameResolver _resolver;
         private Dictionary<string, string> _columnsDescriptions = new();
         private readonly string _connectionString;
         private readonly string _connectionStringForObjectDescriptions;
@@ -23,6 +25,8 @@ namespace L2Data2Code.SchemaReader.SqlServer
         {
             _connectionString = options.ConnectionString;
             _connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;
+            _resolver = ContainerManager.Container.Resolve<INameResolver>();
+            _resolver.Initialize(options.SchemaName);
         }
 
         public override bool CanConnect(bool includeCommentServer = false)
@@ -56,7 +60,6 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
             _columnsDescriptions = options.AlternativeDescriptions ?? GetTableDescriptions(_connectionStringForObjectDescriptions);
             Tables result = new();
 
