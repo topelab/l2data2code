@@ -65,11 +65,11 @@ Every template has a name and these properties:
     - field 2 (*SearchExpression*): file pattern to search. Default `*.sln`
     - field 3 (CommandLine): program to open solution. Default `{file}`
     - field 4 (*CommandArguments*): arguments for command line used. Default empty string.
-	
-	We can use replacement `{file}`, `{directory}` or `{parent}` on *CommandLine* and *CommandArguments*:
-	- `{file}` represents file or files found with *SearchExpression*
-	- `{directory}` is the path for the file (without the file name)
-	- `{parent}` is the path for parent directory.
+    
+    We can use replacement `{file}`, `{directory}` or `{parent}` on *CommandLine* and *CommandArguments*:
+    - `{file}` represents file or files found with *SearchExpression*
+    - `{directory}` is the path for the file (without the file name)
+    - `{parent}` is the path for parent directory.
 - **NextResource**: *ResourcesFolder* name for the next template that will be resolved.
 - **IsGeneral**: string with `true` or `false` indicates if this template is a general template, this collection of files will be not used for any of the entities or tables from data source.
 - **PreCommands and PostCommands elements**:
@@ -79,14 +79,14 @@ Every template has a name and these properties:
   - Both PreCommands and PostCommands have same attributes: *Name*, *Directory*, *Exec*, *ShowWindow*, *ShowMessages*, *ShowMessageWhenExitCodeNotZero* and *ShowMessageWhenExitCodeZero*. All *ShowMessage* attributes are true by default.
   - Example:
     ```json
-	"PostCommands": [
-		{
-			"Name": "Buid",
-			"Directory": "{{SavePath}}",
-			"Exec": "start .",
-			"ShowWindow": "false"
-		}
-	],
+    "PostCommands": [
+        {
+            "Name": "Buid",
+            "Directory": "{{SavePath}}",
+            "Exec": "start .",
+            "ShowWindow": "false"
+        }
+    ],
     ```
 - **Vars**: A collection of name-value values.
 - **Configurations**: A collection of vars configuration that will be showed as *Template Configuration* in UI.
@@ -95,12 +95,14 @@ Every template has a name and these properties:
 
   Every var definition contains a name and a value: 
 
-	- **Name**: *NameOfVar* indicates name of one of the configuration that will be showed as *Template Configuration* in UI.
-	- **Value**: A collection of values separated by a semicolon.
+    - **Name**: *NameOfVar* indicates name of one of the configuration that will be showed as *Template Configuration* in UI.
+    - **Value**: A collection of values separated by a semicolon.
 - **FinalVars**: Its the same as Vars attribute, but it evaluates vars after the Vars collection.
 
 
 #### Template section example
+
+Now, we can use `Template` inside *SavePath*. In this example `Template = "Test template (global)"`
 
 ```json
     "Templates": {
@@ -112,7 +114,7 @@ Every template has a name and these properties:
             "Company": "TestCompany",
             "Area": "TestArea",
             "Module": "TestModule",
-            "SavePath": "c:\\src\\tmp\\{{Company}}\\{{Area}}.{{Module}}",
+            "SavePath": "c:\\src\\tmp\\{{Template}}\\{{Area}}.{{Module}}",
             "SolutionType": "vsc,*.md,code.cmd,{directory}",
             "PostCommands": [
                 {
@@ -187,10 +189,10 @@ Schema definition (defined with a **key**):
 - **TableNameLanguage**: `(en)|es`: table and column names language on data source. This is used on gender and number functions.
 - **RemoveFirstWordOnColumnNames**: `true|(false)`: If column names start with a word and an underscore, for example `ta_code`, setting this property to `true`will remove that first word, in our case `ta_` will be removed.
 - **DescriptionsFile**: path to tab separate file on each line defines description for a table or a column:
-	```
-	table<tab>description for a table
-	table.column<tab>description for column in table
-	```
+    ```
+    table<tab>description for a table
+    table.column<tab>description for column in table
+    ```
 - **RenameTables**: semicolon separated named values strings `old_table_name=new_table_name`.
 - **RenameColumns**: semicolon separated named values strings `old_column_name=new_column_name` or more specific `old_table_name.old_column_name=new_column_name`.
 - **CanCreateDB**: `true|(false)`: this property will expose to templates its value if input data source is different that output data source.
@@ -289,113 +291,114 @@ You can load sln file with Visual Studio 2019 (Community it's OK) or run `dotnet
 
 ```json
 {
-	"Replacement": {
-		"Entity": "Entity",
-		"Module": "string",
-		"Area": "string",
-		"Company": "string",
-		"TableName": "string",
-		"TableNameOrEntity": "string",
-		"IgnoreColumns": ["sting", "string", "..."],
-		"UnfilteredColumns": [ "Property", "Property", "..." ],
-		"GenerateBase": "bool",
-		"GenerateReferences": "bool",
-		"IsView": "bool",
-		"IsUpdatable": "bool",
-		"Description": "string",
-		"ConnectionString": "string",
-		"DataProvider": "string",
-		"Vars": "Dictionary_string_object",
-		"AllColumns": [ "Property", "Property", "..." ],
-		"Columns": [ "Property", "Property", "..." ],
-		"PersistedColumns": [ "Property", "Property", "..." ],
-		"ForeignKeyColumns": [ "Property", "Property", "..." ],
-		"Collections": [ "Property", "Property", "..." ],
-		"HasCollections": "bool",
-		"HasForeignKeys": "bool",
-		"NotPrimaryKeyColumns": [ "Property", "Property", "..." ],
-		"PrimaryKeys": [ "Property", "Property", "..." ],
-		"NotPrimaryKeys": [ "Property", "Property", "..." ],
-		"HasNotPrimaryKeyColumns": "bool",
-		"HasPrimaryKeyColumns": "bool",
-		"MultiplePKColumns": "bool",
-		"IsWeakEntity": "bool", 
-		"Keys": ["string", "string", "..."],
-		"Values": ["object", "object", "..."],
-		"Count": "int",
-		"IsReadOnly": "bool",
-		"CanCreateDB": "bool",
-	}
+    "Replacement": {
+        "Template": "string",
+        "Entity": "Entity",
+        "Module": "string",
+        "Area": "string",
+        "Company": "string",
+        "TableName": "string",
+        "TableNameOrEntity": "string",
+        "IgnoreColumns": ["sting", "string", "..."],
+        "UnfilteredColumns": [ "Property", "Property", "..." ],
+        "GenerateBase": "bool",
+        "GenerateReferences": "bool",
+        "IsView": "bool",
+        "IsUpdatable": "bool",
+        "Description": "string",
+        "ConnectionString": "string",
+        "DataProvider": "string",
+        "Vars": "Dictionary_string_object",
+        "AllColumns": [ "Property", "Property", "..." ],
+        "Columns": [ "Property", "Property", "..." ],
+        "PersistedColumns": [ "Property", "Property", "..." ],
+        "ForeignKeyColumns": [ "Property", "Property", "..." ],
+        "Collections": [ "Property", "Property", "..." ],
+        "HasCollections": "bool",
+        "HasForeignKeys": "bool",
+        "NotPrimaryKeyColumns": [ "Property", "Property", "..." ],
+        "PrimaryKeys": [ "Property", "Property", "..." ],
+        "NotPrimaryKeys": [ "Property", "Property", "..." ],
+        "HasNotPrimaryKeyColumns": "bool",
+        "HasPrimaryKeyColumns": "bool",
+        "MultiplePKColumns": "bool",
+        "IsWeakEntity": "bool", 
+        "Keys": ["string", "string", "..."],
+        "Values": ["object", "object", "..."],
+        "Count": "int",
+        "IsReadOnly": "bool",
+        "CanCreateDB": "bool",
+    }
 }
 ```
 
 **Entity**:
 
 ```json
-	"Entity": {
-		"Name" : "string",
-		"UseSpanish": "bool",
-		"Uppercase": "string",
-		"Lowercase": "string",
-		"Plural": "string",
-		"ToPlural": "string",
-		"Singular": "string",
-		"ToSingular": "string",
-		"LowerCamelCase": "string",
-		"Camelize": "string",
-		"Pascalize": "string",
-		"Humanize": "string",
-		"HumanizeUnCapitalize": "string",
-		"UnCapitalize": "string",
-		"PluralCamelize": "string",
-		"SingularCamelize": "string",
-		"MultiplePKColumns": "bool",
-	}
+    "Entity": {
+        "Name" : "string",
+        "UseSpanish": "bool",
+        "Uppercase": "string",
+        "Lowercase": "string",
+        "Plural": "string",
+        "ToPlural": "string",
+        "Singular": "string",
+        "ToSingular": "string",
+        "LowerCamelCase": "string",
+        "Camelize": "string",
+        "Pascalize": "string",
+        "Humanize": "string",
+        "HumanizeUnCapitalize": "string",
+        "UnCapitalize": "string",
+        "PluralCamelize": "string",
+        "SingularCamelize": "string",
+        "MultiplePKColumns": "bool",
+    }
 }
 ```
 
 **Property**:
 
 ```json
-	"Property": {
-		"Name": "string",
-		"IdOrName": "string",
-		"Table": "string",
-		"Nullable": "bool",
-		"PrimaryKey": "bool",
-		"IsFirst": "bool",
-		"IsLast": "bool",
-		"IsForeignKey": "bool",
-		"IsCollection": "bool",
-		"DefaultValue": "string",
-		"Type": "string",
-		"OverrideDbType": "string",
-		"DbTypeOverrided": "bool",
-		"NullableType": "string",
-		"HasMaxLength": "bool",
-		"Description": "string",
-		"ColumnName": "string",
-		"ColumnNameOrName": "string",
-		"PkOrder": "int",
-		"IsAutoIncrement": "bool",
-		"IsComputed": "bool",
-		"MultiplePKColumns": "bool",
-		"Precision": "int",
-		"Scale": "int",
-		"IsNumeric": "bool",
-		"IsString": "bool",
-		"IsDateOrTime": "bool",
-		"Join": "string",
-		"FromField": "string",
-		"ToField": "string",
-		"DbJoin": "string",
-		"DbFromField": "string",
-		"DbToField": "string",
-		"FirstSample": "string",
-		"Sample": "string",
-		"NextSample": "string",
-		"IsNameDifferentToColumnName": "bool",
-	}
+    "Property": {
+        "Name": "string",
+        "IdOrName": "string",
+        "Table": "string",
+        "Nullable": "bool",
+        "PrimaryKey": "bool",
+        "IsFirst": "bool",
+        "IsLast": "bool",
+        "IsForeignKey": "bool",
+        "IsCollection": "bool",
+        "DefaultValue": "string",
+        "Type": "string",
+        "OverrideDbType": "string",
+        "DbTypeOverrided": "bool",
+        "NullableType": "string",
+        "HasMaxLength": "bool",
+        "Description": "string",
+        "ColumnName": "string",
+        "ColumnNameOrName": "string",
+        "PkOrder": "int",
+        "IsAutoIncrement": "bool",
+        "IsComputed": "bool",
+        "MultiplePKColumns": "bool",
+        "Precision": "int",
+        "Scale": "int",
+        "IsNumeric": "bool",
+        "IsString": "bool",
+        "IsDateOrTime": "bool",
+        "Join": "string",
+        "FromField": "string",
+        "ToField": "string",
+        "DbJoin": "string",
+        "DbFromField": "string",
+        "DbToField": "string",
+        "FirstSample": "string",
+        "Sample": "string",
+        "NextSample": "string",
+        "IsNameDifferentToColumnName": "bool",
+    }
 
 }
 ```

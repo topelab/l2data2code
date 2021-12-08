@@ -1,3 +1,8 @@
+### 2.9.321.1208
+
+- **New**: Refactor and upgrade to .Net 6
+- **New**: *Templates.Template.SavePath* can use name of template using var *Template*
+
 ### 2.9.321.1119
 
 - **New**: Mustache cli, a command line utility to execute a file name and content transformation (based on "mustache") in tree of paths for every path and file.
