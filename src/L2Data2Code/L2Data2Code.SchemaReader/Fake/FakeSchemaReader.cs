@@ -4,18 +4,17 @@ using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
 using System.Collections.Generic;
-using Unity;
 
 namespace L2Data2Code.SchemaReader.Fake
 {
     public class FakeSchemaReader : Schema.SchemaReader
     {
-        private readonly INameResolver _resolver;
+        private readonly INameResolver nameResolver;
 
         public FakeSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _resolver = ContainerManager.Container.Resolve<INameResolver>();
-            _resolver.Initialize(options.SchemaName);
+            nameResolver = Resolver.Get<INameResolver>();
+            nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
@@ -34,7 +33,7 @@ namespace L2Data2Code.SchemaReader.Fake
                 Name = tableName
             };
 
-            tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+            tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
             tbl.ClassName = tbl.CleanName.ToSingular();
             tbl.Description = $"Description for {tbl.ClassName}";
 
@@ -45,8 +44,10 @@ namespace L2Data2Code.SchemaReader.Fake
 
         private static List<Column> LoadFakeColumns(Table tbl, bool removeFirstWord = true)
         {
-            List<Column> result = new() {
-                new Column {
+            List<Column> result = new()
+            {
+                new Column
+                {
                     Table = tbl,
                     TableName = tbl.Name,
                     Name = "id",
@@ -58,7 +59,8 @@ namespace L2Data2Code.SchemaReader.Fake
                     PkOrder = 1,
                     Description = "Id for de table"
                 },
-                new Column {
+                new Column
+                {
                     Table = tbl,
                     TableName = tbl.Name,
                     Name = "name",
@@ -67,7 +69,8 @@ namespace L2Data2Code.SchemaReader.Fake
                     Precision = 50,
                     Description = "String(50) column"
                 },
-                new Column {
+                new Column
+                {
                     Table = tbl,
                     TableName = tbl.Name,
                     Name = "age",

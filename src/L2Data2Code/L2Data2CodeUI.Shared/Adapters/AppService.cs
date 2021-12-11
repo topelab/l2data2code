@@ -16,12 +16,14 @@ namespace L2Data2CodeUI.Shared.Adapters
         public const string PARENT_PATTERN = "{parent}";
         private AppDto AppDto { get; set; } = new AppDto();
         private readonly IMessageService messageService;
+        private readonly IProcessManager processManager;
 
         public AppType AppType => AppDto.AppType;
 
-        public AppService(IMessageService messageService)
+        public AppService(IMessageService messageService, IProcessManager processManager)
         {
             this.messageService = messageService ?? throw new ArgumentNullException(nameof(messageService));
+            this.processManager = processManager ?? throw new ArgumentNullException(nameof(processManager));
         }
 
         public AppService Set(string solutionType)
@@ -89,7 +91,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 .Replace(DIRECTORY_PATTERN, Path.GetDirectoryName(file))
                 .Replace(PARENT_PATTERN, Path.GetDirectoryName(Path.GetDirectoryName(file)));
 
-            ProcessManager.Run(cmdLine, cmdArguments);
+            processManager.Run(cmdLine, cmdArguments);
         }
 
     }

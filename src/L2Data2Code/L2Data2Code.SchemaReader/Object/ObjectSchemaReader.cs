@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Unity;
 
 namespace L2Data2Code.SchemaReader.Object
 {
@@ -22,7 +21,7 @@ namespace L2Data2Code.SchemaReader.Object
         private readonly string assemblyPath;
         private readonly string nameSpace;
         private readonly List<string> nameSpacesCollection;
-        private readonly INameResolver resolver;
+        private readonly INameResolver nameResolver;
 
         /// <summary>
         /// Contructor
@@ -42,8 +41,8 @@ namespace L2Data2Code.SchemaReader.Object
                 throw new Exception($"Assembly file {assemblyPath} doesn't exist");
             }
             nameSpacesCollection = new List<string>();
-            resolver = ContainerManager.Container.Resolve<INameResolver>();
-            resolver.Initialize(options.SchemaName);
+            nameResolver = Resolver.Get<INameResolver>();
+            nameResolver.Initialize(options.SchemaName);
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace L2Data2Code.SchemaReader.Object
         {
             var typeName = GetFriendlyTypeName(type, nameSpace);
 
-            Table table = new() { ClassName = typeName, Name = typeName, CleanName = resolver.ResolveTableName(typeName) };
+            Table table = new() { ClassName = typeName, Name = typeName, CleanName = nameResolver.ResolveTableName(typeName) };
             table.Columns = LoadColumnsFromProperties(nameSpace, type, table, alternativeDescriptions);
             return table;
         }
@@ -97,7 +96,7 @@ namespace L2Data2Code.SchemaReader.Object
                     Table = table,
                     TableName = table.Name,
                     Name = item.Name,
-                    PropertyName = resolver.ResolveColumnName(table.Name, item.Name),
+                    PropertyName = nameResolver.ResolveColumnName(table.Name, item.Name),
                     PropertyType = typeName.Replace("Nullable<", string.Empty).Replace(">", string.Empty),
                     IsNullable = IsNullable(item.PropertyType),
                     IsNumeric = item.PropertyType.IsNumericType(),

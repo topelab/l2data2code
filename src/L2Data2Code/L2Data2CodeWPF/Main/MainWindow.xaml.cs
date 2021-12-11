@@ -1,5 +1,6 @@
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.SharedLib;
 using MahApps.Metro.Controls;
@@ -8,7 +9,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Unity;
 
 namespace L2Data2CodeWPF.Main
 {
@@ -25,9 +25,9 @@ namespace L2Data2CodeWPF.Main
 
         public MainWindow()
         {
-            viewModel = SetupDI.Container.Resolve<MainWindowVM>();
-            fileMonitorService = SetupDI.Container.Resolve<IFileMonitorService>();
-            dispatcher = SetupDI.Container.Resolve<IDispatcherWrapper>();
+            viewModel = Resolver.Get<MainWindowVM>();
+            fileMonitorService = Resolver.Get<IFileMonitorService>();
+            dispatcher = Resolver.Get<IDispatcherWrapper>();
             DataContext = viewModel;
             InitializeComponent();
             StartMonitorConfig();

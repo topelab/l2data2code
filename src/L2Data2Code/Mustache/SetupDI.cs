@@ -9,19 +9,9 @@ namespace Mustache
 {
     public class SetupDI
     {
-
-        private static IUnityContainer container;
-        public static IUnityContainer Container => container ?? Register();
-
-        private static IUnityContainer Register()
+        public static IUnityContainer Register(IUnityContainer container = null)
         {
-            UnityContainer container = new();
-            SetupDI.container = Register(container);
-            return container;
-        }
-
-        private static IUnityContainer Register(IUnityContainer container)
-        {
+            container ??= new UnityContainer();
             container.RegisterSingleton<IJsonSetting, JsonSetting>();
             container.RegisterSingleton<IMustacheHelpers, MustacheHelpers>();
             container.RegisterSingleton<IMustacheRenderizer, MustacheRenderizer>();

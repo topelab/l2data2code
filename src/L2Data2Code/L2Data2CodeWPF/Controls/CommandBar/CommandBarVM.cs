@@ -17,6 +17,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         private readonly MainWindowVM mainWindowVM;
         private readonly IMessageService messageService;
         private readonly IAppService appService;
+        private readonly IProcessManager processManager;
 
         public CommandBarVM(IBaseVM baseVM) : base(baseVM)
         {
@@ -24,6 +25,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
             adapter = mainWindowVM.Adapter;
             messageService = mainWindowVM.MessageService;
             appService = mainWindowVM.AppService;
+            processManager = mainWindowVM.ProcessManager;
         }
 
         public bool ChangeButtons { get; internal set; }
@@ -53,7 +55,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         private void OnOpenFolderCommand(object obj)
         {
             Working = true;
-            ProcessManager.Run(Path.GetDirectoryName(mainWindowVM.SlnFile));
+            processManager.Run(Path.GetDirectoryName(mainWindowVM.SlnFile));
             Working = false;
         }
 
@@ -277,7 +279,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
             var editor = !File.Exists(editor1) ? (!File.Exists(editor2) ? file : editor2) : editor1;
             var args = editor.Equals(file) ? string.Empty : file;
 
-            ProcessManager.Run(editor, args);
+            processManager.Run(editor, args);
         }
 
 

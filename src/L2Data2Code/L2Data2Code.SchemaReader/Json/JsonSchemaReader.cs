@@ -9,29 +9,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Unity;
 
 namespace L2Data2Code.SchemaReader.Json
 {
     public class JsonSchemaReader : Schema.SchemaReader
     {
-        private readonly string _connectionString;
-        private readonly INameResolver _resolver;
+        private readonly string connectionString;
+        private readonly INameResolver nameResolver;
 
         public JsonSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = options.ConnectionString;
-            if (!File.Exists(_connectionString))
+            connectionString = options.ConnectionString;
+            if (!File.Exists(connectionString))
             {
-                throw new Exception($"JSON file {_connectionString} doesn't exist");
+                throw new Exception($"JSON file {connectionString} doesn't exist");
             }
-            _resolver = ContainerManager.Container.Resolve<INameResolver>();
-            _resolver.Initialize(options.SchemaName);
+            nameResolver = Resolver.Get<INameResolver>();
+            nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            var content = File.ReadAllText(_connectionString);
+            var content = File.ReadAllText(connectionString);
             var tableList = JsonConvert.DeserializeObject<List<Table>>(content);
             return Resolve(tableList, options.RemoveFirstWord, options.TableRegex);
         }
@@ -47,12 +46,12 @@ namespace L2Data2Code.SchemaReader.Json
             Dictionary<string, Table> tablesInfo = tables.ToDictionary(k => k.Name.ToUpper(), k => k);
             foreach (var item in tables.Where(t => tableRegex == null || tableRegex.IsMatch(t.Name)))
             {
-                item.CleanName = _resolver.ResolveTableName(item.Name).PascalCamelCase(false);
+                item.CleanName = nameResolver.ResolveTableName(item.Name).PascalCamelCase(false);
                 item.ClassName = item.CleanName.ToSingular();
                 foreach (var column in item.Columns)
                 {
                     column.Table = item;
-                    column.PropertyName = column.PropertyName.IsEmpty() ? _resolver.ResolveColumnName(item.Name, column.Name).PascalCamelCase(removeFirstWord) : column.PropertyName;
+                    column.PropertyName = column.PropertyName.IsEmpty() ? nameResolver.ResolveColumnName(item.Name, column.Name).PascalCamelCase(removeFirstWord) : column.PropertyName;
                 }
                 ResolveKeys(item.InnerKeys, tablesInfo);
                 ResolveKeys(item.OuterKeys, tablesInfo);

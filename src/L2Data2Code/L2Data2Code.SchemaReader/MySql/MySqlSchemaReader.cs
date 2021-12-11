@@ -9,21 +9,20 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Unity;
 
 namespace L2Data2Code.SchemaReader.MySql
 {
     public class MySqlSchemaReader : Schema.SchemaReader
     {
-        private readonly string _connectionString;
-        private MySqlConnection _connection;
+        private readonly string connectionString;
+        private MySqlConnection connection;
         private readonly INameResolver _resolver;
 
 
         public MySqlSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = options.ConnectionString;
-            _resolver = ContainerManager.Container.Resolve<INameResolver>();
+            connectionString = options.ConnectionString;
+            _resolver = Resolver.Get<INameResolver>();
             _resolver.Initialize(options.SchemaName);
         }
 
@@ -31,16 +30,16 @@ namespace L2Data2Code.SchemaReader.MySql
         {
             Tables result = new();
 
-            using (_connection = new MySqlConnection(_connectionString))
+            using (connection = new MySqlConnection(connectionString))
             {
-                _connection.Open();
+                connection.Open();
 
-                var schema = new string[4] { null, _connection.Database, null, null };
+                var schema = new string[4] { null, connection.Database, null, null };
 
-                var tables = _connection.GetSchema("Tables", schema);
+                var tables = connection.GetSchema("Tables", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, tables, false);
 
-                var views = _connection.GetSchema("Views", schema);
+                var views = connection.GetSchema("Views", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, views, true);
 
                 try
@@ -94,7 +93,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     WriteLine("// -----------------------------------------------------------------------------------------");
                     WriteLine("");
                 }
-                _connection.Close();
+                connection.Close();
 
             }
 
@@ -105,7 +104,7 @@ namespace L2Data2Code.SchemaReader.MySql
         {
             foreach (DataRow row in tables.Rows)
             {
-                if ((string)row["TABLE_SCHEMA"] != _connection.Database)
+                if ((string)row["TABLE_SCHEMA"] != connection.Database)
                 {
                     continue;
                 }
@@ -137,10 +136,10 @@ namespace L2Data2Code.SchemaReader.MySql
         {
             List<Column> result = new();
 
-            var schema = new string[4] { null, _connection.Database, tbl.Name, null };
+            var schema = new string[4] { null, connection.Database, tbl.Name, null };
 
             // Columnas
-            var SchemaTabla = _connection.GetSchema("Columns", schema);
+            var SchemaTabla = connection.GetSchema("Columns", schema);
             foreach (DataRow row in SchemaTabla.Rows)
             {
                 Column col = new()
@@ -167,12 +166,12 @@ namespace L2Data2Code.SchemaReader.MySql
 
         private List<Key> LoadRelations(Tables tables)
         {
-            var SchemaName = _connection.Database;
+            var SchemaName = connection.Database;
             var schema = new string[4] { null, SchemaName, null, null };
             List<Key> result = new();
 
             // Relaciones
-            var fkeys = _connection.GetSchema("Foreign Key Columns", schema);
+            var fkeys = connection.GetSchema("Foreign Key Columns", schema);
 
             foreach (DataRow row in fkeys.Rows)
             {
@@ -203,7 +202,7 @@ namespace L2Data2Code.SchemaReader.MySql
 
             Dictionary<string, int> result = new();
 
-            var databaseIndexColumns = _connection.GetSchema("IndexColumns", new string[4] { null, _connection.Database, table, null });
+            var databaseIndexColumns = connection.GetSchema("IndexColumns", new string[4] { null, connection.Database, table, null });
 
             foreach (DataRow row in databaseIndexColumns.Rows)
             {

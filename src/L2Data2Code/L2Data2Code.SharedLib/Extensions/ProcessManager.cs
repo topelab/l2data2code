@@ -9,29 +9,102 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
-using Unity;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
-    public class ProcessSearched
+    public class ProcessManager : IProcessManager
     {
-        public uint Id { get; set; }
-        public string Program { get; set; }
-        public string Args { get; set; }
-    }
+        private readonly ManagementObjectSearcher ProcessSearcher;
+        private readonly Dictionary<string, Process> runningProcess = new();
+        private IEnumerable<ProcessSearched> _allRunningEditors;
+        private ILogger logger;
 
-    public static class ProcessManager
-    {
-        private static readonly Dictionary<string, Process> runningProcess = new();
-        private static ILogger logger;
+        [SupportedOSPlatform("windows")]
+        public ProcessManager(ILogger logger)
+        {
+            this.logger = logger;
+            ProcessSearcher = new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine IS NOT NULL AND (Name = 'devenv.exe' OR Name = 'Code.exe')");
+        }
 
-        public static void Run(this string program) => Run(program, null, null, null);
+        [SupportedOSPlatform("windows")]
+        public async Task CheckEditorsOpenedAsync(string editor, string file = null, Action ifFileOpened = null, Action onExit = null)
+        {
+            if (editor.IsEmpty())
+            {
+                return;
+            }
 
-        public static void Run(this string program, string arguments) => Run(program, arguments, null, null);
+            var editorOpened = await GetAllRunningEditors();
 
-        public static void Run(this string program, string arguments, Action onNewProcess) => Run(program, arguments, onNewProcess, null);
+            foreach (var item in editorOpened)
+            {
+                try
+                {
+                    var args = item.Args.Trim('\"');
+                    var currentFileOpened = file != null && file.Equals(args, StringComparison.CurrentCultureIgnoreCase);
+                    Process proc = Process.GetProcessById((int)item.Id);
+                    Register(proc, GetKey(item.Program, args), currentFileOpened ? ifFileOpened : null, onExit);
+                }
+                catch (ArgumentException ex)
+                {
+                    logger.Error($"It seems {item.Id} is not running: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, $"When registering editor {item.Args}");
+                    throw;
+                }
+            }
+        }
 
-        public static void Run(this string program, string arguments, Action onNewProcess, Action onExit)
+        [SupportedOSPlatform("windows")]
+        public async Task<Process> CheckSolutionOpened(string slnFile = null, Action ifSolutionOpened = null, Action onExit = null)
+        {
+            var vsOpened = await GetAllRunningEditors();
+            Process currentProcess = null;
+
+            foreach (var item in vsOpened)
+            {
+                try
+                {
+                    var sln = item.Args.Trim('\"').ToLower();
+                    var currentSlnOpened = slnFile != null && slnFile.Equals(sln);
+                    Process proc = Process.GetProcessById((int)item.Id);
+                    if (currentSlnOpened)
+                    {
+                        currentProcess = proc;
+                    }
+                    Register(proc, sln, currentSlnOpened ? ifSolutionOpened : null, currentSlnOpened ? onExit : null);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, $"When registering solution {item.Args}");
+                    throw;
+                }
+            }
+            return currentProcess;
+        }
+
+        public string FindPS()
+        {
+            var pwsh = WhereIsFile("PowerShell", "pwsh.exe");
+            return pwsh ?? WhereIsFile("PowerShell", "powershell.exe");
+        }
+
+        public string FindVSCode()
+        {
+            return WhereIsFile("VS Code", $"..{Path.DirectorySeparatorChar}Code.exe");
+        }
+
+        public bool IsRunning(string program) => program != null && runningProcess.ContainsKey(program.ToLower());
+
+        public void Run(string program) => Run(program, null, null, null);
+
+        public void Run(string program, string arguments) => Run(program, arguments, null, null);
+
+        public void Run(string program, string arguments, Action onNewProcess) => Run(program, arguments, onNewProcess, null);
+
+        public void Run(string program, string arguments, Action onNewProcess, Action onExit)
         {
             Process proc;
 
@@ -40,7 +113,7 @@ namespace L2Data2Code.SharedLib.Extensions
                 return;
             }
 
-            logger ??= ContainerManager.Container.Resolve<ILogger>();
+            logger ??= Resolver.Get<ILogger>();
 
             var key = GetKey(program, arguments);
             logger.Info($"Running {key}");
@@ -76,10 +149,79 @@ namespace L2Data2Code.SharedLib.Extensions
             }
         }
 
+        [SupportedOSPlatform("windows")]
+        public async Task UpdateRunningEditors()
+        {
+            await Task.Run(() =>
+            {
+                using var objects = ProcessSearcher.Get();
+                _allRunningEditors = objects.Cast<ManagementBaseObject>()
+                    .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = GetProgram(o["CommandLine"].ToString()), Args = GetArgs(o["CommandLine"].ToString()) })
+                    .ToList();
+            });
+        }
+
         private static string GetKey(string program, string arguments) =>
             program.ToLower() + arguments.IfNotEmpty($" {arguments}");
 
-        private static void Register(this Process proc, string program, Action onNewProcess, Action onExit)
+        private static string GetProgram(string commandLine)
+        {
+            var result = commandLine.Trim();
+            if (result.StartsWith("\""))
+            {
+                return result.Split('\"')[1].Trim();
+            }
+            else
+            {
+                return result.Split(' ')[0].Trim();
+            }
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private static string WhereIsFile(string description, string file)
+        {
+            var paths = Environment.GetEnvironmentVariable("PATH")
+                .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => s.Contains(description));
+
+            var path = paths.Where(path => File.Exists($"{path}{Path.DirectorySeparatorChar}{file}")).FirstOrDefault();
+            return path == null ? null : Path.GetFullPath(Path.Combine(path, file));
+        }
+
+        private string Arguments(string result, string search)
+        {
+            var firstPos = result.IndexOf(search);
+            if (firstPos > -1)
+            {
+                return result[(firstPos + search.Length)..].Trim();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        [SupportedOSPlatform("windows")]
+        private async Task<IEnumerable<ProcessSearched>> GetAllRunningEditors(bool force = false)
+        {
+            if (force || _allRunningEditors == null)
+            {
+                await UpdateRunningEditors();
+            }
+
+            return _allRunningEditors;
+        }
+
+        private string GetArgs(string commandLine)
+        {
+            var result = commandLine.Trim();
+            var startWithQuotes = result.StartsWith("\"");
+            return Arguments(result, startWithQuotes ? "\" " : " ");
+        }
+
+        private void Register(Process proc, string program, Action onNewProcess, Action onExit)
         {
             if (proc != null && !proc.HasExited && proc.MainWindowHandle != IntPtr.Zero)
             {
@@ -96,167 +238,7 @@ namespace L2Data2Code.SharedLib.Extensions
                 runningProcess[program] = proc;
             }
         }
-
-        public static void Activate(IntPtr hWnd) => SetForegroundWindow(hWnd);
-
-        public static bool IsRunning(string program) => program != null && runningProcess.ContainsKey(program.ToLower());
-
-        [SupportedOSPlatform("windows")]
-        public async static Task<Process> CheckSolutionOpened(string slnFile = null, Action ifSolutionOpened = null, Action onExit = null)
-        {
-            var vsOpened = await GetAllRunningEditors();
-            Process currentProcess = null;
-
-            foreach (var item in vsOpened)
-            {
-                try
-                {
-                    var sln = item.Args.Trim('\"').ToLower();
-                    var currentSlnOpened = slnFile != null && slnFile.Equals(sln);
-                    Process proc = Process.GetProcessById((int)item.Id);
-                    if (currentSlnOpened)
-                    {
-                        currentProcess = proc;
-                    }
-                    Register(proc, sln, currentSlnOpened ? ifSolutionOpened : null, currentSlnOpened ? onExit : null);
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, $"When registering solution {item.Args}");
-                    throw;
-                }
-            }
-            return currentProcess;
-        }
-
-        [SupportedOSPlatform("windows")]
-        public static async Task CheckEditorsOpenedAsync(string editor, string file = null, Action ifFileOpened = null, Action onExit = null)
-        {
-            if (editor.IsEmpty())
-            {
-                return;
-            }
-
-            var editorOpened = await GetAllRunningEditors();
-
-            foreach (var item in editorOpened)
-            {
-                try
-                {
-                    var args = item.Args.Trim('\"');
-                    var currentFileOpened = file != null && file.Equals(args, StringComparison.CurrentCultureIgnoreCase);
-                    Process proc = Process.GetProcessById((int)item.Id);
-                    Register(proc, GetKey(item.Program, args), currentFileOpened ? ifFileOpened : null, onExit);
-                }
-                catch (ArgumentException ex)
-                {
-                    logger.Error($"It seems {item.Id} is not running: {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, $"When registering editor {item.Args}");
-                    throw;
-                }
-            }
-        }
-
-        [SupportedOSPlatform("windows")]
-        private static readonly ManagementObjectSearcher ProcessSearcher =
-            new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine IS NOT NULL AND (Name = 'devenv.exe' OR Name = 'Code.exe')");
-
-        private static IEnumerable<ProcessSearched> _allRunningEditors;
-
-        [SupportedOSPlatform("windows")]
-        public async static Task<IEnumerable<ProcessSearched>> GetAllRunningEditors(bool force = false)
-        {
-            if (force || _allRunningEditors == null)
-            {
-                await UpdateRunningEditors();
-            }
-
-            return _allRunningEditors;
-        }
-
-        [SupportedOSPlatform("windows")]
-        public async static Task UpdateRunningEditors()
-        {
-            await Task.Run(() =>
-            {
-                using var objects = ProcessSearcher.Get();
-                _allRunningEditors = objects.Cast<ManagementBaseObject>()
-                    .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
-                    .ToList();
-            });
-        }
-
-        [SupportedOSPlatform("windows")]
-        public async static Task<IEnumerable<ProcessSearched>> GetCommandLine(this string processName)
-        {
-            return await Task.Run<IEnumerable<ProcessSearched>>(() =>
-            {
-                using ManagementObjectSearcher searcher = new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name like '" + processName + "%' AND CommandLine IS NOT NULL");
-                using var objects = searcher.Get();
-                return objects.Cast<ManagementBaseObject>()
-                    .Select(o => new ProcessSearched { Id = (uint)o["ProcessId"], Program = o["CommandLine"].ToString().GetProgram(), Args = o["CommandLine"].ToString().GetArgs() })
-                    .ToList();
-            });
-        }
-
-        public static string GetProgram(this string commandLine)
-        {
-            var result = commandLine.Trim();
-            if (result.StartsWith("\""))
-            {
-                return result.Split('\"')[1].Trim();
-            }
-            else
-            {
-                return result.Split(' ')[0].Trim();
-            }
-        }
-
-        public static string GetArgs(this string commandLine)
-        {
-            var result = commandLine.Trim();
-            var startWithQuotes = result.StartsWith("\"");
-            return result.Arguments(startWithQuotes ? "\" " : " ");
-        }
-
-        public static string WhereIsFile(string description, string file)
-        {
-            var paths = Environment.GetEnvironmentVariable("PATH")
-                .Split(';', StringSplitOptions.RemoveEmptyEntries)
-                .Where(s => s.Contains(description));
-
-            var path = paths.Where(path => File.Exists($"{path}{Path.DirectorySeparatorChar}{file}")).FirstOrDefault();
-            return path == null ? null : Path.GetFullPath(Path.Combine(path, file));
-        }
-
-        public static string FindPS()
-        {
-            var pwsh = WhereIsFile("PowerShell", "pwsh.exe");
-            return pwsh ?? WhereIsFile("PowerShell", "powershell.exe");
-        }
-
-        public static string FindVSCode()
-        {
-            return WhereIsFile("VS Code", $"..{Path.DirectorySeparatorChar}Code.exe");
-        }
-
-        private static string Arguments(this string result, string search)
-        {
-            var firstPos = result.IndexOf(search);
-            if (firstPos > -1)
-            {
-                return result[(firstPos + search.Length)..].Trim();
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        private static void RemoveFromRunning(Process proc, Action onExit = null)
+        private void RemoveFromRunning(Process proc, Action onExit = null)
         {
             var key = runningProcess.Where(d => d.Value == proc).Select(d => d.Key).FirstOrDefault();
 
@@ -268,14 +250,6 @@ namespace L2Data2Code.SharedLib.Extensions
                 }
                 onExit?.Invoke();
             }
-        }
-
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        public static Task CheckEditorsOpenedAsync(object p)
-        {
-            throw new NotImplementedException();
         }
     }
 }

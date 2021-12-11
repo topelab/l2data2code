@@ -7,6 +7,7 @@ using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SharedLib.Configuration;
+using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.Main;
@@ -18,24 +19,9 @@ namespace L2Data2CodeWPF
 {
     public class SetupDI
     {
-
-        private static IUnityContainer container;
-        public static IUnityContainer Container => container ?? Register();
-
-        public static IUnityContainer CreateContainer()
+        public static IUnityContainer Register(IUnityContainer container = null)
         {
-            return Register(new UnityContainer());
-        }
-
-        private static IUnityContainer Register()
-        {
-            UnityContainer container = new();
-            SetupDI.container = Register(container);
-            return container;
-        }
-
-        private static IUnityContainer Register(IUnityContainer container)
-        {
+            container ??= new UnityContainer();
             container.RegisterSingleton<IJsonSetting, JsonSetting>();
             container.RegisterSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>();
             container.RegisterSingleton<IAreasConfiguration, AreasConfiguration>();
@@ -58,6 +44,7 @@ namespace L2Data2CodeWPF
             container.RegisterSingleton<IDispatcherWrapper, DispatcherWrapper>();
             container.RegisterSingleton<INameResolver, NameResolver>();
             container.RegisterSingleton<ITemplateService, TemplateService>();
+            container.RegisterSingleton<IProcessManager, ProcessManager>();
 
             container.RegisterType<IFileMonitorService, FileMonitorService>();
 

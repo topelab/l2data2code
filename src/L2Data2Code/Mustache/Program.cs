@@ -1,4 +1,4 @@
-using Unity;
+using L2Data2Code.SharedLib.Helpers;
 
 namespace Mustache
 {
@@ -7,8 +7,8 @@ namespace Mustache
         static void Main(string[] args)
         {
             var options = MustacheOptionsFactory.Create(args);
-            var container = SetupDI.Container;
-            var mustacheAction = container.Resolve<IMustacheAction>();
+            Resolver.Initialize(SetupDI.Register());
+            var mustacheAction = Resolver.Get<IMustacheAction>();
 
             mustacheAction.Initialize(options);
             mustacheAction.Run();

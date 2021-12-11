@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using Unity;
 
 namespace L2Data2CodeWPF
 {
@@ -25,10 +24,10 @@ namespace L2Data2CodeWPF
 
         public App()
         {
-            var container = ContainerManager.SetupContainer(SetupDI.Container);
-            Logger = container.Resolve<ILogger>();
+            Resolver.Initialize(SetupDI.Register());
+            Logger = Resolver.Get<ILogger>();
 
-            var settings = container.Resolve<IAppSettingsConfiguration>();
+            var settings = Resolver.Get<IAppSettingsConfiguration>();
 
             var uiCulture = settings["UICulture"];
             if (uiCulture != null && !uiCulture.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
@@ -44,7 +43,7 @@ namespace L2Data2CodeWPF
             Logger.Error(e.Exception);
         }
 
-    protected override void OnExit(ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
             Logger.Info("Application ending");
             if (RestartApp)

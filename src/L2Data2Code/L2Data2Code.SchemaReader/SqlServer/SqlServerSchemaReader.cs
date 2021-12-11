@@ -8,32 +8,31 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using Unity;
 
 namespace L2Data2Code.SchemaReader.SqlServer
 {
     public class SqlServerSchemaReader : Schema.SchemaReader
     {
-        private readonly INameResolver _resolver;
-        private Dictionary<string, string> _columnsDescriptions = new();
-        private readonly string _connectionString;
-        private readonly string _connectionStringForObjectDescriptions;
-        private IDbConnection _connection;
+        private readonly INameResolver nameResolver;
+        private Dictionary<string, string> columnsDescriptions = new();
+        private readonly string connectionString;
+        private readonly string connectionStringForObjectDescriptions;
+        private IDbConnection connection;
 
 
         public SqlServerSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = options.ConnectionString;
-            _connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;
-            _resolver = ContainerManager.Container.Resolve<INameResolver>();
-            _resolver.Initialize(options.SchemaName);
+            connectionString = options.ConnectionString;
+            connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;
+            nameResolver = Resolver.Get<INameResolver>();
+            nameResolver.Initialize(options.SchemaName);
         }
 
         public override bool CanConnect(bool includeCommentServer = false)
         {
             try
             {
-                using (SqlConnection connection = new(_connectionString))
+                using (SqlConnection connection = new(connectionString))
                 {
                     connection.Open();
                     if (connection.State == ConnectionState.Open)
@@ -41,9 +40,9 @@ namespace L2Data2Code.SchemaReader.SqlServer
                         connection.Close();
                     }
                 }
-                if (includeCommentServer && !_connectionString.Equals(_connectionStringForObjectDescriptions))
+                if (includeCommentServer && !connectionString.Equals(connectionStringForObjectDescriptions))
                 {
-                    using SqlConnection connection = new(_connectionStringForObjectDescriptions);
+                    using SqlConnection connection = new(connectionStringForObjectDescriptions);
                     connection.Open();
                     if (connection.State == ConnectionState.Open)
                     {
@@ -60,15 +59,15 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _columnsDescriptions = options.AlternativeDescriptions ?? GetTableDescriptions(_connectionStringForObjectDescriptions);
+            columnsDescriptions = options.AlternativeDescriptions ?? GetTableDescriptions(connectionStringForObjectDescriptions);
             Tables result = new();
 
-            using (_connection = new SqlConnection(_connectionString))
+            using (connection = new SqlConnection(connectionString))
             {
-                _connection.Open();
+                connection.Open();
 
                 //pull the tables in a reader
-                using (var cmd = _connection.CreateCommand())
+                using (var cmd = connection.CreateCommand())
                 {
                     cmd.CommandText = TABLES_SQL;
 
@@ -88,9 +87,9 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
                             tbl.Schema = (string)rdr["TABLE_SCHEMA"];
                             tbl.IsView = string.Compare((string)rdr["TABLE_TYPE"], "VIEW", true) == 0;
-                            tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+                            tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.ClassName = tbl.CleanName.ToSingular();
-                            tbl.Description = _columnsDescriptions.ContainsKey(tbl.Name) ? _columnsDescriptions[tbl.Name] : null;
+                            tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name] : null;
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -114,9 +113,9 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.Schema = (string)rdr["TABLE_SCHEMA"];
                             tbl.IsView = true;
                             tbl.IsUpdatable = (string)rdr["IS_UPDATABLE"] == "YES";
-                            tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+                            tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.ClassName = tbl.CleanName.ToSingular();
-                            tbl.Description = _columnsDescriptions.ContainsKey(tbl.Name) ? _columnsDescriptions[tbl.Name] : null;
+                            tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name] : null;
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -175,7 +174,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     WriteLine("// -----------------------------------------------------------------------------------------");
                     WriteLine("");
                 }
-                _connection.Close();
+                connection.Close();
 
 
             }
@@ -188,7 +187,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true)
         {
 
-            using var cmd = _connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = COLUMNS_SQL;
 
             var p = cmd.CreateParameter();
@@ -213,11 +212,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
                         Owner = (string)rdr["Owner"],
                         Name = (string)rdr["ColumnName"]
                     };
-                    col.PropertyName = _resolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
+                    col.PropertyName = nameResolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
                     col.PropertyType = GetPropertyType((string)rdr["DataType"]);
                     col.IsNullable = (string)rdr["IsNullable"] == "YES";
                     col.IsAutoIncrement = ((int)rdr["IsIdentity"]) == 1;
-                    col.Description = _columnsDescriptions.ContainsKey(col.FullName) ? _columnsDescriptions[col.FullName] : null;
+                    col.Description = columnsDescriptions.ContainsKey(col.FullName) ? columnsDescriptions[col.FullName] : null;
                     col.Precision = (int)rdr["Precision"];
                     col.NumericScale = (int)rdr["NumericScale"];
                     col.IsNumeric = rdr["NUMERIC_PRECISION"].IfNull(0) > 0;
@@ -231,7 +230,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         private List<Key> LoadRelations(Tables tables)
         {
-            using var cmd = _connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = ALL_FOREIGN_KEYS;
 
             List<Key> result = new();
@@ -273,7 +272,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                 LEFT OUTER JOIN sys.columns AS c ON ic.object_id = c.object_id AND c.column_id = ic.column_id
                 WHERE (i.is_primary_key = 1) AND (o.name = @tableName)";
 
-            using (var cmd = _connection.CreateCommand())
+            using (var cmd = connection.CreateCommand())
             {
                 cmd.CommandText = sql;
 
