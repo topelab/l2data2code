@@ -1,3 +1,7 @@
+### 2.9.422.116
+
+- **New**: Refactor to use Topelab.Core.Resolver (not in nuget public repo, need to be copied local)
+
 ### 2.9.321.1208
 
 - **New**: Refactor and upgrade to .Net 6

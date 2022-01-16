@@ -2,7 +2,6 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,15 +16,15 @@ namespace L2Data2Code.SchemaReader.Json
         private readonly string connectionString;
         private readonly INameResolver nameResolver;
 
-        public JsonSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public JsonSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             if (!File.Exists(connectionString))
             {
                 throw new Exception($"JSON file {connectionString} doesn't exist");
             }
-            nameResolver = Resolver.Get<INameResolver>();
-            nameResolver.Initialize(options.SchemaName);
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
+            this.nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)

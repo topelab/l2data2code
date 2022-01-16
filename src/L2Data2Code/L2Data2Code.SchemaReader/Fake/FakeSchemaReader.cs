@@ -2,7 +2,6 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
 using System.Collections.Generic;
 
 namespace L2Data2Code.SchemaReader.Fake
@@ -11,10 +10,10 @@ namespace L2Data2Code.SchemaReader.Fake
     {
         private readonly INameResolver nameResolver;
 
-        public FakeSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public FakeSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
-            nameResolver = Resolver.Get<INameResolver>();
-            nameResolver.Initialize(options.SchemaName);
+            this.nameResolver = nameResolver ?? throw new System.ArgumentNullException(nameof(nameResolver));
+            this.nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
@@ -57,7 +56,7 @@ namespace L2Data2Code.SchemaReader.Fake
                     IsAutoIncrement = true,
                     Precision = 10,
                     PkOrder = 1,
-                    Description = "Id for de table"
+                    Description = "Id for the table"
                 },
                 new Column
                 {

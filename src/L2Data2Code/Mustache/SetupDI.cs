@@ -3,24 +3,23 @@ using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.SharedLib.Helpers;
 using NLog;
-using Unity;
+using Topelab.Core.Resolver.Entities;
+using Topelab.Core.Resolver.Enums;
 
 namespace Mustache
 {
     public class SetupDI
     {
-        public static IUnityContainer Register(IUnityContainer container = null)
+        public static ResolveInfoCollection Register()
         {
-            container ??= new UnityContainer();
-            container.RegisterSingleton<IJsonSetting, JsonSetting>();
-            container.RegisterSingleton<IMustacheHelpers, MustacheHelpers>();
-            container.RegisterSingleton<IMustacheRenderizer, MustacheRenderizer>();
+            return new ResolveInfoCollection()
+                .Add<IJsonSetting, JsonSetting>(ResolveTypeEnum.Singleton)
+                .Add<IMustacheHelpers, MustacheHelpers>(ResolveTypeEnum.Singleton)
+                .Add<IMustacheRenderizer, MustacheRenderizer>(ResolveTypeEnum.Singleton)
 
-            container.RegisterType<IMustacheAction, MustacheAction>();
-            container.RegisterType<IFileExecutor, FileExecutor>();
-
-            container.RegisterInstance<ILogger>(LogManager.GetCurrentClassLogger());
-            return container;
+                .Add<IMustacheAction, MustacheAction>()
+                .Add<IFileExecutor, FileExecutor>()
+                .Add<ILogger, Logger>(LogManager.GetCurrentClassLogger());
         }
     }
 }

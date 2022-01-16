@@ -45,6 +45,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         private readonly ISchemaOptionsFactory schemaOptionsFactory;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
+        private readonly ISchemaFactory schemaFactory;
 
         #endregion Private Fields
 
@@ -66,7 +67,8 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 ITemplatesConfiguration templatesConfiguration,
                                 ISchemaOptionsFactory schemaOptionsFactory,
                                 ISchemaService schemaService,
-                                ITemplateService templateService)
+                                ITemplateService templateService,
+                                ISchemaFactory schemaFactory)
         {
             this.messageService = messageService;
             OutputPath = CodeGeneratorDto.DefaultOutputPath;
@@ -80,6 +82,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             this.schemaOptionsFactory = schemaOptionsFactory;
             this.schemaService = schemaService;
             this.templateService = templateService;
+            this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
 
             SettingsConfiguration = settingsConfiguration;
             GlobalsConfiguration = globalsConfiguration;
@@ -293,7 +296,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SetupInitial();
             SetupTables();
             SetCurrentModule(GetModuleList(selectedArea).FirstOrDefault(), true);
-            InputSourceType = SchemaFactory.GetProviderDefinitionKey(schemaName);
+            InputSourceType = schemaFactory.GetProviderDefinitionKey(schemaName);
         }
 
         public void SetCurrentModule(string selectedModule, bool triggered = false)
@@ -447,7 +450,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             schemaName = AreasConfiguration.Schema(SelectedArea);
             descriptionsSchemaName = AreasConfiguration.CommentSchema(SelectedArea);
             outputSchemaName = AreasConfiguration.OutputSchema(SelectedArea);
-            schemaReader = SchemaFactory.Create(schemaOptionsFactory.Create(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
+            schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);

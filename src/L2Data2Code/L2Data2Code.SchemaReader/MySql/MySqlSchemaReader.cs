@@ -2,7 +2,6 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -16,14 +15,14 @@ namespace L2Data2Code.SchemaReader.MySql
     {
         private readonly string connectionString;
         private MySqlConnection connection;
-        private readonly INameResolver _resolver;
+        private readonly INameResolver nameResolver;
 
 
-        public MySqlSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public MySqlSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
-            _resolver = Resolver.Get<INameResolver>();
-            _resolver.Initialize(options.SchemaName);
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
+            this.nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
@@ -122,7 +121,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 tbl.Schema = (string)row["TABLE_SCHEMA"];
                 tbl.IsView = fromViews;
                 tbl.IsUpdatable = !fromViews || (string)row["IS_UPDATABLE"] == "YES";
-                tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+                tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name)
                     ? alternativeDescriptions[tbl.Name]
@@ -150,7 +149,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     Name = (string)row["COLUMN_NAME"],
                     Precision = (int)row["CHARACTER_MAXIMUM_LENGTH"].IfNull(row["NUMERIC_PRECISION"].IfNull(row["DATETIME_PRECISION"].IfNull((ulong)0)))
                 };
-                col.PropertyName = _resolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
+                col.PropertyName = nameResolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
                 col.PropertyType = GetPropertyType((string)row["DATA_TYPE"], col.Precision, (string)row["COLUMN_TYPE"]);
                 col.IsNullable = ((string)row["IS_NULLABLE"]) == "YES";
                 col.IsAutoIncrement = ((string)row["EXTRA"]) == "auto_increment";

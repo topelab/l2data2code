@@ -9,6 +9,7 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
+using Topelab.Core.Resolver.Interfaces;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
@@ -18,11 +19,13 @@ namespace L2Data2Code.SharedLib.Extensions
         private readonly Dictionary<string, Process> runningProcess = new();
         private IEnumerable<ProcessSearched> _allRunningEditors;
         private ILogger logger;
+        private readonly IResolver resolver;
 
         [SupportedOSPlatform("windows")]
-        public ProcessManager(ILogger logger)
+        public ProcessManager(ILogger logger, IResolver resolver)
         {
             this.logger = logger;
+            this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             ProcessSearcher = new("SELECT ProcessId, CommandLine FROM Win32_Process WHERE CommandLine IS NOT NULL AND (Name = 'devenv.exe' OR Name = 'Code.exe')");
         }
 
@@ -113,7 +116,7 @@ namespace L2Data2Code.SharedLib.Extensions
                 return;
             }
 
-            logger ??= Resolver.Get<ILogger>();
+            logger ??= resolver.Get<ILogger>();
 
             var key = GetKey(program, arguments);
             logger.Info($"Running {key}");

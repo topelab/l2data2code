@@ -1,7 +1,6 @@
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
 using Microsoft.CSharp;
 using System;
 using System.CodeDom;
@@ -24,10 +23,10 @@ namespace L2Data2Code.SchemaReader.Object
         private readonly INameResolver nameResolver;
 
         /// <summary>
-        /// Contructor
+        /// Constructor
         /// </summary>
         /// <param name="options">Schema options</param>
-        public ObjectSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public ObjectSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             var parts = connectionString.Split(';');
@@ -41,12 +40,12 @@ namespace L2Data2Code.SchemaReader.Object
                 throw new Exception($"Assembly file {assemblyPath} doesn't exist");
             }
             nameSpacesCollection = new List<string>();
-            nameResolver = Resolver.Get<INameResolver>();
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             nameResolver.Initialize(options.SchemaName);
         }
 
         /// <summary>
-        /// Read schema from an assembly specicfied in options
+        /// Read schema from an assembly specified in options
         /// </summary>
         /// <param name="options">Schema reader options</param>
         /// <returns>Collection of tables</returns>

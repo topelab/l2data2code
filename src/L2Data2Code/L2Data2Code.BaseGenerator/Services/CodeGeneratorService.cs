@@ -25,6 +25,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
+        private readonly ISchemaFactory schemaFactory;
 
         private readonly Dictionary<string, string> templateFiles;
         private readonly HashSet<string> referencedTables;
@@ -82,12 +83,13 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
         /// <param name="logger">Logger service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService)
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
+            this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
 
             referencedTables = new();
             templateFiles = new();
@@ -537,7 +539,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             internalVars.Clear();
 
-            internalVars.Add("database", SchemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
+            internalVars.Add("database", schemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
             internalVars.Add(nameof(Template), Template.Name);
             internalVars.Add(nameof(Template.Company), Template.Company);
             internalVars.Add(nameof(Template.Area), Template.Area);
@@ -610,7 +612,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             IsLast = isLast,
                             DefaultValue = column.GetDefaultValue(),
                             Type = type,
-                            OverrideDbType = SchemaFactory.GetConversion(Provider, type),
+                            OverrideDbType = schemaFactory.GetConversion(Provider, type),
                             Description = string.IsNullOrWhiteSpace(column.Description) ? null : column.Description.ReplaceEndOfLine(),
                             IsCollection = column.IsCollection,
                             IsForeignKey = column.IsForeignKey,

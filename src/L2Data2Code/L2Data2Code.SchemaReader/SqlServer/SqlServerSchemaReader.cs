@@ -2,7 +2,6 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,11 +19,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private IDbConnection connection;
 
 
-        public SqlServerSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public SqlServerSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;
-            nameResolver = Resolver.Get<INameResolver>();
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             nameResolver.Initialize(options.SchemaName);
         }
 

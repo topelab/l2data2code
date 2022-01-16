@@ -1,5 +1,4 @@
 using L2Data2Code.SharedLib.Configuration;
-using L2Data2Code.SharedLib.Helpers;
 using NLog;
 using System;
 using System.Diagnostics;
@@ -9,6 +8,8 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
+using Topelab.Core.Resolver.Interfaces;
+using Topelab.Core.Resolver.Microsoft;
 
 namespace L2Data2CodeWPF
 {
@@ -21,12 +22,13 @@ namespace L2Data2CodeWPF
 
         public static bool RestartApp { get; set; }
 
+        public static IResolver Resolver { get; private set; }
+
 
         public App()
         {
-            Resolver.Initialize(SetupDI.Register());
+            Resolver = ResolverFactory.Create(SetupDI.Register());
             Logger = Resolver.Get<ILogger>();
-
             var settings = Resolver.Get<IAppSettingsConfiguration>();
 
             var uiCulture = settings["UICulture"];

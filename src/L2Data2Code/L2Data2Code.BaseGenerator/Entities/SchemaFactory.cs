@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Json;
@@ -9,10 +10,11 @@ using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Helpers;
 using System;
 using System.Collections.Generic;
+using Topelab.Core.Resolver.Interfaces;
 
 namespace L2Data2Code.BaseGenerator.Entities
 {
-    public class SchemaFactory
+    public class SchemaFactory : ISchemaFactory
     {
         internal class ProviderDefinition
         {
@@ -21,7 +23,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             public Dictionary<string, string> Conversions { get; set; }
         }
 
-        private static readonly Dictionary<string, ProviderDefinition> providers = new()
+        private readonly Dictionary<string, ProviderDefinition> providers = new()
         {
             { "System.Data.SqlClient", new ProviderDefinition { Key = "sqlserver", Type = typeof(SqlServerSchemaReader) } },
             { "MySql.Data.MySqlClient", new ProviderDefinition { Key = "mysql", Type = typeof(MySqlSchemaReader) } },
@@ -42,15 +44,24 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         };
 
-        private static IBasicConfiguration<SchemaConfiguration> schemasConfiguration;
+        private IBasicConfiguration<SchemaConfiguration> schemasConfiguration;
 
-        public static string GetProviderDefinitionKey(string connectionStringKey)
+        private readonly INameResolver nameResolver;
+        private readonly IResolver resolver;
+
+        public SchemaFactory(INameResolver nameResolver, IResolver resolver)
+        {
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
+            this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
+        }
+
+        public string GetProviderDefinitionKey(string connectionStringKey)
         {
             Connection connection = new(schemasConfiguration, connectionStringKey);
             return providers.TryGetValue(connection.Provider, out var providerDefinition) ? providerDefinition.Key : null;
         }
 
-        public static ISchemaReader Create(SchemaOptions schemaOptions)
+        public ISchemaReader Create(SchemaOptions schemaOptions)
         {
             Connection connection;
             Connection commentConnection;
@@ -74,7 +85,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             if (providers.TryGetValue(connection.Provider, out var providerDefinition))
             {
-                return (ISchemaReader)Activator.CreateInstance(providerDefinition.Type, schemaOptions);
+                return resolver.Get<ISchemaReader, INameResolver, SchemaOptions>(providerDefinition.Type.Name, nameResolver, schemaOptions);
             }
             else
             {
@@ -84,7 +95,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         }
 
-        public static string GetConversion(string provider, string type)
+        public string GetConversion(string provider, string type)
         {
             return providers.ContainsKey(provider)
                 ? (providers[provider].Conversions != null && providers[provider].Conversions.ContainsKey(type)

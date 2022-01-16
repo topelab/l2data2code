@@ -23,13 +23,15 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly Dictionary<string, Tables> schemaNamesCached;
         private readonly ISchemaOptionsFactory schemaOptionsFactory;
         private readonly IBasicConfiguration<SchemaConfiguration> schemas;
+        private readonly ISchemaFactory schemaFactory;
 
-        public SchemaService(ILogger logger, ISchemaOptionsFactory schemaOptionsFactory, IBasicConfiguration<SchemaConfiguration> schemas)
+        public SchemaService(ILogger logger, ISchemaOptionsFactory schemaOptionsFactory, IBasicConfiguration<SchemaConfiguration> schemas, ISchemaFactory schemaFactory)
         {
             schemaNamesCached = new();
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.schemaOptionsFactory = schemaOptionsFactory ?? throw new ArgumentNullException(nameof(schemaOptionsFactory));
             this.schemas = schemas ?? throw new ArgumentNullException(nameof(schemas));
+            this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
         }
 
         public Tables Read(CodeGeneratorDto options, Dictionary<string, string> alternativeDescriptions = null)
@@ -43,12 +45,12 @@ namespace L2Data2Code.BaseGenerator.Services
                 if (!schemaNamesCached.ContainsKey(options.SchemaName))
                 {
                     var schemaOptions = schemaOptionsFactory.Create(options, salida);
-                    var schemaReader = SchemaFactory.Create(schemaOptions);
+                    var schemaReader = schemaFactory.Create(schemaOptions);
                     if (schemaReader == null)
                     {
                         throw new Exception($"Cannot create schema reader. Reason: {LogService.LastError}");
                     }
-                    var schemaReaderOptions = new SchemaReaderOptions(ShouldRemoveWord1(options.SchemaName), alternativeDescriptions);
+                    SchemaReaderOptions schemaReaderOptions = new(ShouldRemoveWord1(options.SchemaName), alternativeDescriptions);
                     var tables = schemaReader.ReadSchema(schemaReaderOptions);
 
                     if (schemaReader.HasErrorMessage())

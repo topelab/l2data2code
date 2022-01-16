@@ -25,9 +25,9 @@ namespace L2Data2CodeWPF.Main
 
         public MainWindow()
         {
-            viewModel = Resolver.Get<MainWindowVM>();
-            fileMonitorService = Resolver.Get<IFileMonitorService>();
-            dispatcher = Resolver.Get<IDispatcherWrapper>();
+            viewModel = App.Resolver.Get<MainWindowVM>();
+            fileMonitorService = App.Resolver.Get<IFileMonitorService>();
+            dispatcher = App.Resolver.Get<IDispatcherWrapper>();
             DataContext = viewModel;
             InitializeComponent();
             StartMonitorConfig();
