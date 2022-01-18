@@ -13,9 +13,9 @@ namespace Mustache
         public static ResolveInfoCollection Register()
         {
             return new ResolveInfoCollection()
-                .Add<IJsonSetting, JsonSetting>(ResolveTypeEnum.Singleton)
-                .Add<IMustacheHelpers, MustacheHelpers>(ResolveTypeEnum.Singleton)
-                .Add<IMustacheRenderizer, MustacheRenderizer>(ResolveTypeEnum.Singleton)
+                .Add<IJsonSetting, JsonSetting>(ResolveLifeCycleEnum.Singleton)
+                .Add<IMustacheHelpers, MustacheHelpers>(ResolveLifeCycleEnum.Singleton)
+                .Add<IMustacheRenderizer, MustacheRenderizer>(ResolveLifeCycleEnum.Singleton)
 
                 .Add<IMustacheAction, MustacheAction>()
                 .Add<IFileExecutor, FileExecutor>()
