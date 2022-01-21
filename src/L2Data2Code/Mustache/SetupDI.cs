@@ -4,7 +4,6 @@ using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.SharedLib.Helpers;
 using NLog;
 using Topelab.Core.Resolver.Entities;
-using Topelab.Core.Resolver.Enums;
 
 namespace Mustache
 {
@@ -13,13 +12,13 @@ namespace Mustache
         public static ResolveInfoCollection Register()
         {
             return new ResolveInfoCollection()
-                .Add<IJsonSetting, JsonSetting>(ResolveLifeCycleEnum.Singleton)
-                .Add<IMustacheHelpers, MustacheHelpers>(ResolveLifeCycleEnum.Singleton)
-                .Add<IMustacheRenderizer, MustacheRenderizer>(ResolveLifeCycleEnum.Singleton)
+                .AddSingleton<IJsonSetting, JsonSetting>()
+                .AddSingleton<IMustacheHelpers, MustacheHelpers>()
+                .AddSingleton<IMustacheRenderizer, MustacheRenderizer>()
 
                 .Add<IMustacheAction, MustacheAction>()
                 .Add<IFileExecutor, FileExecutor>()
-                .Add<ILogger, Logger>(LogManager.GetCurrentClassLogger());
+                .AddInstance<ILogger>(LogManager.GetCurrentClassLogger());
         }
     }
 }

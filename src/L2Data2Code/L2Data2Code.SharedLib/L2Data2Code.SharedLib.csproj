@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>2.9.422.116</Version>
+    <Version>2.9.522.121</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="System.Management" Version="6.0.0" />
-    <PackageReference Include="Topelab.Core.Resolver" Version="1.3.922.118" />
+    <PackageReference Include="Topelab.Core.Resolver" Version="1.3.1022.121" />
   </ItemGroup>
 </Project>

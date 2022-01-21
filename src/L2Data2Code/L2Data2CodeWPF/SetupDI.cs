@@ -20,7 +20,6 @@ using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
 using NLog;
 using Topelab.Core.Resolver.Entities;
-using Topelab.Core.Resolver.Enums;
 
 namespace L2Data2CodeWPF
 {
@@ -29,30 +28,30 @@ namespace L2Data2CodeWPF
         public static ResolveInfoCollection Register()
         {
             return new ResolveInfoCollection()
-                .Add<IJsonSetting, JsonSetting>(ResolveLifeCycleEnum.Singleton)
-                .Add<IAppSettingsConfiguration, AppSettingsConfiguration>(ResolveLifeCycleEnum.Singleton)
-                .Add<IAreasConfiguration, AreasConfiguration>(ResolveLifeCycleEnum.Singleton)
-                .Add<IGlobalsConfiguration, GlobalsConfiguration>(ResolveLifeCycleEnum.Singleton)
-                .Add<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>(ResolveLifeCycleEnum.Singleton)
-                .Add<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>(ResolveLifeCycleEnum.Singleton)
-                .Add<ITemplatesConfiguration, TemplatesConfiguration>(ResolveLifeCycleEnum.Singleton)
-                .Add<IMustacheHelpers, MustacheHelpers>(ResolveLifeCycleEnum.Singleton)
-                .Add<IMustacheRenderizer, MustacheRenderizer>(ResolveLifeCycleEnum.Singleton)
-                .Add<ISchemaOptionsFactory, SchemaOptionsFactory>(ResolveLifeCycleEnum.Singleton)
-                .Add<MainWindowVM, MainWindowVM>(ResolveLifeCycleEnum.Singleton)
-                .Add<IMessagePanelService, MessagePanelService>(ResolveLifeCycleEnum.Singleton)
-                .Add<IMessageService, MessageService>(ResolveLifeCycleEnum.Singleton)
-                .Add<IAppService, AppService>(ResolveLifeCycleEnum.Singleton)
-                .Add<ICommandService, CommandService>(ResolveLifeCycleEnum.Singleton)
-                .Add<IGeneratorAdapter, GeneratorAdapter>(ResolveLifeCycleEnum.Singleton)
-                .Add<IGitService, GitService>(ResolveLifeCycleEnum.Singleton)
-                .Add<ISchemaService, SchemaService>(ResolveLifeCycleEnum.Singleton)
-                .Add<ICodeGeneratorService, CodeGeneratorService>(ResolveLifeCycleEnum.Singleton)
-                .Add<IDispatcherWrapper, DispatcherWrapper>(ResolveLifeCycleEnum.Singleton)
-                .Add<INameResolver, NameResolver>(ResolveLifeCycleEnum.Singleton)
-                .Add<ITemplateService, TemplateService>(ResolveLifeCycleEnum.Singleton)
-                .Add<IProcessManager, ProcessManager>(ResolveLifeCycleEnum.Singleton)
-                .Add<ISchemaFactory, SchemaFactory>(ResolveLifeCycleEnum.Singleton)
+                .AddSingleton<IJsonSetting, JsonSetting>()
+                .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
+                .AddSingleton<IAreasConfiguration, AreasConfiguration>()
+                .AddSingleton<IGlobalsConfiguration, GlobalsConfiguration>()
+                .AddSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>()
+                .AddSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>()
+                .AddSingleton<ITemplatesConfiguration, TemplatesConfiguration>()
+                .AddSingleton<IMustacheHelpers, MustacheHelpers>()
+                .AddSingleton<IMustacheRenderizer, MustacheRenderizer>()
+                .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
+                .AddSingleton<MainWindowVM, MainWindowVM>()
+                .AddSingleton<IMessagePanelService, MessagePanelService>()
+                .AddSingleton<IMessageService, MessageService>()
+                .AddSingleton<IAppService, AppService>()
+                .AddSingleton<ICommandService, CommandService>()
+                .AddSingleton<IGeneratorAdapter, GeneratorAdapter>()
+                .AddSingleton<IGitService, GitService>()
+                .AddSingleton<ISchemaService, SchemaService>()
+                .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
+                .AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
+                .AddSingleton<INameResolver, NameResolver>()
+                .AddSingleton<ITemplateService, TemplateService>()
+                .AddSingleton<IProcessManager, ProcessManager>()
+                .AddSingleton<ISchemaFactory, SchemaFactory>()
 
                 .Add<IFileMonitorService, FileMonitorService>()
                 .Add<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
@@ -61,7 +60,7 @@ namespace L2Data2CodeWPF
                 .Add<ISchemaReader, JsonSchemaReader>(nameof(JsonSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
                 .Add<ISchemaReader, ObjectSchemaReader>(nameof(ObjectSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
 
-                .Add<ILogger, Logger>(LogManager.GetCurrentClassLogger())
+                .AddInstance<ILogger>(LogManager.GetCurrentClassLogger())
 
                 ;
         }

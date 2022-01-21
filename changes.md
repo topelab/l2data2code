@@ -1,3 +1,8 @@
+### 2.9.522.121
+
+- Update NuGet packages.
+- Adapted to version 1.3.1022.121 of Topelab.Core.Resolver
+
 ### 2.9.422.116
 
 - **New**: Refactor to use Topelab.Core.Resolver (not in nuget public repo, need to be copied local)
