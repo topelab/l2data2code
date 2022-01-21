@@ -43,7 +43,7 @@
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.SimpleIcons" Version="4.11.0" />
-    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.3.1022.121" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.3.1122.121" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">

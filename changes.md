@@ -1,7 +1,7 @@
 ### 2.9.522.121
 
 - Update NuGet packages.
-- Adapted to version 1.3.1022.121 of Topelab.Core.Resolver
+- Adapted to version 1.3.1122.121 of Topelab.Core.Resolver
 
 ### 2.9.422.116
 
