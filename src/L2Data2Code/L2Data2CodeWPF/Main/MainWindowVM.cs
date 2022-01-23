@@ -35,7 +35,7 @@ namespace L2Data2CodeWPF.Main
         private IEnumerable<string> _moduleList;
         private string _outputPath;
         private bool _runningGenerateCode = false;
-        private string _selectedArea;
+        private string _selectedDataSource;
         private string _selectedModule;
         private string _selectedtemplate;
         private string _selectedVars;
@@ -89,10 +89,10 @@ namespace L2Data2CodeWPF.Main
             VarsList = this.generatorAdapter.GetVarsList(_selectedtemplate);
             _selectedVars = VarsList.FirstOrDefault();
 
-            AreaList = this.generatorAdapter.GetAreaList();
-            _selectedArea = AreaList.FirstOrDefault();
+            DataSourceList = this.generatorAdapter.GetAreaList();
+            _selectedDataSource = DataSourceList.FirstOrDefault();
 
-            ModuleList = this.generatorAdapter.GetModuleList(_selectedArea);
+            ModuleList = this.generatorAdapter.GetModuleList(_selectedDataSource);
             _selectedModule = ModuleList.FirstOrDefault();
 
             TemplateChanged();
@@ -110,7 +110,7 @@ namespace L2Data2CodeWPF.Main
         public ObservableCollection<MessageVM> AllMessages => messagePanelService.AllMessages;
         public IAppService AppService => appService;
         public AppType AppType => appService.AppType;
-        public IEnumerable<string> AreaList
+        public IEnumerable<string> DataSourceList
         {
             get { return _areaList; }
             set { SetProperty(ref _areaList, value); }
@@ -195,10 +195,10 @@ namespace L2Data2CodeWPF.Main
             }
         }
 
-        public string SelectedArea
+        public string SelectedDataSource
         {
-            get { return _selectedArea; }
-            set { SetProperty(ref _selectedArea, value, () => AreaChanged()); }
+            get { return _selectedDataSource; }
+            set { SetProperty(ref _selectedDataSource, value, () => AreaChanged()); }
         }
 
         public string SelectedModule
@@ -303,9 +303,9 @@ namespace L2Data2CodeWPF.Main
             Task.Run(() =>
             {
                 PauseTimer = true;
-                generatorAdapter.SetCurrentArea(SelectedArea);
+                generatorAdapter.SetCurrentDataSource(SelectedDataSource);
                 TablePanelVM.LoadAllTables();
-                _moduleList = generatorAdapter.GetModuleList(SelectedArea);
+                _moduleList = generatorAdapter.GetModuleList(SelectedDataSource);
                 dispatcher?.Invoke(() =>
                 {
                     SelectedModule = ModuleList.FirstOrDefault();

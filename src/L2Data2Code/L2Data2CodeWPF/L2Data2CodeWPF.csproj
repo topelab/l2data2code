@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Strings.es-ES.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator></Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Strings.resx">
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>

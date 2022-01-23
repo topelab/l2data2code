@@ -61,7 +61,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 ILogger logger,
                                 IAppSettingsConfiguration settingsConfiguration,
                                 IGlobalsConfiguration globalsConfiguration,
-                                IAreasConfiguration areasConfiguration,
+                                IDataSorcesConfiguration areasConfiguration,
                                 IBasicConfiguration<ModuleConfiguration> modulesConfiguration,
                                 IBasicConfiguration<SchemaConfiguration> schemasConfiguration,
                                 ITemplatesConfiguration templatesConfiguration,
@@ -86,7 +86,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             SettingsConfiguration = settingsConfiguration;
             GlobalsConfiguration = globalsConfiguration;
-            AreasConfiguration = areasConfiguration;
+            DataSourcesConfiguration = areasConfiguration;
             ModulesConfiguration = modulesConfiguration;
             SchemasConfiguration = schemasConfiguration;
             TemplatesConfiguration = templatesConfiguration;
@@ -104,13 +104,13 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public Action OnConfigurationChanged { get; set; }
         public IBasicNameValueConfiguration SettingsConfiguration { get; }
-        public IAreasConfiguration AreasConfiguration { get; }
+        public IDataSorcesConfiguration DataSourcesConfiguration { get; }
         public IBasicConfiguration<ModuleConfiguration> ModulesConfiguration { get; }
         public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; }
         public ITemplatesConfiguration TemplatesConfiguration { get; }
         public IGlobalsConfiguration GlobalsConfiguration { get; }
         public string OutputPath { get; set; }
-        public string SelectedArea { get; private set; }
+        public string SelectedDataSource { get; private set; }
         public string SelectedModule { get; private set; }
         public string SelectedTemplate { get; private set; }
         public string SelectedVars { get; private set; }
@@ -130,10 +130,10 @@ namespace L2Data2CodeUI.Shared.Adapters
         public IEnumerable<Table> GetAllTables() => Tables.Select(t => t.Value);
 
         public IEnumerable<string> GetAreaList()
-            => AreasConfiguration.GetKeys();
+            => DataSourcesConfiguration.GetKeys();
 
-        public IEnumerable<string> GetModuleList(string selectedArea)
-            => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(AreasConfiguration[selectedArea].Name + "."));
+        public IEnumerable<string> GetModuleList(string selectedDataSource)
+            => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(DataSourcesConfiguration[selectedDataSource].Area + "."));
 
         public IEnumerable<string> GetTemplateList()
             => TemplatesConfiguration.GetKeys();
@@ -155,7 +155,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             var templatePath = TemplatesConfiguration[SelectedTemplate].Path;
             CodeGeneratorDto options = new()
             {
-                Area = AreasConfiguration[SelectedArea].Name,
+                Area = DataSourcesConfiguration[SelectedDataSource].Area,
                 Module = ModulesConfiguration[SelectedModule].Name,
                 GenerateReferenced = baseOptions.GenerateReferenced,
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
@@ -288,14 +288,14 @@ namespace L2Data2CodeUI.Shared.Adapters
             messageService.Info(Messages.CodeGeneratedOK);
         }
 
-        public void SetCurrentArea(string selectedArea)
+        public void SetCurrentDataSource(string selectedDataSource)
         {
-            if (selectedArea == SelectedArea) return;
+            if (selectedDataSource == SelectedDataSource) return;
 
-            SelectedArea = selectedArea;
+            SelectedDataSource = selectedDataSource;
             SetupInitial();
             SetupTables();
-            SetCurrentModule(GetModuleList(selectedArea).FirstOrDefault(), true);
+            SetCurrentModule(GetModuleList(selectedDataSource).FirstOrDefault(), true);
             InputSourceType = schemaFactory.GetProviderDefinitionKey(schemaName);
         }
 
@@ -396,7 +396,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private (string OutputPath, string SolutionType) GetSavePathFromSelectedTemplate()
         {
-            if (SelectedArea == null || SelectedModule == null || SelectedTemplate == null)
+            if (SelectedDataSource == null || SelectedModule == null || SelectedTemplate == null)
             {
                 return (null, null);
             }
@@ -405,7 +405,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             var template = TemplatesConfiguration[SelectedTemplate].Path;
             CodeGeneratorDto options = new()
             {
-                Area = AreasConfiguration[SelectedArea].Name,
+                Area = DataSourcesConfiguration[SelectedDataSource].Area,
                 Module = ModulesConfiguration[SelectedModule].Name,
                 GenerateReferenced = false,
                 OutputPath = null,
@@ -447,9 +447,9 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private void SetupInitial()
         {
-            schemaName = AreasConfiguration.Schema(SelectedArea);
-            descriptionsSchemaName = AreasConfiguration.CommentSchema(SelectedArea);
-            outputSchemaName = AreasConfiguration.OutputSchema(SelectedArea);
+            schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);
+            descriptionsSchemaName = DataSourcesConfiguration.CommentSchema(SelectedDataSource);
+            outputSchemaName = DataSourcesConfiguration.OutputSchema(SelectedDataSource);
             schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
             if (schemaReader == null)
             {

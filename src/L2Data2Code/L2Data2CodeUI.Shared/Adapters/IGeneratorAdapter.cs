@@ -11,7 +11,7 @@ namespace L2Data2CodeUI.Shared.Adapters
     {
         Action OnConfigurationChanged { get; set; }
         IBasicNameValueConfiguration SettingsConfiguration { get; }
-        IAreasConfiguration AreasConfiguration { get; }
+        IDataSorcesConfiguration DataSourcesConfiguration { get; }
         IBasicConfiguration<ModuleConfiguration> ModulesConfiguration { get; }
         IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; }
         ITemplatesConfiguration TemplatesConfiguration { get; }
@@ -20,7 +20,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         string GeneratorVersion { get; set; }
         string InputSourceType { get; }
         string OutputPath { get; set; }
-        string SelectedArea { get; }
+        string SelectedDataSource { get; }
         string SelectedModule { get; }
         string SelectedTemplate { get; }
         string SelectedVars { get; }
@@ -29,10 +29,10 @@ namespace L2Data2CodeUI.Shared.Adapters
         Tables Tables { get; }
         IEnumerable<Table> GetAllTables();
         IEnumerable<string> GetAreaList();
-        IEnumerable<string> GetModuleList(string selectedArea);
+        IEnumerable<string> GetModuleList(string selectedDataSource);
         IEnumerable<string> GetTemplateList();
         IEnumerable<string> GetVarsList(string selectedTemplate);
-        void SetCurrentArea(string selectedArea);
+        void SetCurrentDataSource(string selectedDataSource);
         void SetCurrentModule(string selectedModule, bool triggered = false);
         void SetCurrentTemplate(string selectedTemplate, bool triggered = false);
         void SetCurrentVars(string selectedVars, bool triggered = false);

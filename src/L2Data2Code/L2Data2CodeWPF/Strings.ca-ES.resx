@@ -132,6 +132,9 @@
   <data name="ConfigChanged" xml:space="preserve">
     <value>Compte, ha canviat la configuració! Es reiniciarà l'aplicació ... Voleu continuar?</value>
   </data>
+  <data name="DataSource" xml:space="preserve">
+    <value>Font de dades</value>
+  </data>
   <data name="DeleteContents" xml:space="preserve">
     <value>Esteu segur d'esborrar el contingut de la carpeta {0}?</value>
   </data>

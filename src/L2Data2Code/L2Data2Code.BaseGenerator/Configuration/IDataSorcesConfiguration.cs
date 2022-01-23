@@ -2,7 +2,7 @@ using L2Data2Code.SharedLib.Configuration;
 
 namespace L2Data2Code.BaseGenerator.Configuration
 {
-    public interface IAreasConfiguration : IBasicConfiguration<AreaConfiguration>
+    public interface IDataSorcesConfiguration : IBasicConfiguration<DataSourceConfiguration>
     {
         string CommentSchema(string key);
         string Schema(string key);

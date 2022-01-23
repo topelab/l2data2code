@@ -30,7 +30,7 @@ namespace L2Data2CodeWPF
             return new ResolveInfoCollection()
                 .AddSingleton<IJsonSetting, JsonSetting>()
                 .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
-                .AddSingleton<IAreasConfiguration, AreasConfiguration>()
+                .AddSingleton<IDataSorcesConfiguration, DataSourcesConfiguration>()
                 .AddSingleton<IGlobalsConfiguration, GlobalsConfiguration>()
                 .AddSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>()
                 .AddSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>()

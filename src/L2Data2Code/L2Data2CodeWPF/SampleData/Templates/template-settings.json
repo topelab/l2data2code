@@ -105,21 +105,21 @@
             "RenamaColumns": null
         }
     },
-    "Areas": {
+    "DataSources": {
         "Northwind (json file)": {
-            "Name": "Northwind",
+            "Area": "Northwind",
             "Schema": "northwindtest"
         },
         "Northwind (assembly entities)": {
-            "Name": "Northwind",
+            "Area": "Northwind",
             "Schema": "northwind-entities"
         },
         "Northwind (assembly dtos)": {
-            "Name": "Northwind",
+            "Area": "Northwind",
             "Schema": "northwind-dtos"
         },
         "Demo": {
-            "Name": "Demo",
+            "Area": "Demo",
             "Schema": "general"
         }
     },

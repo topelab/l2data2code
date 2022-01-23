@@ -3,10 +3,10 @@ using L2Data2Code.SharedLib.Helpers;
 
 namespace L2Data2Code.BaseGenerator.Configuration
 {
-    public class AreasConfiguration : BasicConfiguration<AreaConfiguration>, IAreasConfiguration
+    public class DataSourcesConfiguration : BasicConfiguration<DataSourceConfiguration>, IDataSorcesConfiguration
     {
         private const string DEFAULT_KEY = "localserver";
-        public AreasConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.AREAS)
+        public DataSourcesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.DATA_SOURCES)
         {
         }
 

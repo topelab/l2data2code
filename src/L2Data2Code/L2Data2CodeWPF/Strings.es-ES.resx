@@ -132,6 +132,9 @@
   <data name="ConfigChanged" xml:space="preserve">
     <value>¡Cuidado, ha cambiado la configuración! Se reiniciará la aplicación... ¿Desea continuar?</value>
   </data>
+  <data name="DataSource" xml:space="preserve">
+    <value>Fuente de datos</value>
+  </data>
   <data name="DeleteContents" xml:space="preserve">
     <value>¿Está seguro de borrar el contenido de la carpeta {0}?"</value>
   </data>

@@ -95,12 +95,12 @@
                            Margin="10,0"
                            TextWrapping="Wrap"
                            VerticalAlignment="Center"
-                           Text="{x:Static local:Strings.Area}" />
+                           Text="{x:Static local:Strings.DataSource}" />
                 <ComboBox Grid.Row="2"
                           Grid.Column="1"
                           x:Name="cbArea"
-                          ItemsSource="{Binding AreaList}"
-                          SelectedItem="{Binding SelectedArea}"
+                          ItemsSource="{Binding DataSourceList}"
+                          SelectedItem="{Binding SelectedDataSource}"
                           Margin="0,5" />
 
                 <TextBlock Grid.Row="3"
