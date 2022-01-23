@@ -1,3 +1,7 @@
+### 2.10.122.123
+
+- **Breaking change**: "Areas" section needs to be renamed to "DataSources", and any "Name" element inside, needs to be renamed to "Area".
+
 ### 2.9.522.121
 
 - Update NuGet packages.

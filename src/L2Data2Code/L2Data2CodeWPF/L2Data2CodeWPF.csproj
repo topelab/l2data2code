@@ -3,9 +3,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>2.9.522.121</Version>
+    <Version>2.10.122.123</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
     <NeutralLanguage>en</NeutralLanguage>
+    <RestoreSources>$(RestoreSources);../../local-nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SampleData\**" />
