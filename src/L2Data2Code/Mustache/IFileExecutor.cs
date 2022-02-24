@@ -3,7 +3,7 @@ using System;
 namespace Mustache
 {
     /// <summary>
-    /// Interface for an implemenation that execute actions over paths and files
+    /// Interface for an implementation that execute actions over paths and files
     /// </summary>
     internal interface IFileExecutor
     {

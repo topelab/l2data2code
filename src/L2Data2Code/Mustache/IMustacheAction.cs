@@ -1,7 +1,7 @@
 namespace Mustache
 {
     /// <summary>
-    /// Interface for an implemenation that run a Mustache action
+    /// Interface for an implementation that run a Mustache action
     /// </summary>
     internal interface IMustacheAction
     {

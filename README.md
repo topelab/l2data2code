@@ -31,7 +31,7 @@ Here we will define settings for the application: data sources, templates that w
 - **Editor**: "VSCODE" or path to an editor.
 - **Editor2**: same as *Editor* to an alternative editor.
 - **TemplatesBasePath**: Base path for templates.
-- **UICulture**: `es|ca|en`: if not defined, application will try to use UI culture if is one of English, Spanish or Catalan. It can be set to `es` or `ca` on `en` to set UI culture for the application.
+- **UICulture**: `es-ES|ca-ES|en`: if not defined, application will try to use UI culture if is one of English, Spanish or Catalan. It can be set to `es-ES` or `ca-ES` on `en` to set UI culture for the application.
 - **showVarsWindow**: `true|(false)`: when `true`, defined vars could be showed in a window.
 - **generateJsonInfo**: `true|(false)`: when `true`, a JSON info will be generated from data source (if input data source is not a json file) at log file if *JsonGeneratedPath* is not defined.
 - **JsonGeneratedPath**: `true|(false)`: the path on which JSON file will be generated when *generateJsonInfo* is `true`.
