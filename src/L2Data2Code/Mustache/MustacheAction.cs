@@ -7,6 +7,9 @@ using System.IO;
 
 namespace Mustache
 {
+    /// <summary>
+    /// Run a Mustache action
+    /// </summary>
     internal class MustacheAction : IMustacheAction
     {
         private readonly IMustacheRenderizer renderizer;
@@ -14,6 +17,13 @@ namespace Mustache
         private readonly IFileExecutor fileExecutor;
         private MustacheOptions options;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="jsonSetting">Json setting</param>
+        /// <param name="renderizer">Renderizer</param>
+        /// <param name="fileExecutor">File executor</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public MustacheAction(IJsonSetting jsonSetting, IMustacheRenderizer renderizer, IFileExecutor fileExecutor)
         {
             this.jsonSetting = jsonSetting ?? throw new ArgumentNullException(nameof(jsonSetting));
@@ -21,6 +31,11 @@ namespace Mustache
             this.fileExecutor = fileExecutor ?? throw new ArgumentNullException(nameof(fileExecutor));
         }
 
+        /// <summary>
+        /// Initialize options
+        /// </summary>
+        /// <param name="options">Mustache options</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void Initialize(MustacheOptions options)
         {
             this.options = options ?? throw new ArgumentNullException(nameof(options));
@@ -28,10 +43,13 @@ namespace Mustache
             fileExecutor.Initialize(options.TemplatePath);
         }
 
+        /// <summary>
+        /// Run Mustache action
+        /// </summary>
         public void Run()
         {
-            fileExecutor.Run((path) => DoAction(CreatePath, path, options),
-                 (file) => DoAction(TransformFile, file, options));
+            fileExecutor.RunOnPaths((path) => DoAction(CreatePath, path, options));
+            fileExecutor.RunOnFiles((file) => DoAction(TransformFile, file, options));
         }
 
         private void DoAction(Action<string, string, string, JToken> action, string path, MustacheOptions options)
