@@ -246,7 +246,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
-                    if (isFirst)
+                    if (isFirst && !options.GeneateOnlyJson)
                     {
                         template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                         isFirst = false;
@@ -256,7 +256,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
                                                        template.IsGeneral ? null : _alternativeDictionary);
 
-                    if (options.LastPass)
+                    if (options.LastPass && !options.GeneateOnlyJson)
                     {
                         template.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                     }
