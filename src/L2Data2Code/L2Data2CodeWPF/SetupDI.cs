@@ -59,6 +59,7 @@ namespace L2Data2CodeWPF
                 .Add<ISchemaReader, FakeSchemaReader>(nameof(FakeSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
                 .Add<ISchemaReader, JsonSchemaReader>(nameof(JsonSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
                 .Add<ISchemaReader, ObjectSchemaReader>(nameof(ObjectSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
+                .Add<ISchemaReader, SQLiteSchemaReader>(nameof(SQLiteSchemaReader), typeof(INameResolver), typeof(SchemaOptions))
 
                 .AddInstance<ILogger>(LogManager.GetCurrentClassLogger())
 

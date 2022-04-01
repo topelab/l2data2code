@@ -29,16 +29,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             { "MySql.Data.MySqlClient", new ProviderDefinition { Key = "mysql", Type = typeof(MySqlSchemaReader) } },
             { "System.Data.FakeClient", new ProviderDefinition { Key = "fake", Type = typeof(FakeSchemaReader) } },
             { "System.Data.JsonClient", new ProviderDefinition { Key = "json", Type = typeof(JsonSchemaReader) } },
-            {
-                "Microsoft.Data.Sqlite",
-                new ProviderDefinition
-                {
-                    Key = "sqlite",
-                    Type = typeof(JsonSchemaReader),
-                    Conversions = new Dictionary<string, string>() {
-                    { "decimal", "NUMERIC" } }
-                }
-            },
+            { "Microsoft.Data.Sqlite", new ProviderDefinition { Key = "sqlite", Type = typeof(SQLiteSchemaReader), Conversions = new Dictionary<string, string>() {{ "decimal", "NUMERIC" } } } },
             { "System.Data.ObjectClient", new ProviderDefinition { Key = "object", Type = typeof(ObjectSchemaReader) } },
             //{ "Oracle.ManagedDataAccess.Client", typeof(OracleSchemaReader) },
 
