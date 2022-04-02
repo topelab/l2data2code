@@ -251,6 +251,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     break;
                 case "smallint":
                 case "int":
+                case "integer":
                 case "mediumint":
                     if (precision < 12)
                     {
