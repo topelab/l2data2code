@@ -195,14 +195,13 @@ namespace L2Data2Code.SchemaReader.MySql
 
             Dictionary<string, int> result = new();
 
-            var databaseIndexColumns = connection.GetSchema("IndexColumns", new string[4] { null, null, table, null });
+            var databaseIndexes = connection.GetSchema("Indexes", new string[4] { null, null, table, null }).Rows.Cast<DataRow>();
+            var databaseIndexColumns = connection.GetSchema("IndexColumns", new string[4] { null, null, table, null }).Rows.Cast<DataRow>();
+            var indexName = databaseIndexes.Where(r => (bool)r["PRIMARY_KEY"]).Select(r => (string)r["INDEX_NAME"]).FirstOrDefault();
 
-            foreach (DataRow row in databaseIndexColumns.Rows)
+            foreach (DataRow row in databaseIndexColumns.Where(r => (string)r["INDEX_NAME"] == indexName))
             {
-                if (row["INDEX_NAME"].ToString().Equals("PRIMARY"))
-                {
-                    result.Add(row["COLUMN_NAME"].ToString(), Convert.ToInt32(row["ORDINAL_POSITION"]));
-                }
+                result.Add(row["COLUMN_NAME"].ToString(), Convert.ToInt32(row["ORDINAL_POSITION"]));
             }
 
             return result;
