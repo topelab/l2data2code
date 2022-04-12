@@ -240,6 +240,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     break;
                 case "float":
                 case "decimal":
+                case "numeric":
                     sysType = "decimal";
                     break;
                 case "double":
