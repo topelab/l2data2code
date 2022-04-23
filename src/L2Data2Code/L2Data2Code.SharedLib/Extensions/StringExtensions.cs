@@ -330,5 +330,12 @@ namespace L2Data2Code.SharedLib.Extensions
             return s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
+        /// <summary>
+        /// Double slash in path
+        /// </summary>
+        /// <param name="path">path</param>
+        public static string DoubleSlash(this string path)
+            => path.Replace(@"\", @"\\");
+
     }
 }

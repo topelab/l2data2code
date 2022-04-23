@@ -1,3 +1,8 @@
+### 2.10.322.423
+
+- **New**: Added extension *DoubleSlash* to double back slash inside quote string
+
+
 ### 2.10.222.225
 
 - Fix functionality for GenerateOnlyJson
