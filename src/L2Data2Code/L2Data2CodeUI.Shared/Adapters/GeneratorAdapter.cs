@@ -410,7 +410,9 @@ namespace L2Data2CodeUI.Shared.Adapters
                 GenerateReferenced = false,
                 OutputPath = null,
                 CreatedFromSchemaName = outputSchemaName,
-                UserVariables = TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
+                UserVariables = string.Concat(
+                    TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
+                    DataSourcesConfiguration[SelectedDataSource].Vars.ToSemiColonSeparatedString()),
                 TemplatePath = Path.Combine(basePath, template),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
                 SchemaName = schemaNameToFake,
