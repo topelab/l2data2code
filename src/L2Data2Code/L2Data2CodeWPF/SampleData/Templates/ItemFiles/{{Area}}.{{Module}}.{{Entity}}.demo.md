@@ -47,8 +47,9 @@ Entidad.Humanize: {{Entity.Humanize}}
 
 ### Other functions
 
-Version.AddBuildNumber: {{Version.AddBuildNumber}}
-ConnectionString.DoubleSlash: {{ConnectionString.DoubleSlash}}
+- AddBuildNumber: Version.AddBuildNumber = {{Version.AddBuildNumber}}
+- IsTrue: SetDomain.IsTrue = {{SetDomain.IsTrue}}
+- DoubleSlash: ConnectionString.DoubleSlash = {{ConnectionString.DoubleSlash}}
 
 ### Index
 {{#Entity.MultiplePKColumns}}Índice compuesto: {{#PrimaryKeys}}{{Type}} {{Name.Camelize}}{{^IsLast}}, {{/IsLast}}{{/PrimaryKeys}}

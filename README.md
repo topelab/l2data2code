@@ -24,7 +24,7 @@ First file founded at current execution path is `appsettings.json` with a minimu
 
 ### Specification for appsettings.json
 
-Here we will define settings for the application: data sources, templates that will use, etc... It has 5 sections: appSettings, Templates, Schemas, Areas and Modules. You can define a minimum **appsettings.json** with only *appSettings* section, and the rest of sections inside another json file (it will be specicified at **TemplateSettings** key)
+Here we will define settings for the application: data sources, templates that will use, etc... It has 5 sections: appSettings, Templates, Schemas, Areas and Modules. You can define a minimum **appsettings.json** with only *appSettings* section, and the rest of sections inside another json file (it will be specified at **TemplateSettings** key)
 
 #### appSettings section
 
@@ -54,7 +54,7 @@ Every template has a name and these properties:
 - **Path**: relative path from *TemplatesBasePath* on which resides resource templates.
 - **RemoveFolders** `(true)|false`: folders will be removed before generation.
 - **ResourcesFolder** `"General"`: Name of folder for resource templates (files or folders). This name is used as an identification for template. If *IsGeneral* is true, this folder will be processed globally.
-- **ItemsResources** `[]`: array of folder resorces that will be processed for every entity.
+- **ItemsResources** `[]`: array of folder resources that will be processed for every entity.
 - **Company**: Special var that contains company name (or what else you want) to use inside template files or in *Vars* / *Configurations* / *FinalVars* specification.
 - **Area**: Special var that contains area or section name (or what else you want) to use inside template files or in *Vars* / *Configurations* / *FinalVars* specification.
 - **Module**: Special var that contains module name (or what else you want) to use inside template files or in *Vars* / *Configurations* / *FinalVars* specification.
@@ -175,7 +175,7 @@ Now, we can use `Template` inside *SavePath*. In this example `Template = "Test 
     },
 ```
 
-#### Schemas section
+#### Schemes section
 
 Schema definition (defined with a **key**):
 
@@ -230,36 +230,37 @@ Schema definition (defined with a **key**):
 
 ```
 
-#### Areas section
+#### Data source section
 
-Area combo will be filled with information supplied at this section.
+Data source combo will be filled with information supplied at this section.
 
 ![](images/2021-09-10-19-14-05.png)
 
 This is the Area definition (defined with a **Key**):
 
 - **Key**: *string* used to fill combo.
-- **Name**: *string* used like a var inside template files.
+- **Area**: *string* used like a var inside template files.
 - **Schema**: schema key data source.
 - **OutputSchema**: schema key for output data source.
 - **DescriptionsSchema**: schema key where schema objects has a description (this will be obsolete)
+- **Vars**: A collection of name-value values.
 
 ```json
-    "Areas": {
+    "DataSources": {
         "Northwind (json file)": {
-            "Name": "Northwind",
+            "Area": "Northwind",
             "Schema": "northwindtest"
         },
         "Northwind (assembly entities)": {
-            "Name": "Northwind",
+            "Area": "Northwind",
             "Schema": "northwind-entities"
         },
         "Northwind (assembly dtos)": {
-            "Name": "Northwind",
+            "Area": "Northwind",
             "Schema": "northwind-dtos"
         },
         "Demo": {
-            "Name": "Demo",
+            "Area": "Demo",
             "Schema": "general"
         }
     }
