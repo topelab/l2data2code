@@ -1,4 +1,4 @@
-using Topelab.Core.Resolver.Unity;
+using Topelab.Core.Resolver.Microsoft;
 
 namespace Mustache
 {

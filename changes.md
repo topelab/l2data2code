@@ -1,3 +1,7 @@
+### 2.10.422.504
+
+- Update NuGet packages.
+
 ### 2.10.322.423
 
 - **New**: Added extension *DoubleSlash* to double back slash inside quote string
