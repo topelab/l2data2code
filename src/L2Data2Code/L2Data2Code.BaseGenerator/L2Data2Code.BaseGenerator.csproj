@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>2.10.422.504</Version>
+    <Version>2.10.522.531</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseMustache\L2Data2Code.BaseMustache.csproj" />

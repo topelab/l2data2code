@@ -547,6 +547,7 @@ namespace L2Data2Code.BaseGenerator.Services
             internalVars.Add(nameof(Options.GeneratorApplication), Options.GeneratorApplication);
             internalVars.Add(nameof(Options.GeneratorVersion), Options.GeneratorVersion);
             internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.Render(Template.SavePath, internalVars));
+            internalVars.Add(nameof(Options.TemplatePath), Options.TemplatePath.AddPathSeparator());
 
             var lastConditionResult = false;
             string value;

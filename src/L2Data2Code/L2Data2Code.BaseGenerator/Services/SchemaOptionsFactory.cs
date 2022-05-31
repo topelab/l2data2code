@@ -15,18 +15,20 @@ namespace L2Data2Code.BaseGenerator.Services
                 SchemasConfiguration = codeGeneratorDto.SchemasConfiguration,
                 SchemaName = codeGeneratorDto.SchemaName,
                 SummaryWriter = stringBuilderWriter,
-                DescriptionsSchemaName = codeGeneratorDto.DescriptionsSchemaName
+                DescriptionsSchemaName = codeGeneratorDto.DescriptionsSchemaName,
+                TemplatePath = codeGeneratorDto.TemplatePath
             };
         }
 
-        public SchemaOptions Create(IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName)
+        public SchemaOptions Create(string templatePath, IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName)
         {
             return new SchemaOptions
             {
                 SchemasConfiguration = schemasConfiguration,
                 SchemaName = schemaName,
                 SummaryWriter = summaryWriter,
-                DescriptionsSchemaName = descriptionsSchemaName
+                DescriptionsSchemaName = descriptionsSchemaName,
+                TemplatePath = templatePath
             };
         }
     }

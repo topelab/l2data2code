@@ -69,7 +69,7 @@
     },
     "Schemas": {
         "northwindtest": {
-            "ConnectionString": "SampleData\\northwind-dbinfo.json",
+            "ConnectionString": "..\\northwind-dbinfo.json",
             "Provider": "System.Data.JsonClient",
             "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,
@@ -78,7 +78,7 @@
             "RenamaColumns": null
         },
         "northwind-entities": {
-            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Entities",
+            "ConnectionString": "..\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Entities",
             "Provider": "System.Data.ObjectClient",
             "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,
@@ -87,7 +87,7 @@
             "RenamaColumns": null
         },
         "northwind-dtos": {
-            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Dtos",
+            "ConnectionString": "..\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Dtos",
             "Provider": "System.Data.ObjectClient",
             "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,
@@ -96,7 +96,7 @@
             "RenamaColumns": null
         },
         "northwind-collections": {
-            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Collections",
+            "ConnectionString": "..\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Collections",
             "Provider": "System.Data.ObjectClient",
             "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,

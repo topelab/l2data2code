@@ -11,5 +11,6 @@ namespace L2Data2Code.SchemaReader.Schema
         public StringBuilderWriter SummaryWriter { get; set; }
         public string DescriptionsSchemaName { get; set; }
         public string DescriptionsConnectionString { get; set; }
+        public string TemplatePath { get; set; }
     }
 }

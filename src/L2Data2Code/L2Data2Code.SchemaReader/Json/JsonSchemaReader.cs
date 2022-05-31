@@ -14,12 +14,16 @@ namespace L2Data2Code.SchemaReader.Json
     public class JsonSchemaReader : Schema.SchemaReader
     {
         private readonly string connectionString;
+        private readonly string templatePath;
         private readonly INameResolver nameResolver;
 
         public JsonSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
+            
             connectionString = options.ConnectionString;
-            if (!File.Exists(connectionString))
+            templatePath = options.TemplatePath;
+            bool fileExist = templatePath.GetResultUsingBasePath(() => File.Exists(connectionString));
+            if (!fileExist)
             {
                 throw new Exception($"JSON file {connectionString} doesn't exist");
             }
@@ -29,7 +33,7 @@ namespace L2Data2Code.SchemaReader.Json
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            var content = File.ReadAllText(connectionString);
+            var content = templatePath.GetResultUsingBasePath(() => File.ReadAllText(connectionString));
             var tableList = JsonConvert.DeserializeObject<List<Table>>(content);
             return Resolve(tableList, options.RemoveFirstWord, options.TableRegex);
         }

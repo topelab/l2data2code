@@ -8,6 +8,6 @@ namespace L2Data2Code.BaseGenerator.Interfaces
     public interface ISchemaOptionsFactory
     {
         SchemaOptions Create(CodeGeneratorDto codeGeneratorDto, StringBuilderWriter stringBuilderWriter);
-        SchemaOptions Create(IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName);
+        SchemaOptions Create(string templatePath, IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName);
     }
 }

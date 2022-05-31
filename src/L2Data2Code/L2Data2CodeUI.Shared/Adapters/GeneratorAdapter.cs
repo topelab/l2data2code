@@ -449,10 +449,13 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private void SetupInitial()
         {
+            var basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var templatePath = Path.Combine(basePath, TemplatesConfiguration[SelectedTemplate].Path);
+
             schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);
             descriptionsSchemaName = DataSourcesConfiguration.CommentSchema(SelectedDataSource);
             outputSchemaName = DataSourcesConfiguration.OutputSchema(SelectedDataSource);
-            schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
+            schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);

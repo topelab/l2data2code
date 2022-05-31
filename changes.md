@@ -1,3 +1,8 @@
+### 2.10.522.531
+
+- Connection strings for JsonClient and ObjectClient providers are now relative to template path
+- **New**: Added new var *TemplatePath*
+
 ### 2.10.422.504
 
 - Update NuGet packages.

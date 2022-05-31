@@ -18,6 +18,7 @@ namespace L2Data2Code.SchemaReader.Object
     {
         private readonly string connectionString;
         private readonly string assemblyPath;
+        private readonly string templatePath;
         private readonly string nameSpace;
         private readonly List<string> nameSpacesCollection;
         private readonly INameResolver nameResolver;
@@ -29,13 +30,14 @@ namespace L2Data2Code.SchemaReader.Object
         public ObjectSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
+            templatePath = options.TemplatePath;
             var parts = connectionString.Split(';');
             assemblyPath = parts[0];
             if (parts.Length > 1)
             {
                 nameSpace = parts[1];
             }
-            if (!File.Exists(assemblyPath))
+            if (!templatePath.GetResultUsingBasePath(() => File.Exists(assemblyPath)))
             {
                 throw new Exception($"Assembly file {assemblyPath} doesn't exist");
             }
@@ -58,7 +60,7 @@ namespace L2Data2Code.SchemaReader.Object
 
         private IEnumerable<Type> GetTypesFromAssembly(string nameSpace = null)
         {
-            Assembly assembly = Assembly.LoadFrom(assemblyPath);
+            Assembly assembly = templatePath.GetResultUsingBasePath(() => Assembly.LoadFrom(assemblyPath));
             var types = assembly.GetTypes().Where(t => !t.Name.StartsWith("<") && (nameSpace == null || t.Namespace.StartsWith(nameSpace)));
             return types;
         }
