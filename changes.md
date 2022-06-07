@@ -1,3 +1,8 @@
+### 2.11.0
+
+- Upgrade to Topelab.Core 1.4.0
+- Changed version numbering
+
 ### 2.10.522.531
 
 - Connection strings for JsonClient and ObjectClient providers are now relative to template path
