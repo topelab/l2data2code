@@ -23,6 +23,7 @@ namespace L2Data2Code.BaseGenerator.Services
     {
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
+        private readonly IPathRenderizer pathRenderizer;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
         private readonly ISchemaFactory schemaFactory;
@@ -83,13 +84,14 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
         /// <param name="logger">Logger service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory)
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IPathRenderizer pathRenderizer)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
             this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
+            this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
 
             referencedTables = new();
             templateFiles = new();
@@ -246,12 +248,11 @@ namespace L2Data2Code.BaseGenerator.Services
                     var partToReplace = string.Empty;
                     string filename, filePath, rawContent, fileExtension;
 
-                    filename = TemplateFileName(templatesPath, templateFile, replacement);
+                    filename = pathRenderizer.TemplateFileName(templatesPath, templateFile, replacement);
                     if (filename == null)
                     {
                         return null;
                     }
-                    //Check to add to a file
                     var match = templateFilePart.Match(filename);
                     if (match.Success)
                     {
@@ -462,70 +463,6 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private static Regex GetMarkRegex(string fileExtension) =>
             markByExtension.ContainsKey(fileExtension) ? markByExtension[fileExtension] : csMarkPart;
-
-        private string TemplateFileName(string templatesPath, string filePath, Replacement replacement)
-        {
-            var partialName = filePath.Replace(templatesPath, "");
-
-            // Moustached dots are part of file/folder name
-            partialName = partialName.Replace("{{.}}", ".");
-
-            //Check conditional template
-            var iwhen = partialName.IndexOf("when{{");
-            while (iwhen >= 0)
-            {
-                var itag = iwhen + "when{{".Length;
-                var ewhen = partialName.IndexOf("}}", itag);
-                var tag = partialName[itag..ewhen];
-                if (!CheckTemplateName(tag, replacement))
-                    return null;
-                partialName = partialName[..iwhen] + partialName[(ewhen + "}}".Length)..];
-                iwhen = partialName.IndexOf("when{{");
-            }
-
-            // Apply template replacement
-            partialName = mustacheRenderizer.Render(partialName, replacement);
-
-            return partialName;
-        }
-
-        private static bool CheckTemplateName(string tag, Replacement replacement)
-        {
-            return tag.Contains('=') ? CheckTemplateNameConditionIsTrue(tag, replacement) : CheckTemplateNameIsTrue(tag, replacement);
-        }
-
-        private static bool CheckTemplateNameIsTrue(string tag, Replacement replacement)
-        {
-            var result = false;
-
-            var type = typeof(Replacement);
-            var prop = type.GetProperty(tag.TrimStart('^'), typeof(bool));
-            if (prop != null)
-                result = (bool)prop.GetValue(replacement, null);
-
-            if (tag.StartsWith("^"))
-                return !result;
-
-            return result;
-        }
-
-        private static bool CheckTemplateNameConditionIsTrue(string tag, Replacement replacement)
-        {
-            var result = false;
-
-            var expression = tag.TrimStart('^').Split('=');
-            var key = expression[0].Trim();
-            var value = expression[1].Trim();
-            if (replacement.ContainsKey(key) && replacement[key].ToString() == value)
-            {
-                result = true;
-            }
-
-            if (tag.StartsWith("^"))
-                return !result;
-
-            return result;
-        }
 
         private void CreateVarsFromUserVariables()
         {

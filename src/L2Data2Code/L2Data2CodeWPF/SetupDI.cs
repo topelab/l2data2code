@@ -37,6 +37,7 @@ namespace L2Data2CodeWPF
                 .AddSingleton<ITemplatesConfiguration, TemplatesConfiguration>()
                 .AddSingleton<IMustacheHelpers, MustacheHelpers>()
                 .AddSingleton<IMustacheRenderizer, MustacheRenderizer>()
+                .AddSingleton<IPathRenderizer, PathRenderizer>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
                 .AddSingleton<MainWindowVM, MainWindowVM>()
                 .AddSingleton<IMessagePanelService, MessagePanelService>()
