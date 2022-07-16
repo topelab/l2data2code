@@ -34,7 +34,16 @@ namespace L2Data2Code.SchemaReader.Json
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
             var content = templatePath.GetResultUsingBasePath(() => File.ReadAllText(connectionString));
-            var tableList = JsonConvert.DeserializeObject<List<Table>>(content);
+            List<Table> tableList = new();
+
+            if (content.StartsWith("["))
+            {
+                tableList.AddRange(JsonConvert.DeserializeObject<List<Table>>(content));
+            }
+            else
+            {
+                tableList.AddRange(JsonConvert.DeserializeObject<TablesDTO>(content).Tables);
+            }
             return Resolve(tableList, options.RemoveFirstWord, options.TableRegex);
         }
 

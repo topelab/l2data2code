@@ -349,7 +349,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
 
-            FileService.Write(fileName, JsonConvert.SerializeObject(processTables, Formatting.Indented,
+            FileService.Write(fileName, JsonConvert.SerializeObject(new TablesDTO{ Tables = processTables }, Formatting.Indented,
                 new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,

@@ -1,12 +1,13 @@
 ### 2.11.1
 
-- Upgrade NLog to 5.0.1 from 5.0.0ç
+- Generated JSON redesign
 - Added to MustacheHelpers *Join* with three variants:
   - {{Join separator}}: Takes an array a join with a separator.
   - {{JoinWithHeader separator header}}: Takes an array a join with a separator starting with a header.
   - {{JoinWithHeaderFooter separator header footer}}: Takes an array a join with a separator starting with a header and ending with a footer.
   - *separator, header and footer* are strings
 - Mustache add *IsFirst* and *IsLast* to nodes at JObject[] objects
+- Upgrade NLog to 5.0.1 from 5.0.0
 
 ### 2.11.0
 
