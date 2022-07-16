@@ -1,4 +1,5 @@
 using L2Data2Code.BaseMustache.Interfaces;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -58,23 +59,22 @@ namespace L2Data2Code.BaseMustache.Services
 
         private static bool CheckTemplateNameConditionIsTrue<T>(string tag, T replacement) where T : class
         {
-            var result = false;
-
             var expression = tag.TrimStart('^').Split('=');
             var key = expression[0].Trim();
             var value = expression[1].Trim();
 
-            if (replacement is IDictionary<string, object> dictionary)
+            bool result;
+            switch (replacement)
             {
-                if (dictionary.ContainsKey(key) && dictionary[key].ToString() == value)
-                {
-                    result = true;
-                }
-            }
-            else
-            {
-                var replacementValue = typeof(T).GetProperty(key).GetValue(replacement, null)?.ToString();
-                result = replacementValue == value;
+                case IDictionary<string, object> dictionary:
+                    result = dictionary.ContainsKey(key) && dictionary[key].ToString() == value;
+                    break;
+                case JToken token:
+                    result = token[key]?.ToString() == value;
+                    break;
+                default:
+                    result = typeof(T).GetProperty(key).GetValue(replacement, null)?.ToString() == value;
+                    break;
             }
 
             if (tag.StartsWith("^"))
