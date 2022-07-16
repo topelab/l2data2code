@@ -1,6 +1,6 @@
-using L2Data2Code.BaseMustache.Extensions;
 using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using Newtonsoft.Json.Linq;
 using Stubble.Extensions.JsonNet;
 using Stubble.Helpers;
 using System.Collections.Generic;
@@ -24,6 +24,7 @@ namespace L2Data2Code.BaseMustache.Services
                 List<System.Type> types = Assembly.GetCallingAssembly().GetTypes().ToList();
                 types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
                 types.AddRange(Assembly.GetAssembly(typeof(StringExtensions)).GetTypes());
+                types.AddRange(Assembly.GetAssembly(typeof(JSonExtensions)).GetTypes());
 
                 foreach (var type in types)
                 {
@@ -33,7 +34,7 @@ namespace L2Data2Code.BaseMustache.Services
 
                         var IsMethodOk = method.IsStatic
                             && methodParams.Length == 1
-                            && methodParams[0].ParameterType == typeof(string);
+                            && (methodParams[0].ParameterType == typeof(string) || methodParams[0].ParameterType == typeof(JArray));
 
                         if (IsMethodOk)
                         {
@@ -55,10 +56,15 @@ namespace L2Data2Code.BaseMustache.Services
             _mustache = new Stubble.Core.Builders.StubbleBuilder()
                 .Configure(s => s
                     .AddValueGetter(typeof(string), (o, k, i) =>
-                        {
-                            var isMethodOk = _methods.TryGetValue(k, out var method) && method.GetParameters()[0].ParameterType == o.GetType();
-                            return !isMethodOk ? string.Empty : method.Invoke(null, new[] { o });
-                        })
+                    {
+                        var isMethodOk = _methods.TryGetValue(k, out var method) && method.GetParameters()[0].ParameterType == o.GetType();
+                        return !isMethodOk ? string.Empty : method.Invoke(null, new[] { o });
+                    })
+                    .AddValueGetter(typeof(JArray), (o, k, i) =>
+                    {
+                        var isMethodOk = _methods.TryGetValue(k, out var method) && method.GetParameters()[0].ParameterType == o.GetType();
+                        return !isMethodOk ? string.Empty : method.Invoke(null, new[] { o });
+                    })
                     .AddJsonNet()
                     .AddHelpers((Helpers)_helpers)
                 ).Build();

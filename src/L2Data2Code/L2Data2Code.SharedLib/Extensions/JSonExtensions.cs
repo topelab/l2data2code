@@ -17,5 +17,10 @@ namespace L2Data2Code.SharedLib.Extensions
             }
             return valueCollection;
         }
+
+        public static bool HasValues(this JArray array)
+        {
+            return array.HasValues;
+        }
     }
 }

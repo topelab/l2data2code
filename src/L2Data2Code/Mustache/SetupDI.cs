@@ -15,6 +15,7 @@ namespace Mustache
                 .AddSingleton<IJsonSetting, JsonSetting>()
                 .AddSingleton<IMustacheHelpers, MustacheHelpers>()
                 .AddSingleton<IMustacheRenderizer, MustacheRenderizer>()
+                .AddSingleton<IMustacheOptionsInitializer, MustacheOptionsInitializer>()
 
                 .Add<IMustacheAction, MustacheAction>()
                 .Add<IFileExecutor, FileExecutor>()
