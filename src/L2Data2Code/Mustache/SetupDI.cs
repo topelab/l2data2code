@@ -17,6 +17,7 @@ namespace Mustache
                 .AddSingleton<IMustacheRenderizer, MustacheRenderizer>()
                 .AddSingleton<IMustacheOptionsInitializer, MustacheOptionsInitializer>()
                 .AddSingleton<IPathRenderizer, PathRenderizer>()
+                .AddSingleton<IFileService, FileService>()
 
                 .Add<IMustacheAction, MustacheAction>()
                 .Add<IFileExecutor, FileExecutor>()

@@ -17,10 +17,10 @@ namespace L2Data2Code.BaseMustache.Services
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
         }
 
-        public string TemplateFileName<T>(string filePath, T replacement) where T : class
-            => TemplateFileName(null, filePath, replacement);
+        public bool TryGetFileName<T>(string filePath, T replacement, out string fileName) where T : class
+            => TryGetFileName(null, filePath, replacement, out fileName);
 
-        public string TemplateFileName<T>(string templatesPath, string filePath, T replacement) where T : class
+        public bool TryGetFileName<T>(string templatesPath, string filePath, T replacement, out string fileName) where T : class
         {
             var partialName = templatesPath.IsEmpty() ? filePath : filePath.Replace(templatesPath, "");
 
@@ -31,14 +31,16 @@ namespace L2Data2Code.BaseMustache.Services
                 var ewhen = partialName.IndexOf(endOfConditionalFileName, itag);
                 var tag = partialName[itag..ewhen];
                 if (!CheckTemplateName(tag, replacement))
-                    return null;
+                {
+                    fileName = null;
+                    return false;
+                }
                 partialName = string.Concat(partialName[..iwhen], partialName[(ewhen + endOfConditionalFileName.Length)..]);
                 iwhen = partialName.IndexOf(conditionalFileName);
             }
 
-            partialName = mustacheRenderizer.Render(partialName, replacement);
-
-            return partialName;
+            fileName = mustacheRenderizer.Render(partialName, replacement);
+            return true;
         }
 
         private static bool CheckTemplateName<T>(string tag, T replacement) where T : class

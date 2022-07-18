@@ -3,6 +3,7 @@ using L2Data2Code.BaseGenerator.Exceptions;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseMustache.Extensions;
 using L2Data2Code.BaseMustache.Interfaces;
+using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
@@ -24,6 +25,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly IPathRenderizer pathRenderizer;
+        private readonly IFileService fileService;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
         private readonly ISchemaFactory schemaFactory;
@@ -31,8 +33,6 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly Dictionary<string, string> templateFiles;
         private readonly HashSet<string> referencedTables;
         private readonly Dictionary<string, object> internalVars;
-
-        private const string INCLUDE_TEXT = "{{!include ";
 
         private static readonly Regex templateFilePart = new(@"(?<start>^|\\)addtofile-(?<part>[0-9]+)-(?<name>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex templateCondition = new(@"^\s*if\s+(?<key>[^=]+)=(?<value>[^\s]+)\s+(?<var>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -42,7 +42,6 @@ namespace L2Data2Code.BaseGenerator.Services
         private static readonly Regex xmlMarkPart = new(@"<!-- !!!ENDOF(?<part>[0-9]+) -->", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cmdMarkPart = new(@"# !!!ENDOF(?<part>[0-9]+)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex mdMarkPart = new(@"\[//\]: # \(!!!ENDOF(?<part>[0-9]+)\)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex includeRegex = new(@"\{\{!include\s+(?<name>[^\}]+)\}\}", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private static readonly CommentLine commentCsStyle = new() { Start = "// " };
         private static readonly CommentLine commentXmlStyle = new() { Start = "<!-- ", End = " -->" };
@@ -84,7 +83,7 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
         /// <param name="logger">Logger service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IPathRenderizer pathRenderizer)
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IPathRenderizer pathRenderizer, IFileService fileService)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
@@ -92,6 +91,7 @@ namespace L2Data2Code.BaseGenerator.Services
             this.templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
             this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
             this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
+            this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
 
             referencedTables = new();
             templateFiles = new();
@@ -149,7 +149,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     CreateVarsFromUserVariables();
                 }
 
-                FileService.SetSettings(options.Encoding, options.EndOfLine);
+                fileService.SetSettings(options.Encoding, options.EndOfLine);
             }
             catch (CodeGeneratorException)
             {
@@ -245,30 +245,34 @@ namespace L2Data2Code.BaseGenerator.Services
             return templateFiles.Keys
                 .Select(templateFile =>
                 {
+                    ReplacementResult replacementResult; 
                     var partToReplace = string.Empty;
-                    string filename, filePath, rawContent, fileExtension;
+                    string filePath, rawContent, fileExtension;
 
-                    filename = pathRenderizer.TemplateFileName(templatesPath, templateFile, replacement);
-                    if (filename == null)
+                    if (pathRenderizer.TryGetFileName(templatesPath, templateFile, replacement, out var filename))
                     {
-                        return null;
+                        var match = templateFilePart.Match(filename);
+                        if (match.Success)
+                        {
+                            filename = templateFilePart.Replace(filename, "${start}${name}");
+                            partToReplace = match.Groups["part"].Value;
+                        }
+
+                        filePath = Path.Combine(outputBaseDir, filename);
+                        fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
+                        var commentLine = GetCommentLine(fileExtension);
+
+                        rawContent = templateFiles[templateFile];
+                        replacementResult = new(
+                            Path.GetFileName(filePath),
+                            filePath,
+                            filePath.Replace(outputBaseDir, ""),
+                            () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
                     }
-                    var match = templateFilePart.Match(filename);
-                    if (match.Success)
+                    else
                     {
-                        filename = templateFilePart.Replace(filename, "${start}${name}");
-                        partToReplace = match.Groups["part"].Value;
+                        replacementResult = null;
                     }
-
-                    filePath = Path.Combine(outputBaseDir, filename);
-                    fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
-                    var commentLine = GetCommentLine(fileExtension);
-
-                    rawContent = templateFiles[templateFile];
-                    ReplacementResult replacementResult = new(Path.GetFileName(filePath),
-                                                                filePath,
-                                                                filePath.Replace(outputBaseDir, ""),
-                                                                () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
 
                     return replacementResult;
                 })
@@ -287,36 +291,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 var listOfTemplates = Directory.GetFiles(templatesPath, "*.*", SearchOption.AllDirectories);
                 foreach (var templateFile in listOfTemplates)
                 {
-                    var templateContent = FileService.Read(templateFile);
-                    if (templateContent.Contains(INCLUDE_TEXT))
-                    {
-                        var lines = templateContent.Split('\n');
-                        List<string> replacedLines = new();
-                        var changed = false;
-                        foreach (var line in lines)
-                        {
-                            if (line.StartsWith(INCLUDE_TEXT))
-                            {
-                                var match = includeRegex.Match(line);
-                                if (match.Success)
-                                {
-                                    var file = match.Groups["name"].Value;
-                                    var fileContent = FileService.Read(Path.Combine(templatesPath, file));
-                                    replacedLines.Add(fileContent.ReplaceEndOfLine("\n"));
-                                    changed = true;
-                                    continue;
-                                }
-
-                            }
-                            replacedLines.Add(line);
-                        }
-
-                        if (changed)
-                        {
-                            templateContent = string.Join("\n", replacedLines);
-                        }
-
-                    }
+                    var templateContent = fileService.ReadWithIncludes(templateFile, templatesPath);
                     templateFiles.Add(templateFile, templateContent);
                 }
             }
@@ -325,7 +300,6 @@ namespace L2Data2Code.BaseGenerator.Services
                 logger.Error($"Error loading templates: {ex.Message}");
                 throw;
             }
-
         }
 
         private void GenerateJsonInfo(IEnumerable<Table> processTables)
@@ -350,7 +324,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
 
-            FileService.Write(fileName, JsonConvert.SerializeObject(new TablesDTO{ Tables = processTables }, Formatting.Indented,
+            fileService.Write(fileName, JsonConvert.SerializeObject(new TablesDTO{ Tables = processTables }, Formatting.Indented,
                 new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
@@ -404,14 +378,14 @@ namespace L2Data2Code.BaseGenerator.Services
                 {
                     lastResults.Add(result);
                 }
-                FileService.Write(result.FileName.Replace(".template", string.Empty), content);
+                fileService.Write(result.FileName.Replace(".template", string.Empty), content);
             }
 
             foreach (var result in lastResults)
             {
                 var fileExtension = Path.GetExtension(result.FileName.Replace(".template", string.Empty));
                 var content = GetMarkRegex(fileExtension).Replace(result.Content, string.Empty);
-                FileService.Write(result.FileName.Replace(".template", string.Empty), content);
+                fileService.Write(result.FileName.Replace(".template", string.Empty), content);
             }
         }
 
@@ -433,7 +407,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 string prevContent;
                 if (File.Exists(filePath))
                 {
-                    prevContent = FileService.Read(filePath);
+                    prevContent = fileService.Read(filePath);
                 }
                 else
                 {

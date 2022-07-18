@@ -1,4 +1,5 @@
 using L2Data2Code.BaseMustache.Interfaces;
+using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.SharedLib.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,6 +16,7 @@ namespace Mustache
         private readonly IFileExecutor fileExecutor;
         private readonly IMustacheOptionsInitializer mustacheOptionsInitializer;
         private readonly IPathRenderizer pathRenderizer;
+        private readonly IFileService fileService;
         private MustacheOptions options;
         private JToken entities;
 
@@ -26,12 +28,13 @@ namespace Mustache
         /// <param name="mustacheOptionsInitializer">Mustache options initializer</param>
         /// <param name="pathRenderizer">Path renderer</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MustacheAction(IMustacheRenderizer renderizer, IFileExecutor fileExecutor, IMustacheOptionsInitializer mustacheOptionsInitializer, IPathRenderizer pathRenderizer)
+        public MustacheAction(IMustacheRenderizer renderizer, IFileExecutor fileExecutor, IMustacheOptionsInitializer mustacheOptionsInitializer, IPathRenderizer pathRenderizer, IFileService fileService)
         {
             this.renderizer = renderizer ?? throw new ArgumentNullException(nameof(renderizer));
             this.fileExecutor = fileExecutor ?? throw new ArgumentNullException(nameof(fileExecutor));
             this.mustacheOptionsInitializer = mustacheOptionsInitializer ?? throw new ArgumentNullException(nameof(mustacheOptionsInitializer));
             this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
+            this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
         /// <summary>
@@ -76,8 +79,8 @@ namespace Mustache
 
         private void CreatePath(string path, string outputPath, string sourcePath, JToken item)
         {
-            var destPath = pathRenderizer.TemplateFileName(path.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item);
-            if (destPath != null && !Directory.Exists(destPath))
+            var canRenderPath = pathRenderizer.TryGetFileName(path.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item, out var destPath);
+            if (canRenderPath && !Directory.Exists(destPath))
             {
                 Directory.CreateDirectory(destPath);
             }
@@ -85,11 +88,11 @@ namespace Mustache
 
         private void TransformFile(string file, string outputPath, string sourcePath, JToken item)
         {
-            var outpuFile = pathRenderizer.TemplateFileName(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item);
-            if (outpuFile != null)
+            if (pathRenderizer.TryGetFileName(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item, out var outpuFile))
             {
-                var text = renderizer.Render(File.ReadAllText(file), item);
-                File.WriteAllText(outpuFile, text);
+                var originalText = fileService.ReadWithIncludes(file, sourcePath);
+                var text = renderizer.Render(originalText, item);
+                fileService.Write(outpuFile, text);
                 Console.WriteLine(outpuFile);
             }
         }
