@@ -24,13 +24,13 @@ namespace L2Data2Code.BaseGenerator.Configuration
         public List<Command> PreCommands { get; set; } = new List<Command>();
         public List<Command> PostCommands { get; set; } = new List<Command>();
 
-        [JsonProperty("Configurations")]
+        [JsonProperty(nameof(Configurations))]
         public JToken ConfigurationsConfiguration { get; set; }
 
-        [JsonProperty("Vars")]
+        [JsonProperty(nameof(Vars))]
         public JToken VarsConfiguration { get; set; }
 
-        [JsonProperty("FinalVars")]
+        [JsonProperty(nameof(FinalVars))]
         public JToken FinalVarsConfiguration { get; set; }
 
         [JsonIgnore]

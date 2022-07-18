@@ -1,4 +1,5 @@
 using L2Data2Code.BaseMustache.Interfaces;
+using L2Data2Code.SharedLib.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,12 @@ namespace L2Data2Code.BaseMustache.Services
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
         }
 
+        public string TemplateFileName<T>(string filePath, T replacement) where T : class
+            => TemplateFileName(null, filePath, replacement);
+
         public string TemplateFileName<T>(string templatesPath, string filePath, T replacement) where T : class
         {
-            var partialName = filePath.Replace(templatesPath, "");
+            var partialName = templatesPath.IsEmpty() ? filePath : filePath.Replace(templatesPath, "");
 
             var iwhen = partialName.IndexOf(conditionalFileName);
             while (iwhen >= 0)
@@ -70,7 +74,7 @@ namespace L2Data2Code.BaseMustache.Services
                     result = dictionary.ContainsKey(key) && dictionary[key].ToString() == value;
                     break;
                 case JToken token:
-                    result = token[key]?.ToString() == value;
+                    result = token[key]?.ToString().ToLower() == value?.ToLower();
                     break;
                 default:
                     result = typeof(T).GetProperty(key).GetValue(replacement, null)?.ToString() == value;
