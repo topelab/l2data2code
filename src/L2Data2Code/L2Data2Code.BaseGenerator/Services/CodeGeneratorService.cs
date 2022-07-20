@@ -24,7 +24,7 @@ namespace L2Data2Code.BaseGenerator.Services
     {
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
-        private readonly IPathRenderizer pathRenderizer;
+        private readonly IConditionalPathRenderizer pathRenderizer;
         private readonly IFileService fileService;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
@@ -83,7 +83,7 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
         /// <param name="logger">Logger service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IPathRenderizer pathRenderizer, IFileService fileService)
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IConditionalPathRenderizer pathRenderizer, IFileService fileService)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));

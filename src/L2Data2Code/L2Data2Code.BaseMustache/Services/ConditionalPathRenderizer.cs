@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace L2Data2Code.BaseMustache.Services
 {
-    public class PathRenderizer : IPathRenderizer
+    public class ConditionalPathRenderizer : IConditionalPathRenderizer
     {
         private const string conditionalFileName = "when{{";
         private const string endOfConditionalFileName = "}}";
         private readonly IMustacheRenderizer mustacheRenderizer;
 
-        public PathRenderizer(IMustacheRenderizer mustacheRenderizer)
+        public ConditionalPathRenderizer(IMustacheRenderizer mustacheRenderizer)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
         }

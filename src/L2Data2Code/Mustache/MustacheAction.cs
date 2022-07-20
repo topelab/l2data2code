@@ -15,8 +15,9 @@ namespace Mustache
         private readonly IMustacheRenderizer renderizer;
         private readonly IFileExecutor fileExecutor;
         private readonly IMustacheOptionsInitializer mustacheOptionsInitializer;
-        private readonly IPathRenderizer pathRenderizer;
+        private readonly IConditionalPathRenderizer conditionalPathRenderizer;
         private readonly IFileService fileService;
+        private readonly IMultiPathRenderizer multiPathRenderizer;
         private MustacheOptions options;
         private JToken entities;
 
@@ -26,15 +27,16 @@ namespace Mustache
         /// <param name="renderizer">Renderer</param>
         /// <param name="fileExecutor">File executor</param>
         /// <param name="mustacheOptionsInitializer">Mustache options initializer</param>
-        /// <param name="pathRenderizer">Path renderer</param>
+        /// <param name="conditionalPathRenderizer">Path renderer</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MustacheAction(IMustacheRenderizer renderizer, IFileExecutor fileExecutor, IMustacheOptionsInitializer mustacheOptionsInitializer, IPathRenderizer pathRenderizer, IFileService fileService)
+        public MustacheAction(IMustacheRenderizer renderizer, IFileExecutor fileExecutor, IMustacheOptionsInitializer mustacheOptionsInitializer, IConditionalPathRenderizer conditionalPathRenderizer, IFileService fileService, IMultiPathRenderizer multiPathRenderizer)
         {
             this.renderizer = renderizer ?? throw new ArgumentNullException(nameof(renderizer));
             this.fileExecutor = fileExecutor ?? throw new ArgumentNullException(nameof(fileExecutor));
             this.mustacheOptionsInitializer = mustacheOptionsInitializer ?? throw new ArgumentNullException(nameof(mustacheOptionsInitializer));
-            this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
+            this.conditionalPathRenderizer = conditionalPathRenderizer ?? throw new ArgumentNullException(nameof(conditionalPathRenderizer));
             this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
+            this.multiPathRenderizer = multiPathRenderizer ?? throw new ArgumentNullException(nameof(multiPathRenderizer));
         }
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace Mustache
             }
         }
 
-        private void DoAction(Action<string, string, string, JToken> action, string path, MustacheOptions options)
+        private void DoAction(Action<string, string, string, JToken> action, string pathOrFile, MustacheOptions options)
         {
             var outputPath = options.OutputPath.AddPathSeparator();
             var sourcePath = options.TemplatePath.AddPathSeparator();
@@ -72,14 +74,14 @@ namespace Mustache
 
             foreach (var item in entities)
             {
-                action.Invoke(path, outputPath, sourcePath, item);
+                action.Invoke(pathOrFile, outputPath, sourcePath, item);
             }
 
         }
 
         private void CreatePath(string path, string outputPath, string sourcePath, JToken item)
         {
-            var canRenderPath = pathRenderizer.TryGetFileName(path.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item, out var destPath);
+            var canRenderPath = conditionalPathRenderizer.TryGetFileName(path.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item, out var destPath);
             if (canRenderPath && !Directory.Exists(destPath))
             {
                 Directory.CreateDirectory(destPath);
@@ -88,11 +90,23 @@ namespace Mustache
 
         private void TransformFile(string file, string outputPath, string sourcePath, JToken item)
         {
-            if (pathRenderizer.TryGetFileName(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item, out var outpuFile))
+            if (conditionalPathRenderizer.TryGetFileName(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), item, out var outpuFile))
             {
                 var originalText = fileService.ReadWithIncludes(file, sourcePath);
-                var text = renderizer.Render(originalText, item);
-                fileService.Write(outpuFile, text);
+
+                if (multiPathRenderizer.CanApplyMultiPath(file))
+                {
+                    var files = multiPathRenderizer.ApplyMultiPath(file.Replace(sourcePath, outputPath, StringComparison.CurrentCultureIgnoreCase), originalText, item);
+                    foreach (var key in files.Keys)
+                    {
+                        fileService.Write(key, files[key]);
+                    }
+                }
+                else
+                {
+                    var text = renderizer.Render(originalText, item);
+                    fileService.Write(outpuFile, text);
+                }
                 Console.WriteLine(outpuFile);
             }
         }

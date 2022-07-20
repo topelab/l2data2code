@@ -63,17 +63,26 @@ namespace L2Data2Code.SharedLib.Extensions
             return Service(isoLang).Pluralize(word);
         }
 
-        public static string Pascalize(this string word)
+        public static string Pascalize(this string word) => PascalCase(word);
+
+        public static string PascalCase(this string word)
         {
             return Service().Pascalize(word);
         }
 
-        public static string Camelize(this string word)
+        public static string Camelize(this string word) => CamelCase(word);
+
+        public static string CamelCase(this string word)
         {
             return Service().Camelize(word);
         }
 
-        public static string PluralCamelize(this string word)
+        public static string LowerCase(this string word) => word.ToLower();
+        public static string UpperCase(this string word) => word.ToUpper();
+
+        public static string PluralCamelize(this string word) => PluralCamelCase(word);
+
+        public static string PluralCamelCase(this string word)
         {
             var _service = Service();
             return _service.Pluralize(_service.Camelize(word));
