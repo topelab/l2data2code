@@ -1,8 +1,11 @@
 using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using Stubble.Core.Classes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
 
 namespace L2Data2Code.BaseMustache.Services
 {
@@ -13,7 +16,7 @@ namespace L2Data2Code.BaseMustache.Services
         private const string foreachTag = "foreach(";
         private const string startTag = "{{";
         private const string endTag = "}}";
-        private const string separator = "######<END>######";
+        private const string fileSeparator = "<<<END>>>";
         private readonly IMustacheRenderizer mustacheRenderizer;
 
         public MultiPathRenderizer(IMustacheRenderizer mustacheRenderizer)
@@ -36,13 +39,8 @@ namespace L2Data2Code.BaseMustache.Services
                     tag = match.Groups["key"].Value;
                 }
 
-                var toReplace = $"{startTag}#{tag}{endTag}{filePath}\n{startTag}/{tag}{endTag}";
-                var replaced = mustacheRenderizer.Render(toReplace, replacement);
-                string[] fileNames = replaced.Split('\n');
-
-                toReplace = $"{startTag}#{tag}{endTag}{originalText}{separator}{startTag}/{tag}{endTag}";
-                replaced = mustacheRenderizer.Render(toReplace, replacement);
-                string[] contents = replaced.Split(separator);
+                var fileNames = GetReplacements(tag, filePath, replacement);
+                var contents = GetReplacements(tag, originalText, replacement);
 
                 for (int i = 0; i < fileNames.Length; i++)
                 {
@@ -53,6 +51,13 @@ namespace L2Data2Code.BaseMustache.Services
                 }
             }
             return files;
+        }
+
+        private string[] GetReplacements<T>(string tag, string originalText, T replacement)
+        {
+            var toReplace = $"{startTag}#{tag}{endTag}{originalText}{fileSeparator}{startTag}/{tag}{endTag}";
+            var replaced = mustacheRenderizer.Render(toReplace, replacement);
+            return replaced.Split(fileSeparator)[..^1];
         }
     }
 }
