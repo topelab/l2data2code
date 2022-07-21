@@ -1,11 +1,8 @@
 using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
-using Stubble.Core.Classes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
 
 namespace L2Data2Code.BaseMustache.Services
 {
@@ -42,7 +39,7 @@ namespace L2Data2Code.BaseMustache.Services
                 var fileNames = GetReplacements(tag, filePath, replacement);
                 var contents = GetReplacements(tag, originalText, replacement);
 
-                for (int i = 0; i < fileNames.Length; i++)
+                for (var i = 0; i < fileNames.Length; i++)
                 {
                     if (fileNames[i].NotEmpty())
                     {
