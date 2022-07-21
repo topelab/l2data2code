@@ -1,4 +1,5 @@
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace L2Data2Code.BaseMustache.Services
+namespace L2Data2Code.SharedLib.Services
 {
     public class FileService : IFileService
     {
@@ -125,7 +126,7 @@ namespace L2Data2Code.BaseMustache.Services
             return templateContent;
         }
 
-        private string AddIndent(string spaces, string text)
+        private static string AddIndent(string spaces, string text)
         {
             var lines = text.ReplaceEndOfLine("\n").Split("\n").Select(l => string.Concat(spaces, l));
             return string.Join("\n", lines);

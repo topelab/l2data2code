@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseMustache\L2Data2Code.BaseMustache.csproj" />
+    <ProjectReference Include="..\L2Data2Code.CLIBase\L2Data2Code.CLIBase.csproj" />
     <ProjectReference Include="..\L2Data2Code.SharedLib\L2Data2Code.SharedLib.csproj" />
   </ItemGroup>
 </Project>

@@ -1,12 +1,10 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
 using L2Data2Code.BaseGenerator.Interfaces;
-using L2Data2Code.BaseMustache.Extensions;
-using L2Data2Code.BaseMustache.Interfaces;
-using L2Data2Code.BaseMustache.Services;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
+using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json;
 using NLog;
 using System;
@@ -245,7 +243,7 @@ namespace L2Data2Code.BaseGenerator.Services
             return templateFiles.Keys
                 .Select(templateFile =>
                 {
-                    ReplacementResult replacementResult; 
+                    ReplacementResult replacementResult;
                     var partToReplace = string.Empty;
                     string filePath, rawContent, fileExtension;
 
@@ -324,7 +322,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
 
-            fileService.Write(fileName, JsonConvert.SerializeObject(new TablesDTO{ Tables = processTables }, Formatting.Indented,
+            fileService.Write(fileName, JsonConvert.SerializeObject(new TablesDTO { Tables = processTables }, Formatting.Indented,
                 new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,

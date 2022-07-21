@@ -1,24 +1,25 @@
-using L2Data2Code.BaseMustache.Interfaces;
-using L2Data2Code.BaseMustache.Services;
+using L2Data2Code.CLIBase.Interfaces;
+using L2Data2Code.CLIBase.Options;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
-namespace Mustache
+namespace L2Data2Code.CLIBase.Services
 {
     /// <summary>
-    /// Run a Mustache action
+    /// Run a HandleBars action
     /// </summary>
-    internal class MustacheAction : IMustacheAction
+    public class CLIAction : ICLIAction
     {
         private readonly IMustacheRenderizer renderizer;
         private readonly IFileExecutor fileExecutor;
-        private readonly IMustacheOptionsInitializer mustacheOptionsInitializer;
+        private readonly ICLIOptionsInitializer CLIOptionsInitializer;
         private readonly IConditionalPathRenderizer conditionalPathRenderizer;
         private readonly IFileService fileService;
         private readonly IMultiPathRenderizer multiPathRenderizer;
-        private MustacheOptions options;
+        private ICLIOptions options;
         private JToken entities;
 
         /// <summary>
@@ -26,14 +27,14 @@ namespace Mustache
         /// </summary>
         /// <param name="renderizer">Renderer</param>
         /// <param name="fileExecutor">File executor</param>
-        /// <param name="mustacheOptionsInitializer">Mustache options initializer</param>
+        /// <param name="CLIOptionsInitializer">HandleBars options initializer</param>
         /// <param name="conditionalPathRenderizer">Path renderer</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public MustacheAction(IMustacheRenderizer renderizer, IFileExecutor fileExecutor, IMustacheOptionsInitializer mustacheOptionsInitializer, IConditionalPathRenderizer conditionalPathRenderizer, IFileService fileService, IMultiPathRenderizer multiPathRenderizer)
+        public CLIAction(IMustacheRenderizer renderizer, IFileExecutor fileExecutor, ICLIOptionsInitializer CLIOptionsInitializer, IConditionalPathRenderizer conditionalPathRenderizer, IFileService fileService, IMultiPathRenderizer multiPathRenderizer)
         {
             this.renderizer = renderizer ?? throw new ArgumentNullException(nameof(renderizer));
             this.fileExecutor = fileExecutor ?? throw new ArgumentNullException(nameof(fileExecutor));
-            this.mustacheOptionsInitializer = mustacheOptionsInitializer ?? throw new ArgumentNullException(nameof(mustacheOptionsInitializer));
+            this.CLIOptionsInitializer = CLIOptionsInitializer ?? throw new ArgumentNullException(nameof(CLIOptionsInitializer));
             this.conditionalPathRenderizer = conditionalPathRenderizer ?? throw new ArgumentNullException(nameof(conditionalPathRenderizer));
             this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             this.multiPathRenderizer = multiPathRenderizer ?? throw new ArgumentNullException(nameof(multiPathRenderizer));
@@ -42,17 +43,17 @@ namespace Mustache
         /// <summary>
         /// Initialize options
         /// </summary>
-        /// <param name="options">Mustache options</param>
+        /// <param name="options">HandleBars options</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Initialize(MustacheOptions options)
+        public void Initialize(ICLIOptions options)
         {
             this.options = options ?? throw new ArgumentNullException(nameof(options));
             fileExecutor.Initialize(options.TemplatePath);
-            entities = mustacheOptionsInitializer.Initialize(options);
+            entities = CLIOptionsInitializer.Initialize(options);
         }
 
         /// <summary>
-        /// Run Mustache action
+        /// Run HandleBars action
         /// </summary>
         public void Run()
         {
@@ -63,7 +64,7 @@ namespace Mustache
             }
         }
 
-        private void DoAction(Action<string, string, string, JToken> action, string pathOrFile, MustacheOptions options)
+        private void DoAction(Action<string, string, string, JToken> action, string pathOrFile, ICLIOptions options)
         {
             var outputPath = options.OutputPath.AddPathSeparator();
             var sourcePath = options.TemplatePath.AddPathSeparator();

@@ -1,10 +1,10 @@
-using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace L2Data2Code.BaseMustache.Services
+namespace L2Data2Code.SharedLib.Services
 {
     public class ConditionalPathRenderizer : IConditionalPathRenderizer
     {
@@ -39,7 +39,7 @@ namespace L2Data2Code.BaseMustache.Services
                 iwhen = partialName.IndexOf(conditionalFileName);
             }
 
-            fileName = mustacheRenderizer.Render(partialName, replacement);
+            fileName = mustacheRenderizer.RenderPath(partialName, replacement);
             return true;
         }
 

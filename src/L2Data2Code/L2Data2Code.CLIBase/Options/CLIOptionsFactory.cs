@@ -1,17 +1,17 @@
 using System;
 using System.IO;
 
-namespace Mustache
+namespace L2Data2Code.CLIBase.Options
 {
-    internal class MustacheOptionsFactory
+    public class CLIOptionsFactory
     {
-        internal static MustacheOptions Create(string[] args)
+        public static ICLIOptions Create(string[] args)
         {
             if (args == null || args.Length < 2)
             {
-                throw new Exception($"Needs {nameof(MustacheOptions.JsonDataFile)} & {nameof(MustacheOptions.TemplatePath)}");
+                throw new Exception($"Needs {nameof(ICLIOptions.JsonDataFile)} & {nameof(ICLIOptions.TemplatePath)}");
             }
-            return new MustacheOptions
+            return new CLIOptions
             {
                 JsonDataFile = args[0],
                 TemplatePath = args[1],

@@ -1,10 +1,10 @@
-using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json.Linq;
 using Stubble.Helpers;
 using System.Collections.Generic;
 
-namespace L2Data2Code.BaseMustache.Extensions
+namespace L2Data2Code.BaseMustache
 {
     public class MustacheHelpers : Helpers, IMustacheHelpers
     {

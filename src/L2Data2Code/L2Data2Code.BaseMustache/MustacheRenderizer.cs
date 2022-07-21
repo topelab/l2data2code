@@ -1,5 +1,5 @@
-using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json.Linq;
 using Stubble.Core;
 using Stubble.Core.Builders;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace L2Data2Code.BaseMustache.Services
+namespace L2Data2Code.BaseMustache
 {
     public class MustacheRenderizer : IMustacheRenderizer
     {
@@ -48,7 +48,7 @@ namespace L2Data2Code.BaseMustache.Services
                 ).Build();
         }
 
-        private RenderSettings ConfigureSettings() => new RenderSettings() { SkipHtmlEncoding = true };
+        private static RenderSettings ConfigureSettings() => new() { SkipHtmlEncoding = true };
 
         private static void ConfigureMethods()
         {
@@ -91,6 +91,11 @@ namespace L2Data2Code.BaseMustache.Services
                 return renderer.Render(result, view, settings).Replace("(***OPEN***)", "{").Replace("(***CLOSE***)", "}");
             }
             return template;
+        }
+
+        public string RenderPath(string template, object view)
+        {
+            return Render(template, view);
         }
     }
 }

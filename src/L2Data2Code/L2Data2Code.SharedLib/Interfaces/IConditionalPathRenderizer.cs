@@ -1,4 +1,4 @@
-namespace L2Data2Code.BaseMustache.Interfaces
+namespace L2Data2Code.SharedLib.Interfaces
 {
     public interface IConditionalPathRenderizer
     {

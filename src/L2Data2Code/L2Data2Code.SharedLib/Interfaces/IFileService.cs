@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace L2Data2Code.BaseMustache.Services
+namespace L2Data2Code.SharedLib.Interfaces
 {
     public interface IFileService
     {

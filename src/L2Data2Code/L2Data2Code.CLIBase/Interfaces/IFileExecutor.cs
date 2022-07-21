@@ -1,11 +1,11 @@
 using System;
 
-namespace Mustache
+namespace L2Data2Code.CLIBase.Interfaces
 {
     /// <summary>
     /// Interface for an implementation that execute actions over paths and files
     /// </summary>
-    internal interface IFileExecutor
+    public interface IFileExecutor
     {
         /// <summary>
         /// Initialize root path

@@ -1,12 +1,13 @@
+using L2Data2Code.CLIBase.Interfaces;
 using System;
 using System.IO;
 
-namespace Mustache
+namespace L2Data2Code.CLIBase.Services
 {
     /// <summary>
     /// Execute actions over paths and files
     /// </summary>
-    internal class FileExecutor : IFileExecutor
+    public class FileExecutor : IFileExecutor
     {
         private string[] files;
         private string[] dirs;

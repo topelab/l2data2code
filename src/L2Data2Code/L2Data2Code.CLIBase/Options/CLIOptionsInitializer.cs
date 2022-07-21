@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mustache
+namespace L2Data2Code.CLIBase.Options
 {
-    internal class MustacheOptionsInitializer : IMustacheOptionsInitializer
+    public class CLIOptionsInitializer : ICLIOptionsInitializer
     {
         private readonly IJsonSetting jsonSetting;
 
-        public MustacheOptionsInitializer(IJsonSetting jsonSetting)
+        public CLIOptionsInitializer(IJsonSetting jsonSetting)
         {
             this.jsonSetting = jsonSetting ?? throw new ArgumentNullException(nameof(jsonSetting));
         }
 
-        public JToken Initialize(MustacheOptions options)
+        public JToken Initialize(ICLIOptions options)
         {
             jsonSetting.Initialize(options.JsonDataFile);
             var view = jsonSetting.Config;

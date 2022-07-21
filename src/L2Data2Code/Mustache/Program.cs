@@ -1,3 +1,5 @@
+using L2Data2Code.CLIBase.Interfaces;
+using L2Data2Code.CLIBase.Options;
 using Topelab.Core.Resolver.Microsoft;
 
 namespace Mustache
@@ -6,9 +8,9 @@ namespace Mustache
     {
         static void Main(string[] args)
         {
-            var options = MustacheOptionsFactory.Create(args);
+            var options = CLIOptionsFactory.Create(args);
             var resolver = ResolverFactory.Create(SetupDI.Register());
-            var mustacheAction = resolver.Get<IMustacheAction>();
+            var mustacheAction = resolver.Get<ICLIAction>();
 
             mustacheAction.Initialize(options);
             mustacheAction.Run();

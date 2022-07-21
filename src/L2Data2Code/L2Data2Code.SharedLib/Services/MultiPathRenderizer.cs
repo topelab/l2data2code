@@ -1,10 +1,10 @@
-using L2Data2Code.BaseMustache.Interfaces;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace L2Data2Code.BaseMustache.Services
+namespace L2Data2Code.SharedLib.Services
 {
     public class MultiPathRenderizer : IMultiPathRenderizer
     {
@@ -53,7 +53,7 @@ namespace L2Data2Code.BaseMustache.Services
         private string[] GetReplacements<T>(string tag, string originalText, T replacement)
         {
             var toReplace = $"{startTag}#{tag}{endTag}{originalText}{fileSeparator}{startTag}/{tag}{endTag}";
-            var replaced = mustacheRenderizer.Render(toReplace, replacement);
+            var replaced = mustacheRenderizer.RenderPath(toReplace, replacement);
             return replaced.Split(fileSeparator)[..^1];
         }
     }
