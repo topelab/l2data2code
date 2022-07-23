@@ -21,7 +21,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
         public JsonSetting()
         {
-            Initialize(SectionLabels.APP_SETTINGS_FILE);
+            Initialize(AppSettingsConfiguration.APP_SETTINGS_FILE);
         }
 
         public void Initialize(string settingsFile)

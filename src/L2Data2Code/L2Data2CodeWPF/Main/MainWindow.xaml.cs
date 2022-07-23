@@ -58,13 +58,13 @@ namespace L2Data2CodeWPF.Main
         private void StartMonitorConfig()
         {
             var appBasePath = AppDomain.CurrentDomain.BaseDirectory.TrimPathSeparator();
-            fileMonitorService.StartMonitoring(ReStartApplication, appBasePath, SectionLabels.APP_SETTINGS_FILE);
+            fileMonitorService.StartMonitoring(ReStartApplication, appBasePath, AppSettingsConfiguration.APP_SETTINGS_FILE);
             CheckOpenedTimer = new Timer(viewModel.CheckOpenedTimerCallBack, null, 1000, 1000);
         }
 
         private void ReStartApplication(string fileChanged)
         {
-            if (fileChanged.Equals(SectionLabels.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
+            if (fileChanged.Equals(AppSettingsConfiguration.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
             {
                 dispatcher?.Invoke(() =>
                 {

@@ -1,4 +1,5 @@
 using L2Data2Code.BaseGenerator.Entities;
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Configuration;

@@ -1,3 +1,4 @@
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SharedLib.Configuration;
 using System.Collections.Generic;
 

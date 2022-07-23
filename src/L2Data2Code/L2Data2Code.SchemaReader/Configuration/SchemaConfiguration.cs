@@ -1,4 +1,4 @@
-namespace L2Data2Code.SharedLib.Configuration
+namespace L2Data2Code.SchemaReader.Configuration
 {
     public class SchemaConfiguration
     {

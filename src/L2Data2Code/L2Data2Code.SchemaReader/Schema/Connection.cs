@@ -1,3 +1,4 @@
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SharedLib.Configuration;
 using System.Configuration;
 
@@ -21,12 +22,12 @@ namespace L2Data2Code.SchemaReader.Schema
         {
             if (schema.Count == 0)
             {
-                throw new ConfigurationErrorsException($"Not found \"{SectionLabels.SCHEMA}\" section in appsettings.json file.");
+                throw new ConfigurationErrorsException($"Not found \"{ConfigurationLabels.SCHEMA}\" section in appsettings.json file.");
             }
 
             if (schema[schemaName] == null)
             {
-                throw new ConfigurationErrorsException($"Section \"{SectionLabels.SCHEMA}\" does not contain connection key \"{schemaName}\" defined in appsettings.json file.");
+                throw new ConfigurationErrorsException($"Section \"{ConfigurationLabels.SCHEMA}\" does not contain connection key \"{schemaName}\" defined in appsettings.json file.");
             }
 
             var schemaInfo = schema[schemaName];

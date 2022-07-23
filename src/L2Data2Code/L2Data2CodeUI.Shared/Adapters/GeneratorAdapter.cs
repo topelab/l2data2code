@@ -2,6 +2,7 @@ using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
 using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
@@ -91,7 +92,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             TemplatesConfiguration = templatesConfiguration;
 
             jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
+            SettingsConfiguration.Merge(jsonSetting.Config[AppSettingsConfiguration.APP_SETTINGS].ToNameValueCollection());
             SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
 
             this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration["TemplatesBasePath"], "*.json");
@@ -333,7 +334,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             Thread.Sleep(500);
             jsonSetting.ReloadSettings();
             jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
+            SettingsConfiguration.Merge(jsonSetting.Config[AppSettingsConfiguration.APP_SETTINGS].ToNameValueCollection());
             SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
             SetCurrentTemplate(SelectedTemplate, true);
             OnConfigurationChanged?.Invoke();

@@ -3,6 +3,7 @@ using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseMustache;
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Json;
