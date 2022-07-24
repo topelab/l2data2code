@@ -592,7 +592,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private static string DecodeCSharpType(string type) =>
             type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type[1..] : type;
 
-        private Dictionary<string, object> GetDictionaryDataFromReplacement(Replacement replacementData)
+        private static Dictionary<string, object> GetDictionaryDataFromReplacement(Replacement replacementData)
         {
             var data = new Dictionary<string, object>();
 
