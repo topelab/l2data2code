@@ -26,7 +26,7 @@ namespace L2Data2CodeWPF.Base
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
-                App.Logger.Trace($"{this.GetType().Name}.{propertyName} ({field}) = {newValue}");
+                App.Logger.Trace($"{GetType().Name}.{propertyName} ({field}) = {newValue}");
                 field = newValue;
                 onChange?.Invoke();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

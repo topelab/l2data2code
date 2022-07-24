@@ -275,8 +275,16 @@ namespace L2Data2Code.SchemaReader.MySql
         private static string RemoveTablePrefixes(string word)
         {
             var cleanword = word;
-            if (cleanword.StartsWith("tbl_")) cleanword = cleanword.Replace("tbl_", "");
-            if (cleanword.StartsWith("tbl")) cleanword = cleanword.Replace("tbl", "");
+            if (cleanword.StartsWith("tbl_"))
+            {
+                cleanword = cleanword.Replace("tbl_", "");
+            }
+
+            if (cleanword.StartsWith("tbl"))
+            {
+                cleanword = cleanword.Replace("tbl", "");
+            }
+
             return cleanword;
         }
 

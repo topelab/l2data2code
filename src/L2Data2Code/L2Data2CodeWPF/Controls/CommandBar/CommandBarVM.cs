@@ -3,7 +3,6 @@ using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Main;
-using L2Data2CodeWPF.SharedLib;
 using L2Data2CodeWPF.Vars;
 using System;
 using System.ComponentModel;
@@ -235,7 +234,10 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         public bool CheckCanOpenVS(string slnPath, out string slnFile)
         {
             slnFile = null;
-            if (slnPath == null) return false;
+            if (slnPath == null)
+            {
+                return false;
+            }
 
             slnFile = adapter.SlnFile.ToLower();
             if (File.Exists(slnFile))

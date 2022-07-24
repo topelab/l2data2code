@@ -33,7 +33,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
         public void ReloadSettings(params string[] additionalSettingFiles)
         {
-            config = GetSettings(this.settingsFile);
+            config = GetSettings(settingsFile);
             AddSettingFiles(additionalSettingFiles);
         }
 

@@ -1,7 +1,7 @@
+using L2Data2Code.SharedLib.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using L2Data2Code.SharedLib.Extensions;
 
 namespace ConvertTemplates
 {

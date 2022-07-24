@@ -42,7 +42,7 @@ namespace L2Data2Code.CLIBase.Options
         {
             foreach (var children in item.Children())
             {
-                JProperty property = children as JProperty;
+                var property = children as JProperty;
                 var entities = property?.Values();
                 if (entities != null && entities.Count() > 1 && entities.First() is JObject)
                 {

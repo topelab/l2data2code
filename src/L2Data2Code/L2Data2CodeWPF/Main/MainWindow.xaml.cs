@@ -1,6 +1,5 @@
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.SharedLib;
 using MahApps.Metro.Controls;
@@ -45,12 +44,14 @@ namespace L2Data2CodeWPF.Main
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
+            {
                 DragMove();
+            }
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ScrollViewer scv = (ScrollViewer)sender;
+            var scv = (ScrollViewer)sender;
             scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }
@@ -82,9 +83,12 @@ namespace L2Data2CodeWPF.Main
 
         private void ExpanderInfoMessages_Expanded(object sender, RoutedEventArgs e)
         {
-            if (viewModel == null) return;
+            if (viewModel == null)
+            {
+                return;
+            }
 
-            Expander expander = (Expander)sender;
+            var expander = (Expander)sender;
             if (expander.IsExpanded)
             {
                 expander.HorizontalAlignment = HorizontalAlignment.Stretch;

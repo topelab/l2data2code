@@ -170,7 +170,7 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 var tables = schemaService.Read(Options, alternativeDictionary);
 
-                HashSet<string> selectedTables = Options.TableList.Select(s => s.ToUpper()).ToHashSet();
+                var selectedTables = Options.TableList.Select(s => s.ToUpper()).ToHashSet();
                 var processTables = tables.Values
                     .Where(t => selectedTables.Contains(t.Name.ToUpper()))
                     .OrderBy(t => t.Name);
@@ -236,9 +236,11 @@ namespace L2Data2Code.BaseGenerator.Services
                 LoadTemplateFiles();
             }
 
-            var outputBaseDir = mustacheRenderizer.Render(Template.SavePath, replacement).AddPathSeparator();
+            var outputBaseDir = mustacheRenderizer.RenderPath(Template.SavePath, replacement).AddPathSeparator();
             if (string.IsNullOrEmpty(outputBaseDir))
+            {
                 outputBaseDir = CodeGeneratorDto.DefaultOutputPath;
+            }
 
             return templateFiles.Keys
                 .Select(templateFile =>
@@ -455,7 +457,7 @@ namespace L2Data2Code.BaseGenerator.Services
             internalVars.Add(nameof(Template.Module), Template.Module);
             internalVars.Add(nameof(Options.GeneratorApplication), Options.GeneratorApplication);
             internalVars.Add(nameof(Options.GeneratorVersion), Options.GeneratorVersion);
-            internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.Render(Template.SavePath, internalVars));
+            internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.RenderPath(Template.SavePath, internalVars));
             internalVars.Add(nameof(Options.TemplatePath), Options.TemplatePath.AddPathSeparator());
 
             var lastConditionResult = false;
@@ -463,7 +465,11 @@ namespace L2Data2Code.BaseGenerator.Services
             foreach (var item in allVars.Select(s => s.Trim()))
             {
                 var itemLine = item;
-                if (string.IsNullOrWhiteSpace(item) || !item.Contains('=')) continue;
+                if (string.IsNullOrWhiteSpace(item) || !item.Contains('='))
+                {
+                    continue;
+                }
+
                 var matchCondition = templateCondition.Match(item);
                 if (matchCondition.Success)
                 {
@@ -483,9 +489,13 @@ namespace L2Data2Code.BaseGenerator.Services
                 if (itemLine.StartsWith("."))
                 {
                     if (lastConditionResult)
+                    {
                         itemLine = itemLine[1..];
+                    }
                     else
+                    {
                         continue;
+                    }
                 }
                 else
                 {
@@ -494,7 +504,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 var camps = itemLine.Split('=');
                 value = camps[1].Trim();
                 internalVars[camps[0].Trim()] = value.NotEmpty() && value.Contains("{{")
-                    ? mustacheRenderizer.Render(value, internalVars)
+                    ? value.Contains('\\') ? mustacheRenderizer.RenderPath(value, internalVars) : mustacheRenderizer.Render(value, internalVars)
                     : value;
             }
         }
@@ -575,6 +585,8 @@ namespace L2Data2Code.BaseGenerator.Services
                 Vars = internalVars,
                 CanCreateDB = schemaService.CanCreateDB(Options.CreatedFromSchemaName),
             };
+
+            internalVars[nameof(Replacement.Entity)] = entity;
 
             return currentReplacement;
         }

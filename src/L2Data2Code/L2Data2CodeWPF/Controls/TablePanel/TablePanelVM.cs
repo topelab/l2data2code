@@ -2,7 +2,6 @@ using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -161,7 +160,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
         {
             if (e.PropertyName == nameof(TableVM.IsSelected))
             {
-                TableVM item = (TableVM)sender;
+                var item = (TableVM)sender;
                 if (item.IsSelected)
                 {
                     App.Logger.Trace($"*** Table: {item.Name} has been selected");
@@ -179,7 +178,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
         private void SetTables(bool selected)
         {
-            List<TableVM> selection = (selected ? AllTables : AllDataItems.Values.Where(t => !t.Table.IsView)).ToList();
+            var selection = (selected ? AllTables : AllDataItems.Values.Where(t => !t.Table.IsView)).ToList();
             foreach (var item in selection)
             {
                 item.IsSelected = selected;
@@ -188,7 +187,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
         private void SetViews(bool selected)
         {
-            List<TableVM> selection = (selected ? AllViews : AllDataItems.Values.Where(t => t.Table.IsView)).ToList();
+            var selection = (selected ? AllViews : AllDataItems.Values.Where(t => t.Table.IsView)).ToList();
             foreach (var item in selection)
             {
                 item.IsSelected = selected;
@@ -215,7 +214,10 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
         private void SetDataItem(TableVM tableVM)
         {
-            if (!SetRelatedTables) return;
+            if (!SetRelatedTables)
+            {
+                return;
+            }
 
             var item = tableVM.Table;
             var selected = tableVM.IsSelected;

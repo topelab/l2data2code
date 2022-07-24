@@ -290,7 +290,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentDataSource(string selectedDataSource)
         {
-            if (selectedDataSource == SelectedDataSource) return;
+            if (selectedDataSource == SelectedDataSource)
+            {
+                return;
+            }
 
             SelectedDataSource = selectedDataSource;
             SetupInitial();
@@ -301,7 +304,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentModule(string selectedModule, bool triggered = false)
         {
-            if (selectedModule == SelectedModule && !triggered) return;
+            if (selectedModule == SelectedModule && !triggered)
+            {
+                return;
+            }
 
             SelectedModule = selectedModule;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
@@ -310,7 +316,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentTemplate(string selectedTemplate, bool triggered = false)
         {
-            if (selectedTemplate == SelectedTemplate && !triggered) return;
+            if (selectedTemplate == SelectedTemplate && !triggered)
+            {
+                return;
+            }
 
             SelectedTemplate = selectedTemplate;
             SetCurrentVars(GetVarsList(selectedTemplate).FirstOrDefault(), true);
@@ -318,7 +327,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentVars(string selectedVars, bool triggered = false)
         {
-            if (selectedVars == SelectedVars && !triggered) return;
+            if (selectedVars == SelectedVars && !triggered)
+            {
+                return;
+            }
 
             SelectedVars = selectedVars;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();

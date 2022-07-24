@@ -37,8 +37,8 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="compiledVars">The compiled vars.</param>
         public void Exec(Command command, Dictionary<string, object> compiledVars = null)
         {
-            var directorio = compiledVars != null ? mustacheRenderizer.Render(command.Directory, compiledVars) : command.Directory;
-            var exec = compiledVars != null ? mustacheRenderizer.Render(command.Exec, compiledVars) : command.Exec ;
+            var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
+            var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
             StringBuilder outputData = new();
 

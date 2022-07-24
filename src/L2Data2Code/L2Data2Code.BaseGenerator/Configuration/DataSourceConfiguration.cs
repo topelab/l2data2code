@@ -1,7 +1,7 @@
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Collections.Specialized;
 using L2Data2Code.SharedLib.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Specialized;
 
 namespace L2Data2Code.BaseGenerator.Configuration
 {

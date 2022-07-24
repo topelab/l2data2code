@@ -54,17 +54,27 @@ namespace L2Data2Code.SchemaReader.Lib
             foreach (var word in words)
             {
                 if (isCamelCase)
+                {
                     transformedName.Append(word[..1].ToUpper() + word[1..].ToLower());
+                }
                 else if (isUpperCase)
+                {
                     transformedName.Append(word.ToUpper());
+                }
                 else if (isLowerCase)
+                {
                     transformedName.Append(word.ToLower());
+                }
                 else
+                {
                     transformedName.Append(word);
+                }
 
                 index++;
                 if (index < words.Count && !string.IsNullOrEmpty(wordsSeparator))
+                {
                     transformedName.Append(wordsSeparator);
+                }
             }
 
             return transformedName.ToString();
@@ -86,7 +96,9 @@ namespace L2Data2Code.SchemaReader.Lib
                 }
 
                 foreach (Match match in regexCamelCase.Matches(word))
+                {
                     camelCaseWords.Add(match.Groups["word"].Value);
+                }
             }
 
             return camelCaseWords;
@@ -100,7 +112,10 @@ namespace L2Data2Code.SchemaReader.Lib
         {
             name = name.Replace(" ", "_").Replace("-", "_").Trim('_');
             if (name.Length > 0 && '0' <= name[0] && name[0] <= '9')
+            {
                 name = "_" + name;
+            }
+
             return name;
         }
 

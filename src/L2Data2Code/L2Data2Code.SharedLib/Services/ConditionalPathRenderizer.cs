@@ -55,10 +55,14 @@ namespace L2Data2Code.SharedLib.Services
             var type = typeof(T);
             var prop = type.GetProperty(tag.TrimStart('^'), typeof(bool));
             if (prop != null)
+            {
                 result = (bool)prop.GetValue(replacement, null);
+            }
 
             if (tag.StartsWith("^"))
+            {
                 return !result;
+            }
 
             return result;
         }
@@ -84,7 +88,9 @@ namespace L2Data2Code.SharedLib.Services
             }
 
             if (tag.StartsWith("^"))
+            {
                 return !result;
+            }
 
             return result;
         }

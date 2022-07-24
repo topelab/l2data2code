@@ -4,7 +4,6 @@
     <Version>2.11.2</Version>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\L2Data2Code.BaseMustache\L2Data2Code.BaseMustache.csproj" />
     <ProjectReference Include="..\L2Data2Code.SchemaReader\L2Data2Code.SchemaReader.csproj" />
   </ItemGroup>
 </Project>

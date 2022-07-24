@@ -8,7 +8,7 @@ namespace L2Data2Code.SharedLib.Services
 {
     public class MultiPathRenderizer : IMultiPathRenderizer
     {
-        private static readonly Regex templateMultipleFiles = new(@"(?<start>^|\\)foreach\(+(?<key>[^\)]+)\)(?<name>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex templateMultipleFiles = new(@"(?<start>.+)foreach\(+(?<tag>[^\)]+)\)(?<name>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private const string foreachTag = "foreach(";
         private const string startTag = "{{";
@@ -28,31 +28,35 @@ namespace L2Data2Code.SharedLib.Services
             Dictionary<string, string> files = new();
             if (filePath.Contains(foreachTag))
             {
-                string tag = null;
                 var match = templateMultipleFiles.Match(filePath);
                 if (match.Success)
                 {
-                    filePath = templateMultipleFiles.Replace(filePath, "${start}${name}");
-                    tag = match.Groups["key"].Value;
-                }
+                    var start = match.Groups["start"].Value;
+                    var tag = match.Groups["tag"].Value;
+                    var name = match.Groups["name"].Value;
 
-                var fileNames = GetReplacements(tag, filePath, replacement);
-                var contents = GetReplacements(tag, originalText, replacement);
+                    var fileNames = GetReplacements(tag, name, replacement, start);
+                    var contents = GetReplacements(tag, originalText, replacement);
 
-                for (var i = 0; i < fileNames.Length; i++)
-                {
-                    if (fileNames[i].NotEmpty())
+                    for (var i = 0; i < fileNames.Length; i++)
                     {
-                        files.Add(fileNames[i], contents[i]);
+                        if (fileNames[i].NotEmpty())
+                        {
+                            files.Add(fileNames[i], contents[i]);
+                        }
                     }
                 }
             }
             return files;
         }
 
-        private string[] GetReplacements<T>(string tag, string originalText, T replacement)
+        private string[] GetReplacements<T>(string tag, string originalText, T replacement, string start = null)
         {
-            var toReplace = $"{startTag}#{tag}{endTag}{originalText}{fileSeparator}{startTag}/{tag}{endTag}";
+            if (!mustacheRenderizer.CanRenderParentInsideChild && start != null)
+            {
+                start = start.Replace(startTag, $"{startTag}../");
+            }
+            var toReplace = $"{startTag}#{tag}{endTag}{start}{originalText}{fileSeparator}{startTag}/{tag}{endTag}";
             var replaced = mustacheRenderizer.RenderPath(toReplace, replacement);
             return replaced.Split(fileSeparator)[..^1];
         }

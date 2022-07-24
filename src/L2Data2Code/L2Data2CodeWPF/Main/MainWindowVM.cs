@@ -271,7 +271,11 @@ namespace L2Data2CodeWPF.Main
 
         public async void CheckOpenedTimerCallBack(object _)
         {
-            if (PauseTimer) return;
+            if (PauseTimer)
+            {
+                return;
+            }
+
             PauseTimer = true;
 
             try

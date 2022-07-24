@@ -17,7 +17,7 @@ namespace L2Data2Code.SharedLib.Inflector
         public string Apply(string className)
         {
             StringBuilder builder = new(className.Length);
-            System.Collections.Generic.List<string> words = className.SplitWords().ToList();
+            var words = className.SplitWords().ToList();
             var toPluralizeIdx = words.FindLastIndex(word => !WhiteSpaces.IsMatch(word));
             for (var i = 0; i < words.Count; i++)
             {

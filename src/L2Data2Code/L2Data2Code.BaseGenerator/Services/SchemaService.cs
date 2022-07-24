@@ -1,7 +1,6 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.SchemaReader.Configuration;
-using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Configuration;
@@ -68,7 +67,9 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 logger.Error($"Error reading schema: {ex.Message}");
                 if (salida.ContainsErrorMessage)
+                {
                     logger.Error($"\n{salida.OutputStringBuilder}");
+                }
 
                 throw;
             }

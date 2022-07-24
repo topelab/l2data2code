@@ -19,10 +19,10 @@ namespace L2Data2Code.SchemaReader.Json
 
         public JsonSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
         {
-            
+
             connectionString = options.ConnectionString;
             templatePath = options.TemplatePath;
-            bool fileExist = templatePath.GetResultUsingBasePath(() => File.Exists(connectionString));
+            var fileExist = templatePath.GetResultUsingBasePath(() => File.Exists(connectionString));
             if (!fileExist)
             {
                 throw new Exception($"JSON file {connectionString} doesn't exist");
@@ -55,7 +55,7 @@ namespace L2Data2Code.SchemaReader.Json
         private Tables Resolve(IEnumerable<Table> tables, bool removeFirstWord, Regex tableRegex = null)
         {
             Tables result = new();
-            Dictionary<string, Table> tablesInfo = tables.ToDictionary(k => k.Name.ToUpper(), k => k);
+            var tablesInfo = tables.ToDictionary(k => k.Name.ToUpper(), k => k);
             foreach (var item in tables.Where(t => tableRegex == null || tableRegex.IsMatch(t.Name)))
             {
                 item.CleanName = nameResolver.ResolveTableName(item.Name).PascalCamelCase(false);

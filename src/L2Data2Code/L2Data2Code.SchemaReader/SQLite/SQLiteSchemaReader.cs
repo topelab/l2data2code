@@ -144,7 +144,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     Precision = row["CHARACTER_MAXIMUM_LENGTH"].IfNull(row["NUMERIC_PRECISION"].IfNull(row["DATETIME_PRECISION"].IfNull(0)))
                 };
                 col.PropertyName = nameResolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
-                col.PropertyType = GetPropertyType((string)row["DATA_TYPE"], col.Name, col.Precision);
+                col.PropertyType = GetPropertyType((string)row["DATA_TYPE"], col.Precision);
                 col.IsNullable = (bool)row["IS_NULLABLE"];
                 col.IsAutoIncrement = (bool)row["AUTOINCREMENT"];
                 col.NumericScale = row["NUMERIC_SCALE"].IfNull(0);
@@ -199,7 +199,7 @@ namespace L2Data2Code.SchemaReader.MySql
             var databaseIndexColumns = connection.GetSchema("IndexColumns", new string[4] { null, null, table, null }).Rows.Cast<DataRow>();
             var indexName = databaseIndexes.Where(r => (bool)r["PRIMARY_KEY"]).Select(r => (string)r["INDEX_NAME"]).FirstOrDefault();
 
-            foreach (DataRow row in databaseIndexColumns.Where(r => (string)r["INDEX_NAME"] == indexName))
+            foreach (var row in databaseIndexColumns.Where(r => (string)r["INDEX_NAME"] == indexName))
             {
                 result.Add(row["COLUMN_NAME"].ToString(), Convert.ToInt32(row["ORDINAL_POSITION"]));
             }
@@ -207,10 +207,9 @@ namespace L2Data2Code.SchemaReader.MySql
             return result;
         }
 
-        private static string GetPropertyType(string sqlType, string columnName, int precision = 0, string dbTypeOriginal = null)
+        private static string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
         {
             sqlType = sqlType.ToLower();
-            columnName = columnName.ToLower();
 
             var sysType = "string";
             switch (sqlType)
@@ -273,8 +272,16 @@ namespace L2Data2Code.SchemaReader.MySql
         private static string RemoveTablePrefixes(string word)
         {
             var cleanword = word;
-            if (cleanword.StartsWith("tbl_")) cleanword = cleanword.Replace("tbl_", "");
-            if (cleanword.StartsWith("tbl")) cleanword = cleanword.Replace("tbl", "");
+            if (cleanword.StartsWith("tbl_"))
+            {
+                cleanword = cleanword.Replace("tbl_", "");
+            }
+
+            if (cleanword.StartsWith("tbl"))
+            {
+                cleanword = cleanword.Replace("tbl", "");
+            }
+
             return cleanword;
         }
 

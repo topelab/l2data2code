@@ -60,7 +60,7 @@ namespace L2Data2Code.SchemaReader.Object
 
         private IEnumerable<Type> GetTypesFromAssembly(string nameSpace = null)
         {
-            Assembly assembly = templatePath.GetResultUsingBasePath(() => Assembly.LoadFrom(assemblyPath));
+            var assembly = templatePath.GetResultUsingBasePath(() => Assembly.LoadFrom(assemblyPath));
             var types = assembly.GetTypes().Where(t => !t.Name.StartsWith("<") && (nameSpace == null || t.Namespace.StartsWith(nameSpace)));
             return types;
         }

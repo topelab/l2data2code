@@ -47,7 +47,10 @@ namespace L2Data2CodeWPF.Main
 
         public void ViewAll(bool view)
         {
-            if (!view) return;
+            if (!view)
+            {
+                return;
+            }
 
             dispatcher?.BeginInvoke(() =>
             {
@@ -83,7 +86,10 @@ namespace L2Data2CodeWPF.Main
 
         private void WaitForPurgeFinished()
         {
-            if (!runningPurger) return;
+            if (!runningPurger)
+            {
+                return;
+            }
 
             dispatcher?.BeginInvoke(() =>
             {
@@ -120,7 +126,11 @@ namespace L2Data2CodeWPF.Main
 
         private void ExecuteActionWhenNotRunningPurge(Action action)
         {
-            if (runningPurger) return;
+            if (runningPurger)
+            {
+                return;
+            }
+
             runningPurger = true;
             action.Invoke();
             runningPurger = false;

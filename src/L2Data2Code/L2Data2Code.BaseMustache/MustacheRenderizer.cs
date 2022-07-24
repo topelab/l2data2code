@@ -20,6 +20,8 @@ namespace L2Data2Code.BaseMustache
         private readonly RenderSettings settings;
         private readonly IMustacheHelpers mustacheHelpers;
 
+        public bool CanRenderParentInsideChild { get; private set; } = true;
+
         public MustacheRenderizer(IMustacheHelpers mustacheHelpers)
         {
             this.mustacheHelpers = mustacheHelpers ?? throw new ArgumentNullException(nameof(mustacheHelpers));
@@ -55,7 +57,7 @@ namespace L2Data2Code.BaseMustache
             if (methodsInfo == null)
             {
                 methodsInfo = new Dictionary<string, MethodInfo>();
-                List<Type> types = Assembly.GetCallingAssembly().GetTypes().ToList();
+                var types = Assembly.GetCallingAssembly().GetTypes().ToList();
                 types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
                 types.AddRange(Assembly.GetAssembly(typeof(StringExtensions)).GetTypes());
                 types.AddRange(Assembly.GetAssembly(typeof(JSonExtensions)).GetTypes());

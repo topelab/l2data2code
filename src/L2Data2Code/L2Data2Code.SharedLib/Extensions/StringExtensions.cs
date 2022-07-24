@@ -31,7 +31,9 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string ToSingular(this string word, string isoLang)
         {
             if (word.IsEmpty())
+            {
                 return string.Empty;
+            }
 
             var isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
             if (isUpperWord)
@@ -51,7 +53,9 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string ToPlural(this string word, string isoLang)
         {
             if (word.IsEmpty())
+            {
                 return string.Empty;
+            }
 
             var isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
             if (isUpperWord)
@@ -211,7 +215,11 @@ namespace L2Data2Code.SharedLib.Extensions
         /// <returns></returns>
         public static bool IsTrue(this string text)
         {
-            if (text.IsEmpty()) return false;
+            if (text.IsEmpty())
+            {
+                return false;
+            }
+
             var result = text.ToLower().Trim();
             if (result.Equals("1") || result.Equals("true") || result.Equals("yes"))
             {

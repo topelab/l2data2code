@@ -1,4 +1,3 @@
-using L2Data2Code.SharedLib.Helpers;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -45,7 +44,7 @@ namespace L2Data2Code.SharedLib.Extensions
                 {
                     var args = item.Args.Trim('\"');
                     var currentFileOpened = file != null && file.Equals(args, StringComparison.CurrentCultureIgnoreCase);
-                    Process proc = Process.GetProcessById((int)item.Id);
+                    var proc = Process.GetProcessById((int)item.Id);
                     Register(proc, GetKey(item.Program, args), currentFileOpened ? ifFileOpened : null, onExit);
                 }
                 catch (ArgumentException ex)
@@ -72,7 +71,7 @@ namespace L2Data2Code.SharedLib.Extensions
                 {
                     var sln = item.Args.Trim('\"').ToLower();
                     var currentSlnOpened = slnFile != null && slnFile.Equals(sln);
-                    Process proc = Process.GetProcessById((int)item.Id);
+                    var proc = Process.GetProcessById((int)item.Id);
                     if (currentSlnOpened)
                     {
                         currentProcess = proc;
@@ -193,7 +192,7 @@ namespace L2Data2Code.SharedLib.Extensions
             return path == null ? null : Path.GetFullPath(Path.Combine(path, file));
         }
 
-        private string Arguments(string result, string search)
+        private static string Arguments(string result, string search)
         {
             var firstPos = result.IndexOf(search);
             if (firstPos > -1)
@@ -217,7 +216,7 @@ namespace L2Data2Code.SharedLib.Extensions
             return _allRunningEditors;
         }
 
-        private string GetArgs(string commandLine)
+        private static string GetArgs(string commandLine)
         {
             var result = commandLine.Trim();
             var startWithQuotes = result.StartsWith("\"");

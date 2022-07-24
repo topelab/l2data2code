@@ -51,13 +51,14 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private TemplateLibrary Create(string templatePath, ITemplatesConfiguration templatesConfiguration)
         {
-            TemplateLibrary library = new();
-
-            library.FilePath = templatePath;
-            library.Global = new Global
+            TemplateLibrary library = new()
             {
-                Vars = globalsConfiguration.Vars.ToSemiColonSeparatedString(),
-                FinalVars = string.Empty
+                FilePath = templatePath,
+                Global = new Global
+                {
+                    Vars = globalsConfiguration.Vars.ToSemiColonSeparatedString(),
+                    FinalVars = string.Empty
+                }
             };
 
             foreach (var key in templatesConfiguration.GetKeys())

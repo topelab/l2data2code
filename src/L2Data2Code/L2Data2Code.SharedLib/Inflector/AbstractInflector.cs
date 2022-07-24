@@ -149,14 +149,20 @@ namespace L2Data2Code.SharedLib.Inflector
         public string Capitalize(string word)
         {
             if (string.IsNullOrWhiteSpace(word))
+            {
                 return string.Empty;
+            }
+
             return word[..1].ToUpper() + word[1..].ToLower();
         }
 
         public string Uncapitalize(string word)
         {
             if (string.IsNullOrWhiteSpace(word))
+            {
                 return string.Empty;
+            }
+
             return word[..1].ToLower() + word[1..];
         }
 
