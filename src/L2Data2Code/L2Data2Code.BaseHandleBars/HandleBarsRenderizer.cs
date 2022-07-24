@@ -22,7 +22,7 @@ namespace L2Data2Code.BaseHandleBars
             handlebars.RegisterHelper("FormatCurrency", (writer, context, parameters) => { writer.Write(parameters.At<decimal>(0).ToString("C")); });
             handlebars.RegisterHelper("GetVar", (writer, context, parameters) => { writer.Write(values.TryGetValue(parameters.At<string>(0), out var value) ? value : string.Empty); });
             handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
-            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = false; });
+            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
         }
 
         public int Compile(string template, int? key = null)
@@ -43,7 +43,7 @@ namespace L2Data2Code.BaseHandleBars
                 values = newValues;
             }
             var key = Compile(template);
-            return Run(key, view);
+            return Run(key, newValues ?? view);
         }
 
         public string RenderPath(string template, object view)

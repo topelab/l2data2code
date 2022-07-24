@@ -389,7 +389,7 @@ namespace L2Data2Code.BaseGenerator.Services
             }
         }
 
-        private string DoReplacement(Replacement replacement, string partToReplace, string filename, string filePath, string rawContent, CommentLine commentLine)
+        private string DoReplacement(Dictionary<string, object> replacement, string partToReplace, string filename, string filePath, string rawContent, CommentLine commentLine)
         {
             string content;
 
@@ -509,7 +509,7 @@ namespace L2Data2Code.BaseGenerator.Services
             }
         }
 
-        private Replacement GetReplacementData(EntityTable table)
+        private Dictionary<string, object> GetReplacementData(EntityTable table)
         {
             var (ConnectionString, Provider) = schemaService.GetConnectionString(Options.CreatedFromSchemaName);
 
@@ -586,12 +586,28 @@ namespace L2Data2Code.BaseGenerator.Services
                 CanCreateDB = schemaService.CanCreateDB(Options.CreatedFromSchemaName),
             };
 
-            internalVars[nameof(Replacement.Entity)] = entity;
-
-            return currentReplacement;
+            return GetDictionaryDataFromReplacement(currentReplacement);
         }
 
         private static string DecodeCSharpType(string type) =>
             type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type[1..] : type;
+
+        private Dictionary<string, object> GetDictionaryDataFromReplacement(Replacement replacementData)
+        {
+            var data = new Dictionary<string, object>();
+
+            var properties = replacementData.GetType().GetProperties();
+            foreach (var property in properties.Where(p => p.Name != "Item"))
+            {
+                data[property.Name] = property.GetValue(replacementData);
+            }
+
+            foreach (var key in replacementData.Vars.Keys)
+            {
+                data[key] = replacementData.Vars[key];
+            }
+
+            return data;
+        }
     }
 }
