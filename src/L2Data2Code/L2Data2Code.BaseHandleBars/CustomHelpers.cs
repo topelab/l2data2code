@@ -6,6 +6,7 @@ using L2Data2Code.SharedLib.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace L2Data2Code.BaseHandleBars
@@ -65,25 +66,25 @@ namespace L2Data2Code.BaseHandleBars
         }
 
         [HandlebarsWriter(WriterType.String)]
-        public string FormatCurrency(string textNumber)
+        public static string FormatCurrency(object textNumber)
         {
-            return decimal.TryParse(textNumber, out var number) ? number.ToString("C") : string.Empty;
+            return decimal.TryParse(textNumber.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out var number) ? number.ToString("C") : string.Empty;
         }
 
         [HandlebarsWriter(WriterType.Value)]
-        public bool Or(string left, string right)
+        public static bool Or(string left, string right)
         {
             return left.IsTrue() || right.IsTrue();
         }
 
         [HandlebarsWriter(WriterType.Value)]
-        public bool And(string left, string right)
+        public static bool And(string left, string right)
         {
             return left.IsTrue() && right.IsTrue();
         }
 
         [HandlebarsWriter(WriterType.Value)]
-        public bool Equals(string left, string right)
+        public static bool Equals(string left, string right)
         {
             return left == right;
         }
