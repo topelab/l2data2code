@@ -1,6 +1,7 @@
 ### 2.12.0
 
-- 
+- **New**: Added mustache renderer Handlebars.Net. Stubble will be replaced with Handlebars
+- **New**: Added new CLI tool HandleBarsCLI that will replace Mustache tool previously created.
 
 ### 2.11.1
 

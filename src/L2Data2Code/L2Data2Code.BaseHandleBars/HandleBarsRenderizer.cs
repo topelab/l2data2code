@@ -1,7 +1,7 @@
 using HandlebarsDotNet;
 using HandlebarsDotNet.Helpers;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Reflection.PortableExecutable;
 
 namespace L2Data2Code.BaseHandleBars
 {
@@ -22,8 +22,9 @@ namespace L2Data2Code.BaseHandleBars
 
             handlebars.RegisterHelper("FormatCurrency", (writer, context, parameters) => { writer.Write(parameters.At<decimal>(0).ToString("C")); });
             handlebars.RegisterHelper("GetVar", (writer, context, parameters) => { writer.Write(values.TryGetValue(parameters.At<string>(0), out var value) ? value : string.Empty); });
-            handlebars.RegisterHelper("JoinWithHeader", (writer, context, parameters) => { writer.Write(string.Concat(parameters.At<string>(2), string.Join(parameters.At<string>(1), parameters.At<object>(0)))); });
-
+            handlebars.RegisterHelper("Join", (writer, context, parameters) => { writer.Write(string.Join(parameters.At<string>(1), parameters.At<JArray>(0).Values<string>())); });
+            handlebars.RegisterHelper("JoinWithHeader", (writer, context, parameters) => { writer.Write(string.Concat(parameters.At<string>(2), string.Join(parameters.At<string>(1), parameters.At<JArray>(0).Values<string>()))); });
+            handlebars.RegisterHelper("JoinWithHeaderFooter", (writer, context, parameters) => { writer.Write(string.Concat(parameters.At<string>(2), string.Join(parameters.At<string>(1), parameters.At<JArray>(0).Values<string>()), parameters.At<string>(3))); });
 
             handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
