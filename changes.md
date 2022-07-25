@@ -1,3 +1,7 @@
+### 2.12.1
+
+- Putting helpers into CustomHelpers
+
 ### 2.12.0
 
 - **New**: Added mustache renderer Handlebars.Net. Stubble will be replaced with Handlebars

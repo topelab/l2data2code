@@ -1,13 +1,16 @@
 using HandlebarsDotNet;
 using HandlebarsDotNet.Helpers;
-using Newtonsoft.Json.Linq;
+using HandlebarsDotNet.Helpers.Enums;
+using HandlebarsDotNet.Helpers.Helpers;
+using L2Data2Code.SharedLib.Extensions;
 using System.Collections.Generic;
 
 namespace L2Data2Code.BaseHandleBars
 {
     public class HandleBarsRenderizer : IHandleBarsRenderizer
     {
-        private IDictionary<string, object> values;
+        private readonly Dictionary<string, object> values;
+        private readonly Dictionary<string, IHelpers> helpers;
         private readonly Dictionary<int, HandlebarsTemplate<object, object>> templateCache;
         private readonly IHandlebars handlebars;
         private const string separator = "!!!PS!!!";
@@ -17,17 +20,16 @@ namespace L2Data2Code.BaseHandleBars
         public HandleBarsRenderizer()
         {
             values = new Dictionary<string, object>();
+            helpers = new Dictionary<string, IHelpers>
+            {
+                { "Custom", new CustomHelpers(handlebars, values) }
+            };
+
             templateCache = new Dictionary<int, HandlebarsTemplate<object, object>>();
             handlebars = Handlebars.CreateSharedEnvironment();
-
-            handlebars.RegisterHelper("FormatCurrency", (writer, context, parameters) => { writer.Write(parameters.At<decimal>(0).ToString("C")); });
-            handlebars.RegisterHelper("GetVar", (writer, context, parameters) => { writer.Write(values.TryGetValue(parameters.At<string>(0), out var value) ? value : string.Empty); });
-            handlebars.RegisterHelper("Join", (writer, context, parameters) => { writer.Write(string.Join(parameters.At<string>(1), parameters.At<JArray>(0).Values<string>())); });
-            handlebars.RegisterHelper("JoinWithHeader", (writer, context, parameters) => { writer.Write(string.Concat(parameters.At<string>(2), string.Join(parameters.At<string>(1), parameters.At<JArray>(0).Values<string>()))); });
-            handlebars.RegisterHelper("JoinWithHeaderFooter", (writer, context, parameters) => { writer.Write(string.Concat(parameters.At<string>(2), string.Join(parameters.At<string>(1), parameters.At<JArray>(0).Values<string>()), parameters.At<string>(3))); });
-
             handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
+            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = false; options.Categories = new[] { (Category)999 } ; options.CustomHelpers = helpers; });
         }
 
         public int Compile(string template, int? key = null)
@@ -42,10 +44,10 @@ namespace L2Data2Code.BaseHandleBars
 
         public string Render(string template, object view)
         {
-            var newValues = view as IDictionary<string, object>;
+            var newValues = view as Dictionary<string, object>;
             if (newValues != null)
             {
-                values = newValues;
+                values.ClearAndAddRange(newValues);
             }
             var key = Compile(template);
             return Run(key, newValues ?? view);
