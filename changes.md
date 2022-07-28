@@ -1,10 +1,14 @@
-### 2.12.1
+### 2.12.2
 
-- Putting helpers into CustomHelpers
+- **New**: Added options in L2DataToCode to set partials path.
+- **New**: HandleBarsCLI will search into "partials" path to get `*.partial` files.
+- Putting helpers into CustomHelpers.
+- Removed references to Stubble.
+- Removed Mustache CLI utility. HandleBarsCLI replace it and its functionalities.
 
 ### 2.12.0
 
-- **New**: Added mustache renderer Handlebars.Net. Stubble will be replaced with Handlebars
+- **New**: Added mustache renderer Handlebars.Net. Stubble will be replaced with Handlebars.
 - **New**: Added new CLI tool HandleBarsCLI that will replace Mustache tool previously created.
 
 ### 2.11.1

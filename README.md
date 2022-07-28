@@ -55,6 +55,7 @@ Every template has a name and these properties:
 - **RemoveFolders** `(true)|false`: folders will be removed before generation.
 - **ResourcesFolder** `"General"`: Name of folder for resource templates (files or folders). This name is used as an identification for template. If *IsGeneral* is true, this folder will be processed globally.
 - **ItemsResources** `[]`: array of folder resources that will be processed for every entity.
+- **Partials** `"partials"`: Name of the folder for `*.partial` files.
 - **Company**: Special var that contains company name (or what else you want) to use inside template files or in *Vars* / *Configurations* / *FinalVars* specification.
 - **Area**: Special var that contains area or section name (or what else you want) to use inside template files or in *Vars* / *Configurations* / *FinalVars* specification.
 - **Module**: Special var that contains module name (or what else you want) to use inside template files or in *Vars* / *Configurations* / *FinalVars* specification.

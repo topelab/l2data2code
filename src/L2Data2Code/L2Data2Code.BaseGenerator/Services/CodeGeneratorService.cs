@@ -147,7 +147,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     CreateVarsFromUserVariables();
                 }
 
-                fileService.SetSettings(options.Encoding, options.EndOfLine);
+                fileService.Initialize(options.Encoding, options.EndOfLine);
             }
             catch (CodeGeneratorException)
             {
@@ -287,6 +287,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 templateFiles.Clear();
 
                 var templatesPath = templateService.GetPath(Template);
+                PreparePartials(templatesPath);
 
                 var listOfTemplates = Directory.GetFiles(templatesPath, "*.*", SearchOption.AllDirectories);
                 foreach (var templateFile in listOfTemplates)
@@ -300,6 +301,12 @@ namespace L2Data2Code.BaseGenerator.Services
                 logger.Error($"Error loading templates: {ex.Message}");
                 throw;
             }
+        }
+
+        private void PreparePartials(string templatesPath)
+        {
+            var partialsFiles = fileService.GetPartials(templatesPath, Template.Partials);
+            mustacheRenderizer.SetupPartials(partialsFiles);
         }
 
         private void GenerateJsonInfo(IEnumerable<Table> processTables)

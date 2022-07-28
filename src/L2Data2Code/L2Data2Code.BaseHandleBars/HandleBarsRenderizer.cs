@@ -59,5 +59,13 @@ namespace L2Data2Code.BaseHandleBars
         }
 
         public string Run(int key, object context) => templateCache[key](context);
+
+        public void SetupPartials(Dictionary<string, string> partialsFiles)
+        {
+            foreach (var partialName in partialsFiles.Keys)
+            {
+                handlebars.RegisterTemplate(partialName, partialsFiles[partialName]);
+            }
+        }
     }
 }

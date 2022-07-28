@@ -13,6 +13,7 @@ namespace L2Data2Code.BaseGenerator.Configuration
         public bool RemoveFolders { get; set; } = true;
         public string ResourcesFolder { get; set; } = "General";
         public List<string> ItemsResources { get; set; } = new List<string>();
+        public string Partials { get; set; }
         public string Company { get; set; }
         public string Area { get; set; }
         public string Module { get; set; }

@@ -34,7 +34,8 @@ namespace L2Data2Code.SharedLib.Services
         private readonly Dictionary<string, string> defaultEndingLines = new()
         {
             { "crlf", "\r\n" },
-            { "lf", "\n" }
+            { "lf", "\n" },
+            { "cr", "\r" },
         };
 
         public string Read(string file)
@@ -53,13 +54,7 @@ namespace L2Data2Code.SharedLib.Services
             File.WriteAllText(file, content.ReplaceEndOfLine(endOfLine), encoding);
         }
 
-        public void SetSettings(Encoding encoding, string endOfLine)
-        {
-            this.encoding = encoding;
-            this.endOfLine = endOfLine;
-        }
-
-        public void SetSettings(string encodingKey, string endOfLineKey)
+        public void Initialize(string encodingKey, string endOfLineKey)
         {
             encoding = defaultEncodings.ContainsKey(encodingKey) ? defaultEncodings[encodingKey] : Encoding.GetEncoding(encodingKey);
             endOfLine = defaultEndingLines.ContainsKey(endOfLineKey) ? defaultEndingLines[endOfLineKey] : Environment.NewLine;
@@ -67,6 +62,28 @@ namespace L2Data2Code.SharedLib.Services
 
         public string ReadWithIncludes(string templateFile, string basePath = null)
             => ReadWithIncludes(templateFile, basePath, null);
+
+
+        public Dictionary<string, string> GetPartials(string basePath, string partialsPath = null)
+        {
+            var result = new Dictionary<string, string>();
+            var path = Path.Combine(basePath, partialsPath ?? "partials");
+
+            if (!string.IsNullOrWhiteSpace(partialsPath) && Directory.Exists(path))
+            {
+                var files = Directory.GetFiles(path, "*.partial", SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    var name = Path.GetFileNameWithoutExtension(file);
+                    if (!result.ContainsKey(name))
+                    {
+                        result[name] = File.ReadAllText(file);
+                    }
+                }
+            }
+
+            return result;
+        }
 
         private string ReadWithIncludes(string templateFile, string basePath = null, Dictionary<string, string> includedFiles = null)
         {

@@ -50,6 +50,7 @@ namespace L2Data2Code.CLIBase.Services
             this.options = options ?? throw new ArgumentNullException(nameof(options));
             fileExecutor.Initialize(options.TemplatePath);
             entities = CLIOptionsInitializer.Initialize(options);
+            PreparePartials(options.TemplatePath);
         }
 
         /// <summary>
@@ -62,6 +63,12 @@ namespace L2Data2Code.CLIBase.Services
                 fileExecutor.RunOnPaths((path) => DoAction(CreatePath, path, options));
                 fileExecutor.RunOnFiles((file) => DoAction(TransformFile, file, options));
             }
+        }
+
+        private void PreparePartials(string templatesPath)
+        {
+            var partialsFiles = fileService.GetPartials(templatesPath);
+            renderizer.SetupPartials(partialsFiles);
         }
 
         private void DoAction(Action<string, string, string, JToken> action, string pathOrFile, ICLIOptions options)
