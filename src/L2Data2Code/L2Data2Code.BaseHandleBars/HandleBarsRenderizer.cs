@@ -3,11 +3,12 @@ using HandlebarsDotNet.Helpers;
 using HandlebarsDotNet.Helpers.Enums;
 using HandlebarsDotNet.Helpers.Helpers;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using System.Collections.Generic;
 
 namespace L2Data2Code.BaseHandleBars
 {
-    public class HandleBarsRenderizer : IHandleBarsRenderizer
+    public class HandleBarsRenderizer : IMustacheRenderizer
     {
         private readonly Dictionary<string, object> values;
         private readonly Dictionary<string, IHelpers> helpers;
@@ -32,16 +33,6 @@ namespace L2Data2Code.BaseHandleBars
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = false; options.Categories = new[] { (Category)999 } ; options.CustomHelpers = helpers; });
         }
 
-        public int Compile(string template, int? key = null)
-        {
-            key ??= template.GetHashCode();
-            if (!templateCache.ContainsKey(key.Value))
-            {
-                templateCache[key.Value] = handlebars.Compile(template);
-            }
-            return key.Value;
-        }
-
         public string Render(string template, object view)
         {
             var newValues = view as Dictionary<string, object>;
@@ -58,8 +49,6 @@ namespace L2Data2Code.BaseHandleBars
             return Render(template.Replace("\\", separator), view).Replace(separator, "\\");
         }
 
-        public string Run(int key, object context) => templateCache[key](context);
-
         public void SetupPartials(Dictionary<string, string> partialsFiles)
         {
             foreach (var partialName in partialsFiles.Keys)
@@ -67,5 +56,18 @@ namespace L2Data2Code.BaseHandleBars
                 handlebars.RegisterTemplate(partialName, partialsFiles[partialName]);
             }
         }
+
+        private int Compile(string template, int? key = null)
+        {
+            key ??= template.GetHashCode();
+            if (!templateCache.ContainsKey(key.Value))
+            {
+                templateCache[key.Value] = handlebars.Compile(template);
+            }
+            return key.Value;
+        }
+
+        private string Run(int key, object context) => templateCache[key](context);
+
     }
 }

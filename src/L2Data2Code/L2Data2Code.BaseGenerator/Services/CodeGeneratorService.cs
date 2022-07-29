@@ -467,6 +467,11 @@ namespace L2Data2Code.BaseGenerator.Services
             internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.RenderPath(Template.SavePath, internalVars));
             internalVars.Add(nameof(Options.TemplatePath), Options.TemplatePath.AddPathSeparator());
 
+            ProcessConditionals(allVars);
+        }
+
+        private void ProcessConditionals(string[] allVars)
+        {
             var lastConditionResult = false;
             string value;
             foreach (var item in allVars.Select(s => s.Trim()))
@@ -482,7 +487,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 {
                     var key = matchCondition.Groups["key"].Value;
                     value = matchCondition.Groups["value"].Value;
-                    if (internalVars.ContainsKey(key) && internalVars[key].ToString() == value)
+                    if (internalVars.ContainsKey(key) && internalVars[key].ToString().ToLower() == value.ToLower())
                     {
                         lastConditionResult = true;
                         itemLine = "." + matchCondition.Groups["var"].Value;
@@ -510,9 +515,18 @@ namespace L2Data2Code.BaseGenerator.Services
                 }
                 var camps = itemLine.Split('=');
                 value = camps[1].Trim();
-                internalVars[camps[0].Trim()] = value.NotEmpty() && value.Contains("{{")
+                value = value.NotEmpty() && value.Contains("{{")
                     ? value.Contains('\\') ? mustacheRenderizer.RenderPath(value, internalVars) : mustacheRenderizer.Render(value, internalVars)
                     : value;
+
+                if (value.Equals("true", StringComparison.CurrentCultureIgnoreCase) || value.Equals("false", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    internalVars[camps[0].Trim()] = bool.Parse(value);
+                }
+                else
+                {
+                    internalVars[camps[0].Trim()] = value;
+                }
             }
         }
 
