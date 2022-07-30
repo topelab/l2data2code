@@ -12,6 +12,7 @@ namespace L2Data2Code.BaseGenerator.Configuration
         private JToken varsConfiguration;
 
         public string Area { get; set; }
+        public string DefaultModule { get; set; }
         public string Schema { get; set; }
         public string OutputSchema { get => _outputSchema ?? Schema; set => _outputSchema = value; }
         public string DescriptionsSchema { get => _descriptionSchema ?? Schema; set => _descriptionSchema = value; }

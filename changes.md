@@ -1,3 +1,7 @@
+### 2.12.4
+
+- Added `DefaultModule` to `DataSources`. This must match a Modules key.
+
 ### 2.12.3
 
 - Fixed conditionals on `template-settings.json` and in pattern files that start with `where{{...}}`

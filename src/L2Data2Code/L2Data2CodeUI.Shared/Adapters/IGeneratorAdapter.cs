@@ -38,5 +38,6 @@ namespace L2Data2CodeUI.Shared.Adapters
         void SetCurrentTemplate(string selectedTemplate, bool triggered = false);
         void SetCurrentVars(string selectedVars, bool triggered = false);
         void Run(CodeGeneratorDto baseOptions);
+        string GetDefaultModule(string selectedDataSource);
     }
 }

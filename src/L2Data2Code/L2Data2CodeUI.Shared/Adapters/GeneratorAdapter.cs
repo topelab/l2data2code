@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -134,6 +135,13 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public IEnumerable<string> GetModuleList(string selectedDataSource)
             => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(DataSourcesConfiguration[selectedDataSource].Area + "."));
+
+        public string GetDefaultModule(string selectedDataSource)
+        {
+            var defaultModule = DataSourcesConfiguration[selectedDataSource].DefaultModule;
+            var moduleList = GetModuleList(selectedDataSource);
+            return moduleList.Contains(defaultModule) ? defaultModule : moduleList.FirstOrDefault();
+        }
 
         public IEnumerable<string> GetTemplateList()
             => TemplatesConfiguration.GetKeys();
@@ -298,7 +306,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SelectedDataSource = selectedDataSource;
             SetupInitial();
             SetupTables();
-            SetCurrentModule(GetModuleList(selectedDataSource).FirstOrDefault(), true);
+            SetCurrentModule(GetDefaultModule(selectedDataSource), true);
             InputSourceType = schemaFactory.GetProviderDefinitionKey(schemaName);
         }
 

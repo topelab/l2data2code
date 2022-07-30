@@ -93,7 +93,7 @@ namespace L2Data2CodeWPF.Main
             _selectedDataSource = DataSourceList.FirstOrDefault();
 
             ModuleList = this.generatorAdapter.GetModuleList(_selectedDataSource);
-            _selectedModule = ModuleList.FirstOrDefault();
+            _selectedModule = this.generatorAdapter.GetDefaultModule(_selectedDataSource);
 
             TemplateChanged();
             AreaChanged();
@@ -312,7 +312,7 @@ namespace L2Data2CodeWPF.Main
                 _moduleList = generatorAdapter.GetModuleList(SelectedDataSource);
                 dispatcher?.Invoke(() =>
                 {
-                    SelectedModule = ModuleList.FirstOrDefault();
+                    SelectedModule = generatorAdapter.SelectedModule;
                     OnPropertyChanged(nameof(ModuleList));
                     OutputPath = generatorAdapter.OutputPath;
                     SlnFile = generatorAdapter.SlnFile;
