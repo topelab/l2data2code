@@ -1,3 +1,7 @@
+### 2.12.3
+
+- Fixed conditionals on `template-settings.json` and in pattern files that start with `where{{...}}`
+
 ### 2.12.2
 
 - **New**: Added options in L2DataToCode to set partials path.

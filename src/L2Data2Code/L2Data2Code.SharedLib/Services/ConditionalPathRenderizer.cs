@@ -50,18 +50,25 @@ namespace L2Data2Code.SharedLib.Services
 
         private static bool CheckTemplateNameIsTrue<T>(string tag, T replacement) where T : class
         {
-            var result = false;
+            bool result;
+            var key = tag.TrimStart('^');
 
-            var type = typeof(T);
-            var prop = type.GetProperty(tag.TrimStart('^'), typeof(bool));
-            if (prop != null)
+            switch (replacement)
             {
-                result = (bool)prop.GetValue(replacement, null);
+                case IDictionary<string, object> dictionary:
+                    result = dictionary.ContainsKey(key) && dictionary[key].ToString().IsTrue();
+                    break;
+                case JToken token:
+                    result = token[key]?.ToString().IsTrue() ?? false;
+                    break;
+                default:
+                    result = typeof(T).GetProperty(key).GetValue(replacement, null)?.ToString().IsTrue() ?? false;
+                    break;
             }
 
             if (tag.StartsWith("^"))
             {
-                return !result;
+                result = !result;
             }
 
             return result;
@@ -77,13 +84,13 @@ namespace L2Data2Code.SharedLib.Services
             switch (replacement)
             {
                 case IDictionary<string, object> dictionary:
-                    result = dictionary.ContainsKey(key) && dictionary[key].ToString() == value;
+                    result = dictionary.ContainsKey(key) && dictionary[key].ToString().ToLower() == value?.ToLower();
                     break;
                 case JToken token:
                     result = token[key]?.ToString().ToLower() == value?.ToLower();
                     break;
                 default:
-                    result = typeof(T).GetProperty(key).GetValue(replacement, null)?.ToString() == value;
+                    result = typeof(T).GetProperty(key).GetValue(replacement, null)?.ToString().ToLower() == value?.ToLower();
                     break;
             }
 

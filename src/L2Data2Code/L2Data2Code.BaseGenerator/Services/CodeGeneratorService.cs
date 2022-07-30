@@ -487,7 +487,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 {
                     var key = matchCondition.Groups["key"].Value;
                     value = matchCondition.Groups["value"].Value;
-                    if (internalVars.ContainsKey(key) && internalVars[key].ToString().ToLower() == value.ToLower())
+                    if (internalVars.ContainsKey(key) && internalVars[key].ToString().ToLower() == value?.ToLower())
                     {
                         lastConditionResult = true;
                         itemLine = "." + matchCondition.Groups["var"].Value;
