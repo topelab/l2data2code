@@ -1,11 +1,10 @@
-using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Schema;
 
-namespace L2Data2Code.BaseGenerator.Interfaces
+namespace L2Data2Code.SchemaReader.Interface
 {
     public interface ISchemaFactory
     {
-        ISchemaReader Create(SchemaOptions schemaOptions);
+        ISchemaReader Create(ISchemaOptions schemaOptions);
         string GetConversion(string provider, string type);
         string GetProviderDefinitionKey(string connectionStringKey);
     }

@@ -17,7 +17,7 @@ namespace L2Data2Code.SchemaReader.Json
         private readonly string templatePath;
         private readonly INameResolver nameResolver;
 
-        public JsonSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
+        public JsonSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
 
             connectionString = options.ConnectionString;

@@ -1,4 +1,6 @@
 using L2Data2Code.SchemaReader.Configuration;
+using L2Data2Code.SchemaReader.Interface;
+using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SharedLib.Configuration;
 using System.Collections.Generic;
 
@@ -7,7 +9,7 @@ namespace L2Data2Code.BaseGenerator.Entities
     /// <summary>
     /// DTO for code generator options
     /// </summary>
-    public class CodeGeneratorDto
+    public class CodeGeneratorDto : ISchemaOptions
     {
         /// <summary>
         /// Default output path
@@ -106,5 +108,8 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// Schemas configuration
         /// </summary>
         public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; set; }
+        public string ConnectionString { get; set; }
+        public string DescriptionsConnectionString { get; set; }
+        public StringBuilderWriter SummaryWriter { get; set; }
     }
 }

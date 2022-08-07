@@ -18,7 +18,7 @@ namespace L2Data2Code.SchemaReader.MySql
         private readonly INameResolver nameResolver;
 
 
-        public MySqlSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
+        public MySqlSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));

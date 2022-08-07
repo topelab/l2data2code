@@ -10,9 +10,9 @@ Libreria: {{Module}}
 NombreTabla: {{TableName}}
 Entidad: {{Entity}}
 
-Usando "Vars.Variable" ({{Vars.Count}})
-{{#Vars.Keys}}{{.}} = {{GetVar .}}
-{{/Vars.Keys}}
+Usando "Vars.Variable" ({{Count}})
+{{#Keys}}{{.}} = {{GetVar .}}
+{{/Keys}}
 
 {{#SetDomain}}
 Generar Domain

@@ -1,8 +1,7 @@
-using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SchemaReader.Schema;
 using System.Collections.Generic;
 
-namespace L2Data2Code.BaseGenerator.Interfaces
+namespace L2Data2Code.SchemaReader.Interface
 {
     public interface ISchemaService
     {
@@ -11,7 +10,7 @@ namespace L2Data2Code.BaseGenerator.Interfaces
         string GetLang(string schemaName);
         Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName);
         bool NormalizedNames(string schemaName);
-        Tables Read(CodeGeneratorDto options, Dictionary<string, string> alternativeDescriptions = null);
+        Tables Read(ISchemaOptions options, Dictionary<string, string> alternativeDescriptions = null);
         bool ShouldRemoveWord1(string schemaName);
     }
 }

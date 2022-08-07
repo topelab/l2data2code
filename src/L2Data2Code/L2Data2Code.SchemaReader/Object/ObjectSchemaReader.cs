@@ -27,7 +27,7 @@ namespace L2Data2Code.SchemaReader.Object
         /// Constructor
         /// </summary>
         /// <param name="options">Schema options</param>
-        public ObjectSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
+        public ObjectSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             templatePath = options.TemplatePath;

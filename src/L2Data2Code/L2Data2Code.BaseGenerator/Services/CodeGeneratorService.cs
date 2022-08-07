@@ -1,6 +1,7 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
 using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;

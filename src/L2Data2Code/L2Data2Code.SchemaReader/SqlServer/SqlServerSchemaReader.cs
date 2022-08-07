@@ -19,7 +19,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private IDbConnection connection;
 
 
-        public SqlServerSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
+        public SqlServerSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;

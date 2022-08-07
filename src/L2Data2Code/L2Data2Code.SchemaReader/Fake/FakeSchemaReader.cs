@@ -10,7 +10,7 @@ namespace L2Data2Code.SchemaReader.Fake
     {
         private readonly INameResolver nameResolver;
 
-        public FakeSchemaReader(INameResolver nameResolver, SchemaOptions options) : base(options.SummaryWriter)
+        public FakeSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
             this.nameResolver = nameResolver ?? throw new System.ArgumentNullException(nameof(nameResolver));
             this.nameResolver.Initialize(options.SchemaName);
