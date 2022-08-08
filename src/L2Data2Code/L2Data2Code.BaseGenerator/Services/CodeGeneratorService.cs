@@ -207,7 +207,8 @@ namespace L2Data2Code.BaseGenerator.Services
 
                 if (Options.GenerateJsonInfo && Options.JsonGeneratedPath.NotEmpty() && Options.LastPass)
                 {
-                    GenerateJsonInfo(processTables);
+                    var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
+                    schemaService.GenerateJsonInfo(processTables, fileName);
                 }
             }
             catch (CodeGeneratorException)
@@ -308,38 +309,6 @@ namespace L2Data2Code.BaseGenerator.Services
         {
             var partialsFiles = fileService.GetPartials(templatesPath, Template.Partials);
             mustacheRenderizer.SetupPartials(partialsFiles);
-        }
-
-        private void GenerateJsonInfo(IEnumerable<Table> processTables)
-        {
-            // Para generar un json con cada una de las tablas
-            PropertyRenameAndIgnoreSerializerContractResolver jsonResolver = new();
-            jsonResolver.IgnoreProperty(typeof(Column),
-                nameof(Column.Table),
-                nameof(Column.FullName),
-                nameof(Column.FullNameWithOwner),
-                nameof(Column.PropertyName)
-                );
-            jsonResolver.IgnoreProperty(typeof(Table),
-                nameof(Table.PK),
-                nameof(Table.CleanName),
-                nameof(Table.ClassName)
-                );
-            jsonResolver.IgnoreProperty(typeof(Key),
-                nameof(Key.ColumnReferenced),
-                nameof(Key.ColumnReferencing)
-                );
-
-            var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
-
-            fileService.Write(fileName, JsonConvert.SerializeObject(new TablesDTO { Tables = processTables }, Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    ContractResolver = jsonResolver,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore
-                }));
         }
 
         private void SetReferencedTables(IEnumerable<Table> selectedTables)

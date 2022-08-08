@@ -3,6 +3,8 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
+using L2Data2Code.SharedLib.Interfaces;
+using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,9 @@ using System.Linq;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
+    /// <summary>
+    /// Schema service
+    /// </summary>
     public class SchemaService : ISchemaService
     {
         private readonly string DefaultLang = "en";
@@ -18,19 +23,32 @@ namespace L2Data2Code.SchemaReader.Schema
 
         private readonly ILogger logger;
         private readonly Dictionary<string, Tables> schemaNamesCached;
-        private readonly ISchemaOptionsFactory schemaOptionsFactory;
         private readonly IBasicConfiguration<SchemaConfiguration> schemas;
         private readonly ISchemaFactory schemaFactory;
+        private readonly IFileService fileService;
 
-        public SchemaService(ILogger logger, ISchemaOptionsFactory schemaOptionsFactory, IBasicConfiguration<SchemaConfiguration> schemas, ISchemaFactory schemaFactory)
+        /// <summary>
+        /// Schema service
+        /// </summary>
+        /// <param name="logger">Logger</param>
+        /// <param name="schemas">Schema configuration</param>
+        /// <param name="schemaFactory">Schema factory</param>
+        /// <param name="fileService">File service</param>
+        public SchemaService(ILogger logger, IBasicConfiguration<SchemaConfiguration> schemas, ISchemaFactory schemaFactory, IFileService fileService)
         {
             schemaNamesCached = new();
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.schemaOptionsFactory = schemaOptionsFactory ?? throw new ArgumentNullException(nameof(schemaOptionsFactory));
             this.schemas = schemas ?? throw new ArgumentNullException(nameof(schemas));
             this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
+            this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
+        /// <summary>
+        /// Read schema info specified at options
+        /// </summary>
+        /// <param name="options">Schema options</param>
+        /// <param name="alternativeDescriptions">Dictionary with alternative descriptions</param>
+        /// <returns>Specific dictionary of tables</returns>
         public Tables Read(ISchemaOptions options, Dictionary<string, string> alternativeDescriptions = null)
         {
             try
@@ -152,6 +170,40 @@ namespace L2Data2Code.SchemaReader.Schema
             }
 
             return (connectionString, provider);
+        }
+
+        /// <summary>
+        /// Generate JSON file with schema info
+        /// </summary>
+        /// <param name="processTables">Tables to process</param>
+        /// <param name="outputFileName">Output file name (full path) for JSON file</param>
+        public void GenerateJsonInfo(IEnumerable<Table> processTables, string outputFileName)
+        {
+            PropertyRenameAndIgnoreSerializerContractResolver jsonResolver = new();
+            jsonResolver.IgnoreProperty(typeof(Column),
+                nameof(Column.Table),
+                nameof(Column.FullName),
+                nameof(Column.FullNameWithOwner),
+                nameof(Column.PropertyName)
+                );
+            jsonResolver.IgnoreProperty(typeof(Table),
+                nameof(Table.PK),
+                nameof(Table.CleanName),
+                nameof(Table.ClassName)
+                );
+            jsonResolver.IgnoreProperty(typeof(Key),
+                nameof(Key.ColumnReferenced),
+                nameof(Key.ColumnReferencing)
+                );
+
+            fileService.Write(outputFileName, JsonConvert.SerializeObject(new TablesDTO { Tables = processTables }, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    ContractResolver = jsonResolver,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Ignore
+                }));
         }
     }
 }

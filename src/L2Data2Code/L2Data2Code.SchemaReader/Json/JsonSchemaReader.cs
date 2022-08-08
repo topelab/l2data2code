@@ -48,7 +48,7 @@ namespace L2Data2Code.SchemaReader.Json
         }
 
         /// <summary>
-        /// Resolve <see cref="Table.InnerKeys" /> and <see cref="Table.OuterKeys" /> the specified tables.
+        /// Resolve <see cref="Table.InnerKeys" /> and <see cref="Table.OuterKeys" /> for the specified tables.
         /// </summary>
         /// <param name="tables">The tables.</param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace L2Data2Code.SchemaReader.Json
         }
 
         /// <summary>
-        /// Search <paramref name="reference"/> (format: table.column) and return a <see cref="Column"/> or null if not finded.
+        /// Search <paramref name="reference"/> (format: table.column) and return a <see cref="Column"/> or null if not found.
         /// </summary>
         /// <param name="tables">The tables to search.</param>
         /// <param name="reference">The table.column string reference.</param>
