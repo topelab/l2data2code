@@ -4,4 +4,42 @@
     <TargetFramework>net6.0</TargetFramework>
     <Version>2.12.5</Version>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\L2Data2Code.SchemaReader\L2Data2Code.SchemaReader.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\northwind-dbinfo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Northwind.ERP.Domain.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\GlobalFiles\readme.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\ItemFiles\{{Area}}.{{Module}}.{{Entity}}.demo.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\template-settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\Templates-OLD.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

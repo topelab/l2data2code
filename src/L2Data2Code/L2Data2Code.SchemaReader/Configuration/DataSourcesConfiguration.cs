@@ -1,3 +1,4 @@
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Helpers;
 
@@ -6,7 +7,7 @@ namespace L2Data2Code.BaseGenerator.Configuration
     public class DataSourcesConfiguration : BasicConfiguration<DataSourceConfiguration>, IDataSorcesConfiguration
     {
         private const string DEFAULT_KEY = "localserver";
-        public DataSourcesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.DATA_SOURCES)
+        public DataSourcesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, ConfigurationLabels.DATA_SOURCES)
         {
         }
 

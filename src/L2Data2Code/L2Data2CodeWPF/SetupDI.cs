@@ -1,5 +1,4 @@
 using L2Data2Code.BaseGenerator.Configuration;
-using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseHandleBars;
