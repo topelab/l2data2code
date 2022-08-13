@@ -30,7 +30,7 @@ namespace L2Data2Code.BaseHandleBars
             handlebars = Handlebars.CreateSharedEnvironment();
             handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
-            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = false; options.Categories = new[] { (Category)999 } ; options.CustomHelpers = helpers; });
+            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = false; options.Categories = new[] { (Category)999 }; options.CustomHelpers = helpers; });
         }
 
         public string Render(string template, object view)

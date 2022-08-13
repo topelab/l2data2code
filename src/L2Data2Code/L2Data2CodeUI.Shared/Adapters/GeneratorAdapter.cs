@@ -15,7 +15,6 @@ using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -92,8 +91,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SchemasConfiguration = schemasConfiguration;
             TemplatesConfiguration = templatesConfiguration;
 
-            jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration.Merge(jsonSetting.Config[AppSettingsConfiguration.APP_SETTINGS].ToNameValueCollection());
+            SettingsConfiguration.Merge(SettingsConfiguration["TemplateSettings"]);
             SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
 
             this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration["TemplatesBasePath"], "*.json");
@@ -353,8 +351,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             Thread.Sleep(500);
             jsonSetting.ReloadSettings();
-            jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration.Merge(jsonSetting.Config[AppSettingsConfiguration.APP_SETTINGS].ToNameValueCollection());
+            SettingsConfiguration.Merge(SettingsConfiguration["TemplateSettings"]);
             SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
             SetCurrentTemplate(SelectedTemplate, true);
             OnConfigurationChanged?.Invoke();

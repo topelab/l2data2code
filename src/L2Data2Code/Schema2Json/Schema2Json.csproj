@@ -5,9 +5,6 @@
     <Version>2.12.5</Version>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -23,23 +20,17 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="SampleData\northwind-dbinfo.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="SampleData\Northwind.ERP.Domain.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SampleData\Templates\GlobalFiles\readme.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SampleData\Templates\ItemFiles\{{Area}}.{{Module}}.{{Entity}}.demo.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SampleData\Templates\template-settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SampleData\Templates\Templates-OLD.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="SampleData\**" />
+    <EmbeddedResource Remove="SampleData\**" />
+    <None Remove="SampleData\**" />
+    <Page Remove="SampleData\**" />
+    <None Include="SampleData\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

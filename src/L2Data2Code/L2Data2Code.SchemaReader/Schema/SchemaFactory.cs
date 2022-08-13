@@ -31,7 +31,6 @@ namespace L2Data2Code.SchemaReader.Schema
             { "System.Data.JsonClient", new ProviderDefinition { Key = "json", Type = typeof(JsonSchemaReader) } },
             { "Microsoft.Data.Sqlite", new ProviderDefinition { Key = "sqlite", Type = typeof(SQLiteSchemaReader), Conversions = new Dictionary<string, string>() {{ "decimal", "NUMERIC" } } } },
             { "System.Data.ObjectClient", new ProviderDefinition { Key = "object", Type = typeof(ObjectSchemaReader) } },
-            //{ "Oracle.ManagedDataAccess.Client", typeof(OracleSchemaReader) },
 
         };
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace L2Data2Code.SharedLib.Configuration
 {
@@ -9,6 +8,6 @@ namespace L2Data2Code.SharedLib.Configuration
 
         string FirstOrDefault();
         IEnumerable<string> GetKeys();
-        void Merge(NameValueCollection nameValueCollection);
+        void Merge(params string[] additionalSettingFiles);
     }
 }

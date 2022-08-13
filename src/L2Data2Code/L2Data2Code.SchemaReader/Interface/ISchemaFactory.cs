@@ -1,5 +1,3 @@
-using L2Data2Code.SchemaReader.Schema;
-
 namespace L2Data2Code.SchemaReader.Interface
 {
     public interface ISchemaFactory

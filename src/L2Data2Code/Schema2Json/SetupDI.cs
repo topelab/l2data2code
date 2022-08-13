@@ -33,6 +33,7 @@ namespace Schema2Json
                 .AddSingleton<INameResolver, NameResolver>()
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
+                .AddSingleton<ISchema2JsonFactory, Schema2JsonFactory>()
 
                 .Add<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .Add<ISchemaReader, MySqlSchemaReader>(nameof(MySqlSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))

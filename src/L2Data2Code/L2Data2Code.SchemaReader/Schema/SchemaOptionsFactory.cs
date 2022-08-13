@@ -15,7 +15,8 @@ namespace L2Data2Code.SchemaReader.Schema
                 SchemaName = schemaName,
                 SummaryWriter = summaryWriter,
                 DescriptionsSchemaName = descriptionsSchemaName,
-                TemplatePath = templatePath
+                TemplatePath = templatePath,
+                CreatedFromSchemaName = schemaName
             };
         }
     }

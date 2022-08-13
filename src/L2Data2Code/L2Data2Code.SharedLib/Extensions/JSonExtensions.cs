@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
@@ -10,7 +11,7 @@ namespace L2Data2Code.SharedLib.Extensions
             NameValueCollection valueCollection = new();
             if (source != null)
             {
-                foreach (JProperty item in source)
+                foreach (var item in source.Cast<JProperty>())
                 {
                     valueCollection[item.Name] = (string)item.Value;
                 }

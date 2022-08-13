@@ -20,6 +20,9 @@ namespace L2Data2Code.SharedLib.Configuration
             RegexOptions.Singleline | RegexOptions.Compiled
             );
 
+        public const string APP_SETTINGS_FILE = "appsettings.json";
+        public const string APP_SETTINGS = "appSettings";
+
         public BasicNameValueConfiguration(IJsonSetting jsonSetting, string list)
         {
             this.jsonSetting = jsonSetting;
@@ -48,7 +51,13 @@ namespace L2Data2Code.SharedLib.Configuration
 
         public string this[string key] { get => valueCollection[key]; set => valueCollection[key] = value; }
 
-        public void Merge(NameValueCollection nameValueCollection)
+        public void Merge(params string[] additionalSettingFiles)
+        {
+            jsonSetting.AddSettingFiles(additionalSettingFiles);
+            Merge(jsonSetting.Config[APP_SETTINGS].ToNameValueCollection());
+        }
+
+        private void Merge(NameValueCollection nameValueCollection)
         {
             foreach (var key in nameValueCollection.AllKeys)
             {
@@ -64,7 +73,7 @@ namespace L2Data2Code.SharedLib.Configuration
                 if (this[item].Contains('%'))
                 {
                     var matches = ENVIRONMENT_VAR.Matches(this[item]);
-                    foreach (Match element in matches)
+                    foreach (var element in matches.Cast<Match>())
                     {
                         var environmentVar = element.Value.Trim('%');
                         var variable = Environment.GetEnvironmentVariable(environmentVar);
