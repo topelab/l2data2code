@@ -36,27 +36,5 @@
             "RenameTables": null,
             "RenamaColumns": null
         }
-    },
-    "DataSources": {
-        "Northwind (json file)": {
-            "Area": "Northwind",
-            "Schema": "northwindtest"
-        },
-        "Northwind (assembly entities)": {
-            "Area": "Northwind",
-            "Schema": "northwind-entities"
-        },
-        "Northwind (assembly dtos)": {
-            "Area": "Northwind",
-            "Schema": "northwind-dtos"
-        },
-        "Demo": {
-            "Area": "Demo",
-            "Schema": "general"
-        },
-        "Another": {
-            "Area": "Another",
-            "Schema": "general"
-        }
     }
 }

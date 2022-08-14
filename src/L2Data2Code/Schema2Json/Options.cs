@@ -1,4 +1,6 @@
 using CommandLine;
+using CommandLine.Text;
+using System.Collections.Generic;
 
 namespace Schema2Json
 {
@@ -9,5 +11,14 @@ namespace Schema2Json
 
         [Option('s', "schema", Required = true, HelpText = "Set schema name to be read")]
         public string Schema { get; set; }
+
+        [Usage(ApplicationAlias = "Schema2Json")]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Normal scenario", new Options { OutputPath = @"c:\arc\dl", Schema = "demo" });
+            }
+        }
     }
 }

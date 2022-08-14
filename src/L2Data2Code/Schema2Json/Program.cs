@@ -10,7 +10,7 @@ namespace Schema2Json
         static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args)
-                .WithParsed<Options>(Proceed);
+                .WithParsed(Proceed);
         }
 
         private static void Proceed(Options options)

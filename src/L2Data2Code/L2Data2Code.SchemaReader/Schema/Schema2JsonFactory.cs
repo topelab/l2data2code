@@ -12,19 +12,16 @@ namespace L2Data2Code.SchemaReader.Schema
     {
         private readonly ISchemaService schemaService;
         private readonly ISchemaOptionsFactory schemaOptionsFactory;
-        private readonly IDataSorcesConfiguration dataSorcesConfiguration;
         private readonly IAppSettingsConfiguration settingsConfiguration;
         private readonly IBasicConfiguration<SchemaConfiguration> schemasConfiguration;
 
         public Schema2JsonFactory(ISchemaService schemaService,
                                   ISchemaOptionsFactory schemaOptionsFactory,
-                                  IDataSorcesConfiguration dataSorcesConfiguration,
                                   IAppSettingsConfiguration settingsConfiguration,
                                   IBasicConfiguration<SchemaConfiguration> schemasConfiguration)
         {
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
             this.schemaOptionsFactory = schemaOptionsFactory ?? throw new ArgumentNullException(nameof(schemaOptionsFactory));
-            this.dataSorcesConfiguration = dataSorcesConfiguration ?? throw new ArgumentNullException(nameof(dataSorcesConfiguration));
             this.settingsConfiguration = settingsConfiguration ?? throw new ArgumentNullException(nameof(settingsConfiguration));
             this.schemasConfiguration = schemasConfiguration ?? throw new ArgumentNullException(nameof(schemasConfiguration));
 
@@ -34,12 +31,10 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public void Create(string outputPath, string schema)
         {
-            var schemaName = dataSorcesConfiguration.Schema(schema);
-            var descriptionsSchemaName = dataSorcesConfiguration.CommentSchema(schema);
             var templateBasePath = settingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            var schemaOptions = schemaOptionsFactory.Create(templateBasePath, schemasConfiguration, schemaName, new StringBuilderWriter(), descriptionsSchemaName);
+            var schemaOptions = schemaOptionsFactory.Create(templateBasePath, schemasConfiguration, schema, new StringBuilderWriter(), null);
             var tables = schemaService.Read(schemaOptions);
-            var fileName = $"{outputPath.AddPathSeparator()}{schemaName.ToSlug()}-dbinfo.json";
+            var fileName = $"{outputPath.AddPathSeparator()}{schema.ToSlug()}-dbinfo.json";
 
             schemaService.GenerateJsonInfo(tables.Values, fileName);
         }
