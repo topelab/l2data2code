@@ -48,7 +48,7 @@ namespace L2Data2Code.SharedLib.Configuration
             _values.Clear();
             if (token != null)
             {
-                foreach (JProperty item in token)
+                foreach (var item in token.Cast<JProperty>())
                 {
                     _values.Add(item.Name, item.Value.ToObject<T>());
                 }

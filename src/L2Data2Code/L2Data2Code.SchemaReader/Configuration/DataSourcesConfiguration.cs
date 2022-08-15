@@ -17,13 +17,6 @@ namespace L2Data2Code.BaseGenerator.Configuration
             return value?.Schema ?? DEFAULT_KEY;
         }
 
-        public string CommentSchema(string key)
-        {
-            var value = this[key];
-            var defaultKey = Schema(key);
-            return value?.DescriptionsSchema ?? defaultKey;
-        }
-
         public string OutputSchema(string key)
         {
             var value = this[key];

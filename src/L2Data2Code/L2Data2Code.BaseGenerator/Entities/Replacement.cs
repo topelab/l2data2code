@@ -113,10 +113,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     {
                         lock (_syncRoot)
                         {
-                            if (_instance == null)
-                            {
-                                _instance = new IgnoreCaseComparer();
-                            }
+                            _instance ??= new IgnoreCaseComparer();
                         }
                     }
 

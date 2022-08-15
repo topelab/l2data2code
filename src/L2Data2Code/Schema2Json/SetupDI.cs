@@ -17,8 +17,15 @@ using Topelab.Core.Resolver.Entities;
 
 namespace Schema2Json
 {
+    /// <summary>
+    /// Setup dependency injection
+    /// </summary>
     public class SetupDI
     {
+        /// <summary>
+        /// Register interfaces
+        /// </summary>
+        /// <returns>Resolve info collection</returns>
         public static ResolveInfoCollection Register()
         {
             return new ResolveInfoCollection()

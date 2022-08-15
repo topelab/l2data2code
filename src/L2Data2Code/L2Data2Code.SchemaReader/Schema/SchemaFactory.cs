@@ -54,24 +54,17 @@ namespace L2Data2Code.SchemaReader.Schema
         public ISchemaReader Create(ISchemaOptions schemaOptions)
         {
             Connection connection;
-            Connection commentConnection;
             try
             {
                 schemaOptions.SummaryWriter ??= new StringBuilderWriter();
                 schemasConfiguration = schemaOptions.SchemasConfiguration;
                 connection = new Connection(schemasConfiguration, schemaOptions.SchemaName);
                 schemaOptions.ConnectionString = connection.ConnectionString;
-                commentConnection = schemaOptions.DescriptionsSchemaName == null ? null : new Connection(schemasConfiguration, schemaOptions.DescriptionsSchemaName);
             }
             catch (Exception ex)
             {
                 LogService.Error(ex.Message);
                 return null;
-            }
-
-            if (commentConnection != null && providers.ContainsKey(commentConnection.Provider))
-            {
-                schemaOptions.DescriptionsConnectionString = commentConnection.ConnectionString;
             }
 
             if (providers.TryGetValue(connection.Provider, out var providerDefinition))

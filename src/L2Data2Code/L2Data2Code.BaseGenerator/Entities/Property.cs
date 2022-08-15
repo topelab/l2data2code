@@ -8,6 +8,7 @@ namespace L2Data2Code.BaseGenerator.Entities
     /// </summary>
     public class Property : ICloneable
     {
+        public Entity Entity { get; set; }
         public string Name { get; set; }
         public string IdOrName => IsEntityId() ? Constants.ID : Name;
         public string Table { get; set; }
@@ -92,6 +93,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             return new Property
             {
+                Entity = Entity,
                 Table = Table,
                 Name = Name,
                 Nullable = Nullable,

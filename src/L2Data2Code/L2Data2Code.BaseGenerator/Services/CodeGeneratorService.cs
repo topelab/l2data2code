@@ -505,6 +505,13 @@ namespace L2Data2Code.BaseGenerator.Services
             var tableName = table.TableName;
             var normalizeNames = schemaService.NormalizedNames(Options.CreatedFromSchemaName);
 
+            Entity entity = new()
+            {
+                Name = table.ClassName,
+                UseSpanish = schemaService.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
+                MultiplePKColumns = table.MultiplePKColumns,
+            };
+
             var properties =
                 table.Columns.Select(
                     (column, index, isFirst, isLast) =>
@@ -513,6 +520,7 @@ namespace L2Data2Code.BaseGenerator.Services
                         var type = DecodeCSharpType(column.Type);
                         Property property = new()
                         {
+                            Entity = entity,
                             Table = tableName,
                             Name = name,
                             Nullable = column.IsNull,
@@ -545,13 +553,6 @@ namespace L2Data2Code.BaseGenerator.Services
                         };
                         return property;
                     }).ToArray();
-
-            Entity entity = new()
-            {
-                Name = table.ClassName,
-                UseSpanish = schemaService.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
-                MultiplePKColumns = table.MultiplePKColumns,
-            };
 
             Replacement currentReplacement = new()
             {

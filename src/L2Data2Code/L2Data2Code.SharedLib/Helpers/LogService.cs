@@ -114,10 +114,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
         private static Action<string> GetAction(LogType logType)
         {
-            if (Logger == null)
-            {
-                Logger = LogManager.GetCurrentClassLogger();
-            }
+            Logger ??= LogManager.GetCurrentClassLogger();
 
             if (logAction.ContainsKey(logType))
             {

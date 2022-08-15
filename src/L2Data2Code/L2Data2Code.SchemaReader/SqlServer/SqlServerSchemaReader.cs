@@ -15,33 +15,22 @@ namespace L2Data2Code.SchemaReader.SqlServer
         private readonly INameResolver nameResolver;
         private Dictionary<string, string> columnsDescriptions = new();
         private readonly string connectionString;
-        private readonly string connectionStringForObjectDescriptions;
         private IDbConnection connection;
 
 
         public SqlServerSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
-            connectionStringForObjectDescriptions = options.DescriptionsConnectionString ?? options.ConnectionString;
             this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             nameResolver.Initialize(options.SchemaName);
         }
 
-        public override bool CanConnect(bool includeCommentServer = false)
+        public override bool CanConnect()
         {
             try
             {
                 using (SqlConnection connection = new(connectionString))
                 {
-                    connection.Open();
-                    if (connection.State == ConnectionState.Open)
-                    {
-                        connection.Close();
-                    }
-                }
-                if (includeCommentServer && !connectionString.Equals(connectionStringForObjectDescriptions))
-                {
-                    using SqlConnection connection = new(connectionStringForObjectDescriptions);
                     connection.Open();
                     if (connection.State == ConnectionState.Open)
                     {
@@ -58,7 +47,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            columnsDescriptions = options.AlternativeDescriptions ?? GetTableDescriptions(connectionStringForObjectDescriptions);
+            columnsDescriptions = GetTableDescriptions(connectionString);
             Tables result = new();
 
             using (connection = new SqlConnection(connectionString))
@@ -88,7 +77,8 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.IsView = string.Compare((string)rdr["TABLE_TYPE"], "VIEW", true) == 0;
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.ClassName = tbl.CleanName.ToSingular();
-                            tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name] : null;
+                            tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name]
+                                : options.AlternativeDescriptions.ContainsKey(tbl.Name) ? options.AlternativeDescriptions[tbl.Name] : null;
 
                             result.Add(tbl.Name, tbl);
                         }

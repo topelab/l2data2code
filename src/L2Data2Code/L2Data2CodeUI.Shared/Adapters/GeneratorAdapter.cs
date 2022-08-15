@@ -29,7 +29,6 @@ namespace L2Data2CodeUI.Shared.Adapters
         private readonly ILogger logger;
         private Dictionary<string, string> _alternativeDictionary = new();
         private string schemaName = "localserver";
-        private string descriptionsSchemaName = "commentserver";
         private string outputSchemaName = "localserver";
         private ISchemaReader schemaReader;
         private IEnumerable<string> slnFiles;
@@ -247,7 +246,6 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.TemplateResource = template.ResourcesFolder;
                     options.LastPass = template.NextResource.IsEmpty();
                     options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
-                    options.DescriptionsSchemaName = template.IsGeneral ? schemaNameToFake : descriptionsSchemaName;
                     options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
                     options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
@@ -361,22 +359,12 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             try
             {
-                var canConnectToDb = schemaReader?.CanConnect(includeCommentServer: false) ?? false;
-                var canConnectToDbSchema = schemaReader?.CanConnect(includeCommentServer: true) ?? false;
-                _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(descriptionsSchemaName);
+                var canConnectToDb = schemaReader?.CanConnect() ?? false;
 
                 if (canConnectToDb)
                 {
-                    if (!canConnectToDbSchema)
-                    {
-                        messageService.Warning(_alternativeDictionary.Any() ? Messages.ErrorDbSchemaButFile : Messages.ErrorDBSchema);
-                        return !_alternativeDictionary.Any();
-                    }
-                    else
-                    {
-                        messageService.Clear(MessageCodes.CONNECTION);
-                        return true;
-                    }
+                    messageService.Clear(MessageCodes.CONNECTION);
+                    return true;
                 }
                 else
                 {
@@ -433,7 +421,6 @@ namespace L2Data2CodeUI.Shared.Adapters
                 TemplatePath = Path.Combine(basePath, template),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
                 SchemaName = schemaNameToFake,
-                DescriptionsSchemaName = schemaNameToFake,
                 TableList = new List<string>() { "first_table" },
                 GeneratorApplication = GeneratorApplication,
                 GeneratorVersion = GeneratorVersion,
@@ -470,9 +457,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             var templatePath = Path.Combine(basePath, TemplatesConfiguration[SelectedTemplate].Path);
 
             schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);
-            descriptionsSchemaName = DataSourcesConfiguration.CommentSchema(SelectedDataSource);
+            _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName);
             outputSchemaName = DataSourcesConfiguration.OutputSchema(SelectedDataSource);
-            schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
+            schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);

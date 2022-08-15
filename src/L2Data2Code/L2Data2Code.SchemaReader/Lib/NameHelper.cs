@@ -95,7 +95,7 @@ namespace L2Data2Code.SchemaReader.Lib
                     continue;
                 }
 
-                foreach (Match match in regexCamelCase.Matches(word))
+                foreach (var match in regexCamelCase.Matches(word).Cast<Match>())
                 {
                     camelCaseWords.Add(match.Groups["word"].Value);
                 }

@@ -8,6 +8,6 @@ namespace L2Data2Code.SchemaReader.Interface
         void WriteLine(string msg);
         void HasErrorMessage(bool setError);
         bool HasErrorMessage();
-        bool CanConnect(bool includeCommentServer = false);
+        bool CanConnect();
     }
 }

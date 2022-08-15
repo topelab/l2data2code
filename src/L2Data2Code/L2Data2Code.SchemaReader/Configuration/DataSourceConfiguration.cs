@@ -5,21 +5,40 @@ using System.Collections.Specialized;
 
 namespace L2Data2Code.SchemaReader.Configuration
 {
+    /// <summary>
+    /// Data source configuration
+    /// </summary>
     public class DataSourceConfiguration
     {
-        private string _outputSchema;
-        private string _descriptionSchema;
+        private string outputSchema;
         private JToken varsConfiguration;
 
+        /// <summary>
+        /// Area
+        /// </summary>
         public string Area { get; set; }
+        /// <summary>
+        /// Default module
+        /// </summary>
         public string DefaultModule { get; set; }
+        /// <summary>
+        /// Schema
+        /// </summary>
         public string Schema { get; set; }
-        public string OutputSchema { get => _outputSchema ?? Schema; set => _outputSchema = value; }
-        public string DescriptionsSchema { get => _descriptionSchema ?? Schema; set => _descriptionSchema = value; }
+        /// <summary>
+        /// Output schema
+        /// </summary>
+        public string OutputSchema { get => outputSchema ?? Schema; set => outputSchema = value; }
 
+        /// <summary>
+        /// Vars configuration
+        /// </summary>
         [JsonProperty("Vars")]
         public JToken VarsConfiguration { get => varsConfiguration; set { varsConfiguration = value; Vars = value.ToNameValueCollection(); } }
 
+        /// <summary>
+        /// Vars
+        /// </summary>
         [JsonIgnore]
         public NameValueCollection Vars { get; set; }
 

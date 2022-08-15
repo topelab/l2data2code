@@ -29,10 +29,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// </summary>
         public string SchemaName { get; set; }
         /// <summary>
-        /// Schema name key for descriptions
-        /// </summary>
-        public string DescriptionsSchemaName { get; set; }
-        /// <summary>
         /// Output path
         /// </summary>
         public string OutputPath { get; set; }
@@ -109,7 +105,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// </summary>
         public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; set; }
         public string ConnectionString { get; set; }
-        public string DescriptionsConnectionString { get; set; }
         public StringBuilderWriter SummaryWriter { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace L2Data2Code.SchemaReader.Schema
         public void Create(string outputPath, string schema)
         {
             var templateBasePath = settingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            var schemaOptions = schemaOptionsFactory.Create(templateBasePath, schemasConfiguration, schema, new StringBuilderWriter(), null);
+            var schemaOptions = schemaOptionsFactory.Create(templateBasePath, schemasConfiguration, schema, new StringBuilderWriter());
             var tables = schemaService.Read(schemaOptions);
             var fileName = $"{outputPath.AddPathSeparator()}{schema.ToSlug()}-dbinfo.json";
 

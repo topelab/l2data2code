@@ -7,14 +7,13 @@ namespace L2Data2Code.SchemaReader.Schema
 {
     public class SchemaOptionsFactory : ISchemaOptionsFactory
     {
-        public ISchemaOptions Create(string templatePath, IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter, string descriptionsSchemaName)
+        public ISchemaOptions Create(string templatePath, IBasicConfiguration<SchemaConfiguration> schemasConfiguration, string schemaName, StringBuilderWriter summaryWriter)
         {
             return new SchemaOptions
             {
                 SchemasConfiguration = schemasConfiguration,
                 SchemaName = schemaName,
                 SummaryWriter = summaryWriter,
-                DescriptionsSchemaName = descriptionsSchemaName,
                 TemplatePath = templatePath,
                 CreatedFromSchemaName = schemaName
             };
