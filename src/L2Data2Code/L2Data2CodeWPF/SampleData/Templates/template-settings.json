@@ -4,7 +4,7 @@
             "Name": "Test template (global)",
             "ResourcesFolder": "GlobalFiles",
             "ItemsResources": [ "ItemFiles" ],
-            "Partials":  "partials",
+            "Partials": "partials",
             "IsGeneral": "true",
             "Company": "TestCompany",
             "Area": "TestArea",
@@ -196,6 +196,8 @@
     },
     "Modules": {
         "Northwind.Test": { "Name": "Test" },
+        "Northwind.Demo1": { "Name": "Demo1" },
+        "Northwind.Demo2": { "Name": "Demo2" },
         "Demo.Test": { "Name": "Test" },
         "Another.Test": { "Name": "Test" },
         "Demo.Test2": { "Name": "Test2" }

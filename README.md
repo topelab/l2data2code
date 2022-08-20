@@ -45,7 +45,7 @@ Here we will define settings for the application: data sources, templates that w
 
 A collection of template settings that makes a list of templates available for the application.
 
-![](images/2021-04-01-07-35-08.png)
+![](images/template-section.png)
 
 
 Every template has a name and these properties:
@@ -85,14 +85,14 @@ Every template has a name and these properties:
             "Name": "Buid",
             "Directory": "{{SavePath}}",
             "Exec": "start .",
-            "ShowWindow": "false"
+            "ShowWindow": false
         }
     ],
     ```
 - **Vars**: A collection of name-value values.
 - **Configurations**: A collection of vars configuration that will be showed as *Template Configuration* in UI.
 
-  ![](images/2021-04-01-07-57-02.png)
+  ![](images/template-configuration.png)
 
   Every var definition contains a name and a value: 
 
@@ -106,74 +106,73 @@ Every template has a name and these properties:
 Now, we can use `Template` inside *SavePath*. In this example `Template = "Test template (global)"`
 
 ```json
-    "Templates": {
         "Test Demo": {
             "Name": "Test template (global)",
             "ResourcesFolder": "GlobalFiles",
             "ItemsResources": [ "ItemFiles" ],
-            "IsGeneral": "true",
+            "Partials":  "partials",
+            "IsGeneral": true,
             "Company": "TestCompany",
             "Area": "TestArea",
             "Module": "TestModule",
-            "SavePath": "c:\\src\\tmp\\{{Template}}\\{{Area}}.{{Module}}",
+            "SavePath": "c:\\src\\tmp\\{{Company}}\\{{Area}}.{{Module}}",
             "SolutionType": "vsc,*.md,code.cmd,{directory}",
             "PostCommands": [
                 {
                     "Name": "Buid",
                     "Directory": "{{SavePath}}",
                     "Exec": "start .",
-                    "ShowWindow": "false"
+                    "ShowWindow": false
                 }
             ],
             "Vars": {
                 "Version": "1.0.0",
                 "VersionSuffix": "",
                 "ApplicationName": "{{Area}}.{{Module}}",
-                "ApplicationTitle": "{{Company}} {{Area.Humanize}} {{Module}}",
-                "SetDomain": "",
-                "SetAdapters": "",
-                "SetBusiness": "",
-                "SetServices": "",
-                "SetUseCases": "",
-                "SetWebApiControllers": "",
-                "SetWebApi": "",
-                "SetUCDelete": "",
-                "SetUCGet": "",
-                "SetUCGetList": "",
-                "SetUCInsert": "",
-                "SetUCUpdate": "",
-                "SetDefaultModels": "1"
+                "ApplicationTitle": "{{Company.Humanize}} {{Area.Humanize}} {{Module}}",
+                "SetDomain": false,
+                "SetAdapters": false,
+                "SetBusiness": false,
+                "SetServices": false,
+                "SetUseCases": false,
+                "SetWebApiControllers": false,
+                "SetWebApi": false,
+                "SetUCDelete": false,
+                "SetUCGet": false,
+                "SetUCGetList": false,
+                "SetUCInsert": false,
+                "SetUCUpdate": false,
+                "SetDefaultModels": true
             },
             "Configurations": {
-                "Services (no UseCases)": "SetServices=1;",
-                "Business (no UseCases)": "SetBusiness=1;",
-                "Adapters (no UseCases)": "SetAdapters=1;",
-                "Web Api (only GetList)": "SetWebApi=1;SetUCGetList=1;",
-                "Api Controllers (only GetList)": "SetWebApiControllers=1;SetUCGetList=1;",
-                "UseCases (only GetList)": "SetUseCases=1;SetUCGetList=1;",
-                "Domain (only GetList)": "SetDomain=1;SetUCGetList=1;",
-                "Web Api": "SetWebApi=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
-                "Api Controllers": "SetWebApiControllers=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
-                "Adapters": "SetAdapters=1;SetUseCases=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
-                "UseCases": "SetUseCases=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;",
-                "Domain": "SetDomain=1;SetUCDelete=1;SetUCGet=1;SetUCGetList=1;SetUCInsert=1;SetUCUpdate=1;"
+                "Services (no UseCases)": "SetServices=true;",
+                "Business (no UseCases)": "SetBusiness=true;",
+                "Adapters (no UseCases)": "SetAdapters=true;",
+                "Web Api (only GetList)": "SetWebApi=true;SetUCGetList=true;",
+                "Api Controllers (only GetList)": "SetWebApiControllers=true;SetUCGetList=true;",
+                "UseCases (only GetList)": "SetUseCases=true;SetUCGetList=true;",
+                "Domain (only GetList)": "SetDomain=true;SetUCGetList=true;",
+                "Web Api": "SetWebApi=true;SetUCDelete=true;SetUCGet=true;SetUCGetList=true;SetUCInsert=true;SetUCUpdate=true;",
+                "Api Controllers": "SetWebApiControllers=true;SetUCDelete=true;SetUCGet=true;SetUCGetList=true;SetUCInsert=true;SetUCUpdate=true;",
+                "Adapters": "SetAdapters=true;SetUseCases=true;SetUCDelete=true;SetUCGet=true;SetUCGetList=true;SetUCInsert=true;SetUCUpdate=true;",
+                "UseCases": "SetUseCases=true;SetUCDelete=true;SetUCGet=true;SetUCGetList=true;SetUCInsert=true;SetUCUpdate=true;",
+                "Domain": "SetDomain=true;SetUCDelete=true;SetUCGet=true;SetUCGetList=true;SetUCInsert=true;SetUCUpdate=true;"
             },
             "FinalVars": {
-                "if database=mysql UseDB": "MySql; .UsingMySqlDB=1;",
-                "if database=sqlserver UseDB": "SqlServer; .UsingSqlServerDB=1;",
-                "if database=sqlite UseDB": "Sqlite; .UsingSqliteDB=1;",
-                "if database=fake UseDB": "Sqlite; .UsingSqliteDB=1;",
-                "if database=json UseDB": "Sqlite; .UsingSqliteDB=1;",
-                "if database=object UseDB": "Sqlite; .UsingSqliteDB=1;",
-                "if SetWebApi=1 SetWebApiControllers": "1",
-                "if SetWebApiControllers=1 SetUseCases": "1",
-                "if SetUseCases=1 SetBusiness": "1",
-                "if SetServices=1 SetBusiness": "1; .SetModels={{SetDefaultModels}};",
-                "if SetBusiness=1 SetAdapters": "1",
-                "if SetAdapters=1 SetDomain": "1"
+                "if database=mysql UseDB": "MySql; .UsingMySqlDB=true;",
+                "if database=sqlserver UseDB": "SqlServer; .UsingSqlServerDB=true;",
+                "if database=sqlite UseDB": "Sqlite; .UsingSqliteDB=true;",
+                "if database=fake UseDB": "Sqlite; .UsingSqliteDB=true;",
+                "if database=json UseDB": "Sqlite; .UsingSqliteDB=true;",
+                "if database=object UseDB": "Sqlite; .UsingSqliteDB=true;",
+                "if SetWebApi=true SetWebApiControllers": true,
+                "if SetWebApiControllers=true SetUseCases": true,
+                "if SetUseCases=true SetBusiness": true,
+                "if SetServices=true SetBusiness": "true; .SetModels={{SetDefaultModels}};",
+                "if SetBusiness=true SetAdapters": true,
+                "if SetAdapters=true SetDomain": true
             }
-        }
-    },
+        },
 ```
 
 #### Schemes section
@@ -201,16 +200,8 @@ Schema definition (defined with a **key**):
 
 ```json
     "Schemas": {
-        "general": {
-            "ConnectionString": "",
-            "Provider": "System.Data.FakeClient",
-            "TableNameLanguage": "en",
-            "RemoveFirstWordOnColumnNames": false,
-            "DescriptionsFile": null,
-            "RenameTables": null
-        },
         "northwindtest": {
-            "ConnectionString": "SampleData\\northwind-dbinfo.json",
+            "ConnectionString": "..\\northwind-dbinfo.json",
             "Provider": "System.Data.JsonClient",
             "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,
@@ -219,7 +210,25 @@ Schema definition (defined with a **key**):
             "RenamaColumns": null
         },
         "northwind-entities": {
-            "ConnectionString": "SampleData\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Entities",
+            "ConnectionString": "..\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Entities",
+            "Provider": "System.Data.ObjectClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
+        },
+        "northwind-dtos": {
+            "ConnectionString": "..\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Dtos",
+            "Provider": "System.Data.ObjectClient",
+            "TableNameLanguage": "en",
+            "RemoveFirstWordOnColumnNames": false,
+            "DescriptionsFile": null,
+            "RenameTables": null,
+            "RenamaColumns": null
+        },
+        "northwind-collections": {
+            "ConnectionString": "..\\Northwind.ERP.Domain.dll;Northwind.ERP.Domain.Collections",
             "Provider": "System.Data.ObjectClient",
             "TableNameLanguage": "en",
             "RemoveFirstWordOnColumnNames": false,
@@ -228,22 +237,20 @@ Schema definition (defined with a **key**):
             "RenamaColumns": null
         }
     },
-
 ```
 
 #### Data source section
 
 Data source combo will be filled with information supplied at this section.
 
-![](images/2021-09-10-19-14-05.png)
+![](images/datasource-section.png)
 
-This is the Area definition (defined with a **Key**):
+This is the data source definition (defined with a **Key**):
 
 - **Key**: *string* used to fill combo.
-- **Area**: *string* used like a var inside template files.
+- **Area**: *string* used like a var inside template files. It can be used as a department or project name inside a company.
 - **Schema**: schema key data source.
-- **OutputSchema**: schema key for output data source.
-- **DescriptionsSchema**: schema key where schema objects has a description (this will be obsolete)
+- **OutputSchema**: schema key for output data source. When using json or object schema, by default output schema type is SQLite.
 - **Vars**: A collection of name-value values.
 
 ```json
@@ -263,8 +270,12 @@ This is the Area definition (defined with a **Key**):
         "Demo": {
             "Area": "Demo",
             "Schema": "general"
+        },
+        "Another": {
+            "Area": "Another",
+            "Schema": "general"
         }
-    }
+    },
 ```
 
 
@@ -272,14 +283,16 @@ This is the Area definition (defined with a **Key**):
 
 Module combo will be filled with information supplied at this section.
 
-![](images/2021-09-10-19-19-32.png)
+![](images/modules-section.png)
 
 ```json
     "Modules": {
         "Northwind.Test": { "Name": "Test" },
-        "Demo.Test": { "Name": "Test" },
-        "Demo.Info": { "Name": "Info" },
-        "Demo.Module": { "Name": "Module" }
+        "Northwind.Demo1": { "Name": "Demo1" },
+        "Northwind.Demo2": { "Name": "Demo2" },
+		"Demo.Test": { "Name": "Test" },
+        "Another.Test": { "Name": "Test" },
+        "Demo.Test2": { "Name": "Test2" }
     }
 ```
 
@@ -363,6 +376,7 @@ You can load sln file with Visual Studio 2019 (Community it's OK) or run `dotnet
 
 ```json
     "Property": {
+        "Entity": "Entity"
         "Name": "string",
         "IdOrName": "string",
         "Table": "string",
