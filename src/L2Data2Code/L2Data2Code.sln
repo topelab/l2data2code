@@ -10,9 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Info", "_Info", "{E32A1A45-3000-461A-AEF1-DE4C27DC0BC0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		..\..\changes.md = ..\..\changes.md
-		..\..\issues.md = ..\..\issues.md
-		..\..\newfeatures.md = ..\..\newfeatures.md
+		L2Data2CodeWPF\newfeatures.md = L2Data2CodeWPF\newfeatures.md
 		..\..\README.md = ..\..\README.md
 		version.txt = version.txt
 	EndProjectSection
@@ -39,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Data2Code.BaseHandleBars"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HandleBarsCLI", "HundleBarsCLI\HandleBarsCLI.csproj", "{070EF654-4B95-460E-89D3-9F349F69500D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schema2Json", "Schema2Json\Schema2Json.csproj", "{6230B4EA-339E-48C1-8CF5-1D6B7BA6E83F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Schema2Json", "Schema2Json\Schema2Json.csproj", "{6230B4EA-339E-48C1-8CF5-1D6B7BA6E83F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
