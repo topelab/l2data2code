@@ -1,16 +1,11 @@
-﻿# L2 Data2Code 
+# L2 Data2Code WPF
 
-Have a database and want to generate code?
-
-Have an idea of data model and want to generate code for that idea?
-
-Only needs a template, a data source (from database, from special JSON file or from an .NET assembly) and L2 Data2Code.
-
-## What is L2 Data2Code?
+## What is L2 Data2Code WPF?
 
 A simple definition would be a code generator. But is more than a simple code generator from a data source. It gets all the info from the data source (actually, from database, from special JSON file or from an .NET assembly), then merge with a template.
 
 A template is a set of files with a special syntax based on Mustache to define the result.
+
 Normally, a template set is composed by a `json` file on the project root and then one or more directories where templates of files are located. This template file is referenced at `appsettings.json` file at **TemplateSettings** node.
 
 ## How its work?

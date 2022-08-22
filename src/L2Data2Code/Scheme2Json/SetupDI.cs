@@ -15,7 +15,7 @@ using L2Data2Code.SharedLib.Services;
 using NLog;
 using Topelab.Core.Resolver.Entities;
 
-namespace Schema2Json
+namespace Scheme2Json
 {
     /// <summary>
     /// Setup dependency injection

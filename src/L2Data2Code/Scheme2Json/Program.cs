@@ -3,7 +3,7 @@ using L2Data2Code.SchemaReader.Interface;
 using Topelab.Core.Resolver.Microsoft;
 
 
-namespace Schema2Json
+namespace Scheme2Json
 {
     class Program
     {

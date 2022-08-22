@@ -2,7 +2,7 @@ using CommandLine;
 using CommandLine.Text;
 using System.Collections.Generic;
 
-namespace Schema2Json
+namespace Scheme2Json
 {
     /// <summary>
     /// Args options
