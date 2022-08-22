@@ -1,3 +1,8 @@
+### 2.12.5
+
+- Internal refactors to decouples scheme database reading service.
+- **Breaking change**: "Schemas" renamed to "Schemes", **is necessary to be changed on template settings files**.
+
 ### 2.12.4
 
 - Added `DefaultModule` to `DataSources`. This must match a Modules key.
@@ -9,15 +14,8 @@
 ### 2.12.2
 
 - **New**: Added options in L2DataToCode to set partials path.
-- **New**: HandleBarsCLI will search into "partials" path to get `*.partial` files.
 - Putting helpers into CustomHelpers.
 - Removed references to Stubble.
-- Removed Mustache CLI utility. HandleBarsCLI replace it and its functionalities.
-
-### 2.12.0
-
-- **New**: Added mustache renderer Handlebars.Net. Stubble will be replaced with Handlebars.
-- **New**: Added new CLI tool HandleBarsCLI that will replace Mustache tool previously created.
 
 ### 2.11.1
 
@@ -65,64 +63,12 @@
 
 ### 2.9.422.116
 
-- **New**: Refactor to use Topelab.Core.Resolver (not in nuget public repo, need to be copied local)
+- **New**: Refactors to use Topelab.Core.Resolver (not in NUGET public repository, need to be copied local)
 
 ### 2.9.321.1208
 
-- **New**: Refactor and upgrade to .Net 6
+- **New**: Refactors and upgrade to .Net 6
 - **New**: *Templates.Template.SavePath* can use name of template using var *Template*
-
-### 2.9.321.1119
-
-- **New**: Mustache cli, a command line utility to execute a file name and content transformation (based on "mustache") in tree of paths for every path and file.
-
-    We have this in `data.json`
-
-    ```json
-    {
-        "Dishes":[
-            {
-                "Dish": "Apple",
-                "Type": "Postre"
-            },
-            {
-                "Dish": "Melon",
-                "Type": "Postre"
-            },
-            {
-                "Dish": "Black rice",
-                "Type": "First course"
-            }
-        ]
-    }
-    ```
-
-    And these files:
-
-    - templatedir
-        - file1.md
-        - file2.md
-        - {{Type}}
-            - {{Dish}}.md
-
-
-    The idea is that when you run:
-    ```cmd
-    Mustache data.json templatedir outputdir Dishes
-    ```
-
-    It will generate:
-
-    - outputdir
-        - file1.md
-        - file2.md
-        - Dish
-            - Apple.md
-            - Melon.md
-        - First course
-            - Black rice.md
-
-
 
 ### 2.8.221.908
 
@@ -130,45 +76,45 @@
 
 ### 2.8.121.801
 
-- **New**: Removes templates.xml and transform to json file. Now only `appsettings.json` and json specified at *TemplateSettings* will be needed to set configurations for templates.
-- **New**: Template definition are now in json format.
+- **New**: Removes templates.xml and transform to JSON file. Now only `appsettings.json` and JSON specified at *TemplateSettings* will be needed to set configurations for templates.
+- **New**: Template definition are now in JSON format.
 
 ### 2.7.221.730
 
-- SchemaReader refactor
-- Added **new** ObjectSchemaReader that can read type infos from .net dll
+- SchemaReader refactors
+- Added **new** ObjectSchemaReader that can read type infos from .net DLL
 - **New**: Separation for settings. Added new property at `appsettings.json` called *TemplateSttings* where you can specify path for template configurations.
 
 ### 2.6.1021.422
 
-- Big internal refactor.
+- Big internal refactors.
 - New attribute for properties of entities:
   - *HtmlEncode*: encode special chars
-- Rename attribe *Empty* to *IsEmpty*
-- Update nuget packages:
+- Rename attribute *Empty* to *IsEmpty*
+- Update NUGET packages:
   - "Newtonsoft.Json" Version="13.0.1"
   - "NLog" Version="4.7.9"
   - "MahApps.Metro" Version="2.4.4"
 - Removes Affixer and WordList
-- Schemas / RenameColumns can be specified by table: *table_name.column_name=new_column_name*
-- Refactor for GeneratorAdapter, extract git responsability to GitService
+- Schemes / RenameColumns can be specified by table: *table_name.column_name=new_column_name*
+- Refactors for GeneratorAdapter, extract git responsibility to GitService
 - Added *ShowMessages*, *ShowMessageWhenExitCodeNotZero* and *ShowMessageWhenExitCodeZero* to *Command* element
 - Removes bat files for git actions
 - Added helpers And, Or and Equal
-- Refactor form CommandService
+- Refactors form CommandService
 
 ### 2.6.421.227
 
-- Refactor for ReplacementResult
-- Refactor of MessagesViewModels
-- Changed colors for pinned missages
+- Refactors for ReplacementResult
+- Refactors of MessagesViewModels
+- Changed colors for pinned messages
 - Fix lock when scrolling message panel
 - Commands output are redirect to message panel
 - Added *ShowWindow* to *Command* element
 
 ### 2.6.121.220
 
-- Refactor with UnityContainer, preparing for DI
+- Refactors with UnityContainer, preparing for DI
 - **New template elements**: PreCommands and PostCommands
 
   - PreCommands will be executed before output is being generated
@@ -215,7 +161,7 @@
 ### 2.4.420.1215
 
 - Add new button on command bar top open powershell at the output folder
-- Fix responsability for command bar view model
+- Fix responsibility for command bar view model
 - Fix table panel for error: when partial group of table/views are showed and select "All"
 
 ### 2.4.320.1213
@@ -229,7 +175,7 @@
 
 ### 2.4.120.1204
 
-- Refactor for MainWindow: put command bar and tables/views panels in controls
+- Refactors for MainWindow: put command bar and tables/views panels in controls
 
 ### 2.3.1620.1118
 
@@ -275,7 +221,7 @@
 
 ### 2.3.820.1007
 
-- Two differents areas can use same area name but differents data sources and output data sources.
+- Two different areas can use same area name but different data sources and output data sources.
 ```json
     "Areas": {
         "Area 1": {
@@ -284,7 +230,7 @@
             "OutputDataSource": "output_datasource_1"
         },
         "Area 2": {
-            "Name": "Areaname",
+            "Name": "AreaName",
             "DataSource": "datasource_2",
             "OutputDataSource": "output_datasource_3"
         }

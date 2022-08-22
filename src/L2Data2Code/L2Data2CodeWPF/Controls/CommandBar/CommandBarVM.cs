@@ -1,3 +1,4 @@
+using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
@@ -212,7 +213,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
             try
             {
-                var basePath = adapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+                var basePath = adapter.SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
                 var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
                 var TemplatePath = Path.Combine(basePath, template);
                 return Directory.Exists(TemplatePath);
@@ -250,7 +251,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         public void EditTemlate()
         {
-            var basePath = adapter.SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var basePath = adapter.SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
             var TemplatePath = Path.Combine(basePath, template);
             OpenWithEditor(TemplatePath);

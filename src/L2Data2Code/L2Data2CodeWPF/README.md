@@ -6,7 +6,7 @@ A simple definition would be a code generator. But is more than a simple code ge
 
 A template is a set of files with a special syntax based on Mustache to define the result.
 
-Normally, a template set is composed by a `json` file on the project root and then one or more directories where templates of files are located. This template file is referenced at `appsettings.json` file at **TemplateSettings** node.
+Normally, a template set is composed by a `JSON` file on the project root and then one or more directories where templates of files are located. This template file is referenced at `appsettings.json` file at **TemplateSettings** node.
 
 ## How its work?
 
@@ -15,11 +15,10 @@ In this solution we have a sample set of files and configuration template to tes
 First file founded at current execution path is `appsettings.json` with a minimum structure:
 
 - *appSettings* section
-- Partial *Schemas* section
 
 ### Specification for appsettings.json
 
-Here we will define settings for the application: data sources, templates that will use, etc... It has 5 sections: appSettings, Templates, Schemas, Areas and Modules. You can define a minimum **appsettings.json** with only *appSettings* section, and the rest of sections inside another json file (it will be specified at **TemplateSettings** key)
+Here we will define settings for the application: data sources, templates that will use, etc... It has 5 sections: appSettings, Templates, Schemes, Areas and Modules. You can define a minimum **appsettings.json** with only *appSettings* section, and the rest of sections inside another JSON file (it will be specified at **TemplateSettings** key)
 
 #### appSettings section
 
@@ -28,11 +27,11 @@ Here we will define settings for the application: data sources, templates that w
 - **TemplatesBasePath**: Base path for templates.
 - **UICulture**: `es-ES|ca-ES|en`: if not defined, application will try to use UI culture if is one of English, Spanish or Catalan. It can be set to `es-ES` or `ca-ES` on `en` to set UI culture for the application.
 - **showVarsWindow**: `true|(false)`: when `true`, defined vars could be showed in a window.
-- **generateJsonInfo**: `true|(false)`: when `true`, a JSON info will be generated from data source (if input data source is not a json file) at log file if *JsonGeneratedPath* is not defined.
+- **generateJsonInfo**: `true|(false)`: when `true`, a JSON info will be generated from data source (if input data source is not a JSON file) at log file if *JsonGeneratedPath* is not defined.
 - **JsonGeneratedPath**: `true|(false)`: the path on which JSON file will be generated when *generateJsonInfo* is `true`.
 - **Encoding**: `(utf8)|latin1`: establish encoding for output files.
 - **EndOfLine**: `(crlf)|lf|cr`: establish end of line for output files.
-- **TemplateSettings**: relative path (from app running path) to file that contains other sections.
+- **TemplateSettings**: relative path (from application running path) to file that contains other sections.
 
 ### Specification for file specified in *TemplateSettings*
 
@@ -58,7 +57,7 @@ Every template has a name and these properties:
 - **SavePath**: string that contains output path. It can use any defined variable inside. Example: `"c:\src\tmp\{{Company}}\{{Area}}.{{Module}}-{{Version}}"`.
 - **SolutionType**: *(in future versions, SolutionType will be moved to appsettings.json)* Application can open different types of solutions, not only Visual Studio solutions, you can specify property *SolutionType* on template. This is a comma separated string with 4 fields:
     - field 1 (*AppType*): `vs` (Visual Studio), `vsc` (Visual Studio Code), `nb` (Apache Netbeans), `ec` (Eclipse), `ij` (IntelliJIdea). Default: `vs`
-    - field 2 (*SearchExpression*): file pattern to search. Default `*.sln`
+    - field 2 (*SearchExpression*): file pattern to search. Default `*.SLN`
     - field 3 (CommandLine): program to open solution. Default `{file}`
     - field 4 (*CommandArguments*): arguments for command line used. Default empty string.
     
@@ -77,7 +76,7 @@ Every template has a name and these properties:
     ```json
     "PostCommands": [
         {
-            "Name": "Buid",
+            "Name": "Build",
             "Directory": "{{SavePath}}",
             "Exec": "start .",
             "ShowWindow": false
@@ -175,12 +174,12 @@ Now, we can use `Template` inside *SavePath*. In this example `Template = "Test 
 Schema definition (defined with a **key**):
 
 - **Key**: string used to identify a schema.
-- **ConnectionString**: string that defines the connection for data source that can be a data base, a json file with a specific configuration, a path to a dll file, or blank.
+- **ConnectionString**: string that defines the connection for data source that can be a data base, a JSON file with a specific configuration, a path to a DLL file, or blank.
 - **Provider**: `System.Data.[FakeClient | SqlClient | MySqlClient | JsonClient | ObjectClient]`: provider for data source. Every provider has its own syntax for connection string:
   - `FakeClient`: blank string.
   - `SqlClient | MySqlClient`: normal connection string used with this providers.
-  - `JsonClient`: path to json file (special format)
-  - `ObjectClient`: path to .net assembly (dll) and optional, a namespace to filter types separate from path with a semicolon.
+  - `JsonClient`: path to JSON file (special format)
+  - `ObjectClient`: path to .net assembly (DLL) and optional, a name space to filter types separate from path with a semicolon.
 - **TableNameLanguage**: `(en)|es`: table and column names language on data source. This is used on gender and number functions.
 - **RemoveFirstWordOnColumnNames**: `true|(false)`: If column names start with a word and an underscore, for example `ta_code`, setting this property to `true`will remove that first word, in our case `ta_` will be removed.
 - **DescriptionsFile**: path to tab separate file on each line defines description for a table or a column:
@@ -194,7 +193,7 @@ Schema definition (defined with a **key**):
 - **NormalizedNames**: `true|(false)`: When is true, then *ColumnNameOrName* will print *Name* and *TableNameOrEntity* will print *Entity*. When is false then *ColumnNameOrName* will print *ColumnName* and *TableNameOrEntity* will print *TableName*.
 
 ```json
-    "Schemas": {
+    "Schemes": {
         "northwindtest": {
             "ConnectionString": "..\\northwind-dbinfo.json",
             "Provider": "System.Data.JsonClient",
@@ -245,7 +244,7 @@ This is the data source definition (defined with a **Key**):
 - **Key**: *string* used to fill combo.
 - **Area**: *string* used like a var inside template files. It can be used as a department or project name inside a company.
 - **Schema**: schema key data source.
-- **OutputSchema**: schema key for output data source. When using json or object schema, by default output schema type is SQLite.
+- **OutputSchema**: schema key for output data source. When using JSON or object schema, by default output schema type is SQLite.
 - **Vars**: A collection of name-value values.
 
 ```json
@@ -293,7 +292,7 @@ Module combo will be filled with information supplied at this section.
 
 ## Build solution
 
-You can load sln file with Visual Studio 2019 (Community it's OK) or run `dotnet build` from cmd line at directory containing sln file.
+You can load SLN file with Visual Studio 2019 (Community it's OK) or run `dotnet build` from command line at directory containing SLN file.
 
 ## Definitions
 

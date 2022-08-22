@@ -56,13 +56,13 @@
 
 ### 1.0.1
 
-- **New**: Refactor to use Topelab.Core.Resolver (not in nuget public repo, need to be copied local)
-- **New**: Refactor and upgrade to .Net 6
+- **New**: Refactors to use Topelab.Core.Resolver (not in NUGET public repository, need to be copied local)
+- **New**: Refactors and upgrade to .Net 6
 - **New**: *Templates.Template.SavePath* can use name of template using var *Template*
 
 ### 1.0.0
 
-- **New**: Mustache cli, a command line utility to execute a file name and content transformation (based on "mustache") in tree of paths for every path and file.
+- **New**: Mustache CLI, a command line utility to execute a file name and content transformation (based on "mustache") in tree of paths for every path and file.
 
     We have this in `data.json`
 

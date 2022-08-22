@@ -25,13 +25,20 @@ namespace L2Data2Code.SchemaReader.Schema
             this.settingsConfiguration = settingsConfiguration ?? throw new ArgumentNullException(nameof(settingsConfiguration));
             this.schemasConfiguration = schemasConfiguration ?? throw new ArgumentNullException(nameof(schemasConfiguration));
 
-            settingsConfiguration.Merge(settingsConfiguration["TemplateSettings"]);
-            settingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(settingsConfiguration["TemplateSettings"]);
+            if (settingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS] == null)
+            {
+                settingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Directory.GetCurrentDirectory();
+            }
+            else
+            {
+                settingsConfiguration.Merge(settingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
+                settingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(settingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
+            }
         }
 
         public void Create(string outputPath, string schema)
         {
-            var templateBasePath = settingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var templateBasePath = settingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var schemaOptions = schemaOptionsFactory.Create(templateBasePath, schemasConfiguration, schema, new StringBuilderWriter());
             var tables = schemaService.Read(schemaOptions);
             var fileName = $"{outputPath.AddPathSeparator()}{schema.ToSlug()}-dbinfo.json";

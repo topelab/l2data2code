@@ -7,6 +7,7 @@ namespace L2Data2Code.SchemaReader.Configuration
     {
         public SchemasConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, ConfigurationLabels.SCHEMA)
         {
+            this["general"] = new SchemaConfiguration { ConnectionString = string.Empty, Provider = "System.Data.FakeClient", TableNameLanguage = "en", RemoveFirstWordOnColumnNames = false, };
         }
     }
 }

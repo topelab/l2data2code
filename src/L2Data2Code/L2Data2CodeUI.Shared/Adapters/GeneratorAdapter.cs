@@ -90,10 +90,10 @@ namespace L2Data2CodeUI.Shared.Adapters
             SchemasConfiguration = schemasConfiguration;
             TemplatesConfiguration = templatesConfiguration;
 
-            SettingsConfiguration.Merge(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
+            SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
+            SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();
 
-            this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration["TemplatesBasePath"], "*.json");
+            this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH], "*.json");
         }
 
         #endregion Public Constructors
@@ -156,7 +156,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
             gitService.GitInit(baseOptions.OutputPath);
 
-            var basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var templatePath = TemplatesConfiguration[SelectedTemplate].Path;
             CodeGeneratorDto options = new()
             {
@@ -349,8 +349,8 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             Thread.Sleep(500);
             jsonSetting.ReloadSettings();
-            SettingsConfiguration.Merge(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
+            SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
+            SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();
             SetCurrentTemplate(SelectedTemplate, true);
             OnConfigurationChanged?.Invoke();
         }
@@ -406,7 +406,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 return (null, null);
             }
 
-            var basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var template = TemplatesConfiguration[SelectedTemplate].Path;
             CodeGeneratorDto options = new()
             {
@@ -453,7 +453,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private void SetupInitial()
         {
-            var basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
+            var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var templatePath = Path.Combine(basePath, TemplatesConfiguration[SelectedTemplate].Path);
 
             schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);

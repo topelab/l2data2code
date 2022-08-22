@@ -45,12 +45,11 @@ namespace L2Data2Code.SharedLib.Configuration
 
         private void SetupValues(JToken token)
         {
-            _values.Clear();
             if (token != null)
             {
                 foreach (var item in token.Cast<JProperty>())
                 {
-                    _values.Add(item.Name, item.Value.ToObject<T>());
+                    _values[item.Name] = item.Value.ToObject<T>();
                 }
             }
         }

@@ -1,6 +1,6 @@
 # HandleBars
 
-HandleBars (based on [HandleBars](https://HandleBars.github.io/)), is a command line utility to execute a transformation using a json file for every path and file on a directory tree.
+HandleBars (based on [HandleBars](https://HandleBars.github.io/)), is a command line utility to execute a transformation using a JSON file for every path and file on a directory tree.
 
 We have this in `data.json`
 

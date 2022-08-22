@@ -134,7 +134,7 @@
             }
         }
     },
-    "Schemas": {
+    "Schemes": {
         "northwindtest": {
             "ConnectionString": "..\\northwind-dbinfo.json",
             "Provider": "System.Data.JsonClient",
