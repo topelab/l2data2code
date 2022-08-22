@@ -1,3 +1,5 @@
+using System;
+
 namespace L2Data2Code.BaseGenerator.Entities
 {
     public class EntityColumn
@@ -25,104 +27,67 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
 
-
-
         public string GetDefaultValue()
         {
-            switch (Type)
+            return Type switch
             {
-                case Constants.DataBase.Binary:
-                case Constants.DataBase.Varbinary:
-                case Constants.DataBase.Image:
-                    return "null";
+                nameof(DateTime) => "new DateTime(1,1,1)",
+                nameof(TimeSpan) => "TimeSpan.Zero",
+                "bool" => "false",
 
-                case Constants.DataBase.Date:
-                case Constants.DataBase.Datetime:
-                case Constants.DataBase.Timestamp:
-                    return IsNull ? "null" : "new DateTime(1900,1,1)";
+                "int" or "long" or "float"
+                or "double" or "decimal" or "short" or "byte"
+                or nameof(Int16)
+                or nameof(Int32)
+                or nameof(Int64)
+                or nameof(Double)
+                or nameof(Decimal) => "0",
 
-                case Constants.DataBase.Time:
-                    return IsNull ? "null" : "TimeSpan.Zero";
+                "char" => "'\0'",
 
-                case Constants.DataBase.Bit:
-                    return IsNull ? "null" : "false";
-
-                case Constants.DataBase.Bigint:
-                case Constants.DataBase.Int:
-                case Constants.DataBase.Smallint:
-                case Constants.DataBase.Tinyint:
-                case Constants.DataBase.Money:
-                case Constants.DataBase.Numeric:
-                case Constants.DataBase.Float:
-                case Constants.DataBase.Decimal:
-                    return IsNull ? "null" : "0";
-
-                case Constants.DataBase.Char:
-                case Constants.DataBase.Text:
-                case Constants.DataBase.Varchar:
-                case Constants.DataBase.Nchar:
-                case Constants.DataBase.Nvarchar:
-                case Constants.DataBase.Ntext:
-                    return IsNull ? "null" : "string.Empty";
-
-                default:
-                    return "null";
-            }
-
+                _ => "null",
+            };
         }
 
         public string GetCSharpType()
         {
-            switch (Type)
+            return Type switch
             {
-                case Constants.DataBase.Binary:
-                case Constants.DataBase.Varbinary:
-                case Constants.DataBase.Image:
-                    return "byte[]";
+                Constants.DataBase.Binary
+                or Constants.DataBase.Varbinary
+                or Constants.DataBase.Image => "byte[]",
 
-                case Constants.DataBase.Date:
-                case Constants.DataBase.Datetime:
-                case Constants.DataBase.Timestamp:
-                    return "DateTime" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Date
+                or Constants.DataBase.Datetime
+                or Constants.DataBase.Timestamp => "DateTime" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Time:
-                    return "TimeSpan" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Time => "TimeSpan" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Bit:
-                    return "bool" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Bit => "bool" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Money:
-                case Constants.DataBase.Numeric:
-                case Constants.DataBase.Decimal:
-                    return "decimal" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Money
+                or Constants.DataBase.Numeric
+                or Constants.DataBase.Decimal => "decimal" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Float:
-                    return "double" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Float => "double" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Bigint:
-                    return "long" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Bigint => "long" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Int:
-                    return "int" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Int => "int" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Smallint:
-                    return "short" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Smallint => "short" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Tinyint:
-                    return "byte" + (IsNull ? "?" : string.Empty);
+                Constants.DataBase.Tinyint => "byte" + (IsNull ? "?" : string.Empty),
 
-                case Constants.DataBase.Char:
-                case Constants.DataBase.Text:
-                case Constants.DataBase.Varchar:
-                case Constants.DataBase.Nchar:
-                case Constants.DataBase.Nvarchar:
-                case Constants.DataBase.Ntext:
-                    return "string";
+                Constants.DataBase.Char
+                or Constants.DataBase.Text
+                or Constants.DataBase.Varchar
+                or Constants.DataBase.Nchar
+                or Constants.DataBase.Nvarchar
+                or Constants.DataBase.Ntext => "string",
 
-                default:
-                    return Type;
-            }
-
+                _ => Type,
+            };
         }
 
     }

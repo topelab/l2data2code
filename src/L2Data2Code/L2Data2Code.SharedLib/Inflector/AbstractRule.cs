@@ -3,55 +3,52 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SharedLib.Inflector
 {
-	public abstract class AbstractRule : IReplacementRule
-	{
-		private readonly int hashCode;
+    public abstract class AbstractRule : IReplacementRule
+    {
+        private readonly int hashCode;
 
-		protected AbstractRule(string pattern, string replacement)
-		{
-			if (string.IsNullOrEmpty(pattern))
-			{
-				throw new ArgumentNullException("pattern");
-			}
-			if (replacement == null)
-			{
-				throw new ArgumentNullException("replacement");
-			}
-			Pattern = pattern;
-			Replacement = replacement;
-			hashCode = 397 ^ Replacement.GetHashCode() ^ Pattern.GetHashCode();
-			Regex = CreateRegex();
-		}
+        protected AbstractRule(string pattern, string replacement)
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
 
-		public string Replacement { get; private set; }
+            Pattern = pattern;
+            Replacement = replacement ?? throw new ArgumentNullException(nameof(replacement));
+            hashCode = 397 ^ Replacement.GetHashCode() ^ Pattern.GetHashCode();
+            Regex = CreateRegex();
+        }
 
-		public string Pattern { get; private set; }
-		public abstract string Apply(string word);
+        public string Replacement { get; private set; }
 
-		protected Regex Regex { get; private set; }
-		protected abstract Regex CreateRegex();
+        public string Pattern { get; private set; }
+        public abstract string Apply(string word);
 
-		public override bool Equals(object obj)
-		{
-			return Equals(obj as IReplacementRule);
-		}
+        protected Regex Regex { get; private set; }
+        protected abstract Regex CreateRegex();
 
-		public bool Equals(IReplacementRule other)
-		{
-			if (ReferenceEquals(null, other))
-			{
-				return false;
-			}
-			if (ReferenceEquals(this, other))
-			{
-				return true;
-			}
-			return Equals(other.Pattern, Pattern) && Equals(other.Replacement, Replacement);
-		}
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IReplacementRule);
+        }
 
-		public override int GetHashCode()
-		{
-			return hashCode;
-		}
-	}
+        public bool Equals(IReplacementRule other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return Equals(other.Pattern, Pattern) && Equals(other.Replacement, Replacement);
+        }
+
+        public override int GetHashCode()
+        {
+            return hashCode;
+        }
+    }
 }

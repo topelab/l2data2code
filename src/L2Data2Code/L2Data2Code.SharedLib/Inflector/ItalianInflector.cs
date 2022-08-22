@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace L2Data2Code.SharedLib.Inflector
 {
     /// <summary>
@@ -12,14 +7,14 @@ namespace L2Data2Code.SharedLib.Inflector
     /// </remarks>
     /// </summary>
     public class ItalianInflector : AbstractInflector
-	{
-		private class RuleReplacement
-		{
-			public string Rule { get; set; }
-			public string Replacement { get; set; }
-		}
+    {
+        private class RuleReplacement
+        {
+            public string Rule { get; set; }
+            public string Replacement { get; set; }
+        }
 
-		public ItalianInflector()
+        public ItalianInflector()
         {
             #region Fixture Data
 
@@ -82,63 +77,25 @@ namespace L2Data2Code.SharedLib.Inflector
             #endregion
         }
 
-		protected override void AddIrregular(string singular, string plural)
-		{
-			base.AddIrregular(singular, plural);
-			base.AddIrregular(Unaccent(singular), Unaccent(plural));
-		}
+        protected override void AddIrregular(string singular, string plural)
+        {
+            base.AddIrregular(singular, plural);
+            base.AddIrregular(Unaccent(singular), Unaccent(plural));
+        }
 
-		protected override void AddUncountable(string word)
-		{
-			base.AddUncountable(word);
-			base.AddUncountable(Unaccent(word));
-		}
+        protected override void AddUncountable(string word)
+        {
+            base.AddUncountable(word);
+            base.AddUncountable(Unaccent(word));
+        }
 
-		private void AddPluralForEach(string charectersToMatch, string charectersToReplace, char wildChar, string ruleTemplate,
-		                              string replacementTemplate)
-		{
-			IEnumerable<RuleReplacement> e = RulesReplacements(charectersToMatch, charectersToReplace, wildChar, ruleTemplate,
-			                                                   replacementTemplate);
-			foreach (var element in e)
-			{
-				AddPlural(element.Rule, element.Replacement);
-			}
-		}
+        #region Overrides of AbstractInflector
 
-		private void AddSingularForEach(string charectersToMatch, string charectersToReplace, char wildChar,
-		                                string ruleTemplate, string replacementTemplate)
-		{
-			IEnumerable<RuleReplacement> e = RulesReplacements(charectersToMatch, charectersToReplace, wildChar, ruleTemplate,
-			                                                   replacementTemplate);
-			foreach (var element in e)
-			{
-				AddSingular(element.Rule, element.Replacement);
-			}
-		}
+        public override string Ordinalize(string number)
+        {
+            return number;
+        }
 
-		private static IEnumerable<RuleReplacement> RulesReplacements(string charectersToMatch, string charectersToReplace,
-		                                                              char wildChar, string ruleTemplate,
-		                                                              string replacementTemplate)
-		{
-			if (charectersToMatch.Length != charectersToReplace.Length)
-			{
-				throw new ArgumentException("charectersToMatch and charectersToReplace must have same length", charectersToReplace);
-			}
-			for (int i = 0; i < charectersToMatch.Length; i++)
-			{
-				string rule = ruleTemplate.Replace(wildChar, charectersToMatch[i]);
-				string replacement = replacementTemplate.Replace(wildChar, charectersToReplace[i]);
-				yield return new RuleReplacement {Rule = rule, Replacement = replacement};
-			}
-		}
-
-		#region Overrides of AbstractInflector
-
-		public override string Ordinalize(string number)
-		{
-			return number;
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -1,4 +1,4 @@
-using L2Data2CodeWPF.ViewModel;
+using L2Data2CodeWPF.Main;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,8 +9,8 @@ namespace L2Data2CodeWPF.Controls.TablePanel
     /// </summary>
     public partial class TablePanelUserControl : UserControl
     {
-        private readonly TablePanelViewModel viewModel;
-        private readonly MainWindowViewModel mainWindowViewModel;
+        private readonly TablePanelVM viewModel;
+        private readonly MainWindowVM mainWindowVM;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TablePanelUserControl"/> class.
@@ -20,15 +20,15 @@ namespace L2Data2CodeWPF.Controls.TablePanel
             InitializeComponent();
             if (App.Current.MainWindow != null)
             {
-                mainWindowViewModel = App.Current.MainWindow.DataContext as MainWindowViewModel;
-                viewModel = mainWindowViewModel.TablePanelViewModel;
+                mainWindowVM = App.Current.MainWindow.DataContext as MainWindowVM;
+                viewModel = mainWindowVM.TablePanelVM;
                 DataContext = viewModel;
             }
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ScrollViewer scv = (ScrollViewer)sender;
+            var scv = (ScrollViewer)sender;
             scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }

@@ -132,6 +132,9 @@
   <data name="ConfigChanged" xml:space="preserve">
     <value>Be careful, the settings have changed! The application will restart ... Do you want to continue?</value>
   </data>
+  <data name="DataSource" xml:space="preserve">
+    <value>Data source</value>
+  </data>
   <data name="DeleteContents" xml:space="preserve">
     <value>Are you sure you want to delete the contents of folder {0}?</value>
   </data>

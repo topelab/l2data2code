@@ -1,7 +1,6 @@
 using L2Data2Code.SharedLib.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 
@@ -17,15 +16,15 @@ namespace L2Data2Code.SharedLib.Helpers
 
         public JsonSetting(string settingsFile)
         {
-            SettingsFile(settingsFile);
+            Initialize(settingsFile);
         }
 
         public JsonSetting()
         {
-            SettingsFile(FileLabels.APP_SETTINGS_FILE);
+            Initialize(AppSettingsConfiguration.APP_SETTINGS_FILE);
         }
 
-        public void SettingsFile(string settingsFile)
+        public void Initialize(string settingsFile)
         {
             this.settingsFile = settingsFile;
             config = GetSettings(settingsFile);
@@ -34,7 +33,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
         public void ReloadSettings(params string[] additionalSettingFiles)
         {
-            config = GetSettings(this.settingsFile);
+            config = GetSettings(settingsFile);
             AddSettingFiles(additionalSettingFiles);
         }
 
@@ -48,7 +47,7 @@ namespace L2Data2Code.SharedLib.Helpers
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Config)));
         }
 
-        private JObject GetSettings(string settingsFile)
+        private static JObject GetSettings(string settingsFile)
         {
             JObject config;
 

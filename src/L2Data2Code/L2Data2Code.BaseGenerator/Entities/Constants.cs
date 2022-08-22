@@ -1,9 +1,18 @@
 namespace L2Data2Code.BaseGenerator.Entities
 {
+    /// <summary>
+    /// Constants
+    /// </summary>
     public class Constants
     {
+        /// <summary>
+        /// Constant for Id
+        /// </summary>
         public const string ID = "Id";
 
+        /// <summary>
+        /// Database constants
+        /// </summary>
         public class DataBase
         {
             public const string Bigint = "bigint";
@@ -38,14 +47,21 @@ namespace L2Data2Code.BaseGenerator.Entities
             public const string Varchar = "varchar";
         }
 
+        /// <summary>
+        /// Internal types constants
+        /// </summary>
         public class InternalTypes
         {
             public const string ReferenceTo = "=";
             public const string Collection = "*";
         }
 
-        public static string[] NullableTypes = { "bool", "char", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "float", "double", "decimal", "DateTime", "TimeSpan" };
+        private static readonly string[] nullabeTypes = { "bool", "char", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "float", "double", "decimal", "DateTime", "TimeSpan" };
 
+        /// <summary>
+        /// Nullable types constants
+        /// </summary>
+        public static string[] NullableTypes { get => nullabeTypes; }
     }
 
 }

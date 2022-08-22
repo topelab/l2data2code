@@ -1,0 +1,32 @@
+<mah:MetroWindow x:Class="L2Data2CodeWPF.Vars.VarsWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:local="clr-namespace:L2Data2CodeWPF"
+                 xmlns:vars="clr-namespace:L2Data2CodeWPF.Vars"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance vars:VarsVM}"
+                 Title="{x:Static local:Strings.VarsTitle}"
+                 Height="450"
+                 Width="600"
+                 TitleBarHeight="25"
+                 ShowMinButton="False"
+                 ShowMaxRestoreButton="False"
+                 ShowSystemMenu="False">
+    <Grid>
+        <DataGrid ItemsSource="{Binding Variables}"
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static local:Strings.Name}"
+                                    Width="50*"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Path=Name}" />
+                <DataGridTextColumn Header="{x:Static local:Strings.Value}"
+                                    Width="50*"
+                                    Binding="{Binding Path=Value}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</mah:MetroWindow>

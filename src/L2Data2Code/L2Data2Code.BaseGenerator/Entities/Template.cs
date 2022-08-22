@@ -1,4 +1,3 @@
-using L2Data2Code.SharedLib.Configuration;
 using System.Collections.Generic;
 
 namespace L2Data2Code.BaseGenerator.Entities
@@ -8,6 +7,7 @@ namespace L2Data2Code.BaseGenerator.Entities
     {
         public string Name { get; set; }
         public string ResourcesFolder { get; set; }
+        public string Partials { get; set; }
         public string Company { get; set; }
         public string Area { get; set; }
         public string Module { get; set; }

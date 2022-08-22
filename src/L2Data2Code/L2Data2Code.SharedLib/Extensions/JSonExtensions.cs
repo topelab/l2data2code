@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
@@ -7,14 +8,20 @@ namespace L2Data2Code.SharedLib.Extensions
     {
         public static NameValueCollection ToNameValueCollection(this JToken source)
         {
-            NameValueCollection valueCollection = new NameValueCollection();
-            if (source == null) return valueCollection;
-
-            foreach (JProperty item in source)
+            NameValueCollection valueCollection = new();
+            if (source != null)
             {
-                valueCollection[item.Name] = (string)item.Value;
+                foreach (var item in source.Cast<JProperty>())
+                {
+                    valueCollection[item.Name] = (string)item.Value;
+                }
             }
             return valueCollection;
+        }
+
+        public static bool HasValues(this JArray array)
+        {
+            return array.HasValues;
         }
     }
 }

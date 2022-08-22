@@ -15,18 +15,20 @@ namespace L2Data2CodeUI.Shared.Adapters
         public const string DIRECTORY_PATTERN = "{directory}";
         public const string PARENT_PATTERN = "{parent}";
         private AppDto AppDto { get; set; } = new AppDto();
-        private IMessageService messageService;
+        private readonly IMessageService messageService;
+        private readonly IProcessManager processManager;
 
         public AppType AppType => AppDto.AppType;
 
-        public AppService(IMessageService messageService)
+        public AppService(IMessageService messageService, IProcessManager processManager)
         {
             this.messageService = messageService ?? throw new ArgumentNullException(nameof(messageService));
+            this.processManager = processManager ?? throw new ArgumentNullException(nameof(processManager));
         }
 
         public AppService Set(string solutionType)
         {
-            var defaultAppDto = new AppDto();
+            AppDto defaultAppDto = new();
 
             if (solutionType.IsEmpty())
             {
@@ -38,14 +40,14 @@ namespace L2Data2CodeUI.Shared.Adapters
             AppDto.CommandArguments = values.Length > 3 ? values[3].Trim() : defaultAppDto.CommandArguments;
             AppDto.CommandLine = values.Length > 2 ? values[2].Trim() : defaultAppDto.CommandLine;
             AppDto.SearchExpression = values.Length > 1 ? values[1].Trim() : defaultAppDto.SearchExpression;
-            AppDto.AppType = values.Length > 0 ? (Enum.TryParse(typeof(AppTypeAbbr), values[0].Trim(), out object result) ? (AppType)((int)result) : AppType.Undefined) : defaultAppDto.AppType;
+            AppDto.AppType = values.Length > 0 ? (Enum.TryParse(typeof(AppTypeAbbr), values[0].Trim(), out var result) ? (AppType)((int)result) : AppType.Undefined) : defaultAppDto.AppType;
 
             return this;
         }
 
         public IEnumerable<string> Find(string path)
         {
-            var emptyList = new List<string>();
+            List<string> emptyList = new();
             if (AppDto.SearchExpression.IsEmpty() || path.IsEmpty())
             {
                 return emptyList;
@@ -54,7 +56,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             try
             {
                 messageService.Clear(MessageCodes.FIND_SERVICE);
-                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                DirectoryInfo directoryInfo = new(path);
                 return directoryInfo.GetFiles(AppDto.SearchExpression, SearchOption.AllDirectories).Select(f => f.FullName);
             }
             catch (Exception ex)
@@ -89,7 +91,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 .Replace(DIRECTORY_PATTERN, Path.GetDirectoryName(file))
                 .Replace(PARENT_PATTERN, Path.GetDirectoryName(Path.GetDirectoryName(file)));
 
-            ProcessManager.Run(cmdLine, cmdArguments);
+            processManager.Run(cmdLine, cmdArguments);
         }
 
     }

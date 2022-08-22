@@ -20,7 +20,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public string Title { get; private set; }
         public string FileName { get; private set; }
-        public string Content => content ?? (content = func?.Invoke() ?? string.Empty);
+        public string Content => content ??= func?.Invoke() ?? string.Empty;
         public string RelativePath { get; set; }
     }
 

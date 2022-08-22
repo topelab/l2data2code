@@ -1,7 +1,8 @@
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
-using L2Data2Code.BaseGenerator.Extensions;
 using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
@@ -14,12 +15,9 @@ using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Unity;
-using Unity.Resolution;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -29,9 +27,8 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private readonly string schemaNameToFake = "general";
         private readonly ILogger logger;
-        private Dictionary<string, string> _alternativeDictionary = new Dictionary<string, string>();
+        private Dictionary<string, string> _alternativeDictionary = new();
         private string schemaName = "localserver";
-        private string descriptionsSchemaName = "commentserver";
         private string outputSchemaName = "localserver";
         private ISchemaReader schemaReader;
         private IEnumerable<string> slnFiles;
@@ -43,7 +40,11 @@ namespace L2Data2CodeUI.Shared.Adapters
         private readonly IFileMonitorService fileMonitorService;
         private readonly IJsonSetting jsonSetting;
         private Tables tables;
-        private StringBuilderWriter writer = new StringBuilderWriter();
+        private readonly StringBuilderWriter writer = new();
+        private readonly ISchemaOptionsFactory schemaOptionsFactory;
+        private readonly ISchemaService schemaService;
+        private readonly ITemplateService templateService;
+        private readonly ISchemaFactory schemaFactory;
 
         #endregion Private Fields
 
@@ -55,12 +56,21 @@ namespace L2Data2CodeUI.Shared.Adapters
                                 IGitService gitService,
                                 ICodeGeneratorService codeGeneratorService,
                                 IJsonSetting jsonSetting,
-                                IUnityContainer container,
                                 IFileMonitorService fileMonitorService,
-                                ILogger logger)
+                                ILogger logger,
+                                IAppSettingsConfiguration settingsConfiguration,
+                                IGlobalsConfiguration globalsConfiguration,
+                                IDataSorcesConfiguration areasConfiguration,
+                                IBasicConfiguration<ModuleConfiguration> modulesConfiguration,
+                                IBasicConfiguration<SchemaConfiguration> schemasConfiguration,
+                                ITemplatesConfiguration templatesConfiguration,
+                                ISchemaOptionsFactory schemaOptionsFactory,
+                                ISchemaService schemaService,
+                                ITemplateService templateService,
+                                ISchemaFactory schemaFactory)
         {
             this.messageService = messageService;
-            OutputPath = @"c:\src\tmp\";
+            OutputPath = CodeGeneratorDto.DefaultOutputPath;
             this.appService = appService;
             this.commandService = commandService;
             this.gitService = gitService;
@@ -68,19 +78,22 @@ namespace L2Data2CodeUI.Shared.Adapters
             this.fileMonitorService = fileMonitorService;
             this.jsonSetting = jsonSetting;
             this.logger = logger;
+            this.schemaOptionsFactory = schemaOptionsFactory;
+            this.schemaService = schemaService;
+            this.templateService = templateService;
+            this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
 
-            SettingsConfiguration = container.Resolve<IBasicNameValueConfiguration>(nameof(AppSettingsConfiguration));
-            jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
-            SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
+            SettingsConfiguration = settingsConfiguration;
+            GlobalsConfiguration = globalsConfiguration;
+            DataSourcesConfiguration = areasConfiguration;
+            ModulesConfiguration = modulesConfiguration;
+            SchemasConfiguration = schemasConfiguration;
+            TemplatesConfiguration = templatesConfiguration;
 
-            GlobalsConfiguration = container.Resolve<IGlobalsConfiguration>();
-            AreasConfiguration = container.Resolve<IAreasConfiguration>();
-            ModulesConfiguration = container.Resolve<IBasicConfiguration<ModuleConfiguration>>();
-            SchemasConfiguration = container.Resolve<IBasicConfiguration<SchemaConfiguration>>();
-            TemplatesConfiguration = container.Resolve<ITemplatesConfiguration>();
+            SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
+            SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();
 
-            this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration["TemplatesBasePath"], "*.json");
+            this.fileMonitorService.StartMonitoring(CheckTemplateFileChanges, SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH], "*.json");
         }
 
         #endregion Public Constructors
@@ -89,13 +102,13 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public Action OnConfigurationChanged { get; set; }
         public IBasicNameValueConfiguration SettingsConfiguration { get; }
-        public IAreasConfiguration AreasConfiguration { get; }
+        public IDataSorcesConfiguration DataSourcesConfiguration { get; }
         public IBasicConfiguration<ModuleConfiguration> ModulesConfiguration { get; }
         public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; }
         public ITemplatesConfiguration TemplatesConfiguration { get; }
         public IGlobalsConfiguration GlobalsConfiguration { get; }
         public string OutputPath { get; set; }
-        public string SelectedArea { get; private set; }
+        public string SelectedDataSource { get; private set; }
         public string SelectedModule { get; private set; }
         public string SelectedTemplate { get; private set; }
         public string SelectedVars { get; private set; }
@@ -115,10 +128,17 @@ namespace L2Data2CodeUI.Shared.Adapters
         public IEnumerable<Table> GetAllTables() => Tables.Select(t => t.Value);
 
         public IEnumerable<string> GetAreaList()
-            => AreasConfiguration.GetKeys();
+            => DataSourcesConfiguration.GetKeys();
 
-        public IEnumerable<string> GetModuleList(string selectedArea)
-            => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(AreasConfiguration[selectedArea].Name + "."));
+        public IEnumerable<string> GetModuleList(string selectedDataSource)
+            => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(DataSourcesConfiguration[selectedDataSource].Area + "."));
+
+        public string GetDefaultModule(string selectedDataSource)
+        {
+            var defaultModule = DataSourcesConfiguration[selectedDataSource].DefaultModule;
+            var moduleList = GetModuleList(selectedDataSource);
+            return moduleList.Contains(defaultModule) ? defaultModule : moduleList.FirstOrDefault();
+        }
 
         public IEnumerable<string> GetTemplateList()
             => TemplatesConfiguration.GetKeys();
@@ -136,11 +156,11 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
             gitService.GitInit(baseOptions.OutputPath);
 
-            string basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            string templatePath = TemplatesConfiguration[SelectedTemplate].Path;
-            var options = new CodeGeneratorDto
+            var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
+            var templatePath = TemplatesConfiguration[SelectedTemplate].Path;
+            CodeGeneratorDto options = new()
             {
-                Area = AreasConfiguration[SelectedArea].Name,
+                Area = DataSourcesConfiguration[SelectedDataSource].Area,
                 Module = ModulesConfiguration[SelectedModule].Name,
                 GenerateReferenced = baseOptions.GenerateReferenced,
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
@@ -200,12 +220,12 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var processedTemplates = new HashSet<string>();
-                var library = options.TemplatePath.TryLoad(options.TemplateResource);
+                HashSet<string> processedTemplates = new();
+                var library = templateService.TryLoad(options.TemplatePath, options.TemplateResource);
 
                 if (library == null)
                 {
-                    string msg = string.Format(Messages.ErrorResourceNotFound, options.TemplateResource, options.TemplatePath);
+                    var msg = string.Format(Messages.ErrorResourceNotFound, options.TemplateResource, options.TemplatePath);
                     messageService.Error(msg, msg, MessageCodes.RUN_GENERATOR);
                     gitService.GitReset(path);
                     return;
@@ -213,7 +233,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
                 var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
 
-                bool isFirst = true;
+                var isFirst = true;
 
                 while (template != null)
                 {
@@ -226,12 +246,11 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.TemplateResource = template.ResourcesFolder;
                     options.LastPass = template.NextResource.IsEmpty();
                     options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
-                    options.DescriptionsSchemaName = template.IsGeneral ? schemaNameToFake : descriptionsSchemaName;
                     options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
-                    options.GenerateJsonInfo = template.IsGeneral ? false : bool.TryParse(SettingsConfiguration["generateJsonInfo"], out bool result) && result;
+                    options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
-                    if (isFirst)
+                    if (isFirst && !options.GeneateOnlyJson)
                     {
                         template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                         isFirst = false;
@@ -241,7 +260,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
                                                        template.IsGeneral ? null : _alternativeDictionary);
 
-                    if (options.LastPass)
+                    if (options.LastPass && !options.GeneateOnlyJson)
                     {
                         template.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                     }
@@ -273,20 +292,26 @@ namespace L2Data2CodeUI.Shared.Adapters
             messageService.Info(Messages.CodeGeneratedOK);
         }
 
-        public void SetCurrentArea(string selectedArea)
+        public void SetCurrentDataSource(string selectedDataSource)
         {
-            if (selectedArea == SelectedArea) return;
+            if (selectedDataSource == SelectedDataSource)
+            {
+                return;
+            }
 
-            SelectedArea = selectedArea;
+            SelectedDataSource = selectedDataSource;
             SetupInitial();
             SetupTables();
-            SetCurrentModule(GetModuleList(selectedArea).FirstOrDefault(), true);
-            InputSourceType = SchemaFactory.GetProviderDefinitionKey(schemaName);
+            SetCurrentModule(GetDefaultModule(selectedDataSource), true);
+            InputSourceType = schemaFactory.GetProviderDefinitionKey(schemaName);
         }
 
         public void SetCurrentModule(string selectedModule, bool triggered = false)
         {
-            if (selectedModule == SelectedModule && !triggered) return;
+            if (selectedModule == SelectedModule && !triggered)
+            {
+                return;
+            }
 
             SelectedModule = selectedModule;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
@@ -295,7 +320,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentTemplate(string selectedTemplate, bool triggered = false)
         {
-            if (selectedTemplate == SelectedTemplate && !triggered) return;
+            if (selectedTemplate == SelectedTemplate && !triggered)
+            {
+                return;
+            }
 
             SelectedTemplate = selectedTemplate;
             SetCurrentVars(GetVarsList(selectedTemplate).FirstOrDefault(), true);
@@ -303,7 +331,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentVars(string selectedVars, bool triggered = false)
         {
-            if (selectedVars == SelectedVars && !triggered) return;
+            if (selectedVars == SelectedVars && !triggered)
+            {
+                return;
+            }
 
             SelectedVars = selectedVars;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
@@ -318,9 +349,8 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             Thread.Sleep(500);
             jsonSetting.ReloadSettings();
-            jsonSetting.AddSettingFiles(SettingsConfiguration["TemplateSettings"]);
-            SettingsConfiguration.Merge(jsonSetting.Config[SectionLabels.APP_SETTINGS].ToNameValueCollection());
-            SettingsConfiguration["TemplatesBasePath"] ??= Path.GetDirectoryName(SettingsConfiguration["TemplateSettings"]).AddPathSeparator();
+            SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
+            SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();
             SetCurrentTemplate(SelectedTemplate, true);
             OnConfigurationChanged?.Invoke();
         }
@@ -329,22 +359,12 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             try
             {
-                var canConnectToDb = schemaReader?.CanConnect(includeCommentServer: false) ?? false;
-                var canConnectToDbSchema = schemaReader?.CanConnect(includeCommentServer: true) ?? false;
-                _alternativeDictionary = Config.GetSchemaDictionaryFromFile(descriptionsSchemaName);
+                var canConnectToDb = schemaReader?.CanConnect() ?? false;
 
                 if (canConnectToDb)
                 {
-                    if (!canConnectToDbSchema)
-                    {
-                        messageService.Warning(_alternativeDictionary.Any() ? Messages.ErrorDbSchemaButFile : Messages.ErrorDBSchema);
-                        return !_alternativeDictionary.Any();
-                    }
-                    else
-                    {
-                        messageService.Clear(MessageCodes.CONNECTION);
-                        return true;
-                    }
+                    messageService.Clear(MessageCodes.CONNECTION);
+                    return true;
                 }
                 else
                 {
@@ -359,21 +379,21 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
         }
 
-        private void EmptyOutputPath(string path)
+        private static void EmptyOutputPath(string path)
         {
             if (!Directory.Exists(path))
             {
                 return;
             }
 
-            DirectoryInfo directory = new DirectoryInfo(path);
+            DirectoryInfo directory = new(path);
 
-            foreach (FileInfo file in directory.GetFiles().Where(f => !f.Name.StartsWith(".git")))
+            foreach (var file in directory.GetFiles().Where(f => !f.Name.StartsWith(".git")))
             {
                 file.Delete();
             }
 
-            foreach (DirectoryInfo dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
+            foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
             {
                 dir.Delete(true);
             }
@@ -381,25 +401,26 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private (string OutputPath, string SolutionType) GetSavePathFromSelectedTemplate()
         {
-            if (SelectedArea == null || SelectedModule == null || SelectedTemplate == null)
+            if (SelectedDataSource == null || SelectedModule == null || SelectedTemplate == null)
             {
                 return (null, null);
             }
 
-            string basePath = SettingsConfiguration["TemplatesBasePath"].AddPathSeparator();
-            string template = TemplatesConfiguration[SelectedTemplate].Path;
-            var options = new CodeGeneratorDto
+            var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
+            var template = TemplatesConfiguration[SelectedTemplate].Path;
+            CodeGeneratorDto options = new()
             {
-                Area = AreasConfiguration[SelectedArea].Name,
+                Area = DataSourcesConfiguration[SelectedDataSource].Area,
                 Module = ModulesConfiguration[SelectedModule].Name,
                 GenerateReferenced = false,
                 OutputPath = null,
                 CreatedFromSchemaName = outputSchemaName,
-                UserVariables = TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
+                UserVariables = string.Concat(
+                    TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
+                    DataSourcesConfiguration[SelectedDataSource].Vars.ToSemiColonSeparatedString()),
                 TemplatePath = Path.Combine(basePath, template),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
                 SchemaName = schemaNameToFake,
-                DescriptionsSchemaName = schemaNameToFake,
                 TableList = new List<string>() { "first_table" },
                 GeneratorApplication = GeneratorApplication,
                 GeneratorVersion = GeneratorVersion,
@@ -410,10 +431,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var library = options.TemplatePath.TryLoad(options.TemplateResource);
+                var library = templateService.TryLoad(options.TemplatePath, options.TemplateResource);
                 codeGeneratorService.Initialize(options, library);
                 CompiledVars.ClearAndAddRange(codeGeneratorService.GetVars());
-                CompiledVars.TryGetValue("SavePath", out object savePath);
+                CompiledVars.TryGetValue("SavePath", out var savePath);
                 messageService.Clear(MessageCodes.LOADING_TEMPLATES);
 
                 return (savePath as string, codeGeneratorService.GetSolutionType());
@@ -432,10 +453,13 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         private void SetupInitial()
         {
-            schemaName = AreasConfiguration.Schema(SelectedArea);
-            descriptionsSchemaName = AreasConfiguration.CommentSchema(SelectedArea);
-            outputSchemaName = AreasConfiguration.OutputSchema(SelectedArea);
-            schemaReader = SchemaFactory.Create(new SchemaOptions(SchemasConfiguration, schemaName, writer, descriptionsSchemaName));
+            var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
+            var templatePath = Path.Combine(basePath, TemplatesConfiguration[SelectedTemplate].Path);
+
+            schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);
+            _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName);
+            outputSchemaName = DataSourcesConfiguration.OutputSchema(SelectedDataSource);
+            schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer));
             if (schemaReader == null)
             {
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);
@@ -454,8 +478,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                var tableNameResolver = new NameResolver(schemaName);
-                tables = schemaReader.ReadSchema(new SchemaReaderOptions(Config.ShouldRemoveWord1(schemaName), _alternativeDictionary, tableNameResolver))
+                tables = schemaReader.ReadSchema(new SchemaReaderOptions(schemaService.ShouldRemoveWord1(schemaName), _alternativeDictionary))
                     ?? new Tables();
 
                 messageService.Clear(MessageCodes.READ_SCHEMA);

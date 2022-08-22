@@ -1,7 +1,5 @@
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
@@ -26,7 +24,7 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public bool HasErrorMessage() => _outputWriter.ContainsErrorMessage;
 
-        public virtual bool CanConnect(bool includeCommentServer = false) => true;
+        public virtual bool CanConnect() => true;
 
     }
 

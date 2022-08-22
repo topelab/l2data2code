@@ -13,31 +13,32 @@ namespace L2Data2Code.SchemaReader.MySql
 {
     public class MySqlSchemaReader : Schema.SchemaReader
     {
-        private readonly string _connectionString;
-        private MySqlConnection _connection;
-        private INameResolver _resolver;
+        private readonly string connectionString;
+        private MySqlConnection connection;
+        private readonly INameResolver nameResolver;
 
 
-        public MySqlSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public MySqlSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = options.ConnectionString;
+            connectionString = options.ConnectionString;
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
+            this.nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
-            var result = new Tables();
+            Tables result = new();
 
-            using (_connection = new MySqlConnection(_connectionString))
+            using (connection = new MySqlConnection(connectionString))
             {
-                _connection.Open();
+                connection.Open();
 
-                string[] schema = new string[4] { null, _connection.Database, null, null };
+                var schema = new string[4] { null, connection.Database, null, null };
 
-                var tables = _connection.GetSchema("Tables", schema);
+                var tables = connection.GetSchema("Tables", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, tables, false);
 
-                var views = _connection.GetSchema("Views", schema);
+                var views = connection.GetSchema("Views", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, views, true);
 
                 try
@@ -91,7 +92,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     WriteLine("// -----------------------------------------------------------------------------------------");
                     WriteLine("");
                 }
-                _connection.Close();
+                connection.Close();
 
             }
 
@@ -102,12 +103,12 @@ namespace L2Data2Code.SchemaReader.MySql
         {
             foreach (DataRow row in tables.Rows)
             {
-                if ((string)row["TABLE_SCHEMA"] != _connection.Database)
+                if ((string)row["TABLE_SCHEMA"] != connection.Database)
                 {
                     continue;
                 }
 
-                var tbl = new Table
+                Table tbl = new()
                 {
                     Name = (string)row["TABLE_NAME"]
                 };
@@ -119,8 +120,8 @@ namespace L2Data2Code.SchemaReader.MySql
 
                 tbl.Schema = (string)row["TABLE_SCHEMA"];
                 tbl.IsView = fromViews;
-                tbl.IsUpdatable = fromViews ? (string)row["IS_UPDATABLE"] == "YES" : true;
-                tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+                tbl.IsUpdatable = !fromViews || (string)row["IS_UPDATABLE"] == "YES";
+                tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name)
                     ? alternativeDescriptions[tbl.Name]
@@ -132,15 +133,15 @@ namespace L2Data2Code.SchemaReader.MySql
 
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true, Dictionary<string, string> alternativeDescriptions = null)
         {
-            var result = new List<Column>();
+            List<Column> result = new();
 
-            string[] schema = new string[4] { null, _connection.Database, tbl.Name, null };
+            var schema = new string[4] { null, connection.Database, tbl.Name, null };
 
             // Columnas
-            DataTable SchemaTabla = _connection.GetSchema("Columns", schema);
+            var SchemaTabla = connection.GetSchema("Columns", schema);
             foreach (DataRow row in SchemaTabla.Rows)
             {
-                Column col = new Column
+                Column col = new()
                 {
                     Table = tbl,
                     TableName = tbl.Name,
@@ -148,7 +149,7 @@ namespace L2Data2Code.SchemaReader.MySql
                     Name = (string)row["COLUMN_NAME"],
                     Precision = (int)row["CHARACTER_MAXIMUM_LENGTH"].IfNull(row["NUMERIC_PRECISION"].IfNull(row["DATETIME_PRECISION"].IfNull((ulong)0)))
                 };
-                col.PropertyName = _resolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
+                col.PropertyName = nameResolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
                 col.PropertyType = GetPropertyType((string)row["DATA_TYPE"], col.Precision, (string)row["COLUMN_TYPE"]);
                 col.IsNullable = ((string)row["IS_NULLABLE"]) == "YES";
                 col.IsAutoIncrement = ((string)row["EXTRA"]) == "auto_increment";
@@ -164,16 +165,16 @@ namespace L2Data2Code.SchemaReader.MySql
 
         private List<Key> LoadRelations(Tables tables)
         {
-            string SchemaName = _connection.Database;
-            string[] schema = new string[4] { null, SchemaName, null, null };
-            var result = new List<Key>();
+            var SchemaName = connection.Database;
+            var schema = new string[4] { null, SchemaName, null, null };
+            List<Key> result = new();
 
             // Relaciones
-            var fkeys = _connection.GetSchema("Foreign Key Columns", schema);
+            var fkeys = connection.GetSchema("Foreign Key Columns", schema);
 
             foreach (DataRow row in fkeys.Rows)
             {
-                var key = new Key();
+                Key key = new();
                 var referencingTable = row["TABLE_NAME"].ToString();
                 var referencingColumn = row["COLUMN_NAME"].ToString();
                 var referencedTable = row["REFERENCED_TABLE_NAME"].ToString();
@@ -198,9 +199,9 @@ namespace L2Data2Code.SchemaReader.MySql
         private Dictionary<string, int> GetPK(string table)
         {
 
-            var result = new Dictionary<string, int>();
+            Dictionary<string, int> result = new();
 
-            var databaseIndexColumns = _connection.GetSchema("IndexColumns", new string[4] { null, _connection.Database, table, null });
+            var databaseIndexColumns = connection.GetSchema("IndexColumns", new string[4] { null, connection.Database, table, null });
 
             foreach (DataRow row in databaseIndexColumns.Rows)
             {
@@ -213,9 +214,9 @@ namespace L2Data2Code.SchemaReader.MySql
             return result;
         }
 
-        private string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
+        private static string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
         {
-            string sysType = "string";
+            var sysType = "string";
             switch (sqlType)
             {
                 case "blob":
@@ -274,8 +275,16 @@ namespace L2Data2Code.SchemaReader.MySql
         private static string RemoveTablePrefixes(string word)
         {
             var cleanword = word;
-            if (cleanword.StartsWith("tbl_")) cleanword = cleanword.Replace("tbl_", "");
-            if (cleanword.StartsWith("tbl")) cleanword = cleanword.Replace("tbl", "");
+            if (cleanword.StartsWith("tbl_"))
+            {
+                cleanword = cleanword.Replace("tbl_", "");
+            }
+
+            if (cleanword.StartsWith("tbl"))
+            {
+                cleanword = cleanword.Replace("tbl", "");
+            }
+
             return cleanword;
         }
 

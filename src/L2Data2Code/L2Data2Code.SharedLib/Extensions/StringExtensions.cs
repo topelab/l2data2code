@@ -1,16 +1,15 @@
+using L2Data2Code.SharedLib.Inflector;
 using System;
 using System.IO;
 using System.Text;
-using System.Web;
-using L2Data2Code.SharedLib.Inflector;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
     public static class StringExtensions
     {
         private const string DEFAULT_ISO_LANG = "en";
-        private static IInflector _esInflector = new SpanishInflector();
-        private static IInflector _enInflector = new EnglishInflector();
+        private static readonly IInflector _esInflector = new SpanishInflector();
+        private static readonly IInflector _enInflector = new EnglishInflector();
 
         static StringExtensions()
         {
@@ -20,7 +19,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static IInflector Service(string isoLang = null)
         {
-            isoLang = isoLang ?? CurrentLang;
+            isoLang ??= CurrentLang;
             return isoLang.Equals("es") ? _esInflector : _enInflector;
         }
 
@@ -32,12 +31,14 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string ToSingular(this string word, string isoLang)
         {
             if (word.IsEmpty())
+            {
                 return string.Empty;
+            }
 
-            bool isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
+            var isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
             if (isUpperWord)
             {
-                string lowerWord = word.ToLower();
+                var lowerWord = word.ToLower();
                 return Service(isoLang).Singularize(lowerWord).ToUpper();
             }
 
@@ -52,29 +53,40 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string ToPlural(this string word, string isoLang)
         {
             if (word.IsEmpty())
+            {
                 return string.Empty;
+            }
 
-            bool isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
+            var isUpperWord = (string.Compare(word, word.ToUpper(), false) == 0);
             if (isUpperWord)
             {
-                string lowerWord = word.ToLower();
+                var lowerWord = word.ToLower();
                 return Service(isoLang).Pluralize(lowerWord).ToUpper();
             }
 
             return Service(isoLang).Pluralize(word);
         }
 
-        public static string Pascalize(this string word)
+        public static string Pascalize(this string word) => PascalCase(word);
+
+        public static string PascalCase(this string word)
         {
             return Service().Pascalize(word);
         }
 
-        public static string Camelize(this string word)
+        public static string Camelize(this string word) => CamelCase(word);
+
+        public static string CamelCase(this string word)
         {
             return Service().Camelize(word);
         }
 
-        public static string PluralCamelize(this string word)
+        public static string LowerCase(this string word) => word.ToLower();
+        public static string UpperCase(this string word) => word.ToUpper();
+
+        public static string PluralCamelize(this string word) => PluralCamelCase(word);
+
+        public static string PluralCamelCase(this string word)
         {
             var _service = Service();
             return _service.Pluralize(_service.Camelize(word));
@@ -111,23 +123,23 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static string ToTabs(this int indent)
         {
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             return result.AddTabs(indent).ToString();
         }
 
         public static StringBuilder AddTabs(this StringBuilder output, int indent)
         {
-            for (int i = 0; i < indent; i++)
+            for (var i = 0; i < indent; i++)
             {
-                output.Append("\t");
+                output.Append('\t');
             }
             return output;
         }
 
         public static int LengthCompare(this string item1, string item2)
         {
-            int i1 = item1.Length;
-            int i2 = item2.Length;
+            var i1 = item1.Length;
+            var i2 = item2.Length;
 
             if (i1 == i2)
             {
@@ -203,7 +215,11 @@ namespace L2Data2Code.SharedLib.Extensions
         /// <returns></returns>
         public static bool IsTrue(this string text)
         {
-            if (text.IsEmpty()) return false;
+            if (text.IsEmpty())
+            {
+                return false;
+            }
+
             var result = text.ToLower().Trim();
             if (result.Equals("1") || result.Equals("true") || result.Equals("yes"))
             {
@@ -257,30 +273,30 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string ToSlug(this string fileName, string validCharsToAdd)
         {
 
-            string ValidChars = "0123456789abcdefghijklmnopqrstuvwxyz" + validCharsToAdd;
+            var ValidChars = "0123456789abcdefghijklmnopqrstuvwxyz" + validCharsToAdd;
             const string ReplaceableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúàèìòùñÁÉÍÓÚÀÈÌÒÙÑäëïöüÄËÏÖÜâêîôûÂÊÎÔÛÇç";
             const string ReplacingChars = "abcdefghijklmnopqrstuvwxyzaeiouaeiounaeiouaeiounaeiouaeiouaeiouaeioucc";
             const string Separator = "-";
 
             string CharToAdd;
-            string PrevChar = string.Empty;
+            var PrevChar = string.Empty;
 
-            string sCleanUrl = string.Empty;
+            var sCleanUrl = string.Empty;
 
             if ((fileName ?? string.Empty) != string.Empty)
             {
                 while (fileName.Length != 0)
                 {
-                    if (ValidChars.Contains(fileName.Substring(0, 1)))
+                    if (ValidChars.Contains(fileName[..1]))
                     {
-                        CharToAdd = fileName.Substring(0, 1);
+                        CharToAdd = fileName[..1];
                         PrevChar = CharToAdd;
                     }
                     else
                     {
-                        if (ReplaceableChars.Contains(fileName.Substring(0, 1)))
+                        if (ReplaceableChars.Contains(fileName[..1]))
                         {
-                            CharToAdd = ReplacingChars.Substring(ReplaceableChars.IndexOf(fileName.Substring(0, 1)), 1);
+                            CharToAdd = ReplacingChars[ReplaceableChars.IndexOf(fileName[..1])..1];
                             PrevChar = CharToAdd;
                         }
                         else
@@ -295,21 +311,21 @@ namespace L2Data2Code.SharedLib.Extensions
                     }
 
                     sCleanUrl += CharToAdd;
-                    fileName = fileName.Substring(1);
+                    fileName = fileName[1..];
                 }
             }
 
             while (sCleanUrl.Length > 0 && sCleanUrl[0] == '-')
             {
-                sCleanUrl = sCleanUrl.Substring(1);
+                sCleanUrl = sCleanUrl[1..];
             }
 
-            int lon = sCleanUrl.Length;
+            var lon = sCleanUrl.Length;
             if (lon > 1)
             {
                 while (sCleanUrl[lon - 1] == '-')
                 {
-                    sCleanUrl = sCleanUrl.Substring(0, lon - 1);
+                    sCleanUrl = sCleanUrl[..(lon - 1)];
                     lon--;
                     if (lon < 1)
                     {
@@ -330,6 +346,13 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             return s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
+
+        /// <summary>
+        /// Double slash in path
+        /// </summary>
+        /// <param name="path">path</param>
+        public static string DoubleSlash(this string path)
+            => path.Replace(@"\", @"\\");
 
     }
 }

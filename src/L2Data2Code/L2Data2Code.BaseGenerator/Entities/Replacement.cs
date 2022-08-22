@@ -14,6 +14,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     .Where(p => !IgnoreColumns.Contains(p.Name, IgnoreCaseComparer.Instance))
                     .Where(p => !(IgnoreColumns.Contains(Constants.ID) && p.IsEntityId()));
 
+        public string Template { get; set; }
         public Entity Entity { get; set; }
         public string Module { get; set; }
         public string Area { get; set; }
@@ -102,13 +103,20 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             private IgnoreCaseComparer() { }
             private static IgnoreCaseComparer _instance = null;
-            private static object _syncRoot = new object();
+            private static readonly object _syncRoot = new();
 
             public static IEqualityComparer<string> Instance
             {
                 get
                 {
-                    if (_instance == null) lock (_syncRoot) if (_instance == null) _instance = new IgnoreCaseComparer();
+                    if (_instance == null)
+                    {
+                        lock (_syncRoot)
+                        {
+                            _instance ??= new IgnoreCaseComparer();
+                        }
+                    }
+
                     return _instance;
                 }
             }

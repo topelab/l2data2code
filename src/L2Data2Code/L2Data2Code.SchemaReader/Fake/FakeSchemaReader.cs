@@ -3,22 +3,22 @@ using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SchemaReader.Fake
 {
     public class FakeSchemaReader : Schema.SchemaReader
     {
-        private INameResolver _resolver;
+        private readonly INameResolver nameResolver;
 
-        public FakeSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public FakeSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
+            this.nameResolver = nameResolver ?? throw new System.ArgumentNullException(nameof(nameResolver));
+            this.nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
-            var result = new Tables();
+            Tables result = new();
             AddFakeTable("first_table", result, options.RemoveFirstWord);
             AddFakeTable("second_table", result, options.RemoveFirstWord);
 
@@ -27,12 +27,12 @@ namespace L2Data2Code.SchemaReader.Fake
 
         private void AddFakeTable(string tableName, Tables tables, bool removeFirstWord)
         {
-            var tbl = new Table
+            Table tbl = new()
             {
                 Name = tableName
             };
 
-            tbl.CleanName = RemoveTablePrefixes(_resolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+            tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
             tbl.ClassName = tbl.CleanName.ToSingular();
             tbl.Description = $"Description for {tbl.ClassName}";
 
@@ -41,10 +41,12 @@ namespace L2Data2Code.SchemaReader.Fake
             tables.Add(tbl.Name, tbl);
         }
 
-        private List<Column> LoadFakeColumns(Table tbl, bool removeFirstWord = true)
+        private static List<Column> LoadFakeColumns(Table tbl, bool removeFirstWord = true)
         {
-            var result = new List<Column>() {
-                new Column {
+            List<Column> result = new()
+            {
+                new Column
+                {
                     Table = tbl,
                     TableName = tbl.Name,
                     Name = "id",
@@ -54,9 +56,10 @@ namespace L2Data2Code.SchemaReader.Fake
                     IsAutoIncrement = true,
                     Precision = 10,
                     PkOrder = 1,
-                    Description = "Id for de table"
+                    Description = "Id for the table"
                 },
-                new Column {
+                new Column
+                {
                     Table = tbl,
                     TableName = tbl.Name,
                     Name = "name",
@@ -65,7 +68,8 @@ namespace L2Data2Code.SchemaReader.Fake
                     Precision = 50,
                     Description = "String(50) column"
                 },
-                new Column {
+                new Column
+                {
                     Table = tbl,
                     TableName = tbl.Name,
                     Name = "age",
@@ -83,8 +87,16 @@ namespace L2Data2Code.SchemaReader.Fake
         private static string RemoveTablePrefixes(string word)
         {
             var cleanword = word;
-            if (cleanword.StartsWith("tbl_")) cleanword = cleanword.Replace("tbl_", "");
-            if (cleanword.StartsWith("tbl")) cleanword = cleanword.Replace("tbl", "");
+            if (cleanword.StartsWith("tbl_"))
+            {
+                cleanword = cleanword.Replace("tbl_", "");
+            }
+
+            if (cleanword.StartsWith("tbl"))
+            {
+                cleanword = cleanword.Replace("tbl", "");
+            }
+
             return cleanword;
         }
 

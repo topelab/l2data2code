@@ -15,9 +15,9 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool MultiplePKColumns { get; private set; }
         public string Description { get; private set; }
 
-        public List<EntityColumn> Columns = new List<EntityColumn>();
-        public List<Relation> OneToMany = new List<Relation>();
-        public List<Relation> ManyToOne = new List<Relation>();
+        public List<EntityColumn> Columns = new();
+        public List<Relation> OneToMany = new();
+        public List<Relation> ManyToOne = new();
 
         public int NumeroCamposPK { get; set; }
 
@@ -33,7 +33,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var column in table.Columns)
             {
-                EntityColumn campo = new EntityColumn
+                EntityColumn campo = new()
                 {
                     Table = ClassName,
                     ColumnName = column.Name,
@@ -68,12 +68,12 @@ namespace L2Data2Code.BaseGenerator.Entities
                 CanBeNull = r.ColumnReferencing.IsNullable,
             }).ToList();
 
-            string byWord = StringExtensions.CurrentLang == "es" ? "Por" : "By";
-            string withWord = StringExtensions.CurrentLang == "es" ? "Con" : "With";
+            var byWord = StringExtensions.CurrentLang == "es" ? "Por" : "By";
+            var withWord = StringExtensions.CurrentLang == "es" ? "Con" : "With";
 
             foreach (var item in OneToMany)
             {
-                EntityColumn campo = new EntityColumn
+                EntityColumn campo = new()
                 {
                     Table = ClassName,
                     Name = $"{item.Table}{byWord}{item.RelatedColumn}",
@@ -107,7 +107,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var item in ManyToOne)
             {
-                EntityColumn campo = new EntityColumn
+                EntityColumn campo = new()
                 {
                     Table = ClassName,
                     Name = $"{item.Table.ToPlural()}{withWord}{item.RelatedColumn}",

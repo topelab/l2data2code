@@ -8,6 +8,7 @@ namespace L2Data2Code.BaseGenerator.Entities
     /// </summary>
     public class Property : ICloneable
     {
+        public Entity Entity { get; set; }
         public string Name { get; set; }
         public string IdOrName => IsEntityId() ? Constants.ID : Name;
         public string Table { get; set; }
@@ -53,7 +54,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string NextSample => GetSampleValue(Type, true);
 
         private static int _sampleValue = 1;
-        private string GetSampleValue(string type, bool anotherOne = false)
+        private static string GetSampleValue(string type, bool anotherOne = false)
         {
             _sampleValue += anotherOne ? 1 : 0;
 
@@ -92,6 +93,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             return new Property
             {
+                Entity = Entity,
                 Table = Table,
                 Name = Name,
                 Nullable = Nullable,

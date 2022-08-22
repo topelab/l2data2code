@@ -1,10 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>2.8.221.908</Version>
+    <Version>2.12.5</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RestoreSources>$(RestoreSources);../../../local-nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SampleData\**" />
@@ -13,35 +15,11 @@
     <Page Remove="SampleData\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\images\2021-04-01-07-35-08.png" Link="images\2021-04-01-07-35-08.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\images\2021-04-01-07-57-02.png" Link="images\2021-04-01-07-57-02.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\images\2021-09-10-19-14-05.png" Link="images\2021-09-10-19-14-05.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\images\2021-09-10-19-19-32.png" Link="images\2021-09-10-19-19-32.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\changes.md" Link="changes.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\..\issues.md" Link="issues.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\..\README.md" Link="README.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="LambdaConverters" Version="4.0.0" />
-    <PackageReference Include="MahApps.Metro" Version="2.4.4" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.8.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks.SimpleIcons" Version="4.8.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.SimpleIcons" Version="4.11.0" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
@@ -52,7 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Strings.es-ES.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator></Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Strings.resx">
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
@@ -60,6 +38,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\L2Data2Code.BaseHandleBars\L2Data2Code.BaseHandleBars.csproj" />
     <ProjectReference Include="..\L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +47,18 @@
     </None>
     <None Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="changes.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="issues.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SampleData\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

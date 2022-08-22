@@ -1,6 +1,6 @@
-using L2Data2Code.BaseGenerator.Interfaces;
-using L2Data2Code.SharedLib.Configuration;
+using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using System;
@@ -37,14 +37,14 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="compiledVars">The compiled vars.</param>
         public void Exec(Command command, Dictionary<string, object> compiledVars = null)
         {
-            var directorio = compiledVars != null ? mustacheRenderizer.Render(command.Directory, compiledVars) : command.Directory;
-            var exec = compiledVars != null ? mustacheRenderizer.Render(command.Exec, compiledVars) : command.Exec ;
+            var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
+            var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
-            var outputData = new StringBuilder();
+            StringBuilder outputData = new();
 
             try
             {
-                var process = new Process();
+                Process process = new();
                 process.StartInfo.FileName = "cmd";
                 process.StartInfo.Arguments = $"/c {exec}";
                 process.StartInfo.CreateNoWindow = !command.ShowWindow;

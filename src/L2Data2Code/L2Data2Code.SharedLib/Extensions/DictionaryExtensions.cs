@@ -1,8 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace L2Data2Code.SharedLib.Extensions
 {
@@ -16,6 +13,20 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string[] Keys(this Dictionary<string, string> keyValuePairs)
         {
             return keyValuePairs.Select(d => d.Key).ToArray();
+        }
+
+        public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dest, Dictionary<TKey, TValue> source)
+        {
+            foreach (var item in source)
+            {
+                dest[item.Key] = item.Value;
+            }
+        }
+
+        public static void ClearAndAddRange<TKey, TValue>(this Dictionary<TKey, TValue> dest, Dictionary<TKey, TValue> source)
+        {
+            dest.Clear();
+            dest.AddRange(source);
         }
     }
 }

@@ -13,44 +13,57 @@ namespace L2Data2Code.SchemaReader.Json
 {
     public class JsonSchemaReader : Schema.SchemaReader
     {
-        private readonly string _connectionString;
-        private INameResolver _resolver;
+        private readonly string connectionString;
+        private readonly string templatePath;
+        private readonly INameResolver nameResolver;
 
-        public JsonSchemaReader(SchemaOptions options) : base(options.SummaryWriter)
+        public JsonSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
         {
-            _connectionString = options.ConnectionString;
-            if (!File.Exists(_connectionString))
+
+            connectionString = options.ConnectionString;
+            templatePath = options.TemplatePath;
+            var fileExist = templatePath.GetResultUsingBasePath(() => File.Exists(connectionString));
+            if (!fileExist)
             {
-                throw new Exception($"JSON file {_connectionString} doesn't exist");
+                throw new Exception($"JSON file {connectionString} doesn't exist");
             }
+            this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
+            this.nameResolver.Initialize(options.SchemaName);
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
-            _resolver = options.NameResolver ?? new DefaultNameResolver();
+            var content = templatePath.GetResultUsingBasePath(() => File.ReadAllText(connectionString));
+            List<Table> tableList = new();
 
-            var content = File.ReadAllText(_connectionString);
-            var tableList = JsonConvert.DeserializeObject<List<Table>>(content);
+            if (content.StartsWith("["))
+            {
+                tableList.AddRange(JsonConvert.DeserializeObject<List<Table>>(content));
+            }
+            else
+            {
+                tableList.AddRange(JsonConvert.DeserializeObject<TablesDTO>(content).Tables);
+            }
             return Resolve(tableList, options.RemoveFirstWord, options.TableRegex);
         }
 
         /// <summary>
-        /// Resolve <see cref="Table.InnerKeys" /> and <see cref="Table.OuterKeys" /> the specified tables.
+        /// Resolve <see cref="Table.InnerKeys" /> and <see cref="Table.OuterKeys" /> for the specified tables.
         /// </summary>
         /// <param name="tables">The tables.</param>
         /// <returns></returns>
         private Tables Resolve(IEnumerable<Table> tables, bool removeFirstWord, Regex tableRegex = null)
         {
-            var result = new Tables();
+            Tables result = new();
             var tablesInfo = tables.ToDictionary(k => k.Name.ToUpper(), k => k);
             foreach (var item in tables.Where(t => tableRegex == null || tableRegex.IsMatch(t.Name)))
             {
-                item.CleanName = _resolver.ResolveTableName(item.Name).PascalCamelCase(false);
+                item.CleanName = nameResolver.ResolveTableName(item.Name).PascalCamelCase(false);
                 item.ClassName = item.CleanName.ToSingular();
                 foreach (var column in item.Columns)
                 {
                     column.Table = item;
-                    column.PropertyName = column.PropertyName.IsEmpty() ? _resolver.ResolveColumnName(item.Name, column.Name).PascalCamelCase(removeFirstWord) : column.PropertyName;
+                    column.PropertyName = column.PropertyName.IsEmpty() ? nameResolver.ResolveColumnName(item.Name, column.Name).PascalCamelCase(removeFirstWord) : column.PropertyName;
                 }
                 ResolveKeys(item.InnerKeys, tablesInfo);
                 ResolveKeys(item.OuterKeys, tablesInfo);
@@ -64,7 +77,7 @@ namespace L2Data2Code.SchemaReader.Json
         /// </summary>
         /// <param name="keys">The keys.</param>
         /// <param name="tables">The tables.</param>
-        private void ResolveKeys(IEnumerable<Key> keys, Dictionary<string, Table> tables)
+        private static void ResolveKeys(IEnumerable<Key> keys, Dictionary<string, Table> tables)
         {
             foreach (var item in keys)
             {
@@ -74,14 +87,14 @@ namespace L2Data2Code.SchemaReader.Json
         }
 
         /// <summary>
-        /// Search <paramref name="reference"/> (format: table.column) and return a <see cref="Column"/> or null if not finded.
+        /// Search <paramref name="reference"/> (format: table.column) and return a <see cref="Column"/> or null if not found.
         /// </summary>
         /// <param name="tables">The tables to search.</param>
         /// <param name="reference">The table.column string reference.</param>
         /// <returns></returns>
-        private Column GetColum(Dictionary<string, Table> tables, string reference)
+        private static Column GetColum(Dictionary<string, Table> tables, string reference)
         {
-            if (reference.IsEmpty() || !reference.Contains("."))
+            if (reference.IsEmpty() || !reference.Contains('.'))
             {
                 return null;
             }

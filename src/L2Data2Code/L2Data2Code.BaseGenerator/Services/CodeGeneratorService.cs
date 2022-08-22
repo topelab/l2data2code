@@ -1,11 +1,10 @@
 using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Exceptions;
-using L2Data2Code.BaseGenerator.Extensions;
 using L2Data2Code.BaseGenerator.Interfaces;
+using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.SharedLib.Helpers;
-using Newtonsoft.Json;
+using L2Data2Code.SharedLib.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -15,17 +14,22 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.BaseGenerator.Services
 {
+    /// <summary>
+    /// Code generator service
+    /// </summary>
     public class CodeGeneratorService : ICodeGeneratorService
     {
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
+        private readonly IConditionalPathRenderizer pathRenderizer;
+        private readonly IFileService fileService;
         private readonly ISchemaService schemaService;
+        private readonly ITemplateService templateService;
+        private readonly ISchemaFactory schemaFactory;
 
         private readonly Dictionary<string, string> templateFiles;
         private readonly HashSet<string> referencedTables;
         private readonly Dictionary<string, object> internalVars;
-
-        private const string INCLUDE_TEXT = "{{!include ";
 
         private static readonly Regex templateFilePart = new(@"(?<start>^|\\)addtofile-(?<part>[0-9]+)-(?<name>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex templateCondition = new(@"^\s*if\s+(?<key>[^=]+)=(?<value>[^\s]+)\s+(?<var>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -35,7 +39,6 @@ namespace L2Data2Code.BaseGenerator.Services
         private static readonly Regex xmlMarkPart = new(@"<!-- !!!ENDOF(?<part>[0-9]+) -->", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cmdMarkPart = new(@"# !!!ENDOF(?<part>[0-9]+)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex mdMarkPart = new(@"\[//\]: # \(!!!ENDOF(?<part>[0-9]+)\)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex includeRegex = new(@"\{\{!include\s+(?<name>[^\}]+)\}\}", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private static readonly CommentLine commentCsStyle = new() { Start = "// " };
         private static readonly CommentLine commentXmlStyle = new() { Start = "<!-- ", End = " -->" };
@@ -76,11 +79,17 @@ namespace L2Data2Code.BaseGenerator.Services
         /// </summary>
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger)
+        /// <param name="logger">Logger service</param>
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IConditionalPathRenderizer pathRenderizer, IFileService fileService)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
+            this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
+            this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
+            this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
+
             referencedTables = new();
             templateFiles = new();
             internalVars = new();
@@ -89,7 +98,6 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="options">Options for generator</param>
         /// <param name="library">Template library, that is the content for "Templates.xml" file.</param>
         /// <param name="vars">Current collection of vars</param>
@@ -138,7 +146,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     CreateVarsFromUserVariables();
                 }
 
-                FileService.SetSettings(options.Encoding, options.EndOfLine);
+                fileService.Initialize(options.Encoding, options.EndOfLine);
             }
             catch (CodeGeneratorException)
             {
@@ -150,6 +158,11 @@ namespace L2Data2Code.BaseGenerator.Services
             }
         }
 
+        /// <summary>
+        /// Process tables and call <paramref name="onTableProcessed"/> when a table is processed. It can use <paramref name="alternativeDictionary"/> to set column descriptions
+        /// </summary>
+        /// <param name="onTableProcessed">Action for every table processed</param>
+        /// <param name="alternativeDictionary">Alternative column descriptions</param>
         public void ProcessTables(Action<string> onTableProcessed = null, Dictionary<string, string> alternativeDictionary = null)
         {
             try
@@ -180,7 +193,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 foreach (var table in processTables)
                 {
                     logger.Info($"Processing table {table.Name}");
-                    var tabla = new EntityTable(table);
+                    EntityTable tabla = new(table);
                     if (!Options.GeneateOnlyJson)
                     {
                         var results = GenerarCodigos(tabla);
@@ -192,7 +205,8 @@ namespace L2Data2Code.BaseGenerator.Services
 
                 if (Options.GenerateJsonInfo && Options.JsonGeneratedPath.NotEmpty() && Options.LastPass)
                 {
-                    GenerateJsonInfo(processTables);
+                    var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
+                    schemaService.GenerateJsonInfo(processTables, fileName);
                 }
             }
             catch (CodeGeneratorException)
@@ -211,49 +225,54 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private ReplacementResult[] GenerarCodigos(EntityTable tabla)
         {
-            mustacheRenderizer.SetIsoLanguaje(Config.GetLang(Options.CreatedFromSchemaName));
+            StringExtensions.CurrentLang = schemaService.GetLang(Options.CreatedFromSchemaName);
 
             var replacement = GetReplacementData(tabla);
 
-            var templatesPath = Template.GetPath();
+            var templatesPath = templateService.GetPath(Template);
 
             if (!templateFiles.Any())
             {
                 LoadTemplateFiles();
             }
 
-            var outputBaseDir = mustacheRenderizer.Render(Template.SavePath, replacement).AddPathSeparator();
+            var outputBaseDir = mustacheRenderizer.RenderPath(Template.SavePath, replacement).AddPathSeparator();
             if (string.IsNullOrEmpty(outputBaseDir))
-                outputBaseDir = "C:\\src\\tmp\\";
+            {
+                outputBaseDir = CodeGeneratorDto.DefaultOutputPath;
+            }
 
             return templateFiles.Keys
                 .Select(templateFile =>
                 {
+                    ReplacementResult replacementResult;
                     var partToReplace = string.Empty;
-                    string filename, filePath, rawContent, fileExtension;
+                    string filePath, rawContent, fileExtension;
 
-                    filename = TemplateFileName(templatesPath, templateFile, replacement);
-                    if (filename == null)
+                    if (pathRenderizer.TryGetFileName(templatesPath, templateFile, replacement, out var filename))
                     {
-                        return null;
+                        var match = templateFilePart.Match(filename);
+                        if (match.Success)
+                        {
+                            filename = templateFilePart.Replace(filename, "${start}${name}");
+                            partToReplace = match.Groups["part"].Value;
+                        }
+
+                        filePath = Path.Combine(outputBaseDir, filename);
+                        fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
+                        var commentLine = GetCommentLine(fileExtension);
+
+                        rawContent = templateFiles[templateFile];
+                        replacementResult = new(
+                            Path.GetFileName(filePath),
+                            filePath,
+                            filePath.Replace(outputBaseDir, ""),
+                            () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
                     }
-                    //Check to add to a file
-                    var match = templateFilePart.Match(filename);
-                    if (match.Success)
+                    else
                     {
-                        filename = templateFilePart.Replace(filename, "${start}${name}");
-                        partToReplace = match.Groups["part"].Value;
+                        replacementResult = null;
                     }
-
-                    filePath = Path.Combine(outputBaseDir, filename);
-                    fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
-                    var commentLine = GetCommentLine(fileExtension);
-
-                    rawContent = templateFiles[templateFile];
-                    var replacementResult = new ReplacementResult(Path.GetFileName(filePath),
-                                                                filePath,
-                                                                filePath.Replace(outputBaseDir, ""),
-                                                                () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
 
                     return replacementResult;
                 })
@@ -267,41 +286,13 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 templateFiles.Clear();
 
-                var templatesPath = Template.GetPath();
+                var templatesPath = templateService.GetPath(Template);
+                PreparePartials(templatesPath);
 
                 var listOfTemplates = Directory.GetFiles(templatesPath, "*.*", SearchOption.AllDirectories);
                 foreach (var templateFile in listOfTemplates)
                 {
-                    var templateContent = FileService.Read(templateFile);
-                    if (templateContent.Contains(INCLUDE_TEXT))
-                    {
-                        var lines = templateContent.Split('\n');
-                        var replacedLines = new List<string>();
-                        var changed = false;
-                        foreach (var line in lines)
-                        {
-                            if (line.StartsWith(INCLUDE_TEXT))
-                            {
-                                var match = includeRegex.Match(line);
-                                if (match.Success)
-                                {
-                                    var file = match.Groups["name"].Value;
-                                    var fileContent = FileService.Read(Path.Combine(templatesPath, file));
-                                    replacedLines.Add(fileContent.ReplaceEndOfLine("\n"));
-                                    changed = true;
-                                    continue;
-                                }
-
-                            }
-                            replacedLines.Add(line);
-                        }
-
-                        if (changed)
-                        {
-                            templateContent = string.Join("\n", replacedLines);
-                        }
-
-                    }
+                    var templateContent = fileService.ReadWithIncludes(templateFile, templatesPath);
                     templateFiles.Add(templateFile, templateContent);
                 }
             }
@@ -310,39 +301,12 @@ namespace L2Data2Code.BaseGenerator.Services
                 logger.Error($"Error loading templates: {ex.Message}");
                 throw;
             }
-
         }
 
-        private void GenerateJsonInfo(IEnumerable<Table> processTables)
+        private void PreparePartials(string templatesPath)
         {
-            // Para generar un json con cada una de las tablas
-            var jsonResolver = new PropertyRenameAndIgnoreSerializerContractResolver();
-            jsonResolver.IgnoreProperty(typeof(Column),
-                nameof(Column.Table),
-                nameof(Column.FullName),
-                nameof(Column.FullNameWithOwner),
-                nameof(Column.PropertyName)
-                );
-            jsonResolver.IgnoreProperty(typeof(Table),
-                nameof(Table.PK),
-                nameof(Table.CleanName),
-                nameof(Table.ClassName)
-                );
-            jsonResolver.IgnoreProperty(typeof(Key),
-                nameof(Key.ColumnReferenced),
-                nameof(Key.ColumnReferencing)
-                );
-
-            var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
-
-            FileService.Write(fileName, JsonConvert.SerializeObject(processTables, Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    ContractResolver = jsonResolver,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore
-                }));
+            var partialsFiles = fileService.GetPartials(templatesPath, Template.Partials);
+            mustacheRenderizer.SetupPartials(partialsFiles);
         }
 
         private void SetReferencedTables(IEnumerable<Table> selectedTables)
@@ -352,7 +316,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 return;
             }
 
-            var tableList = new List<Table>();
+            List<Table> tableList = new();
             foreach (var item in selectedTables)
             {
                 var tableName = item.Name.ToUpper();
@@ -376,7 +340,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private void SaveFiles(ReplacementResult[] results, bool lastToProcess = false)
         {
-            var lastResults = new List<ReplacementResult>();
+            List<ReplacementResult> lastResults = new();
             foreach (var result in results)
             {
                 var path = Path.GetDirectoryName(result.FileName);
@@ -389,18 +353,18 @@ namespace L2Data2Code.BaseGenerator.Services
                 {
                     lastResults.Add(result);
                 }
-                FileService.Write(result.FileName.Replace(".template", string.Empty), content);
+                fileService.Write(result.FileName.Replace(".template", string.Empty), content);
             }
 
             foreach (var result in lastResults)
             {
                 var fileExtension = Path.GetExtension(result.FileName.Replace(".template", string.Empty));
                 var content = GetMarkRegex(fileExtension).Replace(result.Content, string.Empty);
-                FileService.Write(result.FileName.Replace(".template", string.Empty), content);
+                fileService.Write(result.FileName.Replace(".template", string.Empty), content);
             }
         }
 
-        private string DoReplacement(Replacement replacement, string partToReplace, string filename, string filePath, string rawContent, CommentLine commentLine)
+        private string DoReplacement(Dictionary<string, object> replacement, string partToReplace, string filename, string filePath, string rawContent, CommentLine commentLine)
         {
             string content;
 
@@ -418,7 +382,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 string prevContent;
                 if (File.Exists(filePath))
                 {
-                    prevContent = FileService.Read(filePath);
+                    prevContent = fileService.Read(filePath);
                 }
                 else
                 {
@@ -443,75 +407,11 @@ namespace L2Data2Code.BaseGenerator.Services
             return content;
         }
 
-        private CommentLine GetCommentLine(string fileExtension) =>
+        private static CommentLine GetCommentLine(string fileExtension) =>
             commentByExtension.ContainsKey(fileExtension) ? commentByExtension[fileExtension] : commentCsStyle;
 
-        private Regex GetMarkRegex(string fileExtension) =>
+        private static Regex GetMarkRegex(string fileExtension) =>
             markByExtension.ContainsKey(fileExtension) ? markByExtension[fileExtension] : csMarkPart;
-
-        private string TemplateFileName(string templatesPath, string filePath, Replacement replacement)
-        {
-            var partialName = filePath.Replace(templatesPath, "");
-
-            // Moustached dots are part of file/folder name
-            partialName = partialName.Replace("{{.}}", ".");
-
-            //Check conditional template
-            var iwhen = partialName.IndexOf("when{{");
-            while (iwhen >= 0)
-            {
-                var itag = iwhen + "when{{".Length;
-                var ewhen = partialName.IndexOf("}}", itag);
-                var tag = partialName.Substring(itag, ewhen - itag);
-                if (!CheckTemplateName(tag, replacement))
-                    return null;
-                partialName = partialName.Substring(0, iwhen) + partialName.Substring(ewhen + "}}".Length);
-                iwhen = partialName.IndexOf("when{{");
-            }
-
-            // Apply template replacement
-            partialName = mustacheRenderizer.Render(partialName, replacement);
-
-            return partialName;
-        }
-
-        private static bool CheckTemplateName(string tag, Replacement replacement)
-        {
-            return tag.Contains("=") ? CheckTemplateNameConditionIsTrue(tag, replacement) : CheckTemplateNameIsTrue(tag, replacement);
-        }
-
-        private static bool CheckTemplateNameIsTrue(string tag, Replacement replacement)
-        {
-            var result = false;
-
-            var type = typeof(Replacement);
-            var prop = type.GetProperty(tag.TrimStart('^'), typeof(bool));
-            if (prop != null)
-                result = (bool)prop.GetValue(replacement, null);
-
-            if (tag.StartsWith("^"))
-                return !result;
-
-            return result;
-        }
-
-        private static bool CheckTemplateNameConditionIsTrue(string tag, Replacement replacement)
-        {
-            var result = false;
-
-            var expression = tag.TrimStart('^').Split('=');
-            var key = expression[0].Trim();
-            var value = expression[1].Trim();
-            if (replacement.ContainsKey(key) && replacement[key].ToString() == value)
-            {
-                result = true;
-            }
-
-            if (tag.StartsWith("^"))
-                return !result;
-
-            return result;
-        }
 
         private void CreateVarsFromUserVariables()
         {
@@ -525,26 +425,37 @@ namespace L2Data2Code.BaseGenerator.Services
 
             internalVars.Clear();
 
-            internalVars.Add("database", SchemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
+            internalVars.Add("database", schemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
+            internalVars.Add(nameof(Template), Template.Name);
             internalVars.Add(nameof(Template.Company), Template.Company);
             internalVars.Add(nameof(Template.Area), Template.Area);
             internalVars.Add(nameof(Template.Module), Template.Module);
             internalVars.Add(nameof(Options.GeneratorApplication), Options.GeneratorApplication);
             internalVars.Add(nameof(Options.GeneratorVersion), Options.GeneratorVersion);
-            internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.Render(Template.SavePath, internalVars));
+            internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.RenderPath(Template.SavePath, internalVars));
+            internalVars.Add(nameof(Options.TemplatePath), Options.TemplatePath.AddPathSeparator());
 
+            ProcessConditionals(allVars);
+        }
+
+        private void ProcessConditionals(string[] allVars)
+        {
             var lastConditionResult = false;
             string value;
             foreach (var item in allVars.Select(s => s.Trim()))
             {
                 var itemLine = item;
-                if (string.IsNullOrWhiteSpace(item) || !item.Contains("=")) continue;
+                if (string.IsNullOrWhiteSpace(item) || !item.Contains('='))
+                {
+                    continue;
+                }
+
                 var matchCondition = templateCondition.Match(item);
                 if (matchCondition.Success)
                 {
                     var key = matchCondition.Groups["key"].Value;
                     value = matchCondition.Groups["value"].Value;
-                    if (internalVars.ContainsKey(key) && internalVars[key].ToString() == value)
+                    if (internalVars.ContainsKey(key) && internalVars[key].ToString().ToLower() == value?.ToLower())
                     {
                         lastConditionResult = true;
                         itemLine = "." + matchCondition.Groups["var"].Value;
@@ -558,9 +469,13 @@ namespace L2Data2Code.BaseGenerator.Services
                 if (itemLine.StartsWith("."))
                 {
                     if (lastConditionResult)
-                        itemLine = itemLine.Substring(1);
+                    {
+                        itemLine = itemLine[1..];
+                    }
                     else
+                    {
                         continue;
+                    }
                 }
                 else
                 {
@@ -568,18 +483,34 @@ namespace L2Data2Code.BaseGenerator.Services
                 }
                 var camps = itemLine.Split('=');
                 value = camps[1].Trim();
-                internalVars[camps[0].Trim()] = value.NotEmpty() && value.Contains("{{")
-                    ? mustacheRenderizer.Render(value, internalVars)
+                value = value.NotEmpty() && value.Contains("{{")
+                    ? value.Contains('\\') ? mustacheRenderizer.RenderPath(value, internalVars) : mustacheRenderizer.Render(value, internalVars)
                     : value;
+
+                if (value.Equals("true", StringComparison.CurrentCultureIgnoreCase) || value.Equals("false", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    internalVars[camps[0].Trim()] = bool.Parse(value);
+                }
+                else
+                {
+                    internalVars[camps[0].Trim()] = value;
+                }
             }
         }
 
-        private Replacement GetReplacementData(EntityTable table)
+        private Dictionary<string, object> GetReplacementData(EntityTable table)
         {
-            var connectionStringSettings = Config.GetConnectionString(Options.CreatedFromSchemaName);
+            var (ConnectionString, Provider) = schemaService.GetConnectionString(Options.CreatedFromSchemaName);
 
             var tableName = table.TableName;
-            var normalizeNames = Config.NormalizedNames(Options.CreatedFromSchemaName);
+            var normalizeNames = schemaService.NormalizedNames(Options.CreatedFromSchemaName);
+
+            Entity entity = new()
+            {
+                Name = table.ClassName,
+                UseSpanish = schemaService.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
+                MultiplePKColumns = table.MultiplePKColumns,
+            };
 
             var properties =
                 table.Columns.Select(
@@ -587,8 +518,9 @@ namespace L2Data2Code.BaseGenerator.Services
                     {
                         var name = column.Name;
                         var type = DecodeCSharpType(column.Type);
-                        var property = new Property
+                        Property property = new()
                         {
+                            Entity = entity,
                             Table = tableName,
                             Name = name,
                             Nullable = column.IsNull,
@@ -597,7 +529,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             IsLast = isLast,
                             DefaultValue = column.GetDefaultValue(),
                             Type = type,
-                            OverrideDbType = SchemaFactory.GetConversion(connectionStringSettings.Provider, type),
+                            OverrideDbType = schemaFactory.GetConversion(Provider, type),
                             Description = string.IsNullOrWhiteSpace(column.Description) ? null : column.Description.ReplaceEndOfLine(),
                             IsCollection = column.IsCollection,
                             IsForeignKey = column.IsForeignKey,
@@ -622,38 +554,50 @@ namespace L2Data2Code.BaseGenerator.Services
                         return property;
                     }).ToArray();
 
-            var entity = new Entity
+            Replacement currentReplacement = new()
             {
-                Name = table.ClassName,
-                UseSpanish = Config.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
-                MultiplePKColumns = table.MultiplePKColumns,
-            };
-
-            var currentReplacement = new Replacement
-            {
+                Template = Template.Name,
                 Entity = entity,
                 IsView = table.IsView,
                 IsUpdatable = table.IsUpdatable,
                 Description = string.IsNullOrWhiteSpace(table.Description) ? null : table.Description.ReplaceEndOfLine(),
-                ConnectionString = connectionStringSettings.ConnectionString,
-                DataProvider = connectionStringSettings.Provider,
+                ConnectionString = ConnectionString,
+                DataProvider = Provider,
                 Module = Template.Module,
                 Area = Template.Area,
                 Company = Template.Company,
                 TableName = tableName,
                 TableNameOrEntity = normalizeNames ? entity.Name : tableName,
                 GenerateReferences = Options.GenerateReferenced,
-                IgnoreColumns = Template.IgnoreColumns == null ? new string[] { } : Template.IgnoreColumns.Replace(" ", "").Split(Path.PathSeparator),
+                IgnoreColumns = Template.IgnoreColumns == null ? Array.Empty<string>() : Template.IgnoreColumns.Replace(" ", "").Split(Path.PathSeparator),
                 UnfilteredColumns = properties,
                 GenerateBase = false,
                 Vars = internalVars,
-                CanCreateDB = Config.CanCreateDB(Options.CreatedFromSchemaName),
+                CanCreateDB = schemaService.CanCreateDB(Options.CreatedFromSchemaName),
             };
 
-            return currentReplacement;
+            return GetDictionaryDataFromReplacement(currentReplacement);
         }
 
-        private string DecodeCSharpType(string type) =>
-            type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type.Substring(1) : type;
+        private static string DecodeCSharpType(string type) =>
+            type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type[1..] : type;
+
+        private static Dictionary<string, object> GetDictionaryDataFromReplacement(Replacement replacementData)
+        {
+            var data = new Dictionary<string, object>();
+
+            var properties = replacementData.GetType().GetProperties();
+            foreach (var property in properties.Where(p => p.Name != "Item"))
+            {
+                data[property.Name] = property.GetValue(replacementData);
+            }
+
+            foreach (var key in replacementData.Vars.Keys)
+            {
+                data[key] = replacementData.Vars[key];
+            }
+
+            return data;
+        }
     }
 }

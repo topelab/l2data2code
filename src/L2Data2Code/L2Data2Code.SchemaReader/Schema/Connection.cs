@@ -1,6 +1,5 @@
+using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SharedLib.Configuration;
-using L2Data2Code.SharedLib.Helpers;
-using System;
 using System.Configuration;
 
 namespace L2Data2Code.SchemaReader.Schema
@@ -23,12 +22,12 @@ namespace L2Data2Code.SchemaReader.Schema
         {
             if (schema.Count == 0)
             {
-                throw new ConfigurationErrorsException($"Not found \"{SectionLabels.SCHEMA}\" section in appsettings.json file.");
+                throw new ConfigurationErrorsException($"Not found \"{ConfigurationLabels.SCHEMA}\" section in appsettings.json file.");
             }
 
             if (schema[schemaName] == null)
             {
-                throw new ConfigurationErrorsException($"Section \"{SectionLabels.SCHEMA}\" does not contain connection key \"{schemaName}\" defined in appsettings.json file.");
+                throw new ConfigurationErrorsException($"Section \"{ConfigurationLabels.SCHEMA}\" does not contain connection key \"{schemaName}\" defined in appsettings.json file.");
             }
 
             var schemaInfo = schema[schemaName];
@@ -42,7 +41,7 @@ namespace L2Data2Code.SchemaReader.Schema
             if (ConnectionString.Contains("|DataDirectory|"))
             {
                 //have to replace it
-                string dataFilePath = GetDataDirectory();
+                var dataFilePath = GetDataDirectory();
                 ConnectionString = ConnectionString.Replace("|DataDirectory|", dataFilePath);
             }
 
@@ -51,7 +50,7 @@ namespace L2Data2Code.SchemaReader.Schema
 
         /// <summary>Gets the data directory.</summary>
         /// <returns></returns>
-        public string GetDataDirectory()
+        public static string GetDataDirectory()
         {
             return System.IO.Directory.GetCurrentDirectory() + "\\App_Data\\";
         }

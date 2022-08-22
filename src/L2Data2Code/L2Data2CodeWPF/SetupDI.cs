@@ -1,57 +1,70 @@
-using L2Data2CodeUI.Shared.Adapters;
-using L2Data2CodeWPF.ViewModel;
-using Unity;
-using L2Data2Code.BaseGenerator.Services;
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Interfaces;
-using L2Data2Code.SharedLib.Helpers;
+using L2Data2Code.BaseGenerator.Services;
+using L2Data2Code.BaseHandleBars;
+using L2Data2Code.SchemaReader.Configuration;
+using L2Data2Code.SchemaReader.Fake;
+using L2Data2Code.SchemaReader.Interface;
+using L2Data2Code.SchemaReader.Json;
+using L2Data2Code.SchemaReader.MySql;
+using L2Data2Code.SchemaReader.Object;
+using L2Data2Code.SchemaReader.Schema;
+using L2Data2Code.SchemaReader.SqlServer;
 using L2Data2Code.SharedLib.Configuration;
+using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Helpers;
+using L2Data2Code.SharedLib.Interfaces;
+using L2Data2Code.SharedLib.Services;
+using L2Data2CodeUI.Shared.Adapters;
+using L2Data2CodeWPF.Main;
+using L2Data2CodeWPF.SharedLib;
 using NLog;
+using Topelab.Core.Resolver.Entities;
 
 namespace L2Data2CodeWPF
 {
     public class SetupDI
     {
-
-        private static IUnityContainer container;
-        public static IUnityContainer Container => container ?? Register();
-
-        public static IUnityContainer CreateContainer()
+        public static ResolveInfoCollection Register()
         {
-            return Register(new UnityContainer());
-        }
+            return new ResolveInfoCollection()
+                .AddSingleton<IJsonSetting, JsonSetting>()
+                .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
+                .AddSingleton<IDataSorcesConfiguration, DataSourcesConfiguration>()
+                .AddSingleton<IGlobalsConfiguration, GlobalsConfiguration>()
+                .AddSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>()
+                .AddSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>()
+                .AddSingleton<ITemplatesConfiguration, TemplatesConfiguration>()
+                .AddSingleton<IMustacheRenderizer, HandleBarsRenderizer>()
+                .AddSingleton<IConditionalPathRenderizer, ConditionalPathRenderizer>()
+                .AddSingleton<IFileService, FileService>()
+                .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
+                .AddSingleton<MainWindowVM, MainWindowVM>()
+                .AddSingleton<IMessagePanelService, MessagePanelService>()
+                .AddSingleton<IMessageService, MessageService>()
+                .AddSingleton<IAppService, AppService>()
+                .AddSingleton<ICommandService, CommandService>()
+                .AddSingleton<IGeneratorAdapter, GeneratorAdapter>()
+                .AddSingleton<IGitService, GitService>()
+                .AddSingleton<ISchemaService, SchemaService>()
+                .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
+                .AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
+                .AddSingleton<INameResolver, NameResolver>()
+                .AddSingleton<ITemplateService, TemplateService>()
+                .AddSingleton<IProcessManager, ProcessManager>()
+                .AddSingleton<ISchemaFactory, SchemaFactory>()
 
-        private static IUnityContainer Register()
-        {
-            var container = new UnityContainer();
-            SetupDI.container = Register(container);
-            return container;
-        }
+                .Add<IFileMonitorService, FileMonitorService>()
+                .Add<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+                .Add<ISchemaReader, MySqlSchemaReader>(nameof(MySqlSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+                .Add<ISchemaReader, FakeSchemaReader>(nameof(FakeSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+                .Add<ISchemaReader, JsonSchemaReader>(nameof(JsonSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+                .Add<ISchemaReader, ObjectSchemaReader>(nameof(ObjectSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+                .Add<ISchemaReader, SQLiteSchemaReader>(nameof(SQLiteSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
 
-        private static IUnityContainer Register(IUnityContainer container)
-        {
-            container.RegisterSingleton<IJsonSetting, JsonSetting>();
-            container.RegisterSingleton<IBasicNameValueConfiguration, AppSettingsConfiguration>(nameof(AppSettingsConfiguration));
-            container.RegisterSingleton<IAreasConfiguration, AreasConfiguration>();
-            container.RegisterSingleton<IGlobalsConfiguration, GlobalsConfiguration>();
-            container.RegisterSingleton<IBasicConfiguration<ModuleConfiguration>, ModulesConfiguration>();
-            container.RegisterSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>();
-            container.RegisterSingleton<ITemplatesConfiguration, TemplatesConfiguration>();
+                .AddInstance<ILogger>(LogManager.GetCurrentClassLogger())
 
-            container.RegisterType<MainWindowViewModel>(TypeLifetime.PerContainer);
-            container.RegisterType<IMessagesViewModel, MessagesViewModel>(TypeLifetime.PerContainer);
-            container.RegisterType<IMessageService, MessageService>(TypeLifetime.PerContainer);
-            container.RegisterType<IAppService, AppService>(TypeLifetime.PerContainer);
-            container.RegisterType<ICommandService, CommandService>(TypeLifetime.PerContainer);
-            container.RegisterType<IGeneratorAdapter, GeneratorAdapter>(TypeLifetime.PerContainer);
-            container.RegisterType<IMustacheRenderizer, MustacheRenderizer>(TypeLifetime.PerContainer);
-            container.RegisterType<IGitService, GitService>(TypeLifetime.PerContainer);
-            container.RegisterType<ISchemaService, SchemaService>(TypeLifetime.PerContainer);
-            container.RegisterType<ICodeGeneratorService, CodeGeneratorService>(TypeLifetime.PerContainer);
-
-            container.RegisterType<IFileMonitorService, FileMonitorService>(TypeLifetime.PerResolve);
-
-            container.RegisterInstance<ILogger>(LogManager.GetCurrentClassLogger());
-            return container;
+                ;
         }
     }
 }

@@ -1,5 +1,4 @@
 using L2Data2Code.SharedLib.Configuration;
-using L2Data2Code.SharedLib.Helpers;
 using NLog;
 using System;
 using System.Diagnostics;
@@ -9,7 +8,8 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using Unity;
+using Topelab.Core.Resolver.Interfaces;
+using Topelab.Core.Resolver.Microsoft;
 
 namespace L2Data2CodeWPF
 {
@@ -22,13 +22,14 @@ namespace L2Data2CodeWPF
 
         public static bool RestartApp { get; set; }
 
+        public static IResolver Resolver { get; private set; }
+
 
         public App()
         {
-            var container = ContainerManager.SetupContainer(SetupDI.Container);
-            Logger = container.Resolve<ILogger>();
-
-            var settings = container.Resolve<IBasicNameValueConfiguration>(nameof(AppSettingsConfiguration));
+            Resolver = ResolverFactory.Create(SetupDI.Register());
+            Logger = Resolver.Get<ILogger>();
+            var settings = Resolver.Get<IAppSettingsConfiguration>();
 
             var uiCulture = settings["UICulture"];
             if (uiCulture != null && !uiCulture.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
@@ -44,7 +45,7 @@ namespace L2Data2CodeWPF
             Logger.Error(e.Exception);
         }
 
-    protected override void OnExit(ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
             Logger.Info("Application ending");
             if (RestartApp)

@@ -2,7 +2,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace L2Data2Code.SharedLib.Helpers
@@ -18,7 +17,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
     public static class LogService
     {
-        private static readonly Dictionary<LogType, Action<string>> logAction = new Dictionary<LogType, Action<string>>();
+        private static readonly Dictionary<LogType, Action<string>> logAction = new();
 
         private static ILogger logger = null;
         public static ILogger Logger
@@ -95,11 +94,11 @@ namespace L2Data2Code.SharedLib.Helpers
         private static string GetTraceInfo(int maxFrames = 4)
         {
 
-            var st = new StackTrace(true);
-            int frames = st.FrameCount > maxFrames + 2 ? maxFrames + 2 : st.FrameCount;
-            var sb = new StringBuilder();
+            StackTrace st = new(true);
+            var frames = st.FrameCount > maxFrames + 2 ? maxFrames + 2 : st.FrameCount;
+            StringBuilder sb = new();
 
-            for (int i = frames - 1; i > 1; i--)
+            for (var i = frames - 1; i > 1; i--)
             {
                 if (i < frames - 1)
                 {
@@ -115,10 +114,7 @@ namespace L2Data2Code.SharedLib.Helpers
 
         private static Action<string> GetAction(LogType logType)
         {
-            if (Logger == null)
-            {
-                Logger = LogManager.GetCurrentClassLogger();
-            }
+            Logger ??= LogManager.GetCurrentClassLogger();
 
             if (logAction.ContainsKey(logType))
             {
