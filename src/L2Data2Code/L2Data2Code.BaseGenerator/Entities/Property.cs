@@ -18,7 +18,9 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsLast { get; set; }
         public bool IsForeignKey { get; set; }
         public bool IsCollection { get; set; }
+        public string InitialValue { get; set; }
         public string DefaultValue { get; set; }
+        public bool HasDefaultValue { get; set; }
         public string Type { get; set; }
         public string OverrideDbType { get; set; }
         public bool DbTypeOverrided => OverrideDbType.NotEmpty();
@@ -98,7 +100,9 @@ namespace L2Data2Code.BaseGenerator.Entities
                 Name = Name,
                 Nullable = Nullable,
                 PrimaryKey = PrimaryKey,
+                InitialValue = InitialValue,
                 DefaultValue = DefaultValue,
+                HasDefaultValue = HasDefaultValue,
                 Type = Type,
                 OverrideDbType = OverrideDbType,
                 Description = Description,

@@ -110,7 +110,8 @@ namespace L2Data2Code.SchemaReader.MySql
 
                 Table tbl = new()
                 {
-                    Name = (string)row["TABLE_NAME"]
+                    Name = (string)row["TABLE_NAME"],
+                    SourceDB = "mysql",
                 };
 
                 if (tableRegex != null && !tableRegex.IsMatch(tbl.Name))
@@ -156,6 +157,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 col.NumericScale = (int)row["NUMERIC_SCALE"].IfNull((ulong)0);
                 col.IsNumeric = row["NUMERIC_PRECISION"].IfNull(0) > 0;
                 col.IsComputed = tbl.IsView || !string.IsNullOrWhiteSpace((string)row["EXTRA"]);
+                col.DefaultValue = row["COLUMN_DEFAULT"].IfNull<string>(null) == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'').Replace("CURRENT_TIMESTAMP", "DateTime.Now", StringComparison.CurrentCultureIgnoreCase);
                 col.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name) ? alternativeDescriptions[col.Name] : (string)row["COLUMN_COMMENT"];
                 result.Add(col);
             }

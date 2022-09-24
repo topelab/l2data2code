@@ -81,7 +81,7 @@ namespace L2Data2Code.SchemaReader.Object
         {
             var typeName = GetFriendlyTypeName(type, nameSpace);
 
-            Table table = new() { ClassName = typeName, Name = typeName, CleanName = nameResolver.ResolveTableName(typeName) };
+            Table table = new() { ClassName = typeName, Name = typeName, CleanName = nameResolver.ResolveTableName(typeName), SourceDB = "object" };
             table.Columns = LoadColumnsFromProperties(nameSpace, type, table, alternativeDescriptions);
             return table;
         }

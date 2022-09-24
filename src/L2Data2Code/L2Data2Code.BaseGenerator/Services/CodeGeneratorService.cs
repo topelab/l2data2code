@@ -528,6 +528,8 @@ namespace L2Data2Code.BaseGenerator.Services
                             IsFirst = isFirst,
                             IsLast = isLast,
                             DefaultValue = column.GetDefaultValue(),
+                            InitialValue = column.GetInitialValue(),
+                            HasDefaultValue = column.HasDefaultValue,
                             Type = type,
                             OverrideDbType = schemaFactory.GetConversion(Provider, type),
                             Description = string.IsNullOrWhiteSpace(column.Description) ? null : column.Description.ReplaceEndOfLine(),

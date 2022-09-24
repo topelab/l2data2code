@@ -354,5 +354,20 @@ namespace L2Data2Code.SharedLib.Extensions
         public static string DoubleSlash(this string path)
             => path.Replace(@"\", @"\\");
 
+        public static string RemoveOuter(this string text, char startChar, char? endChar = null)
+        {
+            string result = text;
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                endChar ??= startChar;
+                while (result.Length > 1 && result.StartsWith(startChar) && result.EndsWith(endChar.Value))
+                {
+                    result = result[1..^1];
+                }
+            }
+            return result;
+        }
+
+        public static string StringRepresentation(this string text) => text == null ? "null" : $"\"{text}\"";
     }
 }

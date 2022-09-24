@@ -134,6 +134,11 @@ namespace L2Data2Code.SchemaReader.Schema
         public bool IsNumeric { get; set; }
 
         /// <summary>
+        /// Default value for column
+        /// </summary>
+        public string DefaultValue { get; set; }
+
+        /// <summary>
         /// Gets the full name.
         /// </summary>
         /// <value>

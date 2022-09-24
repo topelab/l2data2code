@@ -1,3 +1,4 @@
+using L2Data2Code.SharedLib.Extensions;
 using System;
 
 namespace L2Data2Code.BaseGenerator.Entities
@@ -26,8 +27,38 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string DbJoin { get; set; }
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
+        public string DefaultValue { get; set; }
+        public bool HasDefaultValue => !string.IsNullOrWhiteSpace(DefaultValue);
 
         public string GetDefaultValue()
+        {
+            return Type switch
+            {
+                "DateTime?" => HasDefaultValue ? DefaultValue : "null",
+                "DateTime" => HasDefaultValue ? DefaultValue : "new DateTime(1,1,1)",
+                "TimeSpan?" => HasDefaultValue ? DefaultValue : "null",
+                "TimeSpan" => HasDefaultValue ? DefaultValue : "TimeSpan.Zero",
+                "bool?" => HasDefaultValue ? DefaultValue.IsTrue().ToString().ToLower() : "null",
+                "bool" => DefaultValue.IsTrue().ToString().ToLower(),
+
+                "int" or "long" or "float"
+                or "double" or "decimal" or "short" or "byte"
+                or "Int16" or "Int32" or "Int64"
+                or "Double" or "Decimal" => HasDefaultValue ? DefaultValue : "0",
+
+                "int?" or "long?" or "float?"
+                or "double?" or "decimal?" or "short?" or "byte?"
+                or "Int16?" or "Int32?" or "Int64?"
+                or "Double?" or "Decimal?" => HasDefaultValue ? DefaultValue : "null",
+
+                "char" => "'\0'",
+                "char?" => "null",
+
+                _ => HasDefaultValue ? DefaultValue.StringRepresentation() : "null",
+            };
+        }
+
+        public string GetInitialValue()
         {
             return Type switch
             {
@@ -48,6 +79,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 _ => "null",
             };
         }
+
 
         public string GetCSharpType()
         {

@@ -65,7 +65,8 @@ namespace L2Data2Code.SchemaReader.SqlServer
                         {
                             Table tbl = new()
                             {
-                                Name = (string)rdr["TABLE_NAME"]
+                                Name = (string)rdr["TABLE_NAME"],
+                                SourceDB = "sqlserver"
                             };
 
                             if (options.TableRegex != null && !options.TableRegex.IsMatch(tbl.Name))
@@ -91,7 +92,8 @@ namespace L2Data2Code.SchemaReader.SqlServer
                         {
                             Table tbl = new()
                             {
-                                Name = (string)rdr["TABLE_NAME"]
+                                Name = (string)rdr["TABLE_NAME"],
+                                SourceDB = "sqlserver"
                             };
 
                             if (options.TableRegex != null && !options.TableRegex.IsMatch(tbl.Name))
@@ -210,6 +212,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     col.NumericScale = (int)rdr["NumericScale"];
                     col.IsNumeric = rdr["NUMERIC_PRECISION"].IfNull(0) > 0;
                     col.IsComputed = tbl.IsView || (int)rdr["IsComputed"] != 0 || ((string)rdr["DataType"]).Equals("timestamp");
+                    col.DefaultValue = rdr["COLUMN_DEFAULT"].IfNull<string>(null) == null ? null : ((string)rdr["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'').Replace("getdate()", "DateTime.Now", StringComparison.CurrentCultureIgnoreCase);
                     result.Add(col);
                 }
             }

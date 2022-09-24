@@ -29,7 +29,8 @@ namespace L2Data2Code.SchemaReader.Fake
         {
             Table tbl = new()
             {
-                Name = tableName
+                Name = tableName,
+                SourceDB = "fake"
             };
 
             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);

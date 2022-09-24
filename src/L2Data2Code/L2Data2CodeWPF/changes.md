@@ -1,3 +1,7 @@
+### 2.12.6
+
+- Added default values to columns (experimental)
+
 ### 2.12.5
 
 - Internal refactors to decouples scheme database reading service.

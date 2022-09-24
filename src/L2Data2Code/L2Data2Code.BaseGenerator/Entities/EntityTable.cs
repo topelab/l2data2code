@@ -51,6 +51,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     PkOrder = column.PkOrder,
                     IsAutoIncrement = column.IsAutoIncrement,
                     IsComputed = column.IsComputed,
+                    DefaultValue = column.DefaultValue,
                 };
                 Columns.Add(campo);
                 NumeroCamposPK += campo.PrimaryKey ? 1 : 0;

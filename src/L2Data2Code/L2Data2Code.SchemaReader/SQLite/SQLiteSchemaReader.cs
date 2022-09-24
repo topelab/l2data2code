@@ -105,7 +105,8 @@ namespace L2Data2Code.SchemaReader.MySql
             {
                 Table tbl = new()
                 {
-                    Name = (string)row["TABLE_NAME"]
+                    Name = (string)row["TABLE_NAME"],
+                    SourceDB = "sqlite"
                 };
 
                 if (tableRegex != null && !tableRegex.IsMatch(tbl.Name))
@@ -150,6 +151,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 col.NumericScale = row["NUMERIC_SCALE"].IfNull(0);
                 col.IsNumeric = row["NUMERIC_PRECISION"].IfNull(0) > 0;
                 col.IsComputed = tbl.IsView;
+                col.DefaultValue = row["COLUMN_DEFAULT"] == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'');
                 col.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name) ? alternativeDescriptions[col.Name] : null;
                 result.Add(col);
             }

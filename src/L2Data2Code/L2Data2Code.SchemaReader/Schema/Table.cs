@@ -6,6 +6,10 @@ namespace L2Data2Code.SchemaReader.Schema
     /// <summary>Table</summary>
     public class Table
     {
+        /// <summary>
+        /// Source where table was originally created
+        /// </summary>
+        public string SourceDB { get; set; }
         /// <summary>Gets the columns.</summary>
         /// <value>The columns.</value>
         public List<Column> Columns { get; set; }
