@@ -159,6 +159,10 @@ namespace L2Data2Code.SchemaReader.MySql
                 col.IsComputed = tbl.IsView || !string.IsNullOrWhiteSpace((string)row["EXTRA"]);
                 col.DefaultValue = row["COLUMN_DEFAULT"].IfNull<string>(null) == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'').Replace("CURRENT_TIMESTAMP", "DateTime.Now", StringComparison.CurrentCultureIgnoreCase);
                 col.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name) ? alternativeDescriptions[col.Name] : (string)row["COLUMN_COMMENT"];
+                if (col.DefaultValue != null && col.PropertyType == "decimal" && !col.DefaultValue.EndsWith("m") && col.DefaultValue.Contains('.'))
+                {
+                    col.DefaultValue += "m";
+                }
                 result.Add(col);
             }
 

@@ -64,6 +64,10 @@ namespace L2Data2Code.SchemaReader.Json
                 {
                     column.Table = item;
                     column.PropertyName = column.PropertyName.IsEmpty() ? nameResolver.ResolveColumnName(item.Name, column.Name).PascalCamelCase(removeFirstWord) : column.PropertyName;
+                    if (column.DefaultValue != null && column.PropertyType == "decimal" && !column.DefaultValue.EndsWith("m") && column.DefaultValue.Contains('.'))
+                    {
+                        column.DefaultValue += "m";
+                    }
                 }
                 ResolveKeys(item.InnerKeys, tablesInfo);
                 ResolveKeys(item.OuterKeys, tablesInfo);
