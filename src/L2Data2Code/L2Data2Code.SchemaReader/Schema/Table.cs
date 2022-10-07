@@ -55,6 +55,10 @@ namespace L2Data2Code.SchemaReader.Schema
         /// <summary>Gets or sets the description.</summary>
         /// <value>The description.</value>
         public string Description { get; set; }
+        /// <summary>
+        /// Table type
+        /// </summary>
+        public string Type { get; set; }
 
         /// <summary>Gets the pk.</summary>
         /// <value>The pk.</value>

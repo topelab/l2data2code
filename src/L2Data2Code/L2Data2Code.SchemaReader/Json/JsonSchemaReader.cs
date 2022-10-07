@@ -59,6 +59,7 @@ namespace L2Data2Code.SchemaReader.Json
             foreach (var item in tables.Where(t => tableRegex == null || tableRegex.IsMatch(t.Name)))
             {
                 item.CleanName = nameResolver.ResolveTableName(item.Name).PascalCamelCase(false);
+                item.Type = nameResolver.ResolveTableType(item.Name);
                 item.ClassName = item.CleanName.ToSingular();
                 foreach (var column in item.Columns)
                 {

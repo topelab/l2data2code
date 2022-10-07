@@ -508,6 +508,7 @@ namespace L2Data2Code.BaseGenerator.Services
             Entity entity = new()
             {
                 Name = table.ClassName,
+                Type = table.TableType,
                 UseSpanish = schemaService.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
             };

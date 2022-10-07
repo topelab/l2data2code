@@ -9,6 +9,7 @@ namespace L2Data2Code.SchemaReader.Schema
     {
         private Dictionary<string, string> _tableNames = null;
         private Dictionary<string, string> _columnNames = null;
+        private Dictionary<string , string> _tableTypes = null;
         private readonly IBasicConfiguration<SchemaConfiguration> schemas;
 
         public NameResolver(IBasicConfiguration<SchemaConfiguration> schemas)
@@ -20,6 +21,7 @@ namespace L2Data2Code.SchemaReader.Schema
         {
             _tableNames = GetRenames(schemas[schemaName]?.RenameTables);
             _columnNames = GetRenames(schemas[schemaName]?.RenameColumns);
+            _tableTypes = GetRenames(schemas[schemaName]?.TableTypes);
         }
 
         public string ResolveTableName(string originalTableName) =>
@@ -30,6 +32,9 @@ namespace L2Data2Code.SchemaReader.Schema
             var key = $"{originalTableName}.{originalColumnName}";
             return _columnNames.ContainsKey(key) ? _columnNames[key] : _columnNames.ContainsKey(originalColumnName) ? _columnNames[originalColumnName] : originalColumnName;
         }
+
+        public string ResolveTableType(string originalTableName) =>
+            _tableTypes.ContainsKey(originalTableName) ? _tableTypes[originalTableName] : string.Empty;
 
         private static Dictionary<string, string> GetRenames(string renameDescriptions)
         {

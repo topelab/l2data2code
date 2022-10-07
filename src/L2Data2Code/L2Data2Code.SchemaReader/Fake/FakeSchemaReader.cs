@@ -34,6 +34,7 @@ namespace L2Data2Code.SchemaReader.Fake
             };
 
             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+            tbl.Type = nameResolver.ResolveTableType(tbl.Name);
             tbl.ClassName = tbl.CleanName.ToSingular();
             tbl.Description = $"Description for {tbl.ClassName}";
 

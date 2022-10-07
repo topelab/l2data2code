@@ -10,6 +10,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Name { get; internal set; }
         public string ClassName { get; internal set; }
         public string TableName { get; internal set; }
+        public string TableType { get; internal set; }
         public bool IsView { get; internal set; }
         public bool IsUpdatable { get; internal set; }
         public bool MultiplePKColumns { get; private set; }
@@ -26,6 +27,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             Name = table.CleanName;
             ClassName = table.ClassName;
             TableName = table.Name;
+            TableType = table.Type;
             IsView = table.IsView;
             IsUpdatable = table.IsUpdatable;
             MultiplePKColumns = table.PK.Count() > 1;

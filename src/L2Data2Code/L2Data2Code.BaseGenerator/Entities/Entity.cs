@@ -14,6 +14,10 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// Entity type
+        /// </summary>
+        public string Type { get; set; }
+        /// <summary>
         /// Use spanish lang?
         /// </summary>
         public bool UseSpanish { get; set; }

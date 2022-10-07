@@ -1,3 +1,8 @@
+### 2.13.0
+
+- Added personalized table types to schemes that can be used elsewhere in templates.
+- Updated some NuGet packages
+
 ### 2.12.6
 
 - Added default values to columns (experimental)

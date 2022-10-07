@@ -77,6 +77,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.Schema = (string)rdr["TABLE_SCHEMA"];
                             tbl.IsView = string.Compare((string)rdr["TABLE_TYPE"], "VIEW", true) == 0;
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+                            tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name]
                                 : options.AlternativeDescriptions.ContainsKey(tbl.Name) ? options.AlternativeDescriptions[tbl.Name] : null;
@@ -105,6 +106,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.IsView = true;
                             tbl.IsUpdatable = (string)rdr["IS_UPDATABLE"] == "YES";
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
+                            tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name] : null;
 
