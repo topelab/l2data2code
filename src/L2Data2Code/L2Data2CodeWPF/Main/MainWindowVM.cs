@@ -86,11 +86,11 @@ namespace L2Data2CodeWPF.Main
             TemplateList = this.generatorAdapter.GetTemplateList();
             _selectedtemplate = TemplateList.FirstOrDefault();
 
-            VarsList = this.generatorAdapter.GetVarsList(_selectedtemplate);
-            _selectedVars = VarsList.FirstOrDefault();
-
             DataSourceList = this.generatorAdapter.GetAreaList();
             _selectedDataSource = DataSourceList.FirstOrDefault();
+
+            VarsList = this.generatorAdapter.GetVarsList(_selectedtemplate, _selectedDataSource);
+            _selectedVars = VarsList.FirstOrDefault();
 
             ModuleList = this.generatorAdapter.GetModuleList(_selectedDataSource);
             _selectedModule = this.generatorAdapter.GetDefaultModule(_selectedDataSource);
@@ -314,6 +314,8 @@ namespace L2Data2CodeWPF.Main
                 {
                     SelectedModule = generatorAdapter.SelectedModule;
                     OnPropertyChanged(nameof(ModuleList));
+                    VarsList = this.generatorAdapter.GetVarsList(SelectedTemplate, SelectedDataSource);
+                    SelectedVars = VarsList.FirstOrDefault();
                     OutputPath = generatorAdapter.OutputPath;
                     SlnFile = generatorAdapter.SlnFile;
                     GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";

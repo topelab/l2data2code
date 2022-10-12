@@ -12,6 +12,7 @@ namespace L2Data2Code.SchemaReader.Configuration
     {
         private string outputSchema;
         private JToken varsConfiguration;
+        private JToken configurationsConfiguration;
 
         /// <summary>
         /// Area
@@ -33,14 +34,26 @@ namespace L2Data2Code.SchemaReader.Configuration
         /// <summary>
         /// Vars configuration
         /// </summary>
-        [JsonProperty("Vars")]
+        [JsonProperty(nameof(Vars))]
         public JToken VarsConfiguration { get => varsConfiguration; set { varsConfiguration = value; Vars = value.ToNameValueCollection(); } }
+
+        /// <summary>
+        /// Configurations configuration
+        /// </summary>
+        [JsonProperty(nameof(Configurations))]
+        public JToken ConfigurationsConfiguration { get => configurationsConfiguration; set { configurationsConfiguration = value; Configurations = value.ToNameValueCollection(); } }
 
         /// <summary>
         /// Vars
         /// </summary>
         [JsonIgnore]
         public NameValueCollection Vars { get; set; }
+
+        /// <summary>
+        /// Configurations
+        /// </summary>
+        [JsonIgnore]
+        public NameValueCollection Configurations { get; set; }
 
         public DataSourceConfiguration()
         {

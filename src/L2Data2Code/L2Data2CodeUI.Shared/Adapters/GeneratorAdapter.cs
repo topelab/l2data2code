@@ -143,8 +143,12 @@ namespace L2Data2CodeUI.Shared.Adapters
         public IEnumerable<string> GetTemplateList()
             => TemplatesConfiguration.GetKeys();
 
-        public IEnumerable<string> GetVarsList(string selectedTemplate)
-            => TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable();
+        public IEnumerable<string> GetVarsList(string selectedTemplate, string selectedDataSource = null)
+        {
+            return selectedDataSource == null
+                ? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable()
+                : DataSourcesConfiguration[selectedDataSource].Configurations?.AllKeys.AsEnumerable() ?? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable();
+        }
 
         public void Run(CodeGeneratorDto baseOptions)
         {
@@ -326,7 +330,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
 
             SelectedTemplate = selectedTemplate;
-            SetCurrentVars(GetVarsList(selectedTemplate).FirstOrDefault(), true);
+            SetCurrentVars(GetVarsList(selectedTemplate, SelectedDataSource).FirstOrDefault(), true);
         }
 
         public void SetCurrentVars(string selectedVars, bool triggered = false)

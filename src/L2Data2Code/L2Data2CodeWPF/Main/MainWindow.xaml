@@ -69,14 +69,14 @@
                           SelectedItem="{Binding SelectedTemplate}"
                           Margin="0,5" />
 
-                <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="2"
                            HorizontalAlignment="Right"
                            Margin="10,0"
                            TextWrapping="Wrap"
                            VerticalAlignment="Center"
                            Text="{x:Static local:Strings.Vars}"
                            Visibility="{Binding VarsVisible, Converter={x:Static s:Converters.VisibleIfTrue}}" />
-                <Grid Grid.Row="1"
+                <Grid Grid.Row="2"
                       Visibility="{Binding VarsVisible, Converter={x:Static s:Converters.VisibleIfTrue}}"
                       Grid.Column="2">
                     <Grid.ColumnDefinitions>
@@ -90,13 +90,13 @@
                               Margin="0,5" />
 
                 </Grid>
-                <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="1"
                            HorizontalAlignment="Right"
                            Margin="10,0"
                            TextWrapping="Wrap"
                            VerticalAlignment="Center"
                            Text="{x:Static local:Strings.DataSource}" />
-                <ComboBox Grid.Row="2"
+                <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           x:Name="cbArea"
                           ItemsSource="{Binding DataSourceList}"

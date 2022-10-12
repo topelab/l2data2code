@@ -1,3 +1,8 @@
+### 2.13.1
+
+- Added personalized configurations to data sources
+- Updated MySql.Data to 8.0.31
+
 ### 2.13.0
 
 - Added personalized table types to schemes that can be used elsewhere in templates.

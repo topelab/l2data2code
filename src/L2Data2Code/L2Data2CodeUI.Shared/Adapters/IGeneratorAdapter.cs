@@ -32,7 +32,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         IEnumerable<string> GetAreaList();
         IEnumerable<string> GetModuleList(string selectedDataSource);
         IEnumerable<string> GetTemplateList();
-        IEnumerable<string> GetVarsList(string selectedTemplate);
+        IEnumerable<string> GetVarsList(string selectedTemplate, string selectedDataSource = null);
         void SetCurrentDataSource(string selectedDataSource);
         void SetCurrentModule(string selectedModule, bool triggered = false);
         void SetCurrentTemplate(string selectedTemplate, bool triggered = false);
