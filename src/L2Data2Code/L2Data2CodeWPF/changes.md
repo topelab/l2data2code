@@ -1,3 +1,7 @@
+### 2.13.2
+
+- Now, *SavePath* can use any of the vars defined
+
 ### 2.13.1
 
 - Added personalized configurations to data sources

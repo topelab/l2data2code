@@ -415,11 +415,12 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private void CreateVarsFromUserVariables()
         {
-            var variables = $"{Library.Global?.Vars ?? string.Empty}";
-            variables += $";{Template.UserVariables ?? string.Empty}";
-            variables += $";{Options.UserVariables ?? string.Empty}";
-            variables += $";{Template.FinalVariables ?? string.Empty}";
-            variables += $";{Library.Global?.FinalVars ?? string.Empty}";
+            var variables = string.Concat(Library.Global?.Vars ?? string.Empty, ";",
+                                          Template.UserVariables ?? string.Empty, ";",
+                                          Options.UserVariables ?? string.Empty, ";",
+                                          Template.FinalVariables ?? string.Empty, ";",
+                                          Library.Global?.FinalVars ?? string.Empty, ";",
+                                          $"{nameof(Template.SavePath)}={Template.SavePath};");
 
             var allVars = variables.ReplaceEndOfLine(";").Split(';', StringSplitOptions.RemoveEmptyEntries);
 
@@ -432,7 +433,6 @@ namespace L2Data2Code.BaseGenerator.Services
             internalVars.Add(nameof(Template.Module), Template.Module);
             internalVars.Add(nameof(Options.GeneratorApplication), Options.GeneratorApplication);
             internalVars.Add(nameof(Options.GeneratorVersion), Options.GeneratorVersion);
-            internalVars.Add(nameof(Template.SavePath), mustacheRenderizer.RenderPath(Template.SavePath, internalVars));
             internalVars.Add(nameof(Options.TemplatePath), Options.TemplatePath.AddPathSeparator());
 
             ProcessConditionals(allVars);

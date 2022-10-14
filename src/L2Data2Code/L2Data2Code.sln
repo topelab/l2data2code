@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Info", "_Info", "{E32A1A45-3000-461A-AEF1-DE4C27DC0BC0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		L2Data2CodeWPF\changes.md = L2Data2CodeWPF\changes.md
 		L2Data2CodeWPF\newfeatures.md = L2Data2CodeWPF\newfeatures.md
 		..\..\README.md = ..\..\README.md
 		version.txt = version.txt
