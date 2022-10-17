@@ -1,3 +1,7 @@
+### 2.13.3
+
+- Some fixes in schema readers (mysql & sqlserver)
+
 ### 2.13.2
 
 - Now, *SavePath* can use any of the vars defined

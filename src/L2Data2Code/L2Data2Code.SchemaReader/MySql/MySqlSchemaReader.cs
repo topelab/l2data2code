@@ -153,6 +153,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 };
                 col.PropertyName = nameResolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
                 col.PropertyType = GetPropertyType((string)row["DATA_TYPE"], col.Precision, (string)row["COLUMN_TYPE"]);
+                col.Precision = col.PropertyType == "bool" ? 1 : col.Precision;
                 col.IsNullable = ((string)row["IS_NULLABLE"]) == "YES";
                 col.IsAutoIncrement = ((string)row["EXTRA"]) == "auto_increment";
                 col.NumericScale = (int)row["NUMERIC_SCALE"].IfNull((ulong)0);
