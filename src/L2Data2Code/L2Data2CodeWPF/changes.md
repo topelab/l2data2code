@@ -1,3 +1,7 @@
+### 2.13.4
+
+- Upgrade to .NET 7.0
+
 ### 2.13.3
 
 - Some fixes in schema readers (mysql & sqlserver)

@@ -22,8 +22,8 @@ namespace HandleBarsCLI
                 .AddSingleton<IMultiPathRenderizer, MultiPathRenderizer>()
                 .AddSingleton<IFileService, FileService>()
 
-                .Add<ICLIAction, CLIAction>()
-                .Add<IFileExecutor, FileExecutor>()
+                .AddTransient<ICLIAction, CLIAction>()
+                .AddTransient<IFileExecutor, FileExecutor>()
                 .AddInstance<ILogger>(LogManager.GetCurrentClassLogger());
         }
     }
