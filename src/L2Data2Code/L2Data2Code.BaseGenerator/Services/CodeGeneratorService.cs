@@ -426,7 +426,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             internalVars.Clear();
 
-            internalVars.Add("database", schemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
+            internalVars.Add("database", Options.SchemasConfiguration[Options.CreatedFromSchemaName].OverrideDataBaseId ?? schemaFactory.GetProviderDefinitionKey(Options.CreatedFromSchemaName));
             internalVars.Add(nameof(Template), Template.Name);
             internalVars.Add(nameof(Template.Company), Template.Company);
             internalVars.Add(nameof(Template.Area), Template.Area);
