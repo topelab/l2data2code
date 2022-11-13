@@ -191,6 +191,7 @@ Schema definition (defined with a **key**):
 - **RenameColumns**: semicolon separated named values strings `old_column_name=new_column_name` or more specific `old_table_name.old_column_name=new_column_name`.
 - **CanCreateDB**: `true|(false)`: this property will expose to templates its value if input data source is different that output data source.
 - **NormalizedNames**: `true|(false)`: When is true, then *ColumnNameOrName* will print *Name* and *TableNameOrEntity* will print *Entity*. When is false then *ColumnNameOrName* will print *ColumnName* and *TableNameOrEntity* will print *TableName*.
+- **OverrideDataBaseId** used to override `database` at `Vars` and it can be used when generating code
 
 ```json
     "Schemes": {

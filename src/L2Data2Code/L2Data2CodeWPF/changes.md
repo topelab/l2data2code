@@ -1,6 +1,10 @@
+### 2.13.6
+
+- Upgrade Topelab.Core.Resolver to 1.4.5
+
 ### 2.13.5
 
-- Added `OverrideDataBaseId` on `Schemes[]` witch is used to override `database` at `Vars`
+- **New**: Added `OverrideDataBaseId` on `Schemes[]` witch is used to override `database` at `Vars` and it can be used when generating code.
 
 ### 2.13.4
 
