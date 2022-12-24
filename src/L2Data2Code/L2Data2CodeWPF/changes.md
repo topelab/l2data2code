@@ -1,3 +1,15 @@
+### 2.13.7
+
+- Upgrade Topelab.Core.Resolver to 1.4.7
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.7
+- Upgrade Handlebars.Net.Helpers to 2.3.12
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.3.12
+- Upgrade Newtonsoft.Json to 13.0.2
+- Upgrade Handlebars.Net.Helpers.Json to 2.3.12
+- Upgrade NLog to 5.1.0
+- Upgrade System.Data.SQLite.Core to 1.0.117
+
+
 ### 2.13.6
 
 - Upgrade Topelab.Core.Resolver to 1.4.5
