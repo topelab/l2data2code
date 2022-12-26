@@ -1,3 +1,8 @@
+### 2.13.8
+
+- Upgrade Topelab.Core.Resolver to 1.4.8
+- Added dependencies on commands
+
 ### 2.13.7
 
 - Upgrade Topelab.Core.Resolver to 1.4.7

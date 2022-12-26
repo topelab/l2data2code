@@ -9,5 +9,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool ShowMessages { get; set; } = true;
         public bool ShowMessageWhenExitCodeNotZero { get; set; } = true;
         public bool ShowMessageWhenExitCodeZero { get; set; } = true;
+        public string DependsOn { get; set; }
     }
 }

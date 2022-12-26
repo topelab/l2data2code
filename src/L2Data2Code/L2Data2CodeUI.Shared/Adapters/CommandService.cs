@@ -18,6 +18,7 @@ namespace L2Data2CodeUI.Shared.Adapters
     {
         private readonly IMessageService messageService;
         private readonly IMustacheRenderizer mustacheRenderizer;
+        private static readonly Dictionary<string, bool> resultExecution = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandService"/> class.
@@ -37,57 +38,76 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="compiledVars">The compiled vars.</param>
         public void Exec(Command command, Dictionary<string, object> compiledVars = null)
         {
+            Process process = null;
             var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
             var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
             StringBuilder outputData = new();
 
+            DataReceivedEventHandler ErrorDataReceived = (s, e) =>
+            {
+                messageService.Error(e.Data, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
+            };
+            DataReceivedEventHandler DataReceived = (s, e) =>
+            {
+                if (e.Data != null)
+                {
+                    if (command.ShowMessages)
+                    {
+                        messageService.Info(e.Data);
+                    }
+                    outputData.AppendLine(e.Data);
+                }
+            };
+
+
             try
             {
-                Process process = new();
-                process.StartInfo.FileName = "cmd";
-                process.StartInfo.Arguments = $"/c {exec}";
-                process.StartInfo.CreateNoWindow = !command.ShowWindow;
-                process.StartInfo.UseShellExecute = false;
-                if (directorio.NotEmpty() && Directory.Exists(directorio))
+                resultExecution[command.Name] = false;
+                if (command.DependsOn == null || (command.DependsOn != null && resultExecution.TryGetValue(command.DependsOn, out var value) && value))
                 {
-                    process.StartInfo.WorkingDirectory = directorio;
-                }
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.ErrorDataReceived += (s, e) =>
-                {
-                    messageService.Error(e.Data, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
-                };
-                process.OutputDataReceived += (s, e) =>
-                {
-                    if (e.Data != null)
+                    process = new();
+                    process.StartInfo.FileName = "cmd";
+                    process.StartInfo.Arguments = $"/c {exec}";
+                    process.StartInfo.CreateNoWindow = !command.ShowWindow;
+                    process.StartInfo.UseShellExecute = false;
+                    if (directorio.NotEmpty() && Directory.Exists(directorio))
                     {
-                        if (command.ShowMessages)
-                        {
-                            messageService.Info(e.Data);
-                        }
-                        outputData.AppendLine(e.Data);
+                        process.StartInfo.WorkingDirectory = directorio;
                     }
-                };
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-                process.WaitForExit();
-                if (process.ExitCode > 0 && command.ShowMessageWhenExitCodeNotZero)
-                {
-                    messageService.Error(string.Format(Messages.ParametrizedErrorMessage, command.Name), outputData.ToString(), MessageCodes.RUN_COMMAND);
-                }
-                if (process.ExitCode == 0 && command.ShowMessageWhenExitCodeZero)
-                {
-                    messageService.Info(string.Format(Messages.ParametrizedStoppingProcess, command.Name));
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+
+
+                    process.ErrorDataReceived += ErrorDataReceived;
+                    process.OutputDataReceived += DataReceived;
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                    process.WaitForExit();
+                    if (process.ExitCode > 0 && command.ShowMessageWhenExitCodeNotZero)
+                    {
+                        messageService.Error(string.Format(Messages.ParametrizedErrorMessage, command.Name), outputData.ToString(), MessageCodes.RUN_COMMAND);
+                    }
+                    if (process.ExitCode == 0 && command.ShowMessageWhenExitCodeZero)
+                    {
+                        messageService.Info(string.Format(Messages.ParametrizedStoppingProcess, command.Name));
+                        resultExecution[command.Name] = true;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 messageService.Error(ex.Message, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
             }
-
+            finally
+            {
+                if (process != null)
+                {
+                    process.ErrorDataReceived -= ErrorDataReceived;
+                    process.OutputDataReceived -= DataReceived;
+                }
+            }
         }
     }
 }
