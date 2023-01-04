@@ -247,6 +247,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     }
                     processedTemplates.Add(template.ResourcesFolder);
 
+                    options.Template = template.Name;
                     options.TemplateResource = template.ResourcesFolder;
                     options.LastPass = template.NextResource.IsEmpty();
                     options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
@@ -416,6 +417,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 Area = DataSourcesConfiguration[SelectedDataSource].Area,
                 Module = ModulesConfiguration[SelectedModule].Name,
+                Template = TemplatesConfiguration[SelectedTemplate].Name,
                 GenerateReferenced = false,
                 OutputPath = null,
                 CreatedFromSchemaName = outputSchemaName,

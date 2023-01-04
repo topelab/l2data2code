@@ -1,3 +1,7 @@
+### 2.13.9
+
+- Fix error processing two or more templates with same resource folder
+
 ### 2.13.8
 
 - Upgrade Topelab.Core.Resolver to 1.4.8

@@ -14,11 +14,13 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string FilePath { get; set; }
 
         /// <summary>
-        /// Obtains first template with name <paramref name="templateResource"/>
+        /// Obtains first template with name <paramref name="template"/>
         /// </summary>
         /// <param name="templateResource">Name for searched template</param>
+        /// <param name="template">Name for searched template</param>
         /// <returns></returns>
-        public Template GetTemplate(string templateResource) => Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(templateResource, StringComparison.CurrentCultureIgnoreCase));
+        public Template GetTemplate(string templateResource, string template) =>
+            Templates.FirstOrDefault(t => t.Name.Equals(template, StringComparison.CurrentCultureIgnoreCase) && t.ResourcesFolder.Equals(templateResource, StringComparison.CurrentCultureIgnoreCase));
 
         /// <summary>
         /// Check if template with name <paramref name="templateResource"/> is in library

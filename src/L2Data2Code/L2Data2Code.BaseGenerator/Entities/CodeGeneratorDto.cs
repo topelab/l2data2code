@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
@@ -106,5 +107,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         public IBasicConfiguration<SchemaConfiguration> SchemasConfiguration { get; set; }
         public string ConnectionString { get; set; }
         public StringBuilderWriter SummaryWriter { get; set; }
+        public string Template { get; set; }
     }
 }

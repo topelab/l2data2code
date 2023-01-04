@@ -110,7 +110,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             try
             {
-                Template = Library.GetTemplate(options.TemplateResource);
+                Template = Library.GetTemplate(options.TemplateResource, options.Template);
                 if (Template == null)
                 {
                     throw new CodeGeneratorException($"Template resource not found {options.TemplateResource}", CodeGeneratorExceptionType.TemplateNotFound);
