@@ -1,3 +1,8 @@
+### 2.13.10
+
+- Upgrade NLog to 5.1.1
+- Upgrade MySql.Data to 8.0.32
+
 ### 2.13.9
 
 - Fix error processing two or more templates with same resource folder
