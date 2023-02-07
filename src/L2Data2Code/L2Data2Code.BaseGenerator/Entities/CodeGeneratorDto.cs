@@ -3,6 +3,7 @@ using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SharedLib.Configuration;
+using L2Data2Code.SharedLib.Extensions;
 using System.Collections.Generic;
 
 namespace L2Data2Code.BaseGenerator.Entities
@@ -108,5 +109,14 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string ConnectionString { get; set; }
         public StringBuilderWriter SummaryWriter { get; set; }
         public string Template { get; set; }
+
+        /// <summary>
+        /// Get minor version from Generator version
+        /// </summary>
+        public string MinorVersion => GeneratorVersion.Piece(0, 1, '.');
+        /// <summary>
+        /// Get major version from Generator version
+        /// </summary>
+        public string MajorVersion => GeneratorVersion.Piece(0, '.');
     }
 }

@@ -433,6 +433,8 @@ namespace L2Data2Code.BaseGenerator.Services
             internalVars.Add(nameof(Template.Module), Template.Module);
             internalVars.Add(nameof(Options.GeneratorApplication), Options.GeneratorApplication);
             internalVars.Add(nameof(Options.GeneratorVersion), Options.GeneratorVersion);
+            internalVars.Add(nameof(Options.MinorVersion), Options.MinorVersion);
+            internalVars.Add(nameof(Options.MajorVersion), Options.MajorVersion);
             internalVars.Add(nameof(Options.TemplatePath), Options.TemplatePath.AddPathSeparator());
 
             ProcessConditionals(allVars);

@@ -238,23 +238,31 @@ namespace L2Data2Code.SharedLib.Extensions
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="part">The n part.</param>
-        /// <param name="defaultValue">The default value.</param>
         /// <param name="separator">The separator.</param>
+        /// <param name="defaultValue">The default value.</param>
         /// <returns></returns>
-        public static string Piece(this string text, int part, string defaultValue = "", char separator = ',')
+        public static string Piece(this string text, int part, char separator = ',', string defaultValue = "")
         {
-            if (text.IsEmpty())
-            {
-                return defaultValue;
-            }
-
             var values = text.Split(separator);
-            if (part < values.Length)
-            {
-                return values[part].IfEmpty(defaultValue).Trim();
-            }
+            part = part > values.Length - 1 ? values.Length - 1 : part < 0 ? 0 : part;
+            return text.IsEmpty() ? defaultValue : values[part].IfEmpty(defaultValue).Trim();
+        }
 
-            return defaultValue;
+        /// <summary>
+        /// Gets de piece of text that correspond to n <paramref name="start"/> (0 based) returning <paramref name="defaultValue"/> if empty
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="start">The start part.</param>
+        /// <param name="end">The end part</param>
+        /// <param name="separator">The separator.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static string Piece(this string text, int start, int end, char separator = ',', string defaultValue = "")
+        {
+            var values = text.Split(separator);
+            start = start > values.Length - 1 ? values.Length - 1 : start < 0 ? 0 : start;
+            end = end > values.Length - 1 ? values.Length - 1 : end < 0 ? 0 : end;
+            return text.IsEmpty() ? defaultValue : string.Join(separator, values[start..(end + 1)]).IfEmpty(defaultValue).Trim();
         }
 
         /// <summary>
