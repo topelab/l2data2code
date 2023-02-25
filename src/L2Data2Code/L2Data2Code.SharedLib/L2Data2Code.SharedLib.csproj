@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Version>2.13.11</Version>
+    <Version>2.13.12</Version>
     <RestoreSources>$(RestoreSources);../../../local-nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="NLog" Version="5.1.2" />
     <PackageReference Include="System.Management" Version="7.0.0" />
-    <PackageReference Include="Topelab.Core.Resolver" Version="1.4.8" />
+    <PackageReference Include="Topelab.Core.Resolver" Version="1.4.10" />
   </ItemGroup>
 </Project>

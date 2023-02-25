@@ -1,3 +1,14 @@
+### 2.13.12
+
+- Upgrade Topelab.Core.Resolver to 1.4.10
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.10
+- Upgrade Handlebars.Net to 2.1.3
+- Upgrade NLog to 5.1.2
+
+### 2.13.11
+
+- **New**: New vars added: `MinorVersion` (2.13) and `MajorVersion` (2)
+
 ### 2.13.10
 
 - Upgrade NLog to 5.1.1
