@@ -10,13 +10,14 @@ using L2Data2CodeWPF.SharedLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 namespace L2Data2CodeWPF.Main
 {
-    public class MainWindowVM : BaseVM
+    internal class MainWindowVM : BaseVM
     {
         private readonly IAppService appService;
         private readonly IDispatcherWrapper dispatcher;
@@ -52,7 +53,8 @@ namespace L2Data2CodeWPF.Main
                             IAppService appService,
                             IGeneratorAdapter generatorAdapter,
                             IDispatcherWrapper dispatcher,
-                            IProcessManager processManager)
+                            IProcessManager processManager,
+                            ICommandBarFactory commandBarFactory)
         {
             this.generatorAdapter = generatorAdapter;
             this.appService = appService;
@@ -74,7 +76,7 @@ namespace L2Data2CodeWPF.Main
             this.generatorAdapter.GeneratorApplication = Strings.Title;
             this.generatorAdapter.GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
-            CommandBarVM = new CommandBarVM(this);
+            CommandBarVM = commandBarFactory.Create(this);
             TablePanelVM = new TablePanelVM(this);
 
             ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
@@ -186,14 +188,7 @@ namespace L2Data2CodeWPF.Main
         public bool RunningGenerateCode
         {
             get => _runningGenerateCode;
-            set
-            {
-                _runningGenerateCode = value;
-                if (value == true)
-                {
-                    OnPropertyChanged();
-                }
-            }
+            set => SetProperty(ref _runningGenerateCode, value);
         }
 
         public string SelectedDataSource
@@ -239,17 +234,7 @@ namespace L2Data2CodeWPF.Main
         public string SlnFile
         {
             get { return _slnFile; }
-            set
-            {
-                SetProperty(ref _slnFile, value, () =>
-                {
-                    CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.ChangeButtons));
-                    CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenVSCommand));
-                    CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenFolderCommand));
-                    CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenPSCommand));
-                    CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenVSCodeCommand));
-                });
-            }
+            set { SetProperty(ref _slnFile, value); }
         }
 
         public TablePanelVM TablePanelVM { get; internal set; }
@@ -338,15 +323,15 @@ namespace L2Data2CodeWPF.Main
             {
                 return false;
             }
-            var existSln = CommandBarVM.CheckCanOpenVS(OutputPath, out var slnFile);
-            var runnig = processManager.IsRunning(slnFile);
+            var existSln = File.Exists(SlnFile);
+            var runnig = processManager.IsRunning(SlnFile);
             var anyItems = TablePanelVM.AllDataItems.Any(k => k.Value.IsSelected);
 
             var result = !RunningGenerateCode && (!existSln || existSln && !runnig) && anyItems;
 
             if (!RunningGenerateCode && anyItems && runnig)
             {
-                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, slnFile), MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
+                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, SlnFile), MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
             }
             else
             {
@@ -356,11 +341,8 @@ namespace L2Data2CodeWPF.Main
         }
         private void CheckButtonStates()
         {
-            CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenVSCommand));
             OnPropertyChanged(nameof(GenerateCodeCommand));
-            CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenFolderCommand));
-            CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenPSCommand));
-            CommandBarVM.OnPropertyChanged(nameof(CommandBarVM.OpenVSCodeCommand));
+            OnPropertyChanged(nameof(SlnFile));
         }
 
         private void ClearMessages(string code)

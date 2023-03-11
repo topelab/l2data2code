@@ -5,21 +5,31 @@ namespace L2Data2CodeWPF.Base
 {
     public class DelegateCommand : ICommand
     {
-        private readonly Action<object> _executeAction;
-        private readonly Func<object, bool> _canExecuteAction;
+        private readonly Action<object> executeAction;
+        private readonly Func<object, bool> canExecuteAction;
+
+        public DelegateCommand()
+        {
+        }
 
         public DelegateCommand(Action<object> executeAction, Func<object, bool> canExecuteAction)
         {
-            _executeAction = executeAction;
-            _canExecuteAction = canExecuteAction;
+            this.executeAction = executeAction;
+            this.canExecuteAction = canExecuteAction;
         }
 
-        public void Execute(object parameter) => _executeAction(parameter);
+        public virtual void Execute(object parameter) => executeAction?.Invoke(parameter);
+        public virtual bool CanExecute(object parameter) => canExecuteAction?.Invoke(parameter) ?? true;
 
-        public bool CanExecute(object parameter) => _canExecuteAction?.Invoke(parameter) ?? true;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
-        public event EventHandler CanExecuteChanged;
-
-        public void InvokeCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        protected void RaiseCanExecuteChanged()
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
     }
 }

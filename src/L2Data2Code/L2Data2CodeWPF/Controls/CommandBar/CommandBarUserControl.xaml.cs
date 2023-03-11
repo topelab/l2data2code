@@ -27,11 +27,21 @@ namespace L2Data2CodeWPF.Controls.CommandBar
                 dispatcher = mainWindowVM.Dispatcher;
                 commandBarVM = mainWindowVM.CommandBarVM;
                 DataContext = commandBarVM;
-                commandBarVM.PropertyChanged += CommandBarVM_PropertyChanged;
+                commandBarVM.PropertyChanged += OnCommandBarVMPropertyChanged;
+                this.Unloaded += OnCommandBarUserControlUnloaded;
             }
         }
 
-        private void CommandBarVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void OnCommandBarUserControlUnloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Unloaded -= OnCommandBarUserControlUnloaded;
+            if (commandBarVM != null)
+            {
+                commandBarVM.PropertyChanged -= OnCommandBarVMPropertyChanged;
+            }
+        }
+
+        private void OnCommandBarVMPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(commandBarVM.ChangeButtons))
             {

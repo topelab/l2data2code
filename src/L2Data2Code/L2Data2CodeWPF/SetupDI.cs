@@ -16,6 +16,9 @@ using L2Data2Code.SharedLib.Helpers;
 using L2Data2Code.SharedLib.Interfaces;
 using L2Data2Code.SharedLib.Services;
 using L2Data2CodeUI.Shared.Adapters;
+using L2Data2CodeWPF.Commands;
+using L2Data2CodeWPF.Commands.Interfaces;
+using L2Data2CodeWPF.Controls.CommandBar;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
 using NLog;
@@ -40,6 +43,18 @@ namespace L2Data2CodeWPF
                 .AddSingleton<IFileService, FileService>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
                 .AddSingleton<MainWindowVM, MainWindowVM>()
+                .AddSingleton<ICommandBarFactory, CommandBarFactory>()
+                .AddSingleton<ICommandBarBindManager, CommandBarBindManager>()
+
+                .AddSingleton<IEditTemplateCommand, EditTemplateCommand>()
+                .AddSingleton<IOpenFolderCommand, OpenFolderCommand>()
+                .AddSingleton<IOpenPSCommand, OpenPSCommand>()
+                .AddSingleton<IOpenSettingsCommand, OpenSettingsCommand>()
+                .AddSingleton<IOpenVarsWindowCommand, OpenVarsWindowCommand>()
+                .AddSingleton<IOpenVSCodeCommand, OpenVSCodeCommand>()
+                .AddSingleton<IOpenVSCommand, OpenVSCommand>()
+
+                .AddSingleton<IEditorLocatorService, EditorLocatorService>()
                 .AddSingleton<IMessagePanelService, MessagePanelService>()
                 .AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<IAppService, AppService>()
