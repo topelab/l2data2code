@@ -54,7 +54,8 @@ namespace L2Data2CodeWPF.Main
                             IGeneratorAdapter generatorAdapter,
                             IDispatcherWrapper dispatcher,
                             IProcessManager processManager,
-                            ICommandBarFactory commandBarFactory)
+                            ICommandBarFactory commandBarFactory,
+                            ITablePanelFactory tablePanelFactory)
         {
             this.generatorAdapter = generatorAdapter;
             this.appService = appService;
@@ -77,14 +78,14 @@ namespace L2Data2CodeWPF.Main
             this.generatorAdapter.GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
             CommandBarVM = commandBarFactory.Create(this);
-            TablePanelVM = new TablePanelVM(this);
+            TablePanelVM = tablePanelFactory.Create(this);
 
             ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
             initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out var generateJsonInfo) && generateJsonInfo
                 && this.generatorAdapter.SettingsConfiguration[nameof(CodeGeneratorDto.JsonGeneratedPath)].NotEmpty();
 
             EmptyFolders = true;
-            TablePanelVM.SetRelatedTables = true;
+            SetRelatedTables = true;
 
             TemplateList = this.generatorAdapter.GetTemplateList();
             _selectedtemplate = TemplateList.FirstOrDefault();
@@ -202,7 +203,7 @@ namespace L2Data2CodeWPF.Main
             get { return _selectedModule; }
             set
             {
-                SetProperty(ref _selectedModule, value);
+                _selectedModule = value;
                 ModuleChanged();
             }
         }
@@ -294,7 +295,7 @@ namespace L2Data2CodeWPF.Main
             {
                 PauseTimer = true;
                 generatorAdapter.SetCurrentDataSource(SelectedDataSource);
-                TablePanelVM.LoadAllTables();
+                TablePanelVM.LoadTablesCommand.Execute(null);
                 _moduleList = generatorAdapter.GetModuleList(SelectedDataSource);
                 dispatcher?.Invoke(() =>
                 {
@@ -357,7 +358,7 @@ namespace L2Data2CodeWPF.Main
             SlnFile = generatorAdapter.SlnFile;
             if (SelectedModule != null)
             {
-                TablePanelVM.IncludeExcludeTablesChanged();
+                OnPropertyChanged(nameof(SelectedModule));
             }
         }
 

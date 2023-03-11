@@ -28,6 +28,9 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         {
             switch (e.PropertyName)
             {
+                case nameof(MainWindowVM.Working):
+                    controlVM.Working = mainVM.Working;
+                    break;
                 case nameof(MainWindowVM.ShowVarsWindow):
                     controlVM.ShowVarsWindow = mainVM.ShowVarsWindow;
                     break;
