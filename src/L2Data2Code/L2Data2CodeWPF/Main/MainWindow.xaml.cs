@@ -1,6 +1,7 @@
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
+using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.SharedLib;
 using MahApps.Metro.Controls;
 using System;

@@ -2,6 +2,7 @@ using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
+using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Controls.CommandBar;
 using L2Data2CodeWPF.Controls.TablePanel;

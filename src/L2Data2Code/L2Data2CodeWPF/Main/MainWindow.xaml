@@ -5,14 +5,14 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                 xmlns:local="clr-namespace:L2Data2CodeWPF"
                  xmlns:vm="clr-namespace:L2Data2CodeWPF.Main"
                  xmlns:cb="clr-namespace:L2Data2CodeWPF.Controls.CommandBar"
                  xmlns:tp="clr-namespace:L2Data2CodeWPF.Controls.TablePanel"
                  xmlns:s="clr-namespace:L2Data2CodeWPF.SharedLib"
+                 xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
                  mc:Ignorable="d"
                  d:DataContext="{d:DesignInstance vm:MainWindowVM}"
-                 Title="{x:Static local:Strings.Title}"
+                 Title="{x:Static str:Strings.Title}"
                  Height="600"
                  Width="850"
                  WindowStartupLocation="CenterScreen"
@@ -60,7 +60,7 @@
 
                 <TextBlock TextWrapping="Wrap"
                            VerticalAlignment="Center"
-                           Text="{x:Static local:Strings.Template}"
+                           Text="{x:Static str:Strings.Template}"
                            HorizontalAlignment="Right"
                            Margin="10,0" />
                 <ComboBox Grid.Column="1"
@@ -74,7 +74,7 @@
                            Margin="10,0"
                            TextWrapping="Wrap"
                            VerticalAlignment="Center"
-                           Text="{x:Static local:Strings.Vars}"
+                           Text="{x:Static str:Strings.Vars}"
                            Visibility="{Binding VarsVisible, Converter={x:Static s:Converters.VisibleIfTrue}}" />
                 <Grid Grid.Row="2"
                       Visibility="{Binding VarsVisible, Converter={x:Static s:Converters.VisibleIfTrue}}"
@@ -95,7 +95,7 @@
                            Margin="10,0"
                            TextWrapping="Wrap"
                            VerticalAlignment="Center"
-                           Text="{x:Static local:Strings.DataSource}" />
+                           Text="{x:Static str:Strings.DataSource}" />
                 <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           x:Name="cbArea"
@@ -108,7 +108,7 @@
                            Margin="10,0"
                            TextWrapping="Wrap"
                            VerticalAlignment="Center"
-                           Text="{x:Static local:Strings.Module}" />
+                           Text="{x:Static str:Strings.Module}" />
                 <ComboBox Grid.Row="3"
                           Grid.Column="1"
                           x:Name="cbModule"
@@ -121,7 +121,7 @@
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
                            Margin="10,0"
-                           Text="{x:Static local:Strings.SaveAt}" />
+                           Text="{x:Static str:Strings.SaveAt}" />
                 <TextBox Grid.Row="4"
                          Grid.Column="1"
                          Margin="0,5"
@@ -132,7 +132,7 @@
                                   Grid.Column="1"
                                   Margin="-50,0"
                                   IsOn="{Binding SetRelatedTables}"
-                                  Content="{x:Static local:Strings.SelectRelatedTables}"
+                                  Content="{x:Static str:Strings.SelectRelatedTables}"
                                   TextBlock.FontSize="12" />
 
                 <mah:ToggleSwitch Grid.Row="6"
@@ -140,7 +140,7 @@
                                   Margin="-50,0"
                                   IsOn="{Binding EmptyFolders}"
                                   IsEnabled="{Binding GenerateOnlyJson, Converter={x:Static s:Converters.EnableIfFalse}}"
-                                  Content="{x:Static local:Strings.EmptyFolders}"
+                                  Content="{x:Static str:Strings.EmptyFolders}"
                                   TextElement.FontSize="12" />
 
                 <mah:ToggleSwitch Grid.Row="7"
@@ -148,7 +148,7 @@
                                   Margin="-50,0"
                                   IsOn="{Binding GenerateOnlyJson}"
                                   Visibility="{Binding GenerateOnlyJsonVisible, Converter={x:Static s:Converters.VisibleIfTrue}}"
-                                  Content="{x:Static local:Strings.GenerateOnlyJson}"
+                                  Content="{x:Static str:Strings.GenerateOnlyJson}"
                                   TextElement.FontSize="12" />
 
                 <Button Grid.Column="1"
@@ -159,7 +159,7 @@
                         Content="{iconPacks:Material Kind=RunFast, Height=64, Width=64}"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
-                        ToolTip="{x:Static local:Strings.Generate}"
+                        ToolTip="{x:Static str:Strings.Generate}"
                         Foreground="{DynamicResource MahApps.Brushes.Accent}">
                 </Button>
             </Grid>
@@ -167,7 +167,7 @@
                        Grid.Row="1"
                        VerticalAlignment="Bottom"
                        Visibility="{Binding MessagePanelVisible, Converter={x:Static s:Converters.VisibleIfTrue}}">
-                <Expander Header="{x:Static local:Strings.MessageBoard}"
+                <Expander Header="{x:Static str:Strings.MessageBoard}"
                           HorizontalAlignment="Left"
                           Height="Auto"
                           IsExpanded="{Binding RunningGenerateCode, Mode=OneWay}"

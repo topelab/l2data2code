@@ -1,3 +1,4 @@
+using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
 using MahApps.Metro.IconPacks;
