@@ -58,6 +58,7 @@ namespace L2Data2CodeWPF
                 .AddSingleton<IOpenVSCommand, OpenVSCommand>()
                 .AddSingleton<ILoadTablesCommand, LoadTablesCommand>()
                 .AddSingleton<ISetDataItemsCommand, SetDataItemsCommand>()
+                .AddSingleton<ISetDataItemCommand, SetDataItemCommand>()
 
                 .AddSingleton<IEditorLocatorService, EditorLocatorService>()
                 .AddSingleton<IMessagePanelService, MessagePanelService>()

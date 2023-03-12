@@ -19,15 +19,21 @@ namespace L2Data2CodeWPF.Commands
 
         public override bool CanExecute(object parameter)
         {
-            var slnFile = parameter as string;
-            return File.Exists(slnFile);
+            var path = GetPath(parameter);
+            return Path.Exists(path);
         }
 
         public override void Execute(object parameter)
         {
             var slnFile = parameter as string;
-            var path = Path.GetDirectoryName(slnFile);
             appService.Open(slnFile, processManager.FindPS(), $"-noexit -command \"cd {AppService.DIRECTORY_PATTERN}\"");
         }
+
+        private string GetPath(object parameter)
+        {
+            var slnFile = parameter as string;
+            return Path.GetDirectoryName(slnFile);
+        }
+
     }
 }

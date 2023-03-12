@@ -1,5 +1,4 @@
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2CodeWPF.Commands.Interfaces;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
 using System.ComponentModel;
@@ -49,7 +48,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
                     break;
                 case nameof(MainWindowVM.SetRelatedTables):
                     controlVM.SetRelatedTables = mainVM.SetRelatedTables;
-                    controlVM.SetDataItemsCommand.SetDataItems();
+                    controlVM.SetDataItemsCommand.Execute(null);
                     break;
                 case nameof(MainWindowVM.SelectedModule):
                     if (mainVM.SelectedModule != null)
@@ -101,7 +100,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
                 {
                     element.IsVisible = !excludeTablesRegex.IsMatch(element.Name);
                 }
-                dispatcher.Invoke(controlVM.SetDataItemsCommand.AddToViews, element);
+                dispatcher.Invoke(controlVM.AddToViews, element);
             }
             dispatcher.Invoke(() => controlVM.ViewsVisible = controlVM.AllViews.Any());
             App.Logger.Info("All items populated");

@@ -18,7 +18,7 @@ namespace L2Data2CodeWPF.Commands
         public override bool CanExecute(object parameter)
         {
             var slnFile = parameter as string;
-            return File.Exists(slnFile);
+            return slnFile != null && slnFile.ToLower().EndsWith(".sln") && File.Exists(slnFile);
         }
 
         public override void Execute(object parameter)

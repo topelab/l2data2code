@@ -18,6 +18,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         private bool havePSInstalled;
         private string vSCodePath;
         private string slnFile;
+        private bool canShowVSButton;
 
         public void SetCommands(ICommand openFolderCommand,
                                 ICommand editTemplateCommand,
@@ -42,6 +43,7 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         public bool HavePSInstalled { get => havePSInstalled; internal set => SetProperty(ref havePSInstalled, value); }
         public string VSCodePath { get => vSCodePath; internal set => SetProperty(ref vSCodePath, value); }
         public string SlnFile { get => slnFile; internal set => SetProperty(ref slnFile, value); }
+        public bool CanShowVSButton { get => canShowVSButton; internal set => SetProperty(ref canShowVSButton, value); }
 
         /// <summary>
         /// Gets the open folder command.

@@ -1,9 +1,9 @@
-using L2Data2CodeWPF.Base;
+using L2Data2CodeWPF.Main;
 
 namespace L2Data2CodeWPF.Controls.CommandBar
 {
     internal interface ICommandBarFactory
     {
-        CommandBarVM Create(IBaseVM baseVM);
+        CommandBarVM Create(MainWindowVM mainVM);
     }
 }

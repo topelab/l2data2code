@@ -40,6 +40,7 @@
                         Padding="5"
                         Command="{Binding OpenVSCommand}"
                         CommandParameter="{Binding SlnFile}"
+                        Visibility="{Binding CanShowVSButton, Converter={x:Static s:Converters.VisibleIfTrue}}"
                         Content="{iconPacks:SimpleIcons Kind=VisualStudio}"
                         ToolTip="{x:Static str:Strings.OpenVSSolution}" />
                 <Button HorizontalAlignment="Left"

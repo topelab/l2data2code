@@ -58,7 +58,7 @@ namespace L2Data2CodeWPF.Commands
                 if (item.IsSelected)
                 {
                     App.Logger.Trace($"*** Table: {item.Name} has been selected");
-                    controlVM.SetDataItemsCommand.SetDataItem(item);
+                    controlVM.SetDataItemCommand.Execute(item);
                 }
                 else
                 {

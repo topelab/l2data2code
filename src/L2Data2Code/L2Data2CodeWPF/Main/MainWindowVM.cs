@@ -19,7 +19,6 @@ namespace L2Data2CodeWPF.Main
 {
     internal class MainWindowVM : BaseVM
     {
-        private readonly IAppService appService;
         private readonly IDispatcherWrapper dispatcher;
         private readonly IGeneratorAdapter generatorAdapter;
         private readonly bool initialGenerateOnlyJsonVisible;
@@ -47,10 +46,10 @@ namespace L2Data2CodeWPF.Main
         private IEnumerable<string> _templateList;
         private IEnumerable<string> _varsList;
         private bool varsVisible = true;
+        private AppType appType;
 
         public MainWindowVM(IMessagePanelService messagePanelService,
                             IMessageService messageService,
-                            IAppService appService,
                             IGeneratorAdapter generatorAdapter,
                             IDispatcherWrapper dispatcher,
                             IProcessManager processManager,
@@ -58,7 +57,6 @@ namespace L2Data2CodeWPF.Main
                             ITablePanelFactory tablePanelFactory)
         {
             this.generatorAdapter = generatorAdapter;
-            this.appService = appService;
             this.messageService = messageService;
             this.messagePanelService = messagePanelService;
             this.dispatcher = dispatcher;
@@ -68,17 +66,19 @@ namespace L2Data2CodeWPF.Main
 
             App.Logger.Info($"Opening {nameof(MainWindowVM)}");
 
+            CommandBarVM = commandBarFactory.Create(this);
+            TablePanelVM = tablePanelFactory.Create(this);
+
             VSCodePath = processManager.FindVSCode();
             HaveVSCodeInstalled = VSCodePath.NotEmpty();
 
             PSPath = processManager.FindPS();
             HavePSInstalled = PSPath.NotEmpty();
 
+            CommandBarVM.CanShowVSButton = AppType == AppType.VisualStudio;
+
             this.generatorAdapter.GeneratorApplication = Strings.Title;
             this.generatorAdapter.GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-
-            CommandBarVM = commandBarFactory.Create(this);
-            TablePanelVM = tablePanelFactory.Create(this);
 
             ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
             initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out var generateJsonInfo) && generateJsonInfo
@@ -112,8 +112,7 @@ namespace L2Data2CodeWPF.Main
 
         public IGeneratorAdapter Adapter => generatorAdapter;
         public ObservableCollection<MessageVM> AllMessages => messagePanelService.AllMessages;
-        public IAppService AppService => appService;
-        public AppType AppType => appService.AppType;
+        public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
         public IEnumerable<string> DataSourceList
         {
             get { return _areaList; }
@@ -356,6 +355,7 @@ namespace L2Data2CodeWPF.Main
             generatorAdapter.SetCurrentModule(SelectedModule);
             OutputPath = generatorAdapter.OutputPath;
             SlnFile = generatorAdapter.SlnFile;
+            AppType = generatorAdapter.AppType;
             if (SelectedModule != null)
             {
                 OnPropertyChanged(nameof(SelectedModule));
@@ -431,6 +431,7 @@ namespace L2Data2CodeWPF.Main
             generatorAdapter.SetCurrentVars(SelectedVars);
             OutputPath = generatorAdapter.OutputPath;
             SlnFile = generatorAdapter.SlnFile;
+            AppType = generatorAdapter.AppType;
         }
     }
 }

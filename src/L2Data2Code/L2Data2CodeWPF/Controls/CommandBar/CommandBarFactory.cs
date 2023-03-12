@@ -35,12 +35,11 @@ namespace L2Data2CodeWPF.Controls.CommandBar
             this.openVarsWindowCommand = openVarsWindowCommand ?? throw new ArgumentNullException(nameof(openVarsWindowCommand));
         }
 
-        public CommandBarVM Create(IBaseVM viewModel)
+        public CommandBarVM Create(MainWindowVM mainVM)
         {
             CommandBarVM commandBarVM = new();
-            openFolderCommand.SetViewModel(viewModel);
             commandBarVM.SetCommands(openFolderCommand, editTemplateCommand, openSettingsCommand, openVSCommand, openVSCodeCommand, openPSCommand, openVarsWindowCommand);
-            bindManager.Start((MainWindowVM)viewModel, commandBarVM);
+            bindManager.Start(mainVM, commandBarVM);
 
             return commandBarVM;
         }

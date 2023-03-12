@@ -5,6 +5,5 @@ namespace L2Data2CodeWPF.Commands.Interfaces
 {
     internal interface IOpenFolderCommand : ICommand
     {
-        void SetViewModel(IBaseVM viewModel);
     }
 }

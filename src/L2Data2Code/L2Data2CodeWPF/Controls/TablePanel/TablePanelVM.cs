@@ -19,6 +19,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
         private bool setRelatedTables;
         private ILoadTablesCommand loadTablesCommand;
         private ISetDataItemsCommand setDataItemsCommand;
+        private ISetDataItemCommand setDataItemCommand;
 
         public ObservableCollection<TableVM> AllTables { get; set; } = new ObservableCollection<TableVM>();
         public ObservableCollection<TableVM> AllViews { get; set; } = new ObservableCollection<TableVM>();
@@ -76,10 +77,23 @@ namespace L2Data2CodeWPF.Controls.TablePanel
             internal set => SetProperty(ref setDataItemsCommand, value);
         }
 
-        public void SetCommands(ILoadTablesCommand loadTablesCommand, ISetDataItemsCommand setDataItemsCommand)
+        public ISetDataItemCommand SetDataItemCommand
+        {
+            get => setDataItemCommand;
+            internal set => SetProperty(ref setDataItemCommand, value);
+        }
+
+        public void SetCommands(ILoadTablesCommand loadTablesCommand, ISetDataItemsCommand setDataItemsCommand, ISetDataItemCommand setDataItemCommand)
         {
             LoadTablesCommand = loadTablesCommand;
             SetDataItemsCommand = setDataItemsCommand;
+            SetDataItemCommand = setDataItemCommand;
+        }
+
+        public void AddToViews(TableVM element)
+        {
+            var viewToAdd = !element.IsVisible ? null : (element.Table.IsView) ? AllViews : AllTables;
+            viewToAdd?.Add(element);
         }
 
         private void SetTables(bool selected)

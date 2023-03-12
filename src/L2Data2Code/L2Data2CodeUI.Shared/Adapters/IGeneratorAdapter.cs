@@ -3,6 +3,7 @@ using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Configuration;
+using L2Data2CodeUI.Shared.Dto;
 using System;
 using System.Collections.Generic;
 
@@ -28,6 +29,8 @@ namespace L2Data2CodeUI.Shared.Adapters
         string SlnFile { get; }
         string SolutionType { get; set; }
         Tables Tables { get; }
+        AppType AppType { get; }
+
         IEnumerable<Table> GetAllTables();
         IEnumerable<string> GetAreaList();
         IEnumerable<string> GetModuleList(string selectedDataSource);

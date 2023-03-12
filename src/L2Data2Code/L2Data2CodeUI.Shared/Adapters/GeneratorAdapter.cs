@@ -32,6 +32,9 @@ namespace L2Data2CodeUI.Shared.Adapters
         private string outputSchemaName = "localserver";
         private ISchemaReader schemaReader;
         private IEnumerable<string> slnFiles;
+
+        public AppType AppType { get; private set; }
+
         private readonly IAppService appService;
         private readonly IMessageService messageService;
         private readonly ICommandService commandService;
@@ -321,6 +324,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SelectedModule = selectedModule;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
             slnFiles = appService.Set(SolutionType).Find(OutputPath);
+            AppType = appService.AppType;
         }
 
         public void SetCurrentTemplate(string selectedTemplate, bool triggered = false)
@@ -344,6 +348,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SelectedVars = selectedVars;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
             slnFiles = appService.Set(SolutionType).Find(OutputPath);
+            AppType = appService.AppType;
         }
 
         #endregion Public Methods

@@ -1,3 +1,4 @@
+using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeWPF.Main;
 using System.ComponentModel;
 
@@ -50,6 +51,9 @@ namespace L2Data2CodeWPF.Controls.CommandBar
                     controlVM.OnPropertyChanged(nameof(controlVM.OpenFolderCommand));
                     controlVM.OnPropertyChanged(nameof(controlVM.OpenPSCommand));
                     controlVM.OnPropertyChanged(nameof(controlVM.OpenVSCodeCommand));
+                    break;
+                case nameof(MainWindowVM.AppType):
+                    controlVM.CanShowVSButton = mainVM.AppType == AppType.VisualStudio;
                     break;
                 default:
                     break;
