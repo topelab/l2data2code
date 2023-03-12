@@ -2,6 +2,7 @@ using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeWPF.Main;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
             this.mainVM = mainVM;
             this.controlVM = controlVM;
             messageService.SetActions(ShowMessage, ClearMessages);
-            mainVM.PropertyChanged += OnParentVMPropertyChanged;
+            mainVM.PropertyChanged += OnMainVMPropertyChanged;
             controlVM.PropertyChanged += OnControlVMPropertyChanged;
             messagePanelService.AllMessages.CollectionChanged += OnAllMessagesCollectionChanged;
         }
@@ -36,7 +37,7 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
         {
             if (mainVM != null)
             {
-                mainVM.PropertyChanged -= OnParentVMPropertyChanged;
+                mainVM.PropertyChanged -= OnMainVMPropertyChanged;
             }
         }
 
@@ -52,28 +53,40 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
             }
         }
 
-        private void OnAllMessagesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void OnAllMessagesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             controlVM.MessagePanelVisible = messagePanelService.AllMessages.Any();
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems.Cast<MessageVM>())
+                    {
+                        controlVM.AllMessages.Add(item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems.Cast<MessageVM>())
+                    {
+                        controlVM.AllMessages.Remove(item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    controlVM.AllMessages.Clear();
+                    break;
+                default:
+                    break;
+            }
         }
 
-        private void OnParentVMPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnMainVMPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 case nameof(MainWindowVM.Working):
+                    controlVM.Working = mainVM.Working;
                     break;
-                case nameof(MainWindowVM.ShowVarsWindow):
-                    break;
-                case nameof(MainWindowVM.HaveVSCodeInstalled):
-                    break;
-                case nameof(MainWindowVM.HavePSInstalled):
-                    break;
-                case (nameof(MainWindowVM.VSCodePath)):
-                    break;
-                case (nameof(MainWindowVM.SlnFile)):
-                    break;
-                case nameof(MainWindowVM.AppType):
+                case nameof(MainWindowVM.RunningGenerateCode):
+                    controlVM.RunningGenerateCode = mainVM.RunningGenerateCode;
                     break;
                 default:
                     break;

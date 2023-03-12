@@ -10,6 +10,11 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
         private ObservableCollection<MessageVM> allMessages;
         private bool messagePanelOpened;
 
+        public MessagePanelVM()
+        {
+            AllMessages = new ObservableCollection<MessageVM>();
+        }
+
         public bool MessagePanelVisible
         {
             get => messagePanelVisible;

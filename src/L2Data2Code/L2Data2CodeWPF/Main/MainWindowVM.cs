@@ -109,7 +109,7 @@ namespace L2Data2CodeWPF.Main
             };
         }
 
-        public IGeneratorAdapter Adapter => generatorAdapter;
+        public IDispatcherWrapper Dispatcher => dispatcher;
         public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
         public IEnumerable<string> DataSourceList
         {
@@ -117,22 +117,16 @@ namespace L2Data2CodeWPF.Main
             set { SetProperty(ref _areaList, value); }
         }
 
-        public bool ChangeButtons { get; set; }
+
         public CommandBarVM CommandBarVM { get; internal set; }
-        public IDispatcherWrapper Dispatcher => dispatcher;
+        public TablePanelVM TablePanelVM { get; internal set; }
+        public MessagePanelVM MessagePanelVM { get; internal set; }
+
         public bool EmptyFolders
         {
             get { return _emptyFolders; }
             set { SetProperty(ref _emptyFolders, value); }
         }
-
-        /// <summary>
-        /// Gets the generate code command.
-        /// </summary>
-        /// <value>
-        /// The generate code command.
-        /// </value>
-        public DelegateCommand GenerateCodeCommand => new(OnGenerateCodeCommand, CanGenerateCodeCommand);
 
         public bool GenerateOnlyJson
         {
@@ -173,8 +167,8 @@ namespace L2Data2CodeWPF.Main
         }
 
         public bool PauseTimer { get; set; }
-        public IProcessManager ProcessManager => processManager;
         public string PSPath { get; set; }
+
         public bool RunningGenerateCode
         {
             get => _runningGenerateCode;
@@ -227,9 +221,6 @@ namespace L2Data2CodeWPF.Main
             set { SetProperty(ref _slnFile, value); }
         }
 
-        public TablePanelVM TablePanelVM { get; internal set; }
-        public MessagePanelVM MessagePanelVM { get; internal set; }
-
         public IEnumerable<string> TemplateList
         {
             get { return _templateList; }
@@ -246,6 +237,8 @@ namespace L2Data2CodeWPF.Main
             set { SetProperty(ref varsVisible, value); }
         }
         public string VSCodePath { get; set; }
+
+        public DelegateCommand GenerateCodeCommand => new(OnGenerateCodeCommand, CanGenerateCodeCommand);
 
         public async void CheckOpenedTimerCallBack(object _)
         {
