@@ -8,6 +8,7 @@
                  xmlns:vm="clr-namespace:L2Data2CodeWPF.Main"
                  xmlns:cb="clr-namespace:L2Data2CodeWPF.Controls.CommandBar"
                  xmlns:tp="clr-namespace:L2Data2CodeWPF.Controls.TablePanel"
+                 xmlns:mp="clr-namespace:L2Data2CodeWPF.Controls.MessagePanel"
                  xmlns:s="clr-namespace:L2Data2CodeWPF.SharedLib"
                  xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
                  mc:Ignorable="d"
@@ -163,34 +164,8 @@
                         Foreground="{DynamicResource MahApps.Brushes.Accent}">
                 </Button>
             </Grid>
-            <DockPanel Margin="10,10,10,10"
-                       Grid.Row="1"
-                       VerticalAlignment="Bottom"
-                       Visibility="{Binding MessagePanelVisible, Converter={x:Static s:Converters.VisibleIfTrue}}">
-                <Expander Header="{x:Static str:Strings.MessageBoard}"
-                          HorizontalAlignment="Left"
-                          Height="Auto"
-                          IsExpanded="{Binding RunningGenerateCode, Mode=OneWay}"
-                          Expanded="ExpanderInfoMessages_Expanded"
-                          Collapsed="ExpanderInfoMessages_Expanded"
-                          Background="{DynamicResource MahApps.Brushes.Accent4}">
-                    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                        <ListView ItemsSource="{Binding AllMessages}"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                  FontSize="10">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Text}"
-                                               Foreground="{Binding Path=Color}"
-                                               TextWrapping="Wrap" />
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
 
-                        </ListView>
-                    </ScrollViewer>
-                </Expander>
-            </DockPanel>
-
+            <mp:MessagePanelUserControl Grid.Row="1" />
 
         </Grid>
 

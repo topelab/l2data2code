@@ -19,6 +19,7 @@ using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeWPF.Commands;
 using L2Data2CodeWPF.Commands.Interfaces;
 using L2Data2CodeWPF.Controls.CommandBar;
+using L2Data2CodeWPF.Controls.MessagePanel;
 using L2Data2CodeWPF.Controls.TablePanel;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
@@ -48,6 +49,8 @@ namespace L2Data2CodeWPF
                 .AddSingleton<ICommandBarBindManager, CommandBarBindManager>()
                 .AddSingleton<ITablePanelFactory, TablePanelFactory>()
                 .AddSingleton<ITablePanelBindManager, TablePanelBindManager>()
+                .AddSingleton<IMessagePanelFactory, MessagePanelFactory>()
+                .AddSingleton<IMessagePanelBindManager, MessagePanelBindManager>()
 
                 .AddSingleton<IEditTemplateCommand, EditTemplateCommand>()
                 .AddSingleton<IOpenFolderCommand, OpenFolderCommand>()

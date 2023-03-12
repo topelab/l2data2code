@@ -2,6 +2,7 @@ using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
+using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.SharedLib;
 using MahApps.Metro.Controls;
 using System;
@@ -34,28 +35,8 @@ namespace L2Data2CodeWPF.Main
             Title = $"{Strings.Title} v{viewModel.GeneratorVersion}";
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (!viewModel.Working)
-            {
-                Close();
-            }
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                DragMove();
-            }
-        }
-
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            var scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
-            e.Handled = true;
-        }
+            => SharedViewEventManager.OnScrollViewerPreviewMouseWheel(sender, e);
 
         private void StartMonitorConfig()
         {
@@ -82,24 +63,5 @@ namespace L2Data2CodeWPF.Main
             }
         }
 
-        private void ExpanderInfoMessages_Expanded(object sender, RoutedEventArgs e)
-        {
-            if (viewModel == null)
-            {
-                return;
-            }
-
-            var expander = (Expander)sender;
-            if (expander.IsExpanded)
-            {
-                expander.HorizontalAlignment = HorizontalAlignment.Stretch;
-                viewModel.MessagePanelOpened = true;
-            }
-            else
-            {
-                expander.HorizontalAlignment = HorizontalAlignment.Left;
-                viewModel.MessagePanelOpened = false;
-            }
-        }
     }
 }

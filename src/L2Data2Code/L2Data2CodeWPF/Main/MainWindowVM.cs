@@ -5,11 +5,11 @@ using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Controls.CommandBar;
+using L2Data2CodeWPF.Controls.MessagePanel;
 using L2Data2CodeWPF.Controls.TablePanel;
 using L2Data2CodeWPF.SharedLib;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,14 +25,13 @@ namespace L2Data2CodeWPF.Main
         private readonly IMessagePanelService messagePanelService;
         private readonly IMessageService messageService;
         private readonly IProcessManager processManager;
-
+        private readonly IMessagePanelFactory messagePanelFactory;
         private IEnumerable<string> _areaList;
         private bool _emptyFolders;
         private bool _generateOnlyJson;
         private bool _generateOnlyJsonVisible;
         private bool _havePSInstalled;
         private bool _haveVSCodeInstalled;
-        private bool _messagePanelOpened;
         private IEnumerable<string> _moduleList;
         private string _outputPath;
         private bool _runningGenerateCode = false;
@@ -54,20 +53,21 @@ namespace L2Data2CodeWPF.Main
                             IDispatcherWrapper dispatcher,
                             IProcessManager processManager,
                             ICommandBarFactory commandBarFactory,
-                            ITablePanelFactory tablePanelFactory)
+                            ITablePanelFactory tablePanelFactory,
+                            IMessagePanelFactory messagePanelFactory)
         {
             this.generatorAdapter = generatorAdapter;
             this.messageService = messageService;
             this.messagePanelService = messagePanelService;
             this.dispatcher = dispatcher;
             this.processManager = processManager;
-
-            this.messageService.SetActions(ShowMessage, ClearMessages);
+            this.messagePanelFactory = messagePanelFactory;
 
             App.Logger.Info($"Opening {nameof(MainWindowVM)}");
 
             CommandBarVM = commandBarFactory.Create(this);
             TablePanelVM = tablePanelFactory.Create(this);
+            MessagePanelVM = messagePanelFactory.Create(this);
 
             VSCodePath = processManager.FindVSCode();
             HaveVSCodeInstalled = VSCodePath.NotEmpty();
@@ -102,7 +102,6 @@ namespace L2Data2CodeWPF.Main
             TemplateChanged();
             AreaChanged();
 
-            AllMessages.CollectionChanged += AllMessages_CollectionChanged;
             this.generatorAdapter.OnConfigurationChanged = () =>
             {
                 TemplateChanged();
@@ -111,7 +110,6 @@ namespace L2Data2CodeWPF.Main
         }
 
         public IGeneratorAdapter Adapter => generatorAdapter;
-        public ObservableCollection<MessageVM> AllMessages => messagePanelService.AllMessages;
         public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
         public IEnumerable<string> DataSourceList
         {
@@ -162,14 +160,6 @@ namespace L2Data2CodeWPF.Main
             set { SetProperty(ref _haveVSCodeInstalled, value); }
         }
 
-        public bool MessagePanelOpened
-        {
-            get { return _messagePanelOpened; }
-            set { SetProperty(ref _messagePanelOpened, value, () => { messagePanelService.ViewAll(value); }); }
-        }
-
-        public bool MessagePanelVisible { get => AllMessages.Any(); }
-        public IMessageService MessageService => messageService;
         public IEnumerable<string> ModuleList
         {
             get { return _moduleList; }
@@ -238,6 +228,8 @@ namespace L2Data2CodeWPF.Main
         }
 
         public TablePanelVM TablePanelVM { get; internal set; }
+        public MessagePanelVM MessagePanelVM { get; internal set; }
+
         public IEnumerable<string> TemplateList
         {
             get { return _templateList; }
@@ -280,11 +272,6 @@ namespace L2Data2CodeWPF.Main
             PauseTimer = false;
         }
 
-        private void AllMessages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(MessagePanelVisible));
-        }
-
         private void AreaChanged()
         {
             Working = true;
@@ -300,7 +287,7 @@ namespace L2Data2CodeWPF.Main
                 {
                     SelectedModule = generatorAdapter.SelectedModule;
                     OnPropertyChanged(nameof(ModuleList));
-                    VarsList = this.generatorAdapter.GetVarsList(SelectedTemplate, SelectedDataSource);
+                    VarsList = generatorAdapter.GetVarsList(SelectedTemplate, SelectedDataSource);
                     SelectedVars = VarsList.FirstOrDefault();
                     OutputPath = generatorAdapter.OutputPath;
                     SlnFile = generatorAdapter.SlnFile;
@@ -331,7 +318,7 @@ namespace L2Data2CodeWPF.Main
 
             if (!RunningGenerateCode && anyItems && runnig)
             {
-                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, SlnFile), MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
+                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, SlnFile), MessagePanelVM.MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
             }
             else
             {
@@ -345,10 +332,6 @@ namespace L2Data2CodeWPF.Main
             OnPropertyChanged(nameof(SlnFile));
         }
 
-        private void ClearMessages(string code)
-        {
-            messagePanelService.ClearPinned(code);
-        }
 
         private void ModuleChanged()
         {
@@ -386,31 +369,6 @@ namespace L2Data2CodeWPF.Main
                     Working = false;
                 });
 
-        }
-        private void ShowMessage(MessageType messageType, string message, string showMessage, string code)
-        {
-            if (showMessage.NotEmpty())
-            {
-                messagePanelService.Add(showMessage, MessagePanelOpened, code);
-            }
-
-            if (message.NotEmpty())
-            {
-                switch (messageType)
-                {
-                    case MessageType.Info:
-                        App.Logger.Info(message);
-                        break;
-                    case MessageType.Warning:
-                        App.Logger.Warn(message);
-                        break;
-                    case MessageType.Error:
-                        App.Logger.Error(message);
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
         private void TemplateChanged(bool triggered = false)
         {

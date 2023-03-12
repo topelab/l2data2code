@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace L2Data2CodeWPF.Main
+namespace L2Data2CodeWPF.Controls.MessagePanel
 {
     public class MessagePanelService : IMessagePanelService
     {
@@ -100,7 +100,7 @@ namespace L2Data2CodeWPF.Main
                     if (dif > TimeSpan.FromMinutes(1))
                     {
                         runningPurger = false;
-                        throw new Exception("To many time waitting to Purge");
+                        throw new Exception("To many time waiting to Purge");
                     }
                 }
             });
