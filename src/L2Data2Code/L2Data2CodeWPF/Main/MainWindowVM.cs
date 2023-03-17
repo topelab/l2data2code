@@ -240,31 +240,6 @@ namespace L2Data2CodeWPF.Main
 
         public DelegateCommand GenerateCodeCommand => new(OnGenerateCodeCommand, CanGenerateCodeCommand);
 
-        public async void CheckOpenedTimerCallBack(object _)
-        {
-            if (PauseTimer)
-            {
-                return;
-            }
-
-            PauseTimer = true;
-
-            try
-            {
-                await processManager.UpdateRunningEditors();
-                await processManager.CheckSolutionOpened();
-                await processManager.CheckEditorsOpenedAsync(generatorAdapter.SettingsConfiguration["Editor"]);
-            }
-            catch (Exception ex)
-            {
-                App.Logger.Error($"{nameof(MainWindowVM)}.{nameof(CheckOpenedTimerCallBack)}(): {ex.Message}");
-            }
-
-            CheckButtonStates();
-
-            PauseTimer = false;
-        }
-
         private void AreaChanged()
         {
             Working = true;
@@ -319,7 +294,7 @@ namespace L2Data2CodeWPF.Main
             }
             return result;
         }
-        private void CheckButtonStates()
+        public void CheckButtonStates()
         {
             OnPropertyChanged(nameof(GenerateCodeCommand));
             OnPropertyChanged(nameof(SlnFile));
