@@ -1,11 +1,9 @@
-using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Commands.Interfaces;
 using L2Data2CodeWPF.Controls.CommandBar;
 using L2Data2CodeWPF.Controls.MessagePanel;
 using L2Data2CodeWPF.Controls.TablePanel;
-using L2Data2CodeWPF.SharedLib;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -13,8 +11,6 @@ namespace L2Data2CodeWPF.Main
 {
     internal class MainWindowVM : BaseVM
     {
-        private readonly IDispatcherWrapper dispatcher;
-        private readonly IGeneratorAdapter generatorAdapter;
         private IEnumerable<string> _areaList;
         private bool _emptyFolders;
         private bool _generateOnlyJson;
@@ -36,22 +32,12 @@ namespace L2Data2CodeWPF.Main
         private bool varsVisible = true;
         private AppType appType;
 
-        public MainWindowVM(IGeneratorAdapter generatorAdapter,
-                            IDispatcherWrapper dispatcher)
-        {
-            this.generatorAdapter = generatorAdapter;
-            this.dispatcher = dispatcher;
-
-        }
-
-        public IDispatcherWrapper Dispatcher => dispatcher;
         public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
         public IEnumerable<string> DataSourceList
         {
             get { return _areaList; }
             set { SetProperty(ref _areaList, value); }
         }
-
 
         public CommandBarVM CommandBarVM { get; internal set; }
         public TablePanelVM TablePanelVM { get; internal set; }
@@ -75,8 +61,6 @@ namespace L2Data2CodeWPF.Main
             set { SetProperty(ref _generateOnlyJsonVisible, value); }
         }
 
-        public string GeneratorApplication { get => generatorAdapter.GeneratorApplication; set => generatorAdapter.GeneratorApplication = value; }
-        public string GeneratorVersion { get => generatorAdapter.GeneratorVersion; set => generatorAdapter.GeneratorVersion = value; }
         public bool HavePSInstalled
         {
             get { return _havePSInstalled; }

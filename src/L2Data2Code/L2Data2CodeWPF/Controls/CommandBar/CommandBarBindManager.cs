@@ -1,5 +1,8 @@
 using L2Data2CodeUI.Shared.Dto;
+using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Main;
+using L2Data2CodeWPF.SharedLib;
+using MahApps.Metro.IconPacks;
 using System.ComponentModel;
 
 namespace L2Data2CodeWPF.Controls.CommandBar
@@ -9,12 +12,20 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         private MainWindowVM mainVM;
         private CommandBarVM controlVM;
 
+        private readonly IDispatcherWrapper dispatcher;
+
+        public CommandBarBindManager(IDispatcherWrapper dispatcherWrapper)
+        {
+            this.dispatcher = dispatcherWrapper ?? throw new System.ArgumentNullException(nameof(dispatcherWrapper));
+        }
+
         public void Start(MainWindowVM mainVM, CommandBarVM controlVM)
         {
             Stop();
             this.mainVM = mainVM;
             this.controlVM = controlVM;
             mainVM.PropertyChanged += OnParentVMPropertyChanged;
+            controlVM.PropertyChanged += OnControlVMPropertyChanged;
         }
 
         public void Stop()
@@ -22,6 +33,11 @@ namespace L2Data2CodeWPF.Controls.CommandBar
             if (mainVM != null)
             {
                 mainVM.PropertyChanged -= OnParentVMPropertyChanged;
+            }
+
+            if (controlVM != null)
+            {
+                controlVM.PropertyChanged -= OnControlVMPropertyChanged;
             }
         }
 
@@ -59,5 +75,41 @@ namespace L2Data2CodeWPF.Controls.CommandBar
                     break;
             }
         }
+
+        private void OnControlVMPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(CommandBarVM.ChangeButtons):
+                    dispatcher.Invoke(() =>
+                    {
+                        controlVM.OpenCmdIcon.Kind = mainVM.AppType switch
+                        {
+                            AppType.VisualStudio => PackIconSimpleIconsKind.VisualStudio,
+                            AppType.VisualStudioCode => PackIconSimpleIconsKind.VisualStudioCode,
+                            AppType.ApacheNetBeans => PackIconSimpleIconsKind.ApacheNetBeansIde,
+                            AppType.Eclipse => PackIconSimpleIconsKind.EclipseIde,
+                            AppType.IntelliJIdea => PackIconSimpleIconsKind.IntelliJIdea,
+                            _ => PackIconSimpleIconsKind.None
+                        };
+                        controlVM.OnPropertyChanged(nameof(controlVM.OpenCmdIcon));
+
+                        controlVM.OpenCmdToolTip = mainVM.AppType switch
+                        {
+                            AppType.VisualStudio => Strings.OpenVSSolution,
+                            AppType.VisualStudioCode => Strings.OpenVSC,
+                            AppType.ApacheNetBeans => Strings.Open + " Apache NetBeans",
+                            AppType.Eclipse => Strings.Open + " Eclipse",
+                            AppType.IntelliJIdea => Strings.Open + " IntelliJIdea",
+                            _ => string.Empty
+                        };
+
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }

@@ -1,6 +1,5 @@
 using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Main;
-using L2Data2CodeWPF.SharedLib;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +13,6 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
     {
         private readonly MessagePanelVM messagePanelVM;
         private readonly MainWindowVM mainWindowVM;
-        private readonly IDispatcherWrapper dispatcher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagePanelUserControl"/> class.
@@ -25,7 +23,6 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
             if (App.Current.MainWindow != null)
             {
                 mainWindowVM = App.Current.MainWindow.DataContext as MainWindowVM;
-                dispatcher = mainWindowVM.Dispatcher;
                 messagePanelVM = mainWindowVM.MessagePanelVM;
                 DataContext = messagePanelVM;
             }

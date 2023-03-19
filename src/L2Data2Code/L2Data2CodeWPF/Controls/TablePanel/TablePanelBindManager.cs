@@ -11,11 +11,12 @@ namespace L2Data2CodeWPF.Controls.TablePanel
     internal class TablePanelBindManager : ITablePanelBindManager
     {
         private readonly IGeneratorAdapter adapter;
-        private IDispatcherWrapper dispatcher;
+        private readonly IDispatcherWrapper dispatcher;
 
-        public TablePanelBindManager(IGeneratorAdapter adapter)
+        public TablePanelBindManager(IGeneratorAdapter adapter, IDispatcherWrapper dispatcher)
         {
             this.adapter = adapter ?? throw new System.ArgumentNullException(nameof(adapter));
+            this.dispatcher = dispatcher ?? throw new System.ArgumentNullException(nameof(dispatcher));
         }
 
         private MainWindowVM mainVM;
@@ -26,7 +27,6 @@ namespace L2Data2CodeWPF.Controls.TablePanel
             Stop();
             this.mainVM = mainVM;
             this.controlVM = controlVM;
-            dispatcher = mainVM.Dispatcher;
 
             this.mainVM.PropertyChanged += OnParentVMPropertyChanged;
         }

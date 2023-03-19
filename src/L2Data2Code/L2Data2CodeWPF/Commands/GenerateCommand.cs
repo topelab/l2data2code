@@ -66,8 +66,8 @@ namespace L2Data2CodeWPF.Commands
                 OutputPath = mainWindowVM.OutputPath.AddPathSeparator(),
                 RemoveFolders = mainWindowVM.EmptyFolders,
                 TableList = mainWindowVM.TablePanelVM.AllDataItems.Where(k => k.Value.IsSelected).Select(k => k.Key).ToList(),
-                GeneratorApplication = mainWindowVM.GeneratorApplication,
-                GeneratorVersion = mainWindowVM.GeneratorVersion,
+                GeneratorApplication = generatorAdapter.GeneratorApplication,
+                GeneratorVersion = generatorAdapter.GeneratorVersion,
                 GeneateOnlyJson = mainWindowVM.GenerateOnlyJson
             };
             Task.Run(() => generatorAdapter.Run(options))

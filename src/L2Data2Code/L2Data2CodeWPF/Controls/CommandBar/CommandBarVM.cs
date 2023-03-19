@@ -1,4 +1,6 @@
+using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Base;
+using MahApps.Metro.IconPacks;
 using System.Windows.Input;
 
 namespace L2Data2CodeWPF.Controls.CommandBar
@@ -19,6 +21,15 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         private string vSCodePath;
         private string slnFile;
         private bool canShowVSButton;
+        private string openCmdToolTip;
+        private PackIconSimpleIcons openCmdIcon;
+
+        public CommandBarVM()
+        {
+            openCmdIcon = new PackIconSimpleIcons();
+            openCmdIcon.Kind = PackIconSimpleIconsKind.VisualStudio;
+            openCmdToolTip = Strings.OpenVSSolution;
+        }
 
         public void SetCommands(ICommand openFolderCommand,
                                 ICommand editTemplateCommand,
@@ -44,6 +55,8 @@ namespace L2Data2CodeWPF.Controls.CommandBar
         public string VSCodePath { get => vSCodePath; internal set => SetProperty(ref vSCodePath, value); }
         public string SlnFile { get => slnFile; internal set => SetProperty(ref slnFile, value); }
         public bool CanShowVSButton { get => canShowVSButton; internal set => SetProperty(ref canShowVSButton, value); }
+        public PackIconSimpleIcons OpenCmdIcon { get => openCmdIcon; internal set => SetProperty(ref openCmdIcon, value); }
+        public string OpenCmdToolTip { get => openCmdToolTip; internal set => SetProperty(ref openCmdToolTip, value); }
 
         /// <summary>
         /// Gets the open folder command.
