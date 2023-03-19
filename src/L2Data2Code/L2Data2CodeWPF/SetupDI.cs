@@ -71,6 +71,7 @@ namespace L2Data2CodeWPF
                 .AddTransient<ICommandBarBindManager, CommandBarBindManager>()
                 .AddTransient<ITablePanelBindManager, TablePanelBindManager>()
                 .AddTransient<IMessagePanelBindManager, MessagePanelBindManager>()
+                .AddTransient<IGenerateCommand, GenerateCommand>()
                 .AddTransient<IEditTemplateCommand, EditTemplateCommand>()
                 .AddTransient<IOpenFolderCommand, OpenFolderCommand>()
                 .AddTransient<IOpenPSCommand, OpenPSCommand>()

@@ -1,17 +1,13 @@
-using L2Data2Code.BaseGenerator.Entities;
-using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
-using L2Data2CodeUI.Shared.Localize;
 using L2Data2CodeWPF.Base;
+using L2Data2CodeWPF.Commands.Interfaces;
 using L2Data2CodeWPF.Controls.CommandBar;
 using L2Data2CodeWPF.Controls.MessagePanel;
 using L2Data2CodeWPF.Controls.TablePanel;
 using L2Data2CodeWPF.SharedLib;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace L2Data2CodeWPF.Main
 {
@@ -19,8 +15,6 @@ namespace L2Data2CodeWPF.Main
     {
         private readonly IDispatcherWrapper dispatcher;
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly IMessagePanelService messagePanelService;
-        private readonly IProcessManager processManager;
         private IEnumerable<string> _areaList;
         private bool _emptyFolders;
         private bool _generateOnlyJson;
@@ -42,15 +36,11 @@ namespace L2Data2CodeWPF.Main
         private bool varsVisible = true;
         private AppType appType;
 
-        public MainWindowVM(IMessagePanelService messagePanelService,
-                            IGeneratorAdapter generatorAdapter,
-                            IDispatcherWrapper dispatcher,
-                            IProcessManager processManager)
+        public MainWindowVM(IGeneratorAdapter generatorAdapter,
+                            IDispatcherWrapper dispatcher)
         {
             this.generatorAdapter = generatorAdapter;
-            this.messagePanelService = messagePanelService;
             this.dispatcher = dispatcher;
-            this.processManager = processManager;
 
         }
 
@@ -179,62 +169,17 @@ namespace L2Data2CodeWPF.Main
         }
         public string VSCodePath { get; set; }
 
-        public DelegateCommand GenerateCodeCommand => new(OnGenerateCodeCommand, CanGenerateCodeCommand);
+        public ICommand GenerateCodeCommand { get; private set; }
 
-
-        private bool CanGenerateCodeCommand(object arg)
-        {
-            if (OutputPath == null)
-            {
-                return false;
-            }
-            var existSln = File.Exists(SlnFile);
-            var runnig = processManager.IsRunning(SlnFile);
-            var anyItems = TablePanelVM.AllDataItems.Any(k => k.Value.IsSelected);
-
-            var result = !RunningGenerateCode && (!existSln || existSln && !runnig) && anyItems;
-
-            if (!RunningGenerateCode && anyItems && runnig)
-            {
-                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, SlnFile), MessagePanelVM.MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
-            }
-            else
-            {
-                messagePanelService.ClearPinned(MessageCodes.CAN_GENERATE_CODE);
-            }
-            return result;
-        }
         public void CheckButtonStates()
         {
             OnPropertyChanged(nameof(GenerateCodeCommand));
             OnPropertyChanged(nameof(SlnFile));
         }
 
-
-        private void OnGenerateCodeCommand(object obj)
+        public void SetCommands(IGenerateCommand generateCommand)
         {
-            Working = true;
-            RunningGenerateCode = true;
-            CheckButtonStates();
-
-            CodeGeneratorDto options = new()
-            {
-                GenerateReferenced = TablePanelVM.SetRelatedTables,
-                OutputPath = OutputPath.AddPathSeparator(),
-                RemoveFolders = EmptyFolders,
-                TableList = TablePanelVM.AllDataItems.Where(k => k.Value.IsSelected).Select(k => k.Key).ToList(),
-                GeneratorApplication = GeneratorApplication,
-                GeneratorVersion = GeneratorVersion,
-                GeneateOnlyJson = GenerateOnlyJson
-            };
-            Task.Run(() => generatorAdapter.Run(options))
-                .ContinueWith((state) =>
-                {
-                    RunningGenerateCode = false;
-                    CheckButtonStates();
-                    Working = false;
-                });
-
+            GenerateCodeCommand = generateCommand;
         }
     }
 }

@@ -1,4 +1,5 @@
 using L2Data2CodeUI.Shared.Localize;
+using L2Data2CodeWPF.Commands.Interfaces;
 using System;
 using Topelab.Core.Resolver.Interfaces;
 
@@ -23,6 +24,9 @@ namespace L2Data2CodeWPF.Main
         public MainWindow Create()
         {
             mainWindowVM = resolver.Get<MainWindowVM>();
+            var generateCommand = resolver.Get<IGenerateCommand>();
+            mainWindowVM.SetCommands(generateCommand);
+
             mainWindowVMBindManager.Start(mainWindowVM);
             mainWindowVMInitializer.Initialize(mainWindowVM);
             var window = new MainWindow(mainWindowVM);
