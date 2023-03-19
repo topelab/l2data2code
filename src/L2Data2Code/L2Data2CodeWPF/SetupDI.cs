@@ -66,6 +66,8 @@ namespace L2Data2CodeWPF
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()
+                .AddTransient<IMainWindowVMBindManager, MainWindowVMBindManager>()
+                .AddTransient<IMainWindowVMInitializer, MainWindowVMInitializer>()
                 .AddTransient<ICommandBarBindManager, CommandBarBindManager>()
                 .AddTransient<ITablePanelBindManager, TablePanelBindManager>()
                 .AddTransient<IMessagePanelBindManager, MessagePanelBindManager>()

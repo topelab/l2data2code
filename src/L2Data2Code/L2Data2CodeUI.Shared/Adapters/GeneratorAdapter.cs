@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace L2Data2CodeUI.Shared.Adapters
@@ -92,6 +93,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             ModulesConfiguration = modulesConfiguration;
             SchemasConfiguration = schemasConfiguration;
             TemplatesConfiguration = templatesConfiguration;
+
+            GeneratorApplication = Strings.Title;
+            GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
             SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
             SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();

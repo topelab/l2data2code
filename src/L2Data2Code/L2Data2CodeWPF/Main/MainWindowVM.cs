@@ -8,11 +8,9 @@ using L2Data2CodeWPF.Controls.CommandBar;
 using L2Data2CodeWPF.Controls.MessagePanel;
 using L2Data2CodeWPF.Controls.TablePanel;
 using L2Data2CodeWPF.SharedLib;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace L2Data2CodeWPF.Main
@@ -21,11 +19,8 @@ namespace L2Data2CodeWPF.Main
     {
         private readonly IDispatcherWrapper dispatcher;
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly bool initialGenerateOnlyJsonVisible;
         private readonly IMessagePanelService messagePanelService;
-        private readonly IMessageService messageService;
         private readonly IProcessManager processManager;
-        private readonly IMessagePanelFactory messagePanelFactory;
         private IEnumerable<string> _areaList;
         private bool _emptyFolders;
         private bool _generateOnlyJson;
@@ -48,65 +43,15 @@ namespace L2Data2CodeWPF.Main
         private AppType appType;
 
         public MainWindowVM(IMessagePanelService messagePanelService,
-                            IMessageService messageService,
                             IGeneratorAdapter generatorAdapter,
                             IDispatcherWrapper dispatcher,
-                            IProcessManager processManager,
-                            ICommandBarFactory commandBarFactory,
-                            ITablePanelFactory tablePanelFactory,
-                            IMessagePanelFactory messagePanelFactory)
+                            IProcessManager processManager)
         {
             this.generatorAdapter = generatorAdapter;
-            this.messageService = messageService;
             this.messagePanelService = messagePanelService;
             this.dispatcher = dispatcher;
             this.processManager = processManager;
-            this.messagePanelFactory = messagePanelFactory;
 
-            App.Logger.Info($"Opening {nameof(MainWindowVM)}");
-
-            CommandBarVM = commandBarFactory.Create(this);
-            TablePanelVM = tablePanelFactory.Create(this);
-            MessagePanelVM = messagePanelFactory.Create(this);
-
-            VSCodePath = processManager.FindVSCode();
-            HaveVSCodeInstalled = VSCodePath.NotEmpty();
-
-            PSPath = processManager.FindPS();
-            HavePSInstalled = PSPath.NotEmpty();
-
-            CommandBarVM.CanShowVSButton = AppType == AppType.VisualStudio;
-
-            this.generatorAdapter.GeneratorApplication = Strings.Title;
-            this.generatorAdapter.GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-
-            ShowVarsWindow = bool.TryParse(this.generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
-            initialGenerateOnlyJsonVisible = bool.TryParse(this.generatorAdapter.SettingsConfiguration["generateJsonInfo"], out var generateJsonInfo) && generateJsonInfo
-                && this.generatorAdapter.SettingsConfiguration[nameof(CodeGeneratorDto.JsonGeneratedPath)].NotEmpty();
-
-            EmptyFolders = true;
-            SetRelatedTables = true;
-
-            TemplateList = this.generatorAdapter.GetTemplateList();
-            _selectedtemplate = TemplateList.FirstOrDefault();
-
-            DataSourceList = this.generatorAdapter.GetAreaList();
-            _selectedDataSource = DataSourceList.FirstOrDefault();
-
-            VarsList = this.generatorAdapter.GetVarsList(_selectedtemplate, _selectedDataSource);
-            _selectedVars = VarsList.FirstOrDefault();
-
-            ModuleList = this.generatorAdapter.GetModuleList(_selectedDataSource);
-            _selectedModule = this.generatorAdapter.GetDefaultModule(_selectedDataSource);
-
-            TemplateChanged();
-            AreaChanged();
-
-            this.generatorAdapter.OnConfigurationChanged = () =>
-            {
-                TemplateChanged();
-                AreaChanged();
-            };
         }
 
         public IDispatcherWrapper Dispatcher => dispatcher;
@@ -178,29 +123,25 @@ namespace L2Data2CodeWPF.Main
         public string SelectedDataSource
         {
             get { return _selectedDataSource; }
-            set { SetProperty(ref _selectedDataSource, value, () => AreaChanged()); }
+            set { SetProperty(ref _selectedDataSource, value); }
         }
 
         public string SelectedModule
         {
             get { return _selectedModule; }
-            set
-            {
-                _selectedModule = value;
-                ModuleChanged();
-            }
+            set { SetProperty(ref _selectedModule, value); }
         }
 
         public string SelectedTemplate
         {
             get { return _selectedtemplate; }
-            set { SetProperty(ref _selectedtemplate, value, () => TemplateChanged()); }
+            set { SetProperty(ref _selectedtemplate, value); }
         }
 
         public string SelectedVars
         {
             get { return _selectedVars; }
-            set { SetProperty(ref _selectedVars, value, VarsChanged); }
+            set { SetProperty(ref _selectedVars, value); }
         }
 
         public bool SetRelatedTables
@@ -240,37 +181,6 @@ namespace L2Data2CodeWPF.Main
 
         public DelegateCommand GenerateCodeCommand => new(OnGenerateCodeCommand, CanGenerateCodeCommand);
 
-        private void AreaChanged()
-        {
-            Working = true;
-            TablePanelVM.LoadingTables = true;
-            TablePanelVM.ViewsVisible = false;
-            Task.Run(() =>
-            {
-                PauseTimer = true;
-                generatorAdapter.SetCurrentDataSource(SelectedDataSource);
-                TablePanelVM.LoadTablesCommand.Execute(null);
-                _moduleList = generatorAdapter.GetModuleList(SelectedDataSource);
-                dispatcher?.Invoke(() =>
-                {
-                    SelectedModule = generatorAdapter.SelectedModule;
-                    OnPropertyChanged(nameof(ModuleList));
-                    VarsList = generatorAdapter.GetVarsList(SelectedTemplate, SelectedDataSource);
-                    SelectedVars = VarsList.FirstOrDefault();
-                    OutputPath = generatorAdapter.OutputPath;
-                    SlnFile = generatorAdapter.SlnFile;
-                    GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
-                });
-            }).ContinueWith((t) =>
-            {
-                dispatcher?.Invoke(() =>
-                {
-                    TablePanelVM.LoadingTables = false;
-                    Working = false;
-                    PauseTimer = false;
-                });
-            });
-        }
 
         private bool CanGenerateCodeCommand(object arg)
         {
@@ -301,18 +211,6 @@ namespace L2Data2CodeWPF.Main
         }
 
 
-        private void ModuleChanged()
-        {
-            generatorAdapter.SetCurrentModule(SelectedModule);
-            OutputPath = generatorAdapter.OutputPath;
-            SlnFile = generatorAdapter.SlnFile;
-            AppType = generatorAdapter.AppType;
-            if (SelectedModule != null)
-            {
-                OnPropertyChanged(nameof(SelectedModule));
-            }
-        }
-
         private void OnGenerateCodeCommand(object obj)
         {
             Working = true;
@@ -337,27 +235,6 @@ namespace L2Data2CodeWPF.Main
                     Working = false;
                 });
 
-        }
-        private void TemplateChanged(bool triggered = false)
-        {
-            Working = true;
-            generatorAdapter.SetCurrentTemplate(SelectedTemplate, triggered);
-            _varsList = generatorAdapter.GetVarsList(SelectedTemplate);
-            SelectedVars = VarsList.FirstOrDefault();
-            OnPropertyChanged(nameof(VarsList));
-            VarsVisible = SelectedVars != null;
-            EmptyFolders = generatorAdapter.TemplatesConfiguration.HasToRemoveFolders(SelectedTemplate);
-            OutputPath = generatorAdapter.OutputPath;
-            SlnFile = generatorAdapter.SlnFile;
-
-            Working = false;
-        }
-        private void VarsChanged()
-        {
-            generatorAdapter.SetCurrentVars(SelectedVars);
-            OutputPath = generatorAdapter.OutputPath;
-            SlnFile = generatorAdapter.SlnFile;
-            AppType = generatorAdapter.AppType;
         }
     }
 }
