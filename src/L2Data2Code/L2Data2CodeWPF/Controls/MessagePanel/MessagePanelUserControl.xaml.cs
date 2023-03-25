@@ -31,25 +31,5 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
             => SharedViewEventManager.OnScrollViewerPreviewMouseWheel(sender, e);
 
-        private void ExpanderInfoMessages_Expanded(object sender, RoutedEventArgs e)
-        {
-            if (messagePanelVM == null)
-            {
-                return;
-            }
-
-            var expander = (Expander)sender;
-            if (expander.IsExpanded)
-            {
-                expander.HorizontalAlignment = HorizontalAlignment.Stretch;
-                messagePanelVM.MessagePanelOpened = true;
-            }
-            else
-            {
-                expander.HorizontalAlignment = HorizontalAlignment.Left;
-                messagePanelVM.MessagePanelOpened = false;
-            }
-        }
-
     }
 }

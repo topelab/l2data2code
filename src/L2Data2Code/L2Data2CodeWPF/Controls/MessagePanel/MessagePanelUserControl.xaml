@@ -15,11 +15,9 @@
                 VerticalAlignment="Bottom"
                 Visibility="{Binding MessagePanelVisible, Converter={x:Static s:Converters.VisibleIfTrue}}">
         <Expander Header="{x:Static str:Strings.MessageBoard}"
-                    HorizontalAlignment="Left"
+                    HorizontalAlignment="Stretch"
                     Height="Auto"
-                    IsExpanded="{Binding RunningGenerateCode, Mode=OneWay}"
-                    Expanded="ExpanderInfoMessages_Expanded"
-                    Collapsed="ExpanderInfoMessages_Expanded"
+                    IsExpanded="{Binding MessagePanelOpened}"
                     Background="{DynamicResource MahApps.Brushes.Accent4}">
             <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <ListView ItemsSource="{Binding AllMessages}"

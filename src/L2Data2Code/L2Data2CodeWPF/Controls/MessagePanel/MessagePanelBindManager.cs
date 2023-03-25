@@ -87,6 +87,10 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
                     break;
                 case nameof(MainWindowVM.RunningGenerateCode):
                     controlVM.RunningGenerateCode = mainVM.RunningGenerateCode;
+                    if (mainVM.RunningGenerateCode)
+                    {
+                        controlVM.MessagePanelOpened = true;
+                    }
                     break;
                 default:
                     break;
