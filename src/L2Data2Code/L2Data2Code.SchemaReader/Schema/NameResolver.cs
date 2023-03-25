@@ -25,16 +25,16 @@ namespace L2Data2Code.SchemaReader.Schema
         }
 
         public string ResolveTableName(string originalTableName) =>
-            _tableNames.ContainsKey(originalTableName) ? _tableNames[originalTableName] : originalTableName;
+            _tableNames.TryGetValue(originalTableName, out var value) ? value : originalTableName;
 
         public string ResolveColumnName(string originalTableName, string originalColumnName)
         {
             var key = $"{originalTableName}.{originalColumnName}";
-            return _columnNames.ContainsKey(key) ? _columnNames[key] : _columnNames.ContainsKey(originalColumnName) ? _columnNames[originalColumnName] : originalColumnName;
+            return _columnNames.TryGetValue(key, out var value) ? value : _columnNames.TryGetValue(originalColumnName, out var value1) ? value1 : originalColumnName;
         }
 
         public string ResolveTableType(string originalTableName) =>
-            _tableTypes.ContainsKey(originalTableName) ? _tableTypes[originalTableName] : string.Empty;
+            _tableTypes.TryGetValue(originalTableName, out var value) ? value : string.Empty;
 
         private static Dictionary<string, string> GetRenames(string renameDescriptions)
         {

@@ -6,11 +6,8 @@ using System.Text.RegularExpressions;
 namespace L2Data2Code.SchemaReader.Lib
 {
     /// <summary>Name Helper</summary>
-    public static class NameHelper
+    public static partial class NameHelper
     {
-        /// <summary>The regex camel case</summary>
-        private static readonly Regex regexCamelCase = new("(?<word>[A-Z]{2,}|[A-Z][^A-Z]*?|^[^A-Z]*?)(?=[A-Z]|$)", RegexOptions.Compiled);
-
         /// <summary>Cleans up.</summary>
         /// <param name="str">The string.</param>
         /// <param name="remove">if set to <c>true</c> [remove].</param>
@@ -95,7 +92,7 @@ namespace L2Data2Code.SchemaReader.Lib
                     continue;
                 }
 
-                foreach (var match in regexCamelCase.Matches(word).Cast<Match>())
+                foreach (var match in CamelCaseRegex().Matches(word).Cast<Match>())
                 {
                     camelCaseWords.Add(match.Groups["word"].Value);
                 }
@@ -119,5 +116,7 @@ namespace L2Data2Code.SchemaReader.Lib
             return name;
         }
 
+        [GeneratedRegex("(?<word>[A-Z]{2,}|[A-Z][^A-Z]*?|^[^A-Z]*?)(?=[A-Z]|$)", RegexOptions.Compiled)]
+        private static partial Regex CamelCaseRegex();
     }
 }

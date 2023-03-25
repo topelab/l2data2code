@@ -4,10 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SharedLib.Inflector
 {
-    public class DefaultTableizeRuleApplier : IRuleApplier
+    public partial class DefaultTableizeRuleApplier : IRuleApplier
     {
         private readonly IInflector inflector;
-        private readonly Regex WhiteSpaces = new(@"[_\s]", RegexOptions.Compiled);
 
         public DefaultTableizeRuleApplier(IInflector inflector)
         {
@@ -18,7 +17,7 @@ namespace L2Data2Code.SharedLib.Inflector
         {
             StringBuilder builder = new(className.Length);
             var words = className.SplitWords().ToList();
-            var toPluralizeIdx = words.FindLastIndex(word => !WhiteSpaces.IsMatch(word));
+            var toPluralizeIdx = words.FindLastIndex(word => !WhiteSpacesRegex().IsMatch(word));
             for (var i = 0; i < words.Count; i++)
             {
                 var word = words[i];
@@ -30,5 +29,8 @@ namespace L2Data2Code.SharedLib.Inflector
             }
             return builder.ToString();
         }
+
+        [GeneratedRegex("[_\\s]", RegexOptions.Compiled)]
+        private static partial Regex WhiteSpacesRegex();
     }
 }

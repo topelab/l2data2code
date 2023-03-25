@@ -33,7 +33,7 @@ namespace L2Data2Code.SchemaReader.Schema
         /// <returns></returns>
         public Table GetTable(string tableName)
         {
-            return ContainsKey(tableName) ? base[tableName] : null;
+            return TryGetValue(tableName, out var table) ? table : null;
         }
 
         /// <summary>
