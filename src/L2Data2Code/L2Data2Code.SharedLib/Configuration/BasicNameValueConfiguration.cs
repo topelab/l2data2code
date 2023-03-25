@@ -9,16 +9,12 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SharedLib.Configuration
 {
-    public class BasicNameValueConfiguration : IBasicNameValueConfiguration
+    public partial class BasicNameValueConfiguration : IBasicNameValueConfiguration
     {
         private readonly IJsonSetting jsonSetting;
         private readonly string list;
 
         private NameValueCollection valueCollection;
-        private static readonly Regex ENVIRONMENT_VAR = new(
-            @"(?<var>%[A-Za-z0-9]+%)",
-            RegexOptions.Singleline | RegexOptions.Compiled
-            );
 
         public const string APP_SETTINGS_FILE = "appsettings.json";
         public const string APP_SETTINGS = "appSettings";
@@ -72,7 +68,7 @@ namespace L2Data2Code.SharedLib.Configuration
             {
                 if (this[item].Contains('%'))
                 {
-                    var matches = ENVIRONMENT_VAR.Matches(this[item]);
+                    var matches = EnvironmentVarRegex().Matches(this[item]);
                     foreach (var element in matches.Cast<Match>())
                     {
                         var environmentVar = element.Value.Trim('%');
@@ -95,5 +91,7 @@ namespace L2Data2Code.SharedLib.Configuration
             ReplaceWithEnvironmentVars();
         }
 
+        [GeneratedRegex("(?<var>%[A-Za-z0-9]+%)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex EnvironmentVarRegex();
     }
 }

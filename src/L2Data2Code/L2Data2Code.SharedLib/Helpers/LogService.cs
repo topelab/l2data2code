@@ -116,14 +116,7 @@ namespace L2Data2Code.SharedLib.Helpers
         {
             Logger ??= LogManager.GetCurrentClassLogger();
 
-            if (logAction.ContainsKey(logType))
-            {
-                return logAction[logType];
-            }
-            else
-            {
-                return null;
-            }
+            return logAction.TryGetValue(logType, out var value) ? value : null;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SharedLib.Inflector
@@ -14,7 +15,7 @@ namespace L2Data2Code.SharedLib.Inflector
 
         public static IEnumerable<string> SplitWords(this string composedPascalCaseWords)
         {
-            foreach (Match regex in WordsSpliter.Matches(composedPascalCaseWords))
+            foreach (var regex in WordsSpliter.Matches(composedPascalCaseWords).Cast<Match>())
             {
                 yield return regex.Value;
             }

@@ -27,7 +27,7 @@ namespace L2Data2CodeWPF.Base
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        protected void RaiseCanExecuteChanged()
+        protected static void RaiseCanExecuteChanged()
         {
             CommandManager.InvalidateRequerySuggested();
         }

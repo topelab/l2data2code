@@ -27,7 +27,7 @@ namespace L2Data2CodeWPF.Commands
             editorLocatorService.OpenWithEditor(path);
         }
 
-        private string GetPath(object parameter)
+        private static string GetPath(object parameter)
         {
             var slnFile = parameter as string;
             return Path.GetDirectoryName(slnFile);

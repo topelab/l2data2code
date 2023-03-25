@@ -26,8 +26,10 @@ namespace L2Data2CodeWPF.Controls.CommandBar
 
         public CommandBarVM()
         {
-            openCmdIcon = new PackIconSimpleIcons();
-            openCmdIcon.Kind = PackIconSimpleIconsKind.VisualStudio;
+            openCmdIcon = new PackIconSimpleIcons
+            {
+                Kind = PackIconSimpleIconsKind.VisualStudio
+            };
             openCmdToolTip = Strings.OpenVSSolution;
         }
 

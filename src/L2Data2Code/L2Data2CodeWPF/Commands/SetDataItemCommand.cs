@@ -16,13 +16,12 @@ namespace L2Data2CodeWPF.Commands
 
         public override bool CanExecute(object parameter)
         {
-            var tableVM = parameter as TableVM;
-            return tableVM != null;
+            return parameter is TableVM;
         }
 
         public override void Execute(object parameter)
         {
-            TableVM tableVM = (TableVM)parameter;
+            var tableVM = (TableVM)parameter;
             SetDataItem(tableVM);
         }
 

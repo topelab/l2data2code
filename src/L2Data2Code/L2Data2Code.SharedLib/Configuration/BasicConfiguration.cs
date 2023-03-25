@@ -41,7 +41,7 @@ namespace L2Data2Code.SharedLib.Configuration
 
         public int Count => _values?.Count ?? 0;
 
-        public T this[string key] { get => _values.ContainsKey(key) ? _values[key] : null; set => _values[key] = value; }
+        public T this[string key] { get => _values.TryGetValue(key, out var value) ? value : null; set => _values[key] = value; }
 
         private void SetupValues(JToken token)
         {

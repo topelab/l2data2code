@@ -57,11 +57,7 @@ namespace L2Data2Code.SchemaReader.Schema
 
                 if (!schemaNamesCached.ContainsKey(options.SchemaName))
                 {
-                    var schemaReader = schemaFactory.Create(options);
-                    if (schemaReader == null)
-                    {
-                        throw new Exception($"Cannot create schema reader. Reason: {LogService.LastError}");
-                    }
+                    var schemaReader = schemaFactory.Create(options) ?? throw new Exception($"Cannot create schema reader. Reason: {LogService.LastError}");
                     SchemaReaderOptions schemaReaderOptions = new(ShouldRemoveWord1(options.SchemaName), alternativeDescriptions);
                     var tables = schemaReader.ReadSchema(schemaReaderOptions);
 

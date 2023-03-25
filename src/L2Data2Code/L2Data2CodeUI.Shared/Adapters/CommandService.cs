@@ -44,11 +44,12 @@ namespace L2Data2CodeUI.Shared.Adapters
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
             StringBuilder outputData = new();
 
-            DataReceivedEventHandler ErrorDataReceived = (s, e) =>
+            void ErrorDataReceived(object s, DataReceivedEventArgs e)
             {
                 messageService.Error(e.Data, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
-            };
-            DataReceivedEventHandler DataReceived = (s, e) =>
+            }
+
+            void DataReceived(object s, DataReceivedEventArgs e)
             {
                 if (e.Data != null)
                 {
@@ -58,8 +59,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     }
                     outputData.AppendLine(e.Data);
                 }
-            };
-
+            }
 
             try
             {

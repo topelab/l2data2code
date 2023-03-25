@@ -29,7 +29,7 @@ namespace L2Data2CodeWPF.Commands
             appService.Open(slnFile, processManager.FindPS(), $"-noexit -command \"cd {AppService.DIRECTORY_PATTERN}\"");
         }
 
-        private string GetPath(object parameter)
+        private static string GetPath(object parameter)
         {
             var slnFile = parameter as string;
             return Path.GetDirectoryName(slnFile);
