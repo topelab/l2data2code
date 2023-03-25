@@ -17,7 +17,7 @@ namespace L2Data2Code.BaseGenerator.Services
     /// <summary>
     /// Code generator service
     /// </summary>
-    public class CodeGeneratorService : ICodeGeneratorService
+    public partial class CodeGeneratorService : ICodeGeneratorService
     {
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
@@ -30,15 +30,6 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly Dictionary<string, string> templateFiles;
         private readonly HashSet<string> referencedTables;
         private readonly Dictionary<string, object> internalVars;
-
-        private static readonly Regex templateFilePart = new(@"(?<start>^|\\)addtofile-(?<part>[0-9]+)-(?<name>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex templateCondition = new(@"^\s*if\s+(?<key>[^=]+)=(?<value>[^\s]+)\s+(?<var>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex templateClean = new(@"(\s|\n)+;", RegexOptions.Multiline | RegexOptions.Compiled);
-
-        private static readonly Regex csMarkPart = new(@"// !!!ENDOF(?<part>[0-9]+)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex xmlMarkPart = new(@"<!-- !!!ENDOF(?<part>[0-9]+) -->", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex cmdMarkPart = new(@"# !!!ENDOF(?<part>[0-9]+)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex mdMarkPart = new(@"\[//\]: # \(!!!ENDOF(?<part>[0-9]+)\)", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private static readonly CommentLine commentCsStyle = new() { Start = "// " };
         private static readonly CommentLine commentXmlStyle = new() { Start = "<!-- ", End = " -->" };
@@ -59,14 +50,14 @@ namespace L2Data2Code.BaseGenerator.Services
 
         private static readonly Dictionary<string, Regex> markByExtension = new()
         {
-            { ".cs", csMarkPart },
-            { ".html", xmlMarkPart },
-            { ".htm", xmlMarkPart },
-            { ".xml", xmlMarkPart },
-            { ".csproj", xmlMarkPart },
-            { ".config", xmlMarkPart },
-            { ".sln", cmdMarkPart },
-            { ".md", mdMarkPart },
+            { ".cs", CsMarkPartRegex() },
+            { ".html", XmlMarkPartRegex() },
+            { ".htm", XmlMarkPartRegex() },
+            { ".xml", XmlMarkPartRegex() },
+            { ".csproj", XmlMarkPartRegex() },
+            { ".config", XmlMarkPartRegex() },
+            { ".sln", CmdMarkPartRegex() },
+            { ".md", MdMarkPartRegex() },
         };
 
 
@@ -251,10 +242,10 @@ namespace L2Data2Code.BaseGenerator.Services
 
                     if (pathRenderizer.TryGetFileName(templatesPath, templateFile, replacement, out var filename))
                     {
-                        var match = templateFilePart.Match(filename);
+                        var match = TemplateFilePartRegex().Match(filename);
                         if (match.Success)
                         {
-                            filename = templateFilePart.Replace(filename, "${start}${name}");
+                            filename = TemplateFilePartRegex().Replace(filename, "${start}${name}");
                             partToReplace = match.Groups["part"].Value;
                         }
 
@@ -401,17 +392,17 @@ namespace L2Data2Code.BaseGenerator.Services
 
             if (Options.CleanEndOfCodeLine)
             {
-                content = templateClean.Replace(content, ";");
+                content = TemplateCleanRegex().Replace(content, ";");
             }
 
             return content;
         }
 
         private static CommentLine GetCommentLine(string fileExtension) =>
-            commentByExtension.ContainsKey(fileExtension) ? commentByExtension[fileExtension] : commentCsStyle;
+            commentByExtension.TryGetValue(fileExtension, out var value) ? value : commentCsStyle;
 
         private static Regex GetMarkRegex(string fileExtension) =>
-            markByExtension.ContainsKey(fileExtension) ? markByExtension[fileExtension] : csMarkPart;
+            markByExtension.TryGetValue(fileExtension, out var value) ? value : CsMarkPartRegex();
 
         private void CreateVarsFromUserVariables()
         {
@@ -452,12 +443,12 @@ namespace L2Data2Code.BaseGenerator.Services
                     continue;
                 }
 
-                var matchCondition = templateCondition.Match(item);
+                var matchCondition = TemplateConditionRegex().Match(item);
                 if (matchCondition.Success)
                 {
                     var key = matchCondition.Groups["key"].Value;
                     value = matchCondition.Groups["value"].Value;
-                    if (internalVars.ContainsKey(key) && internalVars[key].ToString().ToLower() == value?.ToLower())
+                    if (internalVars.TryGetValue(key, out var internalVar) && internalVar.ToString().ToLower() == value?.ToLower())
                     {
                         lastConditionResult = true;
                         itemLine = "." + matchCondition.Groups["var"].Value;
@@ -604,5 +595,20 @@ namespace L2Data2Code.BaseGenerator.Services
 
             return data;
         }
+
+        [GeneratedRegex("(?<start>^|\\\\)addtofile-(?<part>[0-9]+)-(?<name>.+)$", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex TemplateFilePartRegex();
+        [GeneratedRegex("^\\s*if\\s+(?<key>[^=]+)=(?<value>[^\\s]+)\\s+(?<var>.+)$", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex TemplateConditionRegex();
+        [GeneratedRegex("(\\s|\\n)+;", RegexOptions.Multiline | RegexOptions.Compiled)]
+        private static partial Regex TemplateCleanRegex();
+        [GeneratedRegex("// !!!ENDOF(?<part>[0-9]+)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex CsMarkPartRegex();
+        [GeneratedRegex("<!-- !!!ENDOF(?<part>[0-9]+) -->", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex XmlMarkPartRegex();
+        [GeneratedRegex("# !!!ENDOF(?<part>[0-9]+)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex CmdMarkPartRegex();
+        [GeneratedRegex("\\[//\\]: # \\(!!!ENDOF(?<part>[0-9]+)\\)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex MdMarkPartRegex();
     }
 }

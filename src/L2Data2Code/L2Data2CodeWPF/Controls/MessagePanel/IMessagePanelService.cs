@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace L2Data2CodeWPF.Main
+namespace L2Data2CodeWPF.Controls.MessagePanel
 {
     public interface IMessagePanelService
     {

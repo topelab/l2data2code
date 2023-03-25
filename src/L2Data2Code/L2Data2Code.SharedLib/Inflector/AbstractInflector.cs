@@ -11,7 +11,7 @@ namespace L2Data2Code.SharedLib.Inflector
     /// <remarks>
     /// Originally implemented by http://andrewpeters.net/inflectornet/
     /// </remarks>
-    public abstract class AbstractInflector : IInflector
+    public abstract partial class AbstractInflector : IInflector
     {
         private readonly List<IRuleApplier> plurals = new();
         private readonly List<IRuleApplier> singulars = new();
@@ -120,17 +120,17 @@ namespace L2Data2Code.SharedLib.Inflector
 
         public string Titleize(string word)
         {
-            return Regex.Replace(Humanize(Underscore(word)), @"\b([a-z])", match => match.Captures[0].Value.ToUpper());
+            return FirstLetterRegex().Replace(Humanize(Underscore(word)), match => match.Captures[0].Value.ToUpper());
         }
 
         public string Humanize(string lowercaseAndUnderscoredWord)
         {
-            return Capitalize(Regex.Replace(lowercaseAndUnderscoredWord, @"_", " "));
+            return Capitalize(UnderscoreRegex().Replace(lowercaseAndUnderscoredWord, " "));
         }
 
         public string Pascalize(string lowercaseAndUnderscoredWord)
         {
-            return Regex.Replace(lowercaseAndUnderscoredWord, "(?:^|_)(.)", match => match.Groups[1].Value.ToUpper());
+            return FirstLetterOnUnderscoreSplitedRegex().Replace(lowercaseAndUnderscoredWord, match => match.Groups[1].Value.ToUpper());
         }
 
         public string Camelize(string lowercaseAndUnderscoredWord)
@@ -140,10 +140,7 @@ namespace L2Data2Code.SharedLib.Inflector
 
         public string Underscore(string pascalCasedWord)
         {
-            return Regex.Replace(
-                Regex.Replace(
-                    Regex.Replace(pascalCasedWord, @"([A-Z]+)([A-Z][a-z])", "$1_$2"), @"([a-z\d])([A-Z])",
-                    "$1_$2"), @"[-\s]", "_").ToLower();
+            return SlashRegex().Replace(LowerToUpperRegex().Replace(FirstUpperLettersRegex().Replace(pascalCasedWord, "$1_$2"), "$1_$2"), "_").ToLower();
         }
 
         public string Capitalize(string word)
@@ -197,5 +194,18 @@ namespace L2Data2Code.SharedLib.Inflector
         {
             return !IsPlural(word);
         }
+
+        [GeneratedRegex(@"\b([a-z])")]
+        private static partial Regex FirstLetterRegex();
+        [GeneratedRegex("_")]
+        private static partial Regex UnderscoreRegex();
+        [GeneratedRegex(@"[-\s]")]
+        private static partial Regex SlashRegex();
+        [GeneratedRegex("([A-Z]+)([A-Z][a-z])")]
+        private static partial Regex FirstUpperLettersRegex();
+        [GeneratedRegex("([a-z\\d])([A-Z])")]
+        private static partial Regex LowerToUpperRegex();
+        [GeneratedRegex("(?:^|_)(.)")]
+        private static partial Regex FirstLetterOnUnderscoreSplitedRegex();
     }
 }

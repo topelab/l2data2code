@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:L2Data2CodeWPF"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:s="clr-namespace:L2Data2CodeWPF.SharedLib"
+             xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
+             xmlns:commandbar="clr-namespace:L2Data2CodeWPF.Controls.CommandBar"
+             d:DataContext="{d:DesignInstance Type=commandbar:CommandBarVM}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -18,47 +20,51 @@
                         Padding="5"
                         Command="{Binding OpenSettingsCommand}"
                         Content="{iconPacks:Material Kind=TuneVertical}"
-                        ToolTip="{x:Static local:Strings.OpenSettings}" />
+                        ToolTip="{x:Static str:Strings.OpenSettings}" />
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
                         Command="{Binding EditTemplateCommand}"
                         Content="{iconPacks:Material Kind=SquareEditOutline}"
-                        ToolTip="{x:Static local:Strings.EditTemplates}" />
+                        ToolTip="{x:Static str:Strings.EditTemplates}" />
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
                         Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding SlnFile}"
                         Content="{iconPacks:Material Kind=FolderOpenOutline}"
-                        ToolTip="{x:Static local:Strings.OpenGeneratedFolder}" />
-                <Button x:Name="OpenCmdButton"
-                        HorizontalAlignment="Left"
+                        ToolTip="{x:Static str:Strings.OpenGeneratedFolder}" />
+                <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
                         Command="{Binding OpenVSCommand}"
-                        Content="{iconPacks:SimpleIcons Kind=VisualStudio}"
-                        ToolTip="{x:Static local:Strings.OpenVSSolution}" />
+                        CommandParameter="{Binding SlnFile}"
+                        Visibility="{Binding CanShowVSButton, Converter={x:Static s:Converters.VisibleIfTrue}}"
+                        Content="{Binding OpenCmdIcon}"
+                        ToolTip="{Binding OpenCmdToolTip}" />
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
                         Visibility="{Binding HaveVSCodeInstalled, Converter={x:Static s:Converters.VisibleIfTrue}}"
                         Command="{Binding OpenVSCodeCommand}"
+                        CommandParameter="{Binding SlnFile}"
                         Content="{iconPacks:SimpleIcons Kind=VisualStudioCode}"
-                        ToolTip="{x:Static local:Strings.OpenVSC}" />
+                        ToolTip="{x:Static str:Strings.OpenVSC}" />
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
                         Visibility="{Binding HavePSInstalled, Converter={x:Static s:Converters.VisibleIfTrue}}"
                         Command="{Binding OpenPSCommand}"
+                        CommandParameter="{Binding SlnFile}"
                         Content="{iconPacks:Material Kind=Powershell}"
-                        ToolTip="{x:Static local:Strings.OpenPSCommand}" />
+                        ToolTip="{x:Static str:Strings.OpenPSCommand}" />
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
-                        Command="{Binding OpenVarsWindow}"
+                        Command="{Binding OpenVarsWindowCommand}"
                         Visibility="{Binding ShowVarsWindow, Converter={x:Static s:Converters.VisibleIfTrue}}"
                         Content="{iconPacks:Material Kind=VariableBox}"
-                        ToolTip="{x:Static local:Strings.OpenVarsWindow}" />
+                        ToolTip="{x:Static str:Strings.OpenVarsWindow}" />
             </ToolBar>
         </ToolBarPanel>
 

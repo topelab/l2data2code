@@ -9,10 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SharedLib.Services
 {
-    public class FileService : IFileService
+    public partial class FileService : IFileService
     {
         private const string INCLUDE_TEXT = "{{!include ";
-        private readonly Regex includeRegex = new(@"(?<spaces>\s*)\{\{!include\s+(?<name>[^\}]+)\}\}", RegexOptions.Singleline | RegexOptions.Compiled);
         private readonly Encoding defaultEncoding = new UTF8Encoding(false);
 
         private Encoding encoding;
@@ -56,8 +55,8 @@ namespace L2Data2Code.SharedLib.Services
 
         public void Initialize(string encodingKey, string endOfLineKey)
         {
-            encoding = defaultEncodings.ContainsKey(encodingKey) ? defaultEncodings[encodingKey] : Encoding.GetEncoding(encodingKey);
-            endOfLine = defaultEndingLines.ContainsKey(endOfLineKey) ? defaultEndingLines[endOfLineKey] : Environment.NewLine;
+            encoding = defaultEncodings.TryGetValue(encodingKey, out var defaultEncoding) ? defaultEncoding : Encoding.GetEncoding(encodingKey);
+            endOfLine = defaultEndingLines.TryGetValue(endOfLineKey, out var defaultEndingLine) ? defaultEndingLine : Environment.NewLine;
         }
 
         public string ReadWithIncludes(string templateFile, string basePath = null)
@@ -116,7 +115,7 @@ namespace L2Data2Code.SharedLib.Services
             {
                 if (line.Contains(INCLUDE_TEXT))
                 {
-                    var match = includeRegex.Match(line);
+                    var match = IncludeRegex().Match(line);
                     if (match.Success)
                     {
                         var file = match.Groups["name"].Value.Replace('/', Path.DirectorySeparatorChar);
@@ -148,5 +147,8 @@ namespace L2Data2Code.SharedLib.Services
             var lines = text.ReplaceEndOfLine("\n").Split("\n").Select(l => string.Concat(spaces, l));
             return string.Join("\n", lines);
         }
+
+        [GeneratedRegex("(?<spaces>\\s*)\\{\\{!include\\s+(?<name>[^\\}]+)\\}\\}", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex IncludeRegex();
     }
 }

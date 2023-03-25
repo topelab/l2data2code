@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace L2Data2CodeWPF {
+namespace L2Data2CodeUI.Shared.Localize {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace L2Data2CodeWPF {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("L2Data2CodeWPF.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("L2Data2CodeUI.Shared.Localize.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -29,13 +29,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
         {
             try
             {
-                using (SqlConnection connection = new(connectionString))
+                using SqlConnection connection = new(connectionString);
+                connection.Open();
+                if (connection.State == ConnectionState.Open)
                 {
-                    connection.Open();
-                    if (connection.State == ConnectionState.Open)
-                    {
-                        connection.Close();
-                    }
+                    connection.Close();
                 }
                 return true;
             }
@@ -79,8 +77,8 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
-                            tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name]
-                                : options.AlternativeDescriptions.ContainsKey(tbl.Name) ? options.AlternativeDescriptions[tbl.Name] : null;
+                            tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value
+                                : options.AlternativeDescriptions.TryGetValue(tbl.Name, out var alternativeValue) ? alternativeValue : null;
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -108,7 +106,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
-                            tbl.Description = columnsDescriptions.ContainsKey(tbl.Name) ? columnsDescriptions[tbl.Name] : null;
+                            tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -209,7 +207,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     col.PropertyType = GetPropertyType((string)rdr["DataType"]);
                     col.IsNullable = (string)rdr["IsNullable"] == "YES";
                     col.IsAutoIncrement = ((int)rdr["IsIdentity"]) == 1;
-                    col.Description = columnsDescriptions.ContainsKey(col.FullName) ? columnsDescriptions[col.FullName] : null;
+                    col.Description = columnsDescriptions.TryGetValue(col.FullName, out var value) ? value : null;
                     col.Precision = (int)rdr["Precision"];
                     col.NumericScale = (int)rdr["NumericScale"];
                     col.IsNumeric = rdr["NUMERIC_PRECISION"].IfNull(0) > 0;

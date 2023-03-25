@@ -6,10 +6,10 @@ namespace L2Data2Code.BaseGenerator.Configuration
 {
     public class GlobalConfiguration
     {
-        [JsonProperty("Vars")]
+        [JsonProperty(nameof(Vars))]
         public JToken VarsConfiguration { get; set; }
 
-        [JsonProperty("FinalVars")]
+        [JsonProperty(nameof(FinalVars))]
         public JToken FinalVarsConfiguation { get; set; }
 
         [JsonIgnore]

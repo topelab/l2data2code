@@ -16,6 +16,11 @@ using L2Data2Code.SharedLib.Helpers;
 using L2Data2Code.SharedLib.Interfaces;
 using L2Data2Code.SharedLib.Services;
 using L2Data2CodeUI.Shared.Adapters;
+using L2Data2CodeWPF.Commands;
+using L2Data2CodeWPF.Commands.Interfaces;
+using L2Data2CodeWPF.Controls.CommandBar;
+using L2Data2CodeWPF.Controls.MessagePanel;
+using L2Data2CodeWPF.Controls.TablePanel;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
 using NLog;
@@ -39,7 +44,11 @@ namespace L2Data2CodeWPF
                 .AddSingleton<IConditionalPathRenderizer, ConditionalPathRenderizer>()
                 .AddSingleton<IFileService, FileService>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
-                .AddSingleton<MainWindowVM, MainWindowVM>()
+                .AddSingleton<ICommandBarFactory, CommandBarFactory>()
+                .AddSingleton<ITablePanelFactory, TablePanelFactory>()
+                .AddSingleton<IMessagePanelFactory, MessagePanelFactory>()
+
+                .AddSingleton<IEditorLocatorService, EditorLocatorService>()
                 .AddSingleton<IMessagePanelService, MessagePanelService>()
                 .AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<IAppService, AppService>()
@@ -53,6 +62,26 @@ namespace L2Data2CodeWPF
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
+                .AddSingleton<IMainWindowFactory, MainWindowFactory>()
+
+                .AddTransient<MainWindowVM, MainWindowVM>()
+                .AddTransient<IMainWindowEventManager, MainWindowEventManager>()
+                .AddTransient<IMainWindowVMBindManager, MainWindowVMBindManager>()
+                .AddTransient<IMainWindowVMInitializer, MainWindowVMInitializer>()
+                .AddTransient<ICommandBarBindManager, CommandBarBindManager>()
+                .AddTransient<ITablePanelBindManager, TablePanelBindManager>()
+                .AddTransient<IMessagePanelBindManager, MessagePanelBindManager>()
+                .AddTransient<IGenerateCommand, GenerateCommand>()
+                .AddTransient<IEditTemplateCommand, EditTemplateCommand>()
+                .AddTransient<IOpenFolderCommand, OpenFolderCommand>()
+                .AddTransient<IOpenPSCommand, OpenPSCommand>()
+                .AddTransient<IOpenSettingsCommand, OpenSettingsCommand>()
+                .AddTransient<IOpenVarsWindowCommand, OpenVarsWindowCommand>()
+                .AddTransient<IOpenVSCodeCommand, OpenVSCodeCommand>()
+                .AddTransient<IOpenVSCommand, OpenVSCommand>()
+                .AddTransient<ILoadTablesCommand, LoadTablesCommand>()
+                .AddTransient<ISetDataItemsCommand, SetDataItemsCommand>()
+                .AddTransient<ISetDataItemCommand, SetDataItemCommand>()
 
                 .AddTransient<IFileMonitorService, FileMonitorService>()
                 .AddTransient<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))

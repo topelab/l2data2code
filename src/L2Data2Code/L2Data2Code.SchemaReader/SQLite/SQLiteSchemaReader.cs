@@ -119,9 +119,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                 tbl.ClassName = tbl.CleanName.ToSingular();
-                tbl.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name)
-                    ? alternativeDescriptions[tbl.Name]
-                    : (fromViews ? (string)row["DESCRIPTION"] : string.Empty);
+                tbl.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : (fromViews ? (string)row["DESCRIPTION"] : string.Empty);
 
                 result.Add(tbl.Name, tbl);
             }
@@ -153,7 +151,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 col.IsNumeric = row["NUMERIC_PRECISION"].IfNull(0) > 0;
                 col.IsComputed = tbl.IsView;
                 col.DefaultValue = row["COLUMN_DEFAULT"] == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'');
-                col.Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(tbl.Name) ? alternativeDescriptions[col.Name] : null;
+                col.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
                 result.Add(col);
             }
 

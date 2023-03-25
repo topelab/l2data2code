@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:L2Data2CodeWPF"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:s="clr-namespace:L2Data2CodeWPF.SharedLib"
+             xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="300">
@@ -20,7 +20,7 @@
                       DockPanel.Dock="Top"
                       Margin="5,10,0,10"
                       Padding="5"
-                      Header="{x:Static local:Strings.Tables}"
+                      Header="{x:Static str:Strings.Tables}"
                       IsExpanded="True">
                 <DockPanel Background="White">
                     <iconPacks:PackIconMaterial Kind="Autorenew"
@@ -37,7 +37,7 @@
                               DockPanel.Dock="Top"
                               HorizontalAlignment="Center"
                               FontWeight="Bold"
-                              Content="{x:Static local:Strings.All}"
+                              Content="{x:Static str:Strings.All}"
                               Margin="10"
                               Visibility="{Binding LoadingTables, Converter={x:Static s:Converters.VisibleIfFalse}}" />
                     <ScrollViewer DockPanel.Dock="Top"
@@ -73,7 +73,7 @@
                       DockPanel.Dock="Top"
                       Margin="5,10,0,10"
                       Padding="5"
-                      Header="{x:Static local:Strings.Views}"
+                      Header="{x:Static str:Strings.Views}"
                       IsExpanded="True"
                       Visibility="{Binding ViewsVisible, Converter={x:Static s:Converters.VisibleIfTrue}}">
                 <DockPanel Background="White">
@@ -81,7 +81,7 @@
                               DockPanel.Dock="Top"
                               HorizontalAlignment="Center"
                               FontWeight="Bold"
-                              Content="{x:Static local:Strings.All}"
+                              Content="{x:Static str:Strings.All}"
                               Margin="10" />
                     <ScrollViewer DockPanel.Dock="Top"
                                   PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">

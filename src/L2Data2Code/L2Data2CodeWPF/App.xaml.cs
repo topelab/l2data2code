@@ -1,4 +1,5 @@
 using L2Data2Code.SharedLib.Configuration;
+using L2Data2CodeWPF.Main;
 using NLog;
 using System;
 using System.Diagnostics;
@@ -37,6 +38,13 @@ namespace L2Data2CodeWPF
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(uiCulture);
             }
             Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var windowFactory = Resolver.Get<IMainWindowFactory>();
+            var window = windowFactory.Create();
+            window.Show();
         }
 
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

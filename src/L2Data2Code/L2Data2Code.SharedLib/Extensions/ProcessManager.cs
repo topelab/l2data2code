@@ -47,9 +47,8 @@ namespace L2Data2Code.SharedLib.Extensions
                     var proc = Process.GetProcessById((int)item.Id);
                     Register(proc, GetKey(item.Program, args), currentFileOpened ? ifFileOpened : null, onExit);
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
-                    logger.Error($"It seems {item.Id} is not running: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
@@ -77,6 +76,9 @@ namespace L2Data2Code.SharedLib.Extensions
                         currentProcess = proc;
                     }
                     Register(proc, sln, currentSlnOpened ? ifSolutionOpened : null, currentSlnOpened ? onExit : null);
+                }
+                catch (ArgumentException)
+                {
                 }
                 catch (Exception ex)
                 {
@@ -227,7 +229,7 @@ namespace L2Data2Code.SharedLib.Extensions
         {
             if (proc != null && !proc.HasExited && proc.MainWindowHandle != IntPtr.Zero)
             {
-                var oldProc = runningProcess.ContainsKey(program) ? runningProcess[program] : null;
+                var oldProc = runningProcess.TryGetValue(program, out var value) ? value : null;
                 if (oldProc != proc)
                 {
                     proc.EnableRaisingEvents = true;

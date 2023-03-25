@@ -108,7 +108,7 @@ namespace L2Data2Code.SchemaReader.Object
                     PropertyType = typeName.Replace("Nullable<", string.Empty).Replace(">", string.Empty),
                     IsNullable = IsNullable(item.PropertyType),
                     IsNumeric = item.PropertyType.IsNumericType(),
-                    Description = alternativeDescriptions != null && alternativeDescriptions.ContainsKey(table.Name) ? alternativeDescriptions[item.Name] : null
+                    Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(table.Name, out var value) ? value : null
                 };
                 columns.Add(column);
             }

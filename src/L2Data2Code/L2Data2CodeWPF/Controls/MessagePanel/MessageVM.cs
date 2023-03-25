@@ -2,7 +2,7 @@ using L2Data2CodeWPF.Base;
 using System;
 using System.Windows.Media;
 
-namespace L2Data2CodeWPF.Main
+namespace L2Data2CodeWPF.Controls.MessagePanel
 {
     public class MessageVM : BaseVM
     {

@@ -6,10 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SharedLib.Services
 {
-    public class MultiPathRenderizer : IMultiPathRenderizer
+    public partial class MultiPathRenderizer : IMultiPathRenderizer
     {
-        private static readonly Regex templateMultipleFiles = new(@"(?<start>.+)foreach\(+(?<tag>[^\)]+)\)(?<name>.+)$", RegexOptions.Singleline | RegexOptions.Compiled);
-
         private const string foreachTag = "foreach(";
         private const string startTag = "{{";
         private const string endTag = "}}";
@@ -28,7 +26,7 @@ namespace L2Data2Code.SharedLib.Services
             Dictionary<string, string> files = new();
             if (filePath.Contains(foreachTag))
             {
-                var match = templateMultipleFiles.Match(filePath);
+                var match = TemplateMultipleFilesRegex().Match(filePath);
                 if (match.Success)
                 {
                     var start = match.Groups["start"].Value;
@@ -60,5 +58,8 @@ namespace L2Data2Code.SharedLib.Services
             var replaced = mustacheRenderizer.RenderPath(toReplace, replacement);
             return replaced.Split(fileSeparator)[..^1];
         }
+
+        [GeneratedRegex("(?<start>.+)foreach\\(+(?<tag>[^\\)]+)\\)(?<name>.+)$", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex TemplateMultipleFilesRegex();
     }
 }

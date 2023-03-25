@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace L2Data2CodeUI.Shared.Adapters
@@ -32,6 +33,9 @@ namespace L2Data2CodeUI.Shared.Adapters
         private string outputSchemaName = "localserver";
         private ISchemaReader schemaReader;
         private IEnumerable<string> slnFiles;
+
+        public AppType AppType { get; private set; }
+
         private readonly IAppService appService;
         private readonly IMessageService messageService;
         private readonly ICommandService commandService;
@@ -89,6 +93,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             ModulesConfiguration = modulesConfiguration;
             SchemasConfiguration = schemasConfiguration;
             TemplatesConfiguration = templatesConfiguration;
+
+            GeneratorApplication = Strings.Title;
+            GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
             SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
             SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();
@@ -321,6 +328,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SelectedModule = selectedModule;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
             slnFiles = appService.Set(SolutionType).Find(OutputPath);
+            AppType = appService.AppType;
         }
 
         public void SetCurrentTemplate(string selectedTemplate, bool triggered = false)
@@ -344,6 +352,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             SelectedVars = selectedVars;
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
             slnFiles = appService.Set(SolutionType).Find(OutputPath);
+            AppType = appService.AppType;
         }
 
         #endregion Public Methods

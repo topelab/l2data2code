@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>2.13.12</Version>
+    <Version>2.13.13</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
     <NeutralLanguage>en</NeutralLanguage>
     <RestoreSources>$(RestoreSources);../../../local-nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
@@ -22,19 +22,8 @@
     <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.10" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Strings.Designer.cs">
-      <DependentUpon>Strings.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Update="Strings.es-ES.resx">
       <Generator></Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Strings.resx">
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

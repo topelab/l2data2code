@@ -1,3 +1,4 @@
+using L2Data2CodeWPF.Base;
 using L2Data2CodeWPF.Main;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,11 +28,7 @@ namespace L2Data2CodeWPF.Controls.TablePanel
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            var scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
-            e.Handled = true;
-        }
+            => SharedViewEventManager.OnScrollViewerPreviewMouseWheel(sender, e);
 
 
     }

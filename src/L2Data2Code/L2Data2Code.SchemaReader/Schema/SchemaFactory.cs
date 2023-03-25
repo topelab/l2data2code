@@ -81,10 +81,8 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public string GetConversion(string provider, string type)
         {
-            return providers.ContainsKey(provider)
-                ? providers[provider].Conversions != null && providers[provider].Conversions.ContainsKey(type)
-                    ? providers[provider].Conversions[type]
-                    : null
+            return providers.TryGetValue(provider, out var providerDefinition)
+                ? providerDefinition.Conversions != null && providerDefinition.Conversions.TryGetValue(type, out var conversion) ? conversion : null
                 : null;
         }
 
