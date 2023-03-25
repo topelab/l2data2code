@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:L2Data2Code.Main.CommandBar"
+             xmlns:s="using:L2Data2CodeUI.Shared.SharedLib"
+             xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="L2Data2Code.Main.CommandBar.CommandBarUserControl">
+    <Design.DataContext>
+        <local:CommandBarVM />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Button.Mine">
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto" ColumnDefinitions="Auto">
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=TuneVertical, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.OpenSettings}"
+                    Command="{Binding OpenSettingsCommand}" />
+            <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=SquareEditOutline, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.EditTemplates}"
+                    Command="{Binding EditTemplateCommand}" />
+            <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=FolderOutline, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.OpenGeneratedFolder}"
+                    Command="{Binding OpenFolderCommand}" />
+            <Button Classes="Flat Mine" x:Name="OpenCmdButton"
+                    Content="{materialIcons:MaterialIconExt Kind=Visualstudio, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.OpenVSSolution}"
+                    Command="{Binding OpenVSCommand}" />
+            <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=VsCode, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
+                    IsVisible="{Binding HaveVSCodeInstalled}"
+                    Command="{Binding OpenVSCodeCommand}" />
+            <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=Powershell, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.OpenPSCommand}"
+                    IsVisible="{Binding HavePSInstalled}"
+                    Command="{Binding OpenPSCommand}" />
+            <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=VariableBox, Size=24}"
+                    ToolTip.Tip="{x:Static str:Strings.OpenVarsWindow}"
+                    Command="{Binding OpenVarsWindow}"
+                    IsVisible="{Binding ShowVarsWindow}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
