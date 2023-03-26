@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using L2Data2Code.Main.CommandBar;
 using L2Data2Code.SharedLib.Extensions;
-using L2Data2Code.ViewModels;
+using L2Data2Code.Base;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 

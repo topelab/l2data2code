@@ -40,7 +40,7 @@ namespace L2Data2Code
                 .AddSingleton<IFileService, FileService>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
-                .AddSingleton<IMainWindowInitializer, MainWindowInitializer>()
+                .AddSingleton<IMainWindowVMInitializer, MainWindowInitializer>()
                 .AddSelf<MainWindow>()
                 .AddSelf<MainWindowViewModel>()
                 //.AddSingleton<MainWindowVM, MainWindowVM>()

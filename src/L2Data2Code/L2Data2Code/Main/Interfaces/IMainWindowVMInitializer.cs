@@ -1,6 +1,6 @@
 namespace L2Data2Code.Main.Interfaces
 {
-    internal interface IMainWindowInitializer
+    internal interface IMainWindowVMInitializer
     {
         void Initialize(MainWindowViewModel viewModel);
     }
