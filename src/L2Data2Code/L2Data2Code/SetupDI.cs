@@ -1,9 +1,11 @@
+using L2Data2Code.Base;
 using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseHandleBars;
 using L2Data2Code.Main;
 using L2Data2Code.Main.Interfaces;
+using L2Data2Code.Main.MessagePanel;
 using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;
@@ -40,11 +42,11 @@ namespace L2Data2Code
                 .AddSingleton<IFileService, FileService>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
-                .AddSingleton<IMainWindowVMInitializer, MainWindowInitializer>()
+                //.AddSingleton<IMainWindowVMInitializer, MainWindowInitializer>()
                 .AddSelf<MainWindow>()
                 .AddSelf<MainWindowViewModel>()
-                //.AddSingleton<MainWindowVM, MainWindowVM>()
-                //.AddSingleton<IMessagePanelService, MessagePanelService>()
+                .AddSingleton<MainWindowVM, MainWindowVM>()
+                .AddSingleton<IMessagePanelService, MessagePanelService>()
                 .AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<IAppService, AppService>()
                 .AddSingleton<ICommandService, CommandService>()
@@ -52,7 +54,7 @@ namespace L2Data2Code
                 .AddSingleton<IGitService, GitService>()
                 .AddSingleton<ISchemaService, SchemaService>()
                 .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
-                //.AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
+                .AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
                 .AddSingleton<INameResolver, NameResolver>()
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IProcessManager, ProcessManager>()

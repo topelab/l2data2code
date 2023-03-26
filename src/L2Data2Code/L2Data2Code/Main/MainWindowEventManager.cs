@@ -2,10 +2,11 @@ using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
-using L2Data2CodeWPF.SharedLib;
+using L2Data2Code.Base;
 using System;
 using System.Threading;
 using System.Windows;
+using L2Data2Code.Main.Interfaces;
 
 namespace L2Data2Code.Main
 {
@@ -40,7 +41,7 @@ namespace L2Data2Code.Main
                 dispatcherWrapper?.Invoke(() =>
                 {
                     window.Activate();
-                    var result = MessageBox.Show(window, Strings.ConfigChanged, Strings.Warning, MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                    var result = MessageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxButton.OKCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Cancel)
                     {
                         return;

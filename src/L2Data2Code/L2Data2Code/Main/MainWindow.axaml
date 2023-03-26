@@ -11,7 +11,7 @@
         Title="L2Data2Code">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowVM/>
     </Design.DataContext>
 
     <Grid ColumnDefinitions="40*, 30* 10"

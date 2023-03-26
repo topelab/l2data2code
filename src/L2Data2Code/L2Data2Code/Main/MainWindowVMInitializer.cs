@@ -1,11 +1,12 @@
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
-using L2Data2CodeWPF.Controls.CommandBar;
-using L2Data2CodeWPF.Controls.MessagePanel;
-using L2Data2CodeWPF.Controls.TablePanel;
+using L2Data2Code.Main.CommandBar;
+using L2Data2Code.Main.MessagePanel;
+using L2Data2Code.Main.TablePanel;
 using System;
 using System.Linq;
+using L2Data2Code.Main.Interfaces;
 
 namespace L2Data2Code.Main
 {

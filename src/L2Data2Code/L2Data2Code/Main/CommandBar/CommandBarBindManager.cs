@@ -1,6 +1,9 @@
+using Avalonia.Media;
 using L2Data2Code.Base;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
+using Material.Icons;
+using Material.Icons.Avalonia;
 using System.ComponentModel;
 
 namespace L2Data2Code.Main.CommandBar
@@ -83,12 +86,12 @@ namespace L2Data2Code.Main.CommandBar
                     {
                         controlVM.OpenCmdIcon.Kind = mainVM.AppType switch
                         {
-                            AppType.VisualStudio => PackIconSimpleIconsKind.VisualStudio,
-                            AppType.VisualStudioCode => PackIconSimpleIconsKind.VisualStudioCode,
-                            AppType.ApacheNetBeans => PackIconSimpleIconsKind.ApacheNetBeansIde,
-                            AppType.Eclipse => PackIconSimpleIconsKind.EclipseIde,
-                            AppType.IntelliJIdea => PackIconSimpleIconsKind.IntelliJIdea,
-                            _ => PackIconSimpleIconsKind.None
+                            AppType.VisualStudio => MaterialIconKind.MicrosoftVisualStudio,
+                            AppType.VisualStudioCode => MaterialIconKind.MicrosoftVisualStudioCode,
+                            AppType.ApacheNetBeans => MaterialIconKind.Application,
+                            AppType.Eclipse => MaterialIconKind.Application,
+                            AppType.IntelliJIdea => MaterialIconKind.Application,
+                            _ => MaterialIconKind.Application
                         };
                         controlVM.OnPropertyChanged(nameof(controlVM.OpenCmdIcon));
 

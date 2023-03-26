@@ -1,6 +1,5 @@
+using L2Data2Code.Base;
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2Code.Main;
-using L2Data2Code.SharedLib;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;

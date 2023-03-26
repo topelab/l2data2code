@@ -1,3 +1,4 @@
+using L2Data2Code.Commands.Interfaces;
 using L2Data2Code.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
@@ -32,7 +33,10 @@ namespace L2Data2Code.Main
 
             mainWindowVMBindManager.Start(mainWindowVM);
             mainWindowVMInitializer.Initialize(mainWindowVM);
-            var window = new MainWindow(mainWindowVM);
+            var window = new MainWindow
+            {
+                DataContext = mainWindowVM
+            };
             mainWindowEventManager.Start(window, mainWindowVM);
             window.Title = $"{Strings.Title} v{generatorAdapter.GeneratorVersion}";
             return window;

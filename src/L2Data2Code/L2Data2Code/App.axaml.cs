@@ -16,6 +16,7 @@ namespace L2Data2Code
     {
         public static IResolver Resolver { get; private set; }
         public static ILogger Logger { get; private set; }
+        public static bool RestartApp { get; internal set; }
 
         public override void Initialize()
         {

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace L2Data2Code.Main.MessagePanel
 {
-    public class MessagePanelVM : BaseVM
+    public class MessagePanelVM : ViewModelBase
     {
         private bool messagePanelVisible;
         private bool runningGenerateCode;

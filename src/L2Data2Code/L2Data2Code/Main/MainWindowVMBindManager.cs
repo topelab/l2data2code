@@ -1,9 +1,10 @@
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2CodeWPF.SharedLib;
+using L2Data2Code.Base;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using L2Data2Code.Main.Interfaces;
 
 namespace L2Data2Code.Main
 {

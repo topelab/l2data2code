@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace L2Data2Code.Main.MessagePanel
 {
-    public class MessageVM : BaseVM
+    public class MessageVM : ViewModelBase
     {
         public const double GlobalTimeOfLife = 10.0;
         public const double GlobalTimeToDie = 1.0;

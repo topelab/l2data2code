@@ -1,4 +1,8 @@
 using L2Data2Code.Base;
+using L2Data2Code.Commands.Interfaces;
+using L2Data2Code.Main.CommandBar;
+using L2Data2Code.Main.MessagePanel;
+using L2Data2Code.Main.TablePanel;
 using L2Data2CodeUI.Shared.Dto;
 using System.Collections.Generic;
 using System.Windows.Input;

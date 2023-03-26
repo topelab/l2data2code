@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using L2Data2Code.Main.MessagePanel;
 
 namespace L2Data2Code.Commands
 {
