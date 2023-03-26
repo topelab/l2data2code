@@ -29,9 +29,9 @@
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=FolderOutline, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenGeneratedFolder}"
                     Command="{Binding OpenFolderCommand}" />
-            <Button Classes="Flat Mine" x:Name="OpenCmdButton"
-                    Content="{materialIcons:MaterialIconExt Kind=Visualstudio, Size=24}"
-                    ToolTip.Tip="{x:Static str:Strings.OpenVSSolution}"
+            <Button Classes="Flat Mine"
+                    Content="{Binding OpenCmdIcon}"
+                    ToolTip.Tip="{Binding OpenCmdToolTip}"
                     Command="{Binding OpenVSCommand}" />
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=VsCode, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenVSC}"

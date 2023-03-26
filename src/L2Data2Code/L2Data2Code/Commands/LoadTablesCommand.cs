@@ -4,6 +4,7 @@ using L2Data2Code.Base;
 using L2Data2Code.Main;
 using System.ComponentModel;
 using System.Linq;
+using L2Data2Code.Main.TablePanel;
 
 namespace L2Data2Code.Commands
 {

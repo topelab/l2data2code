@@ -1,12 +1,21 @@
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace L2Data2Code.Base
 {
     public class ViewModelBase : ReactiveObject
     {
+        private bool _working;
+
+        public virtual bool Working
+        {
+            get { return _working; }
+            set { SetProperty(ref _working, value); }
+        }
+
         public void SetProperty<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
         {
             SetProperty(ref field, newValue, null, propertyName);

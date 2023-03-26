@@ -1,6 +1,6 @@
 using L2Data2Code.Commands.Interfaces;
-using L2Data2CodeWPF.Base;
-using L2Data2CodeWPF.Controls.TablePanel;
+using L2Data2Code.Base;
+using L2Data2Code.Main.TablePanel;
 
 namespace L2Data2Code.Commands
 {
