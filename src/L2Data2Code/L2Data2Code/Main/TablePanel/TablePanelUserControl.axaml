@@ -1,0 +1,103 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:L2Data2Code.Main.TablePanel"
+             xmlns:s="using:L2Data2CodeUI.Shared.SharedLib"
+             xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
+             x:Class="L2Data2Code.Main.TablePanel.TablePanelUserControl">
+    <Grid IsEnabled="{Binding !Working}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="*" MinHeight="50*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0"
+                   Grid.Column="0">
+            <Expander x:Name="ExpanderTables"
+                      DockPanel.Dock="Top"
+                      Margin="5,10,0,10"
+                      Padding="5"
+                      Header="{x:Static str:Strings.Tables}"
+                      IsExpanded="True">
+                <DockPanel Background="White">
+                    <materialIcons:MaterialIconExt Kind="Autorenew"
+                                                    Width="64"
+                                                    Height="64"
+                                                    DockPanel.Dock="Top"
+                                                    Foreground="Orange"
+                                                    HorizontalAlignment="Center"
+                                                    Margin="0,20"
+                                                    IsVisible="{Binding LoadingTables}" />
+                    <CheckBox IsChecked="{Binding SelectAllTables}"
+                              DockPanel.Dock="Top"
+                              HorizontalAlignment="Center"
+                              FontWeight="Bold"
+                              Content="{x:Static str:Strings.All}"
+                              Margin="10"
+                              IsVisible="{Binding !LoadingTables}" />
+                    <ScrollViewer DockPanel.Dock="Top"
+                                  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <ListBox Items="{Binding AllTables}"
+                                 FontSize="10"
+                                 IsVisible="{Binding !LoadingTables}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbTable"
+                                              IsChecked="{Binding Path=IsSelected}">
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                    </CheckBox>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsRelated}"
+                                                     Value="true">
+                                            <Setter Property="TextBlock.FontStyle"
+                                                    Value="Italic" />
+                                            <Setter TargetName="cbTable"
+                                                    Property="CheckBox.Background"
+                                                    Value="AliceBlue" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </DockPanel>
+            </Expander>
+        </DockPanel>
+        <DockPanel Grid.Row="1">
+            <Expander x:Name="ExpanderViews"
+                      DockPanel.Dock="Top"
+                      Margin="5,10,0,10"
+                      Padding="5"
+                      Header="{x:Static str:Strings.Views}"
+                      IsExpanded="True"
+                      IsVisible="{Binding ViewsVisible}">
+                <DockPanel Background="White">
+                    <CheckBox IsChecked="{Binding SelectAllViews}"
+                              DockPanel.Dock="Top"
+                              HorizontalAlignment="Center"
+                              FontWeight="Bold"
+                              Content="{x:Static str:Strings.All}"
+                              Margin="10" />
+                    <ScrollViewer DockPanel.Dock="Top"
+                                  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <ListBox Items="{Binding AllViews}"
+                                  FontSize="10">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding Path=IsSelected}"
+                                              VerticalAlignment="Top"
+                                              VerticalContentAlignment="Top">
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                    </CheckBox>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </DockPanel>
+            </Expander>
+        </DockPanel>
+    </Grid>
+
+</UserControl>

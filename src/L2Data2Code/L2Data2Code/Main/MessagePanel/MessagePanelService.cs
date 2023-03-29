@@ -10,13 +10,13 @@ namespace L2Data2Code.Main.MessagePanel
     public class MessagePanelService : IMessagePanelService
     {
         private bool runningPurger;
-        private readonly Dispatcher dispatcher;
+        private readonly Lazy<Dispatcher> dispatcher;
 
         public ObservableCollection<MessageVM> AllMessages { get; }
 
         public MessagePanelService()
         {
-            dispatcher = Application.Current.Dispatcher;
+            dispatcher = new Lazy<Dispatcher>(() => Application.Current?.Dispatcher);
             AllMessages = new ObservableCollection<MessageVM>();
             DispatcherTimer timer = new()
             {
@@ -28,7 +28,7 @@ namespace L2Data2Code.Main.MessagePanel
 
         public void Add(string text, bool viewStatus = false, string code = null)
         {
-            dispatcher?.BeginInvoke(() =>
+            dispatcher.Value?.BeginInvoke(() =>
             {
                 lock (AllMessages)
                 {
@@ -52,7 +52,7 @@ namespace L2Data2Code.Main.MessagePanel
                 return;
             }
 
-            dispatcher?.BeginInvoke(() =>
+            dispatcher.Value?.BeginInvoke(() =>
             {
                 foreach (var item in AllMessages)
                 {
@@ -67,7 +67,7 @@ namespace L2Data2Code.Main.MessagePanel
         {
             WaitForPurgeFinished();
 
-            dispatcher?.BeginInvoke(() =>
+            dispatcher.Value?.BeginInvoke(() =>
             {
                 runningPurger = true;
 
@@ -91,7 +91,7 @@ namespace L2Data2Code.Main.MessagePanel
                 return;
             }
 
-            dispatcher?.BeginInvoke(() =>
+            dispatcher.Value?.BeginInvoke(() =>
             {
                 var start = DateTime.Now;
                 while (runningPurger)

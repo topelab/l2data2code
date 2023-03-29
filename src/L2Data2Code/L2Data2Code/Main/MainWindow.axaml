@@ -5,6 +5,9 @@
         xmlns:vm="using:L2Data2Code.Main"
         xmlns:cb="using:L2Data2Code.Main.CommandBar"
         xmlns:str="using:L2Data2CodeUI.Shared.Localize"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:mp="clr-namespace:L2Data2Code.Main.MessagePanel"
+        xmlns:tp="clr-namespace:L2Data2Code.Main.TablePanel"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L2Data2Code.Main.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -16,36 +19,124 @@
 
     <Grid ColumnDefinitions="40*, 30* 10"
           RowDefinitions="0, 45, *">
-        
+
         <cb:CommandBarUserControl Grid.Row="1" Grid.ColumnSpan="3" />
 
         <Grid Grid.Row="2"
-              RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, 200*"
-              ColumnDefinitions="163*, 344*"
+              RowDefinitions="Auto, 200*"
               Margin="0, 10">
 
-            <TextBlock TextWrapping="Wrap"
-                       VerticalAlignment="Center"
-                       Text="{x:Static str:Strings.Template}"
-                       HorizontalAlignment="Right"
-                       Margin="10,0" />
+            <Grid Margin="10,10"
+                  IsEnabled="{Binding !Working}"
+                  RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, 200*"
+                  ColumnDefinitions="163*, 344*">
 
-            <ComboBox Grid.Column="1"
-                      x:Name="cbTemplate"
-                      Items="{Binding TemplateList}"
-                      SelectedItem="{Binding SelectedTemplate}"
-                      Margin="0,5"/>
+                <TextBlock TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.Template}"
+                           HorizontalAlignment="Right"
+                           Margin="10,0" />
 
-            <TextBlock Grid.Row="2"
-                       HorizontalAlignment="Right"
-                       Margin="10,0"
-                       TextWrapping="Wrap"
-                       VerticalAlignment="Center"
-                       Text="{x:Static str:Strings.Vars}"
-                       IsVisible="{Binding VarsVisible}" />
+                <ComboBox Grid.Column="1"
+                          x:Name="cbTemplate"
+                          Items="{Binding TemplateList}"
+                          SelectedItem="{Binding SelectedTemplate}"
+                          Margin="0,5"/>
+
+                <TextBlock Grid.Row="2"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.Vars}"
+                           IsVisible="{Binding VarsVisible}" />
+
+                <Grid Grid.Row="2"
+                      IsVisible="{Binding VarsVisible}"
+                      Grid.Column="2"
+                      ColumnDefinitions="*, Auto">
+                    <ComboBox Grid.Column="0"
+                              x:Name="cbVars"
+                              Items="{Binding VarsList}"
+                              SelectedItem="{Binding SelectedVars}"
+                              Margin="0,5" />
+                </Grid>
+
+                <TextBlock Grid.Row="1"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.DataSource}" />
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          x:Name="cbArea"
+                          Items="{Binding DataSourceList}"
+                          SelectedItem="{Binding SelectedDataSource}"
+                          Margin="0,5" />
+
+                <TextBlock Grid.Row="3"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.Module}" />
+                <ComboBox Grid.Row="3"
+                          Grid.Column="1"
+                          x:Name="cbModule"
+                          Items="{Binding ModuleList}"
+                          SelectedItem="{Binding SelectedModule}"
+                          Margin="0,5" />
+
+                <TextBlock Grid.Row="4"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           Text="{x:Static str:Strings.SaveAt}" />
+                <TextBox Grid.Row="4"
+                         Grid.Column="1"
+                         Margin="0,5"
+                         Text="{Binding OutputPath}"
+                         IsReadOnly="True" />
+
+                <CheckBox Grid.Row="5"
+                        Grid.Column="1"
+                        IsChecked="{Binding SetRelatedTables}"
+                        IsEnabled="{Binding !GenerateOnlyJson}"
+                        Content="{x:Static str:Strings.SelectRelatedTables}" />
+
+                <CheckBox Grid.Row="6"
+                        Grid.Column="1"
+                        IsChecked="{Binding EmptyFolders}"
+                        IsEnabled="{Binding !GenerateOnlyJson}"
+                        Content="{x:Static str:Strings.EmptyFolders}" />
+
+                <CheckBox Grid.Row="7"
+                        Grid.Column="1"
+                        IsChecked="{Binding GenerateOnlyJson}"
+                        IsVisible="{Binding GenerateOnlyJsonVisible}" />
+
+                <Button Grid.Column="1"
+                        Grid.Row="8"
+                        Command="{Binding GenerateCodeCommand}"
+                        CommandParameter="{Binding}"
+                        Height="72"
+                        Margin="0, 10"
+                        Content="{materialIcons:MaterialIconExt Kind=RunFast, Size=64}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        ToolTip.Tip="{x:Static str:Strings.Generate}" />
+            </Grid>
+
+            <mp:MessagePanelUserControl Grid.Row="1" />
 
 
         </Grid>
+
+        <tp:TablePanelUserControl Grid.Row="2"
+                          Grid.Column="1" />
+
     </Grid>
 
 

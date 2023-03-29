@@ -3,9 +3,13 @@ using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseHandleBars;
+using L2Data2Code.Commands.Interfaces;
+using L2Data2Code.Commands;
 using L2Data2Code.Main;
+using L2Data2Code.Main.CommandBar;
 using L2Data2Code.Main.Interfaces;
 using L2Data2Code.Main.MessagePanel;
+using L2Data2Code.Main.TablePanel;
 using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;
@@ -41,11 +45,11 @@ namespace L2Data2Code
                 .AddSingleton<IConditionalPathRenderizer, ConditionalPathRenderizer>()
                 .AddSingleton<IFileService, FileService>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
-                .AddSingleton<IMainWindowFactory, MainWindowFactory>()
-                //.AddSingleton<IMainWindowVMInitializer, MainWindowInitializer>()
-                .AddSelf<MainWindow>()
-                .AddSelf<MainWindowViewModel>()
-                .AddSingleton<MainWindowVM, MainWindowVM>()
+                .AddSingleton<ICommandBarFactory, CommandBarFactory>()
+                .AddSingleton<ITablePanelFactory, TablePanelFactory>()
+                .AddSingleton<IMessagePanelFactory, MessagePanelFactory>()
+
+                .AddSingleton<IEditorLocatorService, EditorLocatorService>()
                 .AddSingleton<IMessagePanelService, MessagePanelService>()
                 .AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<IAppService, AppService>()
@@ -59,6 +63,26 @@ namespace L2Data2Code
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
+                .AddSingleton<IMainWindowFactory, MainWindowFactory>()
+
+                .AddTransient<MainWindowVM, MainWindowVM>()
+                .AddTransient<IMainWindowEventManager, MainWindowEventManager>()
+                .AddTransient<IMainWindowVMBindManager, MainWindowVMBindManager>()
+                .AddTransient<IMainWindowVMInitializer, MainWindowVMInitializer>()
+                .AddTransient<ICommandBarBindManager, CommandBarBindManager>()
+                .AddTransient<ITablePanelBindManager, TablePanelBindManager>()
+                .AddTransient<IMessagePanelBindManager, MessagePanelBindManager>()
+                .AddTransient<IGenerateCommand, GenerateCommand>()
+                .AddTransient<IEditTemplateCommand, EditTemplateCommand>()
+                .AddTransient<IOpenFolderCommand, OpenFolderCommand>()
+                .AddTransient<IOpenPSCommand, OpenPSCommand>()
+                .AddTransient<IOpenSettingsCommand, OpenSettingsCommand>()
+                .AddTransient<IOpenVarsWindowCommand, OpenVarsWindowCommand>()
+                .AddTransient<IOpenVSCodeCommand, OpenVSCodeCommand>()
+                .AddTransient<IOpenVSCommand, OpenVSCommand>()
+                .AddTransient<ILoadTablesCommand, LoadTablesCommand>()
+                .AddTransient<ISetDataItemsCommand, SetDataItemsCommand>()
+                .AddTransient<ISetDataItemCommand, SetDataItemCommand>()
 
                 .AddTransient<IFileMonitorService, FileMonitorService>()
                 .AddTransient<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
@@ -69,6 +93,7 @@ namespace L2Data2Code
                 .AddTransient<ISchemaReader, SQLiteSchemaReader>(nameof(SQLiteSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
 
                 .AddInstance<ILogger>(LogManager.GetCurrentClassLogger())
+
 
                 ;
         }

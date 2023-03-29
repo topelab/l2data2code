@@ -9,7 +9,7 @@ namespace L2Data2Code.Base
     /// </summary>
     internal class DispatcherWrapper : IDispatcherWrapper
     {
-        private readonly Dispatcher dispatcher;
+        private readonly Lazy<Dispatcher> dispatcher;
 
         /// <summary>
         /// Constructor
@@ -17,7 +17,7 @@ namespace L2Data2Code.Base
         /// <param name="dispatcher">Defined dispatcher or null to get current applicarion dispatcher</param>
         public DispatcherWrapper(Dispatcher dispatcher = null)
         {
-            this.dispatcher = dispatcher ?? Application.Current.Dispatcher;
+            this.dispatcher = new Lazy<Dispatcher>(() => dispatcher ?? Application.Current?.Dispatcher);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace L2Data2Code.Base
                 throw new ArgumentNullException(nameof(action));
             }
 
-            dispatcher.Invoke(action, args);
+            dispatcher.Value?.Invoke(action, args);
         }
     }
 }
