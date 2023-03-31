@@ -12,16 +12,14 @@ namespace L2Data2Code.Main
 {
     internal class MainWindowEventManager : IMainWindowEventManager
     {
-        private readonly IDispatcherWrapper dispatcherWrapper;
         private readonly IFileMonitorService fileMonitorService;
         private readonly IProcessManager processManager;
         private readonly IGeneratorAdapter generatorAdapter;
 
         public Timer CheckOpenedTimer { get; private set; }
 
-        public MainWindowEventManager(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService, IProcessManager processManager, IGeneratorAdapter generatorAdapter)
+        public MainWindowEventManager(IFileMonitorService fileMonitorService, IProcessManager processManager, IGeneratorAdapter generatorAdapter)
         {
-            this.dispatcherWrapper = dispatcherWrapper ?? throw new ArgumentNullException(nameof(dispatcherWrapper));
             this.fileMonitorService = fileMonitorService ?? throw new ArgumentNullException(nameof(fileMonitorService));
             this.processManager = processManager ?? throw new ArgumentNullException(nameof(processManager));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
@@ -38,17 +36,14 @@ namespace L2Data2Code.Main
         {
             if (fileChanged.Equals(BasicNameValueConfiguration.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
             {
-                dispatcherWrapper?.Invoke(() =>
+                window.Activate();
+                var result = MessageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Cancel)
                 {
-                    window.Activate();
-                    var result = MessageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxButton.OKCancel, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.Cancel)
-                    {
-                        return;
-                    }
-                    App.RestartApp = true;
-                    window.Close();
-                });
+                    return;
+                }
+                App.RestartApp = true;
+                window.Close();
             }
         }
 

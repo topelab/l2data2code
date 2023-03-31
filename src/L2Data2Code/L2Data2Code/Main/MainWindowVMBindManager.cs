@@ -11,12 +11,10 @@ namespace L2Data2Code.Main
     internal class MainWindowVMBindManager : IMainWindowVMBindManager
     {
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly IDispatcherWrapper dispatcher;
 
-        public MainWindowVMBindManager(IGeneratorAdapter generatorAdapter, IDispatcherWrapper dispatcher)
+        public MainWindowVMBindManager(IGeneratorAdapter generatorAdapter)
         {
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
-            this.dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
         }
 
         public void Start(MainWindowVM mainWindowVM)
@@ -93,24 +91,18 @@ namespace L2Data2Code.Main
                 mainWindowVM.PauseTimer = true;
                 generatorAdapter.SetCurrentDataSource(mainWindowVM.SelectedDataSource);
                 mainWindowVM.TablePanelVM.LoadTablesCommand.Execute(null);
-                dispatcher?.Invoke(() =>
-                {
-                    mainWindowVM.SelectedModule = generatorAdapter.SelectedModule;
-                    mainWindowVM.ModuleList = generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource);
-                    mainWindowVM.VarsList = generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource);
-                    mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
-                    mainWindowVM.OutputPath = generatorAdapter.OutputPath;
-                    mainWindowVM.SlnFile = generatorAdapter.SlnFile;
-                    mainWindowVM.GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
-                });
+                mainWindowVM.SelectedModule = generatorAdapter.SelectedModule;
+                mainWindowVM.ModuleList = generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource);
+                mainWindowVM.VarsList = generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource);
+                mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
+                mainWindowVM.OutputPath = generatorAdapter.OutputPath;
+                mainWindowVM.SlnFile = generatorAdapter.SlnFile;
+                mainWindowVM.GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
             }).ContinueWith((t) =>
             {
-                dispatcher?.Invoke(() =>
-                {
-                    mainWindowVM.TablePanelVM.LoadingTables = false;
-                    mainWindowVM.Working = false;
-                    mainWindowVM.PauseTimer = false;
-                });
+                mainWindowVM.TablePanelVM.LoadingTables = false;
+                mainWindowVM.Working = false;
+                mainWindowVM.PauseTimer = false;
             });
         }
 

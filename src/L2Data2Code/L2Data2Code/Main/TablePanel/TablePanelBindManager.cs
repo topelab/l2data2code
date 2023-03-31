@@ -10,12 +10,10 @@ namespace L2Data2Code.Main.TablePanel
     internal class TablePanelBindManager : ITablePanelBindManager
     {
         private readonly IGeneratorAdapter adapter;
-        private readonly IDispatcherWrapper dispatcher;
 
-        public TablePanelBindManager(IGeneratorAdapter adapter, IDispatcherWrapper dispatcher)
+        public TablePanelBindManager(IGeneratorAdapter adapter)
         {
             this.adapter = adapter ?? throw new System.ArgumentNullException(nameof(adapter));
-            this.dispatcher = dispatcher ?? throw new System.ArgumentNullException(nameof(dispatcher));
         }
 
         private MainWindowVM mainVM;
@@ -78,19 +76,16 @@ namespace L2Data2Code.Main.TablePanel
                 PopulateDataItems(includeTablesRegex, excludeTablesRegex);
             }).ContinueWith((t) =>
             {
-                dispatcher.Invoke(() =>
-                {
-                    controlVM.LoadingTables = false;
-                    controlVM.Working = false;
-                    mainVM.PauseTimer = false;
-                });
+                controlVM.LoadingTables = false;
+                controlVM.Working = false;
+                mainVM.PauseTimer = false;
             });
         }
 
         private void PopulateDataItems(Regex includeTablesRegex = null, Regex excludeTablesRegex = null)
         {
             App.Logger.Info("Populating tables and view lists");
-            dispatcher.Invoke(ClearDataItemsLists);
+            ClearDataItemsLists();
 
             foreach (var element in controlVM.AllDataItems.Values.OrderBy(k => k.Name))
             {
@@ -99,9 +94,9 @@ namespace L2Data2Code.Main.TablePanel
                 {
                     element.IsVisible = !excludeTablesRegex.IsMatch(element.Name);
                 }
-                dispatcher.Invoke(controlVM.AddToViews, element);
+                controlVM.AddToViews(element);
             }
-            dispatcher.Invoke(() => controlVM.ViewsVisible = controlVM.AllViews.Any());
+            controlVM.ViewsVisible = controlVM.AllViews.Any();
             App.Logger.Info("All items populated");
         }
 

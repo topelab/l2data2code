@@ -11,5 +11,30 @@
     <Design.DataContext>
         <local:MessagePanelVM />
     </Design.DataContext>
+    <DockPanel Margin="10,10,10,10"
+                Grid.Row="1"
+                VerticalAlignment="Bottom"
+                IsVisible="{Binding MessagePanelVisible}">
+        <Expander Header="{x:Static str:Strings.MessageBoard}"
+                    HorizontalAlignment="Stretch"
+                    Height="80"
+                    IsExpanded="{Binding MessagePanelOpened}"
+                    Background="{DynamicResource ThemeAccentBrush}">
+            <ScrollViewer>
+                <ListBox Items="{Binding AllMessages}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            FontSize="10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Text}"
+                                        Foreground="{Binding Path=Color}"
+                                        TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+            </ScrollViewer>
+        </Expander>
+    </DockPanel>
 
 </UserControl>

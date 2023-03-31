@@ -11,7 +11,7 @@
     <Grid IsEnabled="{Binding !Working}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />
-            <RowDefinition Height="*" MinHeight="50*" />
+            <RowDefinition Height="*" MinHeight="50" />
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0"
                    Grid.Column="0">
@@ -22,14 +22,6 @@
                       Header="{x:Static str:Strings.Tables}"
                       IsExpanded="True">
                 <DockPanel Background="White">
-                    <materialIcons:MaterialIconExt Kind="Autorenew"
-                                                    Width="64"
-                                                    Height="64"
-                                                    DockPanel.Dock="Top"
-                                                    Foreground="Orange"
-                                                    HorizontalAlignment="Center"
-                                                    Margin="0,20"
-                                                    IsVisible="{Binding LoadingTables}" />
                     <CheckBox IsChecked="{Binding SelectAllTables}"
                               DockPanel.Dock="Top"
                               HorizontalAlignment="Center"
@@ -37,8 +29,7 @@
                               Content="{x:Static str:Strings.All}"
                               Margin="10"
                               IsVisible="{Binding !LoadingTables}" />
-                    <ScrollViewer DockPanel.Dock="Top"
-                                  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                    <ScrollViewer DockPanel.Dock="Top">
                         <ListBox Items="{Binding AllTables}"
                                  FontSize="10"
                                  IsVisible="{Binding !LoadingTables}">
@@ -48,16 +39,6 @@
                                               IsChecked="{Binding Path=IsSelected}">
                                         <TextBlock Text="{Binding Path=Name}" />
                                     </CheckBox>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding Path=IsRelated}"
-                                                     Value="true">
-                                            <Setter Property="TextBlock.FontStyle"
-                                                    Value="Italic" />
-                                            <Setter TargetName="cbTable"
-                                                    Property="CheckBox.Background"
-                                                    Value="AliceBlue" />
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -80,8 +61,7 @@
                               FontWeight="Bold"
                               Content="{x:Static str:Strings.All}"
                               Margin="10" />
-                    <ScrollViewer DockPanel.Dock="Top"
-                                  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                    <ScrollViewer DockPanel.Dock="Top">
                         <ListBox Items="{Binding AllViews}"
                                   FontSize="10">
                             <ListBox.ItemTemplate>

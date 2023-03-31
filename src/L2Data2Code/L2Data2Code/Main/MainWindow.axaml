@@ -12,7 +12,6 @@
         x:Class="L2Data2Code.Main.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="L2Data2Code">
-
     <Design.DataContext>
         <vm:MainWindowVM/>
     </Design.DataContext>
@@ -128,16 +127,8 @@
                         VerticalAlignment="Top"
                         ToolTip.Tip="{x:Static str:Strings.Generate}" />
             </Grid>
-
             <mp:MessagePanelUserControl Grid.Row="1" />
-
-
         </Grid>
-
-        <tp:TablePanelUserControl Grid.Row="2"
-                          Grid.Column="1" />
-
+        <tp:TablePanelUserControl Grid.Row="2" Grid.Column="1" />
     </Grid>
-
-
 </Window>
