@@ -31,13 +31,16 @@ namespace L2Data2Code.Main
             var generateCommand = resolver.Get<IGenerateCommand>();
             mainWindowVM.SetCommands(generateCommand);
 
-            mainWindowVMBindManager.Start(mainWindowVM);
-            mainWindowVMInitializer.Initialize(mainWindowVM);
             var window = new MainWindow
             {
                 DataContext = mainWindowVM
             };
-            mainWindowEventManager.Start(window, mainWindowVM);
+            window.Opened += (sender, args) =>
+            {
+                mainWindowVMBindManager.Start(mainWindowVM);
+                mainWindowVMInitializer.Initialize(mainWindowVM);
+                mainWindowEventManager.Start(window, mainWindowVM);
+            };
             window.Title = $"{Strings.Title} v{generatorAdapter.GeneratorVersion}";
             return window;
         }

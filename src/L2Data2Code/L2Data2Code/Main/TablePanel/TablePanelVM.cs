@@ -94,6 +94,8 @@ namespace L2Data2Code.Main.TablePanel
         {
             var viewToAdd = !element.IsVisible ? null : (element.Table.IsView) ? AllViews : AllTables;
             viewToAdd?.Add(element);
+            OnPropertyChanged(nameof(AllViews));
+            OnPropertyChanged(nameof(AllTables));
         }
 
         private void SetTables(bool selected)

@@ -11,7 +11,7 @@
     <Grid IsEnabled="{Binding !Working}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />
-            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition Height="50*" />
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0"
                    Grid.Column="0">

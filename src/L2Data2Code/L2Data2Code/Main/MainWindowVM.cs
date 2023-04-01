@@ -31,6 +31,9 @@ namespace L2Data2Code.Main
         private IEnumerable<string> _varsList;
         private bool varsVisible = true;
         private AppType appType;
+        private CommandBarVM commandBarVM;
+        private TablePanelVM tablePanelVM;
+        private MessagePanelVM messagePanelVM;
 
         public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
         public IEnumerable<string> DataSourceList
@@ -39,9 +42,9 @@ namespace L2Data2Code.Main
             set { SetProperty(ref _areaList, value); }
         }
 
-        public CommandBarVM CommandBarVM { get; internal set; }
-        public TablePanelVM TablePanelVM { get; internal set; }
-        public MessagePanelVM MessagePanelVM { get; internal set; }
+        public CommandBarVM CommandBarVM { get => commandBarVM; internal set => SetProperty(ref commandBarVM, value); }
+        public TablePanelVM TablePanelVM { get => tablePanelVM; internal set => SetProperty(ref tablePanelVM, value); }
+        public MessagePanelVM MessagePanelVM { get => messagePanelVM; internal set => SetProperty(ref messagePanelVM, value); }
 
         public bool EmptyFolders
         {

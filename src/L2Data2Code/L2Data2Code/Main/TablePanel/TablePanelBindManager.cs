@@ -70,16 +70,11 @@ namespace L2Data2Code.Main.TablePanel
             var includeTablesRegex = includeTables == null ? null : new Regex(includeTables);
             var excludeTablesRegex = excludeTables == null ? null : new Regex(excludeTables);
 
-            Task.Run(() =>
-            {
-                mainVM.PauseTimer = true;
-                PopulateDataItems(includeTablesRegex, excludeTablesRegex);
-            }).ContinueWith((t) =>
-            {
-                controlVM.LoadingTables = false;
-                controlVM.Working = false;
-                mainVM.PauseTimer = false;
-            });
+            mainVM.PauseTimer = true;
+            PopulateDataItems(includeTablesRegex, excludeTablesRegex);
+            controlVM.LoadingTables = false;
+            controlVM.Working = false;
+            mainVM.PauseTimer = false;
         }
 
         private void PopulateDataItems(Regex includeTablesRegex = null, Regex excludeTablesRegex = null)

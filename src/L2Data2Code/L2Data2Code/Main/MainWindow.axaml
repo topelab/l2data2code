@@ -19,7 +19,7 @@
     <Grid ColumnDefinitions="40*, 30* 10"
           RowDefinitions="0, 45, *">
 
-        <cb:CommandBarUserControl Grid.Row="1" Grid.ColumnSpan="3" />
+        <cb:CommandBarUserControl DataContext="{Binding CommandBarVM}" Grid.Row="1" Grid.ColumnSpan="3" />
 
         <Grid Grid.Row="2"
               RowDefinitions="Auto, 200*"
@@ -127,8 +127,8 @@
                         VerticalAlignment="Top"
                         ToolTip.Tip="{x:Static str:Strings.Generate}" />
             </Grid>
-            <mp:MessagePanelUserControl Grid.Row="1" />
+            <mp:MessagePanelUserControl DataContext="{Binding MessagePanelVM}" Grid.Row="1" />
         </Grid>
-        <tp:TablePanelUserControl Grid.Row="2" Grid.Column="1" />
+        <tp:TablePanelUserControl DataContext="{Binding TablePanelVM}" Grid.Row="2" Grid.Column="1" />
     </Grid>
 </Window>

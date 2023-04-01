@@ -1,10 +1,8 @@
+using L2Data2Code.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2Code.Base;
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
-using L2Data2Code.Main.Interfaces;
 
 namespace L2Data2Code.Main
 {
@@ -86,24 +84,20 @@ namespace L2Data2Code.Main
             mainWindowVM.TablePanelVM.ViewsVisible = false;
             var initialGenerateOnlyJsonVisible = bool.TryParse(generatorAdapter.SettingsConfiguration["generateJsonInfo"], out var generateJsonInfo) && generateJsonInfo;
 
-            Task.Run(() =>
-            {
-                mainWindowVM.PauseTimer = true;
-                generatorAdapter.SetCurrentDataSource(mainWindowVM.SelectedDataSource);
-                mainWindowVM.TablePanelVM.LoadTablesCommand.Execute(null);
-                mainWindowVM.SelectedModule = generatorAdapter.SelectedModule;
-                mainWindowVM.ModuleList = generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource);
-                mainWindowVM.VarsList = generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource);
-                mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
-                mainWindowVM.OutputPath = generatorAdapter.OutputPath;
-                mainWindowVM.SlnFile = generatorAdapter.SlnFile;
-                mainWindowVM.GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
-            }).ContinueWith((t) =>
-            {
-                mainWindowVM.TablePanelVM.LoadingTables = false;
-                mainWindowVM.Working = false;
-                mainWindowVM.PauseTimer = false;
-            });
+            mainWindowVM.PauseTimer = true;
+            generatorAdapter.SetCurrentDataSource(mainWindowVM.SelectedDataSource);
+            mainWindowVM.TablePanelVM.LoadTablesCommand.Execute(null);
+            mainWindowVM.ModuleList = generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource);
+            mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(mainWindowVM.SelectedDataSource);
+            mainWindowVM.VarsList = generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource);
+            mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
+
+            mainWindowVM.OutputPath = generatorAdapter.OutputPath;
+            mainWindowVM.SlnFile = generatorAdapter.SlnFile;
+            mainWindowVM.GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
+            mainWindowVM.TablePanelVM.LoadingTables = false;
+            mainWindowVM.Working = false;
+            mainWindowVM.PauseTimer = false;
         }
 
         private void TemplateChanged(MainWindowVM mainWindowVM)

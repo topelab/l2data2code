@@ -56,14 +56,15 @@ namespace L2Data2Code.Main
             var selectedTemplate = mainWindowVM.TemplateList.FirstOrDefault();
             var selectedDataSource = mainWindowVM.DataSourceList.FirstOrDefault();
 
+            mainWindowVM.SelectedTemplate = selectedTemplate;
+            mainWindowVM.SelectedDataSource = selectedDataSource;
+            mainWindowVM.ModuleList = generatorAdapter.GetModuleList(selectedDataSource);
+            mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(selectedDataSource);
             mainWindowVM.VarsList = generatorAdapter.GetVarsList(selectedTemplate, selectedDataSource);
             mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
 
-            mainWindowVM.ModuleList = generatorAdapter.GetModuleList(selectedDataSource);
-            mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(selectedDataSource);
-
-            mainWindowVM.SelectedTemplate = selectedTemplate;
-            mainWindowVM.SelectedDataSource = selectedDataSource;
+            mainWindowVM.TablePanelVM.SelectAllTables = false;
+            mainWindowVM.TablePanelVM.SelectAllViews = false;
 
             generatorAdapter.OnConfigurationChanged = () =>
             {
