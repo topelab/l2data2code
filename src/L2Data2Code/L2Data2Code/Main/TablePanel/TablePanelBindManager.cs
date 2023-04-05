@@ -1,9 +1,7 @@
-using L2Data2Code.Base;
 using L2Data2CodeUI.Shared.Adapters;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace L2Data2Code.Main.TablePanel
 {

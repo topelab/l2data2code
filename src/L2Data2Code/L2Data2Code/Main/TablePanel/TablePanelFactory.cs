@@ -1,5 +1,4 @@
 using L2Data2Code.Commands.Interfaces;
-using L2Data2Code.Main;
 using System;
 
 namespace L2Data2Code.Main.TablePanel
@@ -22,7 +21,7 @@ namespace L2Data2Code.Main.TablePanel
         public TablePanelVM Create(MainWindowVM mainVM)
         {
             TablePanelVM tablePanelVM = new();
-            loadTablesCommand.Initialize(mainVM, tablePanelVM);
+            loadTablesCommand.Initialize(tablePanelVM);
             setDataItemsCommand.Initialize(tablePanelVM);
             setDataItemCommand.Initialize(tablePanelVM);
             tablePanelVM.SetCommands(loadTablesCommand, setDataItemsCommand, setDataItemCommand);

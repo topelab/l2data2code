@@ -11,7 +11,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L2Data2Code.Main.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="L2Data2Code">
+        Title="L2Data2Code"
+        Width="850"
+        Height="600">
     <Design.DataContext>
         <vm:MainWindowVM/>
     </Design.DataContext>

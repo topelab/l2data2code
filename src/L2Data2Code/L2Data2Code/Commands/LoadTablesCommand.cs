@@ -1,16 +1,15 @@
-using L2Data2Code.Commands.Interfaces;
-using L2Data2CodeUI.Shared.Adapters;
 using L2Data2Code.Base;
-using L2Data2Code.Main;
+using L2Data2Code.Commands.Interfaces;
+using L2Data2Code.Main.TablePanel;
+using L2Data2CodeUI.Shared.Adapters;
 using System.ComponentModel;
 using System.Linq;
-using L2Data2Code.Main.TablePanel;
+using System.Windows.Input;
 
 namespace L2Data2Code.Commands
 {
     internal class LoadTablesCommand : DelegateCommand, ILoadTablesCommand
     {
-        private MainWindowVM mainVM;
         private TablePanelVM controlVM;
 
         private readonly IGeneratorAdapter adapter;
@@ -25,9 +24,8 @@ namespace L2Data2Code.Commands
             LoadAllTables();
         }
 
-        public void Initialize(MainWindowVM mainVM, TablePanelVM controlVM)
+        public void Initialize(TablePanelVM controlVM)
         {
-            this.mainVM = mainVM;
             this.controlVM = controlVM;
         }
 
@@ -66,7 +64,7 @@ namespace L2Data2Code.Commands
                     item.IsRelated = false;
                 }
 
-                mainVM.OnPropertyChanged(nameof(mainVM.GenerateCodeCommand));
+                CommandManager.InvalidateRequerySuggested();
             }
         }
     }

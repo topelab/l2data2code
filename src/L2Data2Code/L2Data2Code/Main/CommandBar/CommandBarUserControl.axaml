@@ -28,19 +28,23 @@
                     Command="{Binding EditTemplateCommand}" />
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=FolderOutline, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenGeneratedFolder}"
-                    Command="{Binding OpenFolderCommand}" />
+                    Command="{Binding OpenFolderCommand}"
+                    CommandParameter="{Binding SlnFile}" />
             <Button Classes="Flat Mine"
                     Content="{Binding OpenCmdIcon}"
                     ToolTip.Tip="{Binding OpenCmdToolTip}"
-                    Command="{Binding OpenVSCommand}" />
+                    Command="{Binding OpenVSCommand}"
+                    CommandParameter="{Binding SlnFile}" />
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=VsCode, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
                     IsVisible="{Binding HaveVSCodeInstalled}"
-                    Command="{Binding OpenVSCodeCommand}" />
+                    Command="{Binding OpenVSCodeCommand}"
+                    CommandParameter="{Binding SlnFile}" />
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=Powershell, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenPSCommand}"
                     IsVisible="{Binding HavePSInstalled}"
-                    Command="{Binding OpenPSCommand}" />
+                    Command="{Binding OpenPSCommand}"
+                    CommandParameter="{Binding SlnFile}" />
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=VariableBox, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenVarsWindow}"
                     Command="{Binding OpenVarsWindow}"

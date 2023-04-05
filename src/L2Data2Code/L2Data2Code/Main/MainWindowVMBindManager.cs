@@ -1,8 +1,11 @@
+using L2Data2Code.Base;
 using L2Data2Code.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
+using ReactiveUI;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace L2Data2Code.Main
 {
@@ -43,6 +46,7 @@ namespace L2Data2Code.Main
                 case nameof(MainWindowVM.ModuleList):
                     break;
                 case nameof(MainWindowVM.OutputPath):
+                    CommandManager.InvalidateRequerySuggested();
                     break;
                 case nameof(MainWindowVM.PauseTimer):
                     break;
@@ -98,6 +102,7 @@ namespace L2Data2Code.Main
             mainWindowVM.TablePanelVM.LoadingTables = false;
             mainWindowVM.Working = false;
             mainWindowVM.PauseTimer = false;
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void TemplateChanged(MainWindowVM mainWindowVM)
@@ -112,6 +117,7 @@ namespace L2Data2Code.Main
             mainWindowVM.SlnFile = generatorAdapter.SlnFile;
 
             mainWindowVM.Working = false;
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void ModuleChanged(MainWindowVM mainWindowVM)
@@ -123,6 +129,7 @@ namespace L2Data2Code.Main
             mainWindowVM.AppType = generatorAdapter.AppType;
 
             mainWindowVM.Working = false;
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void VarsChanged(MainWindowVM mainWindowVM)
