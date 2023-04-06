@@ -1,8 +1,8 @@
+using L2Data2Code.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Threading;
 
 namespace L2Data2Code.Main.MessagePanel
@@ -10,13 +10,13 @@ namespace L2Data2Code.Main.MessagePanel
     public class MessagePanelService : IMessagePanelService
     {
         private bool runningPurger;
-        private readonly Lazy<Dispatcher> dispatcher;
+        private readonly IDispatcherWrapper dispatcher;
 
         public ObservableCollection<MessageVM> AllMessages { get; }
 
-        public MessagePanelService()
+        public MessagePanelService(IDispatcherWrapper dispatcher)
         {
-            dispatcher = new Lazy<Dispatcher>(() => Application.Current?.Dispatcher);
+            this.dispatcher = dispatcher;
             AllMessages = new ObservableCollection<MessageVM>();
             DispatcherTimer timer = new()
             {
@@ -28,7 +28,7 @@ namespace L2Data2Code.Main.MessagePanel
 
         public void Add(string text, bool viewStatus = false, string code = null)
         {
-            dispatcher.Value?.BeginInvoke(() =>
+            dispatcher.Invoke(() =>
             {
                 lock (AllMessages)
                 {
@@ -52,7 +52,7 @@ namespace L2Data2Code.Main.MessagePanel
                 return;
             }
 
-            dispatcher.Value?.BeginInvoke(() =>
+            dispatcher.Invoke(() =>
             {
                 foreach (var item in AllMessages)
                 {
@@ -60,14 +60,13 @@ namespace L2Data2Code.Main.MessagePanel
                 }
 
             });
-
         }
 
         public void ClearPinned(string code)
         {
             WaitForPurgeFinished();
 
-            dispatcher.Value?.BeginInvoke(() =>
+            dispatcher.Invoke(() =>
             {
                 runningPurger = true;
 
@@ -91,7 +90,7 @@ namespace L2Data2Code.Main.MessagePanel
                 return;
             }
 
-            dispatcher.Value?.BeginInvoke(() =>
+            dispatcher.Invoke(() =>
             {
                 var start = DateTime.Now;
                 while (runningPurger)

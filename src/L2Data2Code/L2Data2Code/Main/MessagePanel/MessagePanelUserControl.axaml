@@ -17,7 +17,7 @@
                 IsVisible="{Binding MessagePanelVisible}">
         <Expander Header="{x:Static str:Strings.MessageBoard}"
                     HorizontalAlignment="Stretch"
-                    Height="80"
+                    DockPanel.Dock="Bottom"
                     IsExpanded="{Binding MessagePanelOpened}"
                     Background="{DynamicResource ThemeAccentBrush}">
             <ScrollViewer>

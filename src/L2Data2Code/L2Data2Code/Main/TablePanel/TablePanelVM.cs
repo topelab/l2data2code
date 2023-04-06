@@ -53,7 +53,7 @@ namespace L2Data2Code.Main.TablePanel
         public bool ViewsVisible
         {
             get => viewsVisible;
-            set => SetProperty(ref viewsVisible, value, () => AutoHeight = value ? "50*" : "*");
+            set => SetProperty(ref viewsVisible, value);
         }
 
         private bool isAnyItemActive;

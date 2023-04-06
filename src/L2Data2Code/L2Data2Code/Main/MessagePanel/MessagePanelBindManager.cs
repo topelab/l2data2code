@@ -39,6 +39,11 @@ namespace L2Data2Code.Main.MessagePanel
             {
                 mainVM.PropertyChanged -= OnMainVMPropertyChanged;
             }
+            if (controlVM != null)
+            {
+                controlVM.PropertyChanged -= OnControlVMPropertyChanged;
+            }
+            messagePanelService.AllMessages.CollectionChanged -= OnAllMessagesCollectionChanged;
         }
 
         private void OnControlVMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -89,6 +94,7 @@ namespace L2Data2Code.Main.MessagePanel
                     controlVM.RunningGenerateCode = mainVM.RunningGenerateCode;
                     if (mainVM.RunningGenerateCode)
                     {
+                        controlVM.MessagePanelVisible = true;
                         controlVM.MessagePanelOpened = true;
                     }
                     break;

@@ -1,6 +1,5 @@
+using Avalonia.Threading;
 using System;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace L2Data2Code.Base
 {
@@ -17,7 +16,7 @@ namespace L2Data2Code.Base
         /// <param name="dispatcher">Defined dispatcher or null to get current applicarion dispatcher</param>
         public DispatcherWrapper(Dispatcher dispatcher = null)
         {
-            this.dispatcher = new Lazy<Dispatcher>(() => dispatcher ?? Application.Current?.Dispatcher);
+            this.dispatcher = new Lazy<Dispatcher>(() => dispatcher ?? Dispatcher.UIThread);
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace L2Data2Code.Base
                 throw new ArgumentNullException(nameof(action));
             }
 
-            dispatcher.Value?.Invoke(action, args);
+            dispatcher.Value.InvokeAsync(() => action.DynamicInvoke(args));
         }
     }
 }

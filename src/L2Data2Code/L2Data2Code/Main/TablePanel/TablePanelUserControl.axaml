@@ -10,8 +10,7 @@
              x:Class="L2Data2Code.Main.TablePanel.TablePanelUserControl">
     <Grid IsEnabled="{Binding !Working}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50*" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0"
                    Grid.Column="0">
@@ -31,13 +30,17 @@
                               IsVisible="{Binding !LoadingTables}" />
                     <ScrollViewer DockPanel.Dock="Top">
                         <ListBox Items="{Binding AllTables}"
-                                 FontSize="10"
                                  IsVisible="{Binding !LoadingTables}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <CheckBox Name="cbTable"
-                                              IsChecked="{Binding Path=IsSelected}">
-                                        <TextBlock Text="{Binding Path=Name}" />
+                                    <CheckBox IsChecked="{Binding Path=IsSelected}"
+                                              Margin="2,0"
+                                              Height="8"
+                                              FontSize="10">
+                                        <TextBlock Text="{Binding Path=Name}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="11"
+                                                   Margin="0"/>
                                     </CheckBox>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -45,8 +48,6 @@
                     </ScrollViewer>
                 </DockPanel>
             </Expander>
-        </DockPanel>
-        <DockPanel Grid.Row="1">
             <Expander x:Name="ExpanderViews"
                       DockPanel.Dock="Top"
                       Margin="5,10,0,10"
@@ -62,14 +63,17 @@
                               Content="{x:Static str:Strings.All}"
                               Margin="10" />
                     <ScrollViewer DockPanel.Dock="Top">
-                        <ListBox Items="{Binding AllViews}"
-                                  FontSize="10">
+                        <ListBox Items="{Binding AllViews}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <CheckBox IsChecked="{Binding Path=IsSelected}"
-                                              VerticalAlignment="Top"
-                                              VerticalContentAlignment="Top">
-                                        <TextBlock Text="{Binding Path=Name}" />
+                                              Margin="2,0"
+                                              Height="8"
+                                              FontSize="10">
+                                        <TextBlock Text="{Binding Path=Name}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="11"
+                                                   Margin="0"/>
                                     </CheckBox>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
