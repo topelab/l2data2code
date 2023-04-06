@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using L2Data2Code.Base;
 using L2Data2Code.Commands.Interfaces;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace L2Data2Code.Main.TablePanel
     /// </summary>
     internal class TablePanelVM : ViewModelBase
     {
-        private string _autoHeight = "50*";
+        private GridLength _autoHeight = new(50, GridUnitType.Star);
         private bool _selectAllTables;
         private bool _loadingTables;
         private bool _selectAllViews;
@@ -25,7 +26,7 @@ namespace L2Data2Code.Main.TablePanel
         public ObservableCollection<TableVM> AllViews { get; set; } = new ObservableCollection<TableVM>();
         public Dictionary<string, TableVM> AllDataItems { get; set; } = new Dictionary<string, TableVM>();
 
-        public string AutoHeight
+        public GridLength AutoHeight
         {
             get => _autoHeight;
             set => SetProperty(ref _autoHeight, value);
@@ -103,8 +104,14 @@ namespace L2Data2Code.Main.TablePanel
         {
             var viewToAdd = !element.IsVisible ? null : (element.Table.IsView) ? AllViews : AllTables;
             viewToAdd?.Add(element);
-            OnPropertyChanged(nameof(AllViews));
-            OnPropertyChanged(nameof(AllTables));
+            if (AllViews.Any())
+            {
+                OnPropertyChanged(nameof(AllViews));
+            }
+            else
+            {
+                OnPropertyChanged(nameof(AllTables));
+            }
         }
 
         private void SetTables(bool selected)

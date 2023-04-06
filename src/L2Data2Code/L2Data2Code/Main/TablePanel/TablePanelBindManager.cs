@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using L2Data2CodeUI.Shared.Adapters;
 using System.ComponentModel;
 using System.Linq;
@@ -90,6 +91,14 @@ namespace L2Data2Code.Main.TablePanel
                 controlVM.AddToViews(element);
             }
             controlVM.ViewsVisible = controlVM.AllViews.Any();
+            if (controlVM.ViewsVisible)
+            {
+                controlVM.AutoHeight = new GridLength(50, GridUnitType.Star);
+            }
+            else
+            {
+                controlVM.AutoHeight = new GridLength(0, GridUnitType.Star);
+            }
             App.Logger.Info("All items populated");
         }
 
