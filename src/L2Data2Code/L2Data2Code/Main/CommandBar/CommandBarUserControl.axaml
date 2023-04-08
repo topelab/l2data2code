@@ -47,7 +47,7 @@
                     CommandParameter="{Binding SlnFile}" />
             <Button Classes="Flat Mine" Content="{materialIcons:MaterialIconExt Kind=VariableBox, Size=24}"
                     ToolTip.Tip="{x:Static str:Strings.OpenVarsWindow}"
-                    Command="{Binding OpenVarsWindow}"
+                    Command="{Binding OpenVarsWindowCommand}"
                     IsVisible="{Binding ShowVarsWindow}" />
         </StackPanel>
     </Grid>

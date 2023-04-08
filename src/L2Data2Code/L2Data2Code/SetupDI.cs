@@ -26,6 +26,7 @@ using L2Data2Code.SharedLib.Services;
 using L2Data2CodeUI.Shared.Adapters;
 using NLog;
 using Topelab.Core.Resolver.Entities;
+using L2Data2Code.Main.Vars;
 
 namespace L2Data2Code
 {
@@ -64,6 +65,7 @@ namespace L2Data2Code
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
+                .AddSingleton<IVarsFactory, VarsFactory>()
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()

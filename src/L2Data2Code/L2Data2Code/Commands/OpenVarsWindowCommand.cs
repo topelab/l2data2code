@@ -1,25 +1,28 @@
-using L2Data2Code.Commands.Interfaces;
-using L2Data2CodeUI.Shared.Adapters;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using L2Data2Code.Base;
+using L2Data2Code.Commands.Interfaces;
+using L2Data2Code.Main.Vars;
 using System;
-using L2Data2CodeWPF.Vars;
 
 namespace L2Data2Code.Commands
 {
     internal class OpenVarsWindowCommand : DelegateCommand, IOpenVarsWindowCommand
     {
-        private readonly IGeneratorAdapter adapter;
+        private readonly IVarsFactory varsFactory;
 
-        public OpenVarsWindowCommand(IGeneratorAdapter adapter)
+        public OpenVarsWindowCommand(IVarsFactory varsFactory)
         {
-            this.adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+            this.varsFactory = varsFactory ?? throw new ArgumentNullException(nameof(varsFactory));
         }
 
         public override void Execute(object parameter)
         {
-            VarsVM varsVM = new(adapter.CompiledVars);
-            //VarsWindow varsWindow = new(varsVM);
-            //varsWindow.ShowDialog();
+            var varsWindow = varsFactory.Create();
+            if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                varsWindow.ShowDialog(desktop.MainWindow);
+            }
         }
     }
 }
