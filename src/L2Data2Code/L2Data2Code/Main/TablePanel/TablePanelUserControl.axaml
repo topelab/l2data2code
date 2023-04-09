@@ -77,11 +77,11 @@
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding Path=IsSelected}"
                                       Margin="2,0"
-                                      Height="8"
-                                      FontSize="10">
+                                      Height="10">
                                 <TextBlock Text="{Binding Path=Name}"
                                            VerticalAlignment="Center"
-                                           FontSize="10"
+                                           FontSize="11"
+                                           Padding="0"
                                            Margin="0"/>
                             </CheckBox>
                         </DataTemplate>

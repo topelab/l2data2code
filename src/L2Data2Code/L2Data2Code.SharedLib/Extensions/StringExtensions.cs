@@ -376,6 +376,6 @@ namespace L2Data2Code.SharedLib.Extensions
             return result;
         }
 
-        public static string StringRepresentation(this string text) => text == null ? "null" : $"\"{text}\"";
+        public static string StringRepresentation(this string text) => text == null ? "null" : $"\"{text.DoubleSlash()}\"";
     }
 }

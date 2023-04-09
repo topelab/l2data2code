@@ -11,9 +11,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L2Data2Code.Main.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="L2Data2Code"
-        Width="850"
-        Height="600"
+        Title="Avalonia.L2Data2Code"
+        Width="1024"
+        Height="860"
         TransparencyLevelHint="AcrylicBlur"
         Background="#80000000"
         ExtendClientAreaToDecorationsHint="True"
@@ -23,124 +23,127 @@
         <vm:MainWindowVM/>
     </Design.DataContext>
 
-    <StackPanel Orientation="Vertical">
-        <TitleBar />
-        <Grid ColumnDefinitions="40*, 30* 10"
-              RowDefinitions="0, 45, *">
+    <Grid ColumnDefinitions="40*, 30*, 10"
+          RowDefinitions="45, *">
 
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/Assets/avalonia-logo.ico" Width="24" Height="24" Margin="10" />
+            <TextBlock Margin="15" Text="{Binding $parent[Window].Title} " />
             <cb:CommandBarUserControl DataContext="{Binding CommandBarVM}" Grid.Row="1" Grid.ColumnSpan="3" />
+        </StackPanel>
 
-            <Grid Grid.Row="2"
-                  RowDefinitions="Auto, 200*"
-                  Margin="0, 10">
 
-                <Grid Margin="10,10"
-                      IsEnabled="{Binding !Working}"
-                      RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, 200*"
-                      ColumnDefinitions="163*, 344*">
+        <Grid Grid.Row="1"
+              RowDefinitions="Auto, 200*"
+              Margin="0, 10">
 
-                    <TextBlock TextWrapping="Wrap"
-                               VerticalAlignment="Center"
-                               Text="{x:Static str:Strings.Template}"
-                               HorizontalAlignment="Right"
-                               Margin="10,0" />
+            <Grid Margin="10,10"
+                  IsEnabled="{Binding !Working}"
+                  RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, 200*"
+                  ColumnDefinitions="163*, 344*">
 
-                    <ComboBox Grid.Column="1"
-                              x:Name="cbTemplate"
-                              Items="{Binding TemplateList}"
-                              SelectedItem="{Binding SelectedTemplate}"
-                              Margin="0,5"/>
+                <TextBlock TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.Template}"
+                           HorizontalAlignment="Right"
+                           Margin="10,0" />
 
-                    <TextBlock Grid.Row="2"
-                               HorizontalAlignment="Right"
-                               Margin="10,0"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Center"
-                               Text="{x:Static str:Strings.Vars}"
-                               IsVisible="{Binding VarsVisible}" />
+                <ComboBox Grid.Column="1"
+                          x:Name="cbTemplate"
+                          Items="{Binding TemplateList}"
+                          SelectedItem="{Binding SelectedTemplate}"
+                          Margin="0,5"/>
 
-                    <Grid Grid.Row="2"
-                          IsVisible="{Binding VarsVisible}"
-                          Grid.Column="2"
-                          ColumnDefinitions="*, Auto">
-                        <ComboBox Grid.Column="0"
-                                  x:Name="cbVars"
-                                  Items="{Binding VarsList}"
-                                  SelectedItem="{Binding SelectedVars}"
-                                  Margin="0,5" />
-                    </Grid>
+                <TextBlock Grid.Row="2"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.Vars}"
+                           IsVisible="{Binding VarsVisible}" />
 
-                    <TextBlock Grid.Row="1"
-                               HorizontalAlignment="Right"
-                               Margin="10,0"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Center"
-                               Text="{x:Static str:Strings.DataSource}" />
-                    <ComboBox Grid.Row="1"
-                              Grid.Column="1"
-                              x:Name="cbArea"
-                              Items="{Binding DataSourceList}"
-                              SelectedItem="{Binding SelectedDataSource}"
+                <Grid Grid.Row="2"
+                      IsVisible="{Binding VarsVisible}"
+                      Grid.Column="2"
+                      ColumnDefinitions="*, Auto">
+                    <ComboBox Grid.Column="0"
+                              x:Name="cbVars"
+                              Items="{Binding VarsList}"
+                              SelectedItem="{Binding SelectedVars}"
                               Margin="0,5" />
-
-                    <TextBlock Grid.Row="3"
-                               HorizontalAlignment="Right"
-                               Margin="10,0"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Center"
-                               Text="{x:Static str:Strings.Module}" />
-                    <ComboBox Grid.Row="3"
-                              Grid.Column="1"
-                              x:Name="cbModule"
-                              Items="{Binding ModuleList}"
-                              SelectedItem="{Binding SelectedModule}"
-                              Margin="0,5" />
-
-                    <TextBlock Grid.Row="4"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right"
-                               Margin="10,0"
-                               Text="{x:Static str:Strings.SaveAt}" />
-                    <TextBox Grid.Row="4"
-                             Grid.Column="1"
-                             Margin="0,5"
-                             Text="{Binding OutputPath}"
-                             IsReadOnly="True" />
-
-                    <CheckBox Grid.Row="5"
-                            Grid.Column="1"
-                            IsChecked="{Binding SetRelatedTables}"
-                            IsEnabled="{Binding !GenerateOnlyJson}"
-                            Content="{x:Static str:Strings.SelectRelatedTables}" />
-
-                    <CheckBox Grid.Row="6"
-                            Grid.Column="1"
-                            IsChecked="{Binding EmptyFolders}"
-                            IsEnabled="{Binding !GenerateOnlyJson}"
-                            Content="{x:Static str:Strings.EmptyFolders}" />
-
-                    <CheckBox Grid.Row="7"
-                            Grid.Column="1"
-                            IsChecked="{Binding GenerateOnlyJson}"
-                            IsVisible="{Binding GenerateOnlyJsonVisible}" />
-
-                    <Button Grid.Column="1"
-                            Grid.Row="8"
-                            Command="{Binding GenerateCodeCommand}"
-                            CommandParameter="{Binding}"
-                            Height="72"
-                            Margin="0, 10"
-                            Content="{materialIcons:MaterialIconExt Kind=RunFast, Size=64}"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Top"
-                            ToolTip.Tip="{x:Static str:Strings.Generate}" />
                 </Grid>
-                <mp:MessagePanelUserControl DataContext="{Binding MessagePanelVM}" Grid.Row="1" />
-            </Grid>
-            <tp:TablePanelUserControl DataContext="{Binding TablePanelVM}" Grid.Row="2" Grid.Column="1" />
-        </Grid>
 
-    </StackPanel>
+                <TextBlock Grid.Row="1"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.DataSource}" />
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          x:Name="cbArea"
+                          Items="{Binding DataSourceList}"
+                          SelectedItem="{Binding SelectedDataSource}"
+                          Margin="0,5" />
+
+                <TextBlock Grid.Row="3"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Text="{x:Static str:Strings.Module}" />
+                <ComboBox Grid.Row="3"
+                          Grid.Column="1"
+                          x:Name="cbModule"
+                          Items="{Binding ModuleList}"
+                          SelectedItem="{Binding SelectedModule}"
+                          Margin="0,5" />
+
+                <TextBlock Grid.Row="4"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="10,0"
+                           Text="{x:Static str:Strings.SaveAt}" />
+                <TextBox Grid.Row="4"
+                         Grid.Column="1"
+                         Margin="0,5"
+                         Text="{Binding OutputPath}"
+                         IsReadOnly="True" />
+
+                <CheckBox Grid.Row="5"
+                        Grid.Column="1"
+                        IsChecked="{Binding SetRelatedTables}"
+                        IsEnabled="{Binding !GenerateOnlyJson}"
+                        Content="{x:Static str:Strings.SelectRelatedTables}" />
+
+                <CheckBox Grid.Row="6"
+                        Grid.Column="1"
+                        IsChecked="{Binding EmptyFolders}"
+                        IsEnabled="{Binding !GenerateOnlyJson}"
+                        Content="{x:Static str:Strings.EmptyFolders}" />
+
+                <CheckBox Grid.Row="7"
+                          Grid.Column="1"
+                          IsChecked="{Binding GenerateOnlyJson}"
+                          IsVisible="{Binding GenerateOnlyJsonVisible}"
+                          Content="{x:Static str:Strings.GenerateOnlyJson}" />
+
+                <Button Grid.Column="1"
+                        Grid.Row="8"
+                        Command="{Binding GenerateCodeCommand}"
+                        CommandParameter="{Binding}"
+                        Height="72"
+                        Margin="0, 10"
+                        Content="{materialIcons:MaterialIconExt Kind=RunFast, Size=64}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        ToolTip.Tip="{x:Static str:Strings.Generate}" />
+            </Grid>
+            <mp:MessagePanelUserControl DataContext="{Binding MessagePanelVM}" Grid.Row="1" />
+        </Grid>
+        <tp:TablePanelUserControl DataContext="{Binding TablePanelVM}" Grid.Row="1" Grid.Column="1" />
+    </Grid>
+
 
 </Window>
