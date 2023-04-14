@@ -8,6 +8,9 @@
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Title="Vars"
+        Width="800"
+        Height="600"
+        Topmost="True"
         TransparencyLevelHint="AcrylicBlur"
         Background="#80000000"
         ExtendClientAreaToDecorationsHint="True">
@@ -18,8 +21,7 @@
 
         <DataGrid Grid.Row="1"
                   Items="{Binding Variables}"
-                  CanUserResizeColumns="True"
-                  CanUserReorderColumns="True">
+                  CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static str:Strings.Name}"
                                     Width="Auto"
