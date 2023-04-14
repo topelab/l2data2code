@@ -7,16 +7,27 @@
         x:Class="L2Data2Code.Main.Vars.VarsWindow"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Title="VarsWindow">
-    <Grid>
-        <DataGrid Items="{Binding Variables}">
+        Title="Vars"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#80000000"
+        ExtendClientAreaToDecorationsHint="True">
+    <Grid RowDefinitions="45, *">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="10,5" Text="{Binding $parent[Window].Title} " />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  Items="{Binding Variables}"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static str:Strings.Name}"
-                                    Width="50*"
+                                    Width="Auto"
                                     IsReadOnly="True"
                                     Binding="{Binding Path=Name}" />
                 <DataGridTextColumn Header="{x:Static str:Strings.Value}"
-                                    Width="50*"
+                                    Width="*"
+                                    IsReadOnly="True"
                                     Binding="{Binding Path=Value}" />
             </DataGrid.Columns>
         </DataGrid>

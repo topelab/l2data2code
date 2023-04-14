@@ -1,19 +1,24 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:L2Data2Code"
-             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              x:Class="L2Data2Code.App">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
     <Application.Resources>
-        <themes:BundledTheme BaseTheme="Dark" PrimaryColor="Orange" SecondaryColor="Amber"/>
+        <ResourceDictionary>
+            <Color x:Key="SystemAccentColor">#ff8f00</Color>
+            <Color x:Key="SystemAccentColorDark1">#da9000</Color>
+            <Color x:Key="SystemAccentColorDark2">#b87a00</Color>
+            <Color x:Key="SystemAccentColorDark3">#a86f00</Color>
+            <Color x:Key="SystemAccentColorLight1">#ffcb65</Color>
+            <Color x:Key="SystemAccentColorLight2">#ffda93</Color>
+            <Color x:Key="SystemAccentColorLight3">#ffedcb</Color>
+        </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
+        <FluentTheme Mode="Dark" />
         <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"></StyleInclude>
-        <StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
-        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Default.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TitleBar.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CaptionButtons.xaml"/>
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
 </Application>
