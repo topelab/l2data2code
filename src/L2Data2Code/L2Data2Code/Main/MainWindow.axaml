@@ -18,7 +18,7 @@
         Background="#80000000"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterScreen">
-    
+
     <Design.DataContext>
         <vm:MainWindowVM/>
     </Design.DataContext>
@@ -111,23 +111,26 @@
                          Text="{Binding OutputPath}"
                          IsReadOnly="True" />
 
-                <CheckBox Grid.Row="5"
-                        Grid.Column="1"
-                        IsChecked="{Binding SetRelatedTables}"
-                        IsEnabled="{Binding !GenerateOnlyJson}"
-                        Content="{x:Static str:Strings.SelectRelatedTables}" />
+                <ToggleSwitch Grid.Row="5"
+                              Grid.Column="1"
+                              OnContent="{x:Static str:Strings.SelectRelatedTables}"
+                              OffContent="{x:Static str:Strings.SelectRelatedTables}"
+                              IsChecked="{Binding SetRelatedTables}"
+                              IsEnabled="{Binding !GenerateOnlyJson}" />
 
-                <CheckBox Grid.Row="6"
-                        Grid.Column="1"
-                        IsChecked="{Binding EmptyFolders}"
-                        IsEnabled="{Binding !GenerateOnlyJson}"
-                        Content="{x:Static str:Strings.EmptyFolders}" />
+                <ToggleSwitch Grid.Row="6"
+                              Grid.Column="1"
+                              IsChecked="{Binding EmptyFolders}"
+                              IsEnabled="{Binding !GenerateOnlyJson}"
+                              OnContent="{x:Static str:Strings.EmptyFolders}"
+                              OffContent="{x:Static str:Strings.EmptyFolders}" />
 
-                <CheckBox Grid.Row="7"
-                          Grid.Column="1"
-                          IsChecked="{Binding GenerateOnlyJson}"
-                          IsVisible="{Binding GenerateOnlyJsonVisible}"
-                          Content="{x:Static str:Strings.GenerateOnlyJson}" />
+                <ToggleSwitch Grid.Row="7"
+                              Grid.Column="1"
+                              IsChecked="{Binding GenerateOnlyJson}"
+                              IsVisible="{Binding GenerateOnlyJsonVisible}"
+                              OnContent="{x:Static str:Strings.GenerateOnlyJson}" 
+                              OffContent="{x:Static str:Strings.GenerateOnlyJson}" />
 
                 <Button Grid.Column="1"
                         Grid.Row="8"
