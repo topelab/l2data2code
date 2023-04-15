@@ -8,7 +8,6 @@ namespace L2Data2Code.Main.MessagePanel
         private bool messagePanelVisible;
         private bool runningGenerateCode;
         private ObservableCollection<MessageVM> allMessages;
-        private bool messagePanelOpened;
 
         public MessagePanelVM()
         {
@@ -29,11 +28,6 @@ namespace L2Data2Code.Main.MessagePanel
         {
             get => allMessages;
             internal set => SetProperty(ref allMessages, value);
-        }
-        public bool MessagePanelOpened
-        {
-            get => messagePanelOpened;
-            set => SetProperty(ref messagePanelOpened, value);
         }
     }
 }

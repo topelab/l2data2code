@@ -43,7 +43,7 @@ namespace L2Data2Code.Commands
 
             if (!mainWindowVM.RunningGenerateCode && anyItems && runnig)
             {
-                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, mainWindowVM.SlnFile), mainWindowVM.MessagePanelVM.MessagePanelOpened, MessageCodes.CAN_GENERATE_CODE);
+                messagePanelService.Add(string.Format(Strings.CannotGenerateCode, mainWindowVM.SlnFile), mainWindowVM.MessagePanelVM.MessagePanelVisible, MessageCodes.CAN_GENERATE_CODE);
             }
             else
             {

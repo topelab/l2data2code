@@ -7,7 +7,7 @@ namespace L2Data2Code.Main.MessagePanel
     public class MessageVM : ViewModelBase
     {
         public const double GlobalTimeOfLife = 10.0;
-        public const double GlobalTimeToDie = 1.0;
+        public const double GlobalTimeToDie = 3.0;
 
         private string _text;
         private bool _viewed;

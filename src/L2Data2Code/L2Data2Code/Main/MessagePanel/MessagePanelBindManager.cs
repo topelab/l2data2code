@@ -50,8 +50,8 @@ namespace L2Data2Code.Main.MessagePanel
         {
             switch (e.PropertyName)
             {
-                case nameof(controlVM.MessagePanelOpened):
-                    messagePanelService.ViewAll(controlVM.MessagePanelOpened);
+                case nameof(controlVM.MessagePanelVisible):
+                    messagePanelService.ViewAll(controlVM.MessagePanelVisible);
                     break;
                 default:
                     break;
@@ -60,7 +60,6 @@ namespace L2Data2Code.Main.MessagePanel
 
         private void OnAllMessagesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            controlVM.MessagePanelVisible = messagePanelService.AllMessages.Any();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -81,6 +80,8 @@ namespace L2Data2Code.Main.MessagePanel
                 default:
                     break;
             }
+
+            controlVM.MessagePanelVisible = messagePanelService.AllMessages.Any();
         }
 
         private void OnMainVMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -95,7 +96,6 @@ namespace L2Data2Code.Main.MessagePanel
                     if (mainVM.RunningGenerateCode)
                     {
                         controlVM.MessagePanelVisible = true;
-                        controlVM.MessagePanelOpened = true;
                     }
                     break;
                 default:
@@ -107,7 +107,7 @@ namespace L2Data2Code.Main.MessagePanel
         {
             if (showMessage.NotEmpty())
             {
-                messagePanelService.Add(showMessage, controlVM.MessagePanelOpened, code);
+                messagePanelService.Add(showMessage, controlVM.MessagePanelVisible, code);
             }
 
             if (message.NotEmpty())

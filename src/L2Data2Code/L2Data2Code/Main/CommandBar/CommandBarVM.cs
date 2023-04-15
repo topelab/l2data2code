@@ -29,9 +29,7 @@ namespace L2Data2Code.Main.CommandBar
         {
             openCmdIcon = new MaterialIcon
             {
-                Kind = MaterialIconKind.Visualstudio,
-                Height = 24,
-                Width = 24
+                Kind = MaterialIconKind.Visualstudio
             };
             openCmdToolTip = Strings.OpenVSSolution;
         }

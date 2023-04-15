@@ -14,9 +14,9 @@ namespace L2Data2Code.Main.MessagePanel
 
         public MessagePanelVM Create(MainWindowVM mainVM)
         {
-            MessagePanelVM MessagePanelVM = new();
-            bindManager.Start(mainVM, MessagePanelVM);
-            return MessagePanelVM;
+            MessagePanelVM messagePanelVM = new();
+            bindManager.Start(mainVM, messagePanelVM);
+            return messagePanelVM;
         }
     }
 }

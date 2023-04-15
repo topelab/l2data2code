@@ -9,32 +9,50 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="L2Data2Code.Main.MessagePanel.MessagePanelUserControl">
     <Design.DataContext>
-        <local:MessagePanelVM />
+        <local:MessagePanelVM MessagePanelVisible="True" />
     </Design.DataContext>
     <DockPanel Margin="10,10,10,10"
-                Grid.Row="1"
-                VerticalAlignment="Bottom"
-                IsVisible="{Binding MessagePanelVisible}">
-        <Expander Header="{x:Static str:Strings.MessageBoard}"
-                    HorizontalAlignment="Stretch"
-                    DockPanel.Dock="Bottom"
-                    IsExpanded="{Binding MessagePanelOpened}"
-                    Background="{DynamicResource ThemeAccentBrush}">
-            <ScrollViewer>
-                <ListBox Items="{Binding AllMessages}"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            FontSize="10">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Text}"
-                                        Foreground="{Binding Path=Color}"
-                                        TextWrapping="Wrap" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+               Grid.Row="1"
+               VerticalAlignment="Bottom"
+               IsVisible="{Binding MessagePanelVisible}">
+        <Border Background="{DynamicResource ResourceKey=SystemAccentColor}"
+            CornerRadius="5"
+            Margin="10,0"
+            DockPanel.Dock="Top"
+            Padding="10">
+                <TextBlock Text="{x:Static str:Strings.MessageBoard}"
+                           HorizontalAlignment="Center"
+                           FontSize="15"
+                           FontWeight="ExtraBlack"/>
+        </Border>
+        <ListBox Items="{Binding AllMessages}"
+                 Margin="10,0"
+                 DockPanel.Dock="Top"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 FontSize="10"
+                 Background="Transparent">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="DockPanel.Dock" Value="Bottom" />
+                </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Text}"
+                               Foreground="{Binding Path=Color}"
+                               Margin="0"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel LastChildFill="False" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
 
-                </ListBox>
-            </ScrollViewer>
-        </Expander>
+        </ListBox>
     </DockPanel>
 
 </UserControl>

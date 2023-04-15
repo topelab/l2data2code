@@ -14,6 +14,7 @@
             <Color x:Key="SystemAccentColorLight1">#ffcb65</Color>
             <Color x:Key="SystemAccentColorLight2">#ffda93</Color>
             <Color x:Key="SystemAccentColorLight3">#ffedcb</Color>
+            <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource SystemAccentColor}" />
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
