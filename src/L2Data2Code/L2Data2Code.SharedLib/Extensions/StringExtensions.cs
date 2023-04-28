@@ -364,7 +364,7 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static string RemoveOuter(this string text, char startChar, char? endChar = null)
         {
-            string result = text;
+            var result = text;
             if (!string.IsNullOrWhiteSpace(result))
             {
                 endChar ??= startChar;
@@ -376,6 +376,6 @@ namespace L2Data2Code.SharedLib.Extensions
             return result;
         }
 
-        public static string StringRepresentation(this string text) => text == null ? "null" : $"\"{text}\"";
+        public static string StringRepresentation(this string text) => text == null ? "null" : $"\"{text.DoubleSlash()}\"";
     }
 }

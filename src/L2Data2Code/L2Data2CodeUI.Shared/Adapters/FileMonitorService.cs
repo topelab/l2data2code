@@ -36,9 +36,12 @@ namespace L2Data2CodeUI.Shared.Adapters
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             var watcher = sender as FileSystemWatcher;
-            watcher.EnableRaisingEvents = false;
-            action.Invoke(e.Name);
-            watcher.EnableRaisingEvents = true;
+            if (watcher.EnableRaisingEvents)
+            {
+                watcher.EnableRaisingEvents = false;
+                action.Invoke(e.Name);
+                watcher.EnableRaisingEvents = true;
+            }
         }
     }
 }
