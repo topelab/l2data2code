@@ -14,8 +14,14 @@
     <Compile Remove="Models\**" />
     <EmbeddedResource Remove="Models\**" />
     <None Remove="Models\**" />
+    <Compile Remove="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs" />
     <None Remove=".gitignore" />
     <None Remove="Assets\l2data2code-v3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.
@@ -71,6 +77,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\northwind-dbinfo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Northwind.ERP.Domain.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\GlobalFiles\readme.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\ItemFiles\{{Area}}.{{Module}}.{{Entity}}.demo.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\template-settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
