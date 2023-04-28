@@ -1,6 +1,8 @@
-# L2 Data2Code
+# L2Data2Code v3
 
-## What is L2 Data2Code?
+## What is L2Data2Code v3?
+
+It's an evolution for L2Data2CodeWPF built using AvaloniaUI. At the moment, only presentation has been changed, all the functionality remains the same as L2Date2CodeWPF.
 
 A simple definition would be a code generator. But is more than a simple code generator from a data source. It gets all the info from the data source (actually, from database, from special JSON file or from an .NET assembly), then merge with a template.
 
