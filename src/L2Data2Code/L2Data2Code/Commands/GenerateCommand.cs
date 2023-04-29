@@ -19,12 +19,14 @@ namespace L2Data2Code.Commands
         private readonly IProcessManager processManager;
         private readonly IMessagePanelService messagePanelService;
         private readonly IGeneratorAdapter generatorAdapter;
+        private readonly IDispatcherWrapper dispatcherWrapper;
 
-        public GenerateCommand(IProcessManager processManager, IMessagePanelService messagePanelService, IGeneratorAdapter generatorAdapter)
+        public GenerateCommand(IProcessManager processManager, IMessagePanelService messagePanelService, IGeneratorAdapter generatorAdapter, IDispatcherWrapper dispatcherWrapper)
         {
             this.processManager = processManager ?? throw new ArgumentNullException(nameof(processManager));
             this.messagePanelService = messagePanelService ?? throw new ArgumentNullException(nameof(messagePanelService));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
+            this.dispatcherWrapper = dispatcherWrapper ?? throw new ArgumentNullException(nameof(dispatcherWrapper));
         }
 
         public override bool CanExecute(object parameter)
@@ -73,9 +75,12 @@ namespace L2Data2Code.Commands
             Task.Run(() => generatorAdapter.Run(options))
                 .ContinueWith((state) =>
                 {
-                    mainWindowVM.RunningGenerateCode = false;
-                    mainWindowVM.CheckButtonStates();
-                    mainWindowVM.Working = false;
+                    dispatcherWrapper.Invoke(() =>
+                    {
+                        mainWindowVM.RunningGenerateCode = false;
+                        mainWindowVM.CheckButtonStates();
+                        mainWindowVM.Working = false;
+                    });
                 });
         }
     }

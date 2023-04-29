@@ -31,7 +31,7 @@ namespace L2Data2Code.Main
         {
             var appBasePath = AppDomain.CurrentDomain.BaseDirectory.TrimPathSeparator();
             fileMonitorService.StartMonitoring((file) => ReStartApplication(window, file), appBasePath, BasicNameValueConfiguration.APP_SETTINGS_FILE);
-            CheckOpenedTimer = new Timer((state) => CheckOpenedTimerCallBack(mainWindowVM), null, 1000, 1000);
+            CheckOpenedTimer = new Timer((state) => CheckOpenedTimerCallBack(mainWindowVM), null, 3000, 3000);
         }
 
         private void ReStartApplication(MainWindow window, string fileChanged)
@@ -58,7 +58,6 @@ namespace L2Data2Code.Main
             {
                 return;
             }
-
             mainWindowVM.PauseTimer = true;
 
             try
@@ -72,7 +71,6 @@ namespace L2Data2Code.Main
                 App.Logger.Error($"{nameof(MainWindowVM)}.{nameof(CheckOpenedTimerCallBack)}(): {ex.Message}");
             }
 
-            mainWindowVM.CheckButtonStates();
             mainWindowVM.PauseTimer = false;
         }
 

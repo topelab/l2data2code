@@ -5,6 +5,7 @@ using L2Data2CodeUI.Shared.Localize;
 using Material.Icons;
 using Material.Icons.Avalonia;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace L2Data2Code.Main.CommandBar
 {
