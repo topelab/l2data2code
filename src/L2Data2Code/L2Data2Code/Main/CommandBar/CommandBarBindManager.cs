@@ -1,9 +1,12 @@
 using Avalonia.Media;
 using L2Data2Code.Base;
+using L2Data2Code.SharedLib.Extensions;
+using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using Material.Icons;
 using Material.Icons.Avalonia;
+using System;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -15,10 +18,12 @@ namespace L2Data2Code.Main.CommandBar
         private CommandBarVM controlVM;
 
         private readonly IDispatcherWrapper dispatcher;
+        private readonly IFileMonitorService fileMonitorService;
 
-        public CommandBarBindManager(IDispatcherWrapper dispatcherWrapper)
+        public CommandBarBindManager(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService)
         {
             this.dispatcher = dispatcherWrapper ?? throw new System.ArgumentNullException(nameof(dispatcherWrapper));
+            this.fileMonitorService = fileMonitorService ?? throw new System.ArgumentNullException(nameof(fileMonitorService));
         }
 
         public void Start(MainWindowVM mainVM, CommandBarVM controlVM)
@@ -41,6 +46,8 @@ namespace L2Data2Code.Main.CommandBar
             {
                 controlVM.PropertyChanged -= OnControlVMPropertyChanged;
             }
+
+            fileMonitorService.StopMonitoring();
         }
 
         private void OnParentVMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -72,6 +79,12 @@ namespace L2Data2Code.Main.CommandBar
                     break;
                 case nameof(MainWindowVM.AppType):
                     controlVM.CanShowVSButton = mainVM.AppType == AppType.VisualStudio;
+                    break;
+                case nameof(MainWindowVM.OutputPath):
+                    if (mainVM.OutputPath != null)
+                    {
+                        fileMonitorService.StartMonitoring(file => mainVM.CheckButtonStates(), mainVM.OutputPath.TrimPathSeparator());
+                    }
                     break;
                 default:
                     break;

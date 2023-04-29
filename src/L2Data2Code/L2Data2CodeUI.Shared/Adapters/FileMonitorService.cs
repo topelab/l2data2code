@@ -15,9 +15,13 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void StartMonitoring(Action<string> action, string basePath, params string[] filters)
         {
-            fileSystemWatcher.EnableRaisingEvents = false;
-            fileSystemWatcher.Changed -= FileSystemWatcher_Changed;
+            StopMonitoring();
             this.action = action;
+
+            if (!Directory.Exists(basePath))
+            {
+                basePath = Directory.GetParent(basePath).FullName;
+            }
 
             fileSystemWatcher.Path = basePath;
             fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
@@ -29,11 +33,19 @@ namespace L2Data2CodeUI.Shared.Adapters
                     fileSystemWatcher.Filters.Add(item);
                 }
             }
-            fileSystemWatcher.Changed += FileSystemWatcher_Changed;
+            fileSystemWatcher.Changed += OnFileSystemWatcher;
+            fileSystemWatcher.Deleted += OnFileSystemWatcher;
             fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        public void StopMonitoring()
+        {
+            fileSystemWatcher.Deleted -= OnFileSystemWatcher;
+            fileSystemWatcher.Changed -= OnFileSystemWatcher;
+            fileSystemWatcher.EnableRaisingEvents = false;
+        }
+
+        private void OnFileSystemWatcher(object sender, FileSystemEventArgs e)
         {
             var watcher = sender as FileSystemWatcher;
             if (watcher.EnableRaisingEvents)
