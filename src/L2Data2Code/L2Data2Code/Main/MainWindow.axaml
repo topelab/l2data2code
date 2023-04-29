@@ -29,7 +29,7 @@
         <StackPanel Orientation="Horizontal">
             <Image Source="/Assets/l2data2code-v3.ico" Width="24" Height="24" Margin="10" />
             <TextBlock Margin="15" Text="{Binding $parent[Window].Title} " />
-            <cb:CommandBarUserControl DataContext="{Binding CommandBarVM}" Grid.Row="1" Grid.ColumnSpan="3" />
+            <cb:CommandBarUserControl IsEnabled="{Binding !Working}" DataContext="{Binding CommandBarVM}" Grid.Row="1" Grid.ColumnSpan="3" />
         </StackPanel>
 
 

@@ -51,6 +51,7 @@ namespace L2Data2Code.Main
                 case nameof(MainWindowVM.PauseTimer):
                     break;
                 case nameof(MainWindowVM.RunningGenerateCode):
+                    mainWindowVM.OnPropertyChanged(nameof(mainWindowVM.GenerateCodeCommand));
                     break;
                 case nameof(MainWindowVM.SelectedDataSource):
                     AreaChanged(mainWindowVM);
@@ -69,6 +70,7 @@ namespace L2Data2Code.Main
                 case nameof(MainWindowVM.ShowVarsWindow):
                     break;
                 case nameof(MainWindowVM.SlnFile):
+                    mainWindowVM.OnPropertyChanged(nameof(mainWindowVM.GenerateCodeCommand));
                     break;
                 case nameof(MainWindowVM.TemplateList):
                     break;
@@ -138,6 +140,7 @@ namespace L2Data2Code.Main
             mainWindowVM.OutputPath = generatorAdapter.OutputPath;
             mainWindowVM.SlnFile = generatorAdapter.SlnFile;
             mainWindowVM.AppType = generatorAdapter.AppType;
+            CommandManager.InvalidateRequerySuggested();
         }
     }
 }

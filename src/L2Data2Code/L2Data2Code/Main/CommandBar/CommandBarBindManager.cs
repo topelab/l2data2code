@@ -1,10 +1,11 @@
-using Avalonia.Media;
 using L2Data2Code.Base;
+using L2Data2Code.SharedLib.Extensions;
+using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using Material.Icons;
-using Material.Icons.Avalonia;
 using System.ComponentModel;
+using System.IO;
 
 namespace L2Data2Code.Main.CommandBar
 {
@@ -14,10 +15,12 @@ namespace L2Data2Code.Main.CommandBar
         private CommandBarVM controlVM;
 
         private readonly IDispatcherWrapper dispatcher;
+        private readonly IFileMonitorService fileMonitorService;
 
-        public CommandBarBindManager(IDispatcherWrapper dispatcherWrapper)
+        public CommandBarBindManager(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService)
         {
             this.dispatcher = dispatcherWrapper ?? throw new System.ArgumentNullException(nameof(dispatcherWrapper));
+            this.fileMonitorService = fileMonitorService ?? throw new System.ArgumentNullException(nameof(fileMonitorService));
         }
 
         public void Start(MainWindowVM mainVM, CommandBarVM controlVM)
@@ -40,6 +43,8 @@ namespace L2Data2Code.Main.CommandBar
             {
                 controlVM.PropertyChanged -= OnControlVMPropertyChanged;
             }
+
+            fileMonitorService.StopMonitoring();
         }
 
         private void OnParentVMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -72,9 +77,26 @@ namespace L2Data2Code.Main.CommandBar
                 case nameof(MainWindowVM.AppType):
                     controlVM.CanShowVSButton = mainVM.AppType == AppType.VisualStudio;
                     break;
+                case nameof(MainWindowVM.OutputPath):
+                    if (mainVM.OutputPath != null)
+                    {
+                        WatchOutputPath();
+                    }
+                    break;
                 default:
                     break;
             }
+        }
+
+        private void WatchOutputPath()
+        {
+            var parent = Path.GetDirectoryName(mainVM.OutputPath.TrimPathSeparator());
+            var last = mainVM.OutputPath.Replace(parent, "").Trim('\\');
+            var action = () =>
+            {
+                dispatcher.Invoke(() => { mainVM.CheckButtonStates(); });
+            };
+            fileMonitorService.StartMonitoring(file => action(), parent, last);
         }
 
         private void OnControlVMPropertyChanged(object sender, PropertyChangedEventArgs e)

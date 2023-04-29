@@ -162,6 +162,7 @@ namespace L2Data2Code.Main
         {
             OnPropertyChanged(nameof(GenerateCodeCommand));
             OnPropertyChanged(nameof(SlnFile));
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void SetCommands(IGenerateCommand generateCommand)
