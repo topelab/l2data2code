@@ -1,3 +1,7 @@
+### 3.0.1
+
+- Fix some issues with buttons in command bar
+
 ### 3.0.0
 
 - Renamed main application L2 Data2Code WPF to L2 Data2Code
