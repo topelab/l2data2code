@@ -18,13 +18,8 @@ namespace L2Data2CodeUI.Shared.Adapters
             StopMonitoring();
             this.action = action;
 
-            if (!Directory.Exists(basePath))
-            {
-                basePath = Directory.GetParent(basePath).FullName;
-            }
-
             fileSystemWatcher.Path = basePath;
-            fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.DirectoryName;
             fileSystemWatcher.Filters.Clear();
             if (filters != null)
             {
@@ -35,6 +30,8 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
             fileSystemWatcher.Changed += OnFileSystemWatcher;
             fileSystemWatcher.Deleted += OnFileSystemWatcher;
+            fileSystemWatcher.Created += OnFileSystemWatcher;
+
             fileSystemWatcher.EnableRaisingEvents = true;
         }
 
@@ -42,6 +39,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             fileSystemWatcher.Deleted -= OnFileSystemWatcher;
             fileSystemWatcher.Changed -= OnFileSystemWatcher;
+            fileSystemWatcher.Created -= OnFileSystemWatcher;
             fileSystemWatcher.EnableRaisingEvents = false;
         }
 

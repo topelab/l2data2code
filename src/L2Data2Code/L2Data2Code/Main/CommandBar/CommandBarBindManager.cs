@@ -1,14 +1,11 @@
-using Avalonia.Media;
 using L2Data2Code.Base;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using Material.Icons;
-using Material.Icons.Avalonia;
-using System;
 using System.ComponentModel;
-using System.Windows.Input;
+using System.IO;
 
 namespace L2Data2Code.Main.CommandBar
 {
@@ -83,12 +80,23 @@ namespace L2Data2Code.Main.CommandBar
                 case nameof(MainWindowVM.OutputPath):
                     if (mainVM.OutputPath != null)
                     {
-                        fileMonitorService.StartMonitoring(file => mainVM.CheckButtonStates(), mainVM.OutputPath.TrimPathSeparator());
+                        WatchOutputPath();
                     }
                     break;
                 default:
                     break;
             }
+        }
+
+        private void WatchOutputPath()
+        {
+            var parent = Path.GetDirectoryName(mainVM.OutputPath.TrimPathSeparator());
+            var last = mainVM.OutputPath.Replace(parent, "").Trim('\\');
+            var action = () =>
+            {
+                dispatcher.Invoke(() => { mainVM.CheckButtonStates(); });
+            };
+            fileMonitorService.StartMonitoring(file => action(), parent, last);
         }
 
         private void OnControlVMPropertyChanged(object sender, PropertyChangedEventArgs e)
