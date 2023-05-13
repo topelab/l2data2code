@@ -1,3 +1,7 @@
+### 3.0.2
+
+- Fixed problems when parent directory for an output path that doesn't exist
+
 ### 3.0.1
 
 - Fix some issues with buttons in command bar

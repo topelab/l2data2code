@@ -83,6 +83,12 @@ namespace L2Data2Code.Main.CommandBar
                         WatchOutputPath();
                     }
                     break;
+                case nameof(MainWindowVM.RunningGenerateCode):
+                    if (!mainVM.RunningGenerateCode)
+                    {
+                        WatchOutputPath();
+                    }
+                    break;
                 default:
                     break;
             }

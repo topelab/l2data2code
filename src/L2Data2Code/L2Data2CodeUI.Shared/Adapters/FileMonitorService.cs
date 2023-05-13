@@ -16,23 +16,26 @@ namespace L2Data2CodeUI.Shared.Adapters
         public void StartMonitoring(Action<string> action, string basePath, params string[] filters)
         {
             StopMonitoring();
-            this.action = action;
 
-            fileSystemWatcher.Path = basePath;
-            fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.DirectoryName;
-            fileSystemWatcher.Filters.Clear();
-            if (filters != null)
+            if (Path.Exists(basePath))
             {
-                foreach (var item in filters)
+                this.action = action;
+                fileSystemWatcher.Path = basePath;
+                fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.DirectoryName;
+                fileSystemWatcher.Filters.Clear();
+                if (filters != null)
                 {
-                    fileSystemWatcher.Filters.Add(item);
+                    foreach (var item in filters)
+                    {
+                        fileSystemWatcher.Filters.Add(item);
+                    }
                 }
-            }
-            fileSystemWatcher.Changed += OnFileSystemWatcher;
-            fileSystemWatcher.Deleted += OnFileSystemWatcher;
-            fileSystemWatcher.Created += OnFileSystemWatcher;
+                fileSystemWatcher.Changed += OnFileSystemWatcher;
+                fileSystemWatcher.Deleted += OnFileSystemWatcher;
+                fileSystemWatcher.Created += OnFileSystemWatcher;
 
-            fileSystemWatcher.EnableRaisingEvents = true;
+                fileSystemWatcher.EnableRaisingEvents = true;
+            }
         }
 
         public void StopMonitoring()
