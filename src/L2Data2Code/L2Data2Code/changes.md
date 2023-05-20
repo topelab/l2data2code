@@ -1,3 +1,15 @@
+### 3.0.3
+
+- Upgrade Topelab.Core.Resolver to 1.4.12
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.12
+- Upgrade NLog to 5.1.4
+- Upgrade Avalonia to 0.10.21
+- Upgrade Avalonia.Controls.DataGrid to 0.10.21
+- Upgrade Avalonia.Desktop to 0.10.21
+- Upgrade Avalonia.Diagnostics to 0.10.21
+- Upgrade Avalonia.ReactiveUI to 0.10.21
+
+
 ### 3.0.2
 
 - Fixed problems when parent directory for an output path that doesn't exist

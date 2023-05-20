@@ -1,3 +1,9 @@
+### 2.13.14
+
+- Upgrade Topelab.Core.Resolver to 1.4.12
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.12
+- Upgrade NLog to 5.1.4
+
 ### 2.13.12
 
 - Upgrade Topelab.Core.Resolver to 1.4.10
