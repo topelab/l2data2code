@@ -13,6 +13,10 @@ namespace L2Data2Code.SchemaReader.Schema
         /// <summary>Gets the columns.</summary>
         /// <value>The columns.</value>
         public List<Column> Columns { get; set; }
+        /// <summary>
+        /// Indexes for tables
+        /// </summary>
+        public List<Index> Indexes { get; set; }
         /// <summary>Gets the inner keys.</summary>
         /// <value>The inner keys.</value>
         public List<Key> InnerKeys { get; set; } = new List<Key>();
