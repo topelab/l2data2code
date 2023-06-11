@@ -6,7 +6,9 @@
     <Version>2.13.14</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
     <NeutralLanguage>en</NeutralLanguage>
-    <RestoreSources>$(RestoreSources);../../../local-nupkg;https://api.nuget.org/v3/index.json</RestoreSources>
+    <RestoreAdditionalProjectSources>
+        https://nuget.pkg.github.com/topelab/index.json
+    </RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SampleData\**" />
