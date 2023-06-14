@@ -63,6 +63,7 @@ namespace L2Data2CodeWPF
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
+                .AddSingleton<IReplacementCollectionFactory, ReplacementCollectionFactory>()
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()

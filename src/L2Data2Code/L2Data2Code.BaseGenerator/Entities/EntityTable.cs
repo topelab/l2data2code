@@ -19,6 +19,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public List<EntityColumn> Columns = new();
         public List<Relation> OneToMany = new();
         public List<Relation> ManyToOne = new();
+        public List<Index> Indexes = new();
 
         public int NumeroCamposPK { get; set; }
 
@@ -32,6 +33,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             IsUpdatable = table.IsUpdatable;
             MultiplePKColumns = table.PK.Count() > 1;
             Description = table.Description;
+            Indexes.AddRange(table.Indexes);
 
             foreach (var column in table.Columns)
             {
