@@ -133,10 +133,6 @@ namespace L2Data2Code.BaseGenerator.Entities
                 };
                 Columns.Add(campo);
             }
-
-
         }
-
     }
-
 }

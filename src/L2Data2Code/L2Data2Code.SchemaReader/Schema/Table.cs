@@ -16,13 +16,13 @@ namespace L2Data2Code.SchemaReader.Schema
         /// <summary>
         /// Indexes for tables
         /// </summary>
-        public List<Index> Indexes { get; set; }
+        public List<Index> Indexes { get; set; } = new();
         /// <summary>Gets the inner keys.</summary>
         /// <value>The inner keys.</value>
-        public List<Key> InnerKeys { get; set; } = new List<Key>();
+        public List<Key> InnerKeys { get; set; } = new();
         /// <summary>Gets the outer keys.</summary>
         /// <value>The outer keys.</value>
-        public List<Key> OuterKeys { get; set; } = new List<Key>();
+        public List<Key> OuterKeys { get; set; } = new();
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         public string Name { get; set; }
@@ -36,7 +36,7 @@ namespace L2Data2Code.SchemaReader.Schema
         public bool IsView { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this table or view is updatable.
-        /// Tables are alwais updatables.
+        /// Tables are always updatable.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this instance is updatable; otherwise, <c>false</c>.

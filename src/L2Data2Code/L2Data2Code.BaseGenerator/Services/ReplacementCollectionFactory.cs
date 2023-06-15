@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static L2Data2Code.BaseGenerator.Entities.Replacement;
 
 namespace L2Data2Code.BaseGenerator.Services
 {
@@ -78,7 +79,7 @@ namespace L2Data2Code.BaseGenerator.Services
                         return property;
                     }).ToArray();
 
-            Replacement currentReplacement = new()
+            Replacement replacement = new()
             {
                 Template = template.Name,
                 Entity = entity,
@@ -100,7 +101,60 @@ namespace L2Data2Code.BaseGenerator.Services
                 CanCreateDB = schemaService.CanCreateDB(options.CreatedFromSchemaName),
             };
 
-            return GetDictionaryDataFromReplacement(currentReplacement);
+            var filteredColumns = properties
+                    .Where(p => !replacement.IgnoreColumns.Contains(p.Name, IgnoreCaseComparer.Instance))
+                    .Where(p => !(replacement.IgnoreColumns.Contains(Constants.ID) && p.IsEntityId()));
+
+            replacement.AllColumns = filteredColumns
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.Columns = filteredColumns
+                    .Where(p => !p.IsForeignKey && !p.IsCollection)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.PersistedColumns = filteredColumns
+                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.IsComputed && !p.PrimaryKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.ForeignKeyColumns = filteredColumns
+                    .Where(p => p.IsForeignKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.Collections = filteredColumns
+                    .Where(p => p.IsCollection)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.NotPrimaryKeyColumns = filteredColumns
+                    .Where(p => !p.PrimaryKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.PrimaryKeys = filteredColumns
+                    .Where(p => !p.IsForeignKey && !p.IsCollection)
+                    .Where(p => p.PrimaryKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.NotPrimaryKeys = filteredColumns
+                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.HasCollections = filteredColumns.Any(p => p.IsCollection);
+            replacement.HasForeignKeys = filteredColumns.Any(p => p.IsForeignKey);
+            replacement.HasNotPrimaryKeyColumns = replacement.NotPrimaryKeys.Any();
+            replacement.HasPrimaryKeyColumns = replacement.PrimaryKeys.Any();
+            replacement.MultiplePKColumns = replacement.PrimaryKeys.Length > 1;
+
+            var primaryKeys = properties.Where(p => p.PrimaryKey);
+            replacement.IsWeakEntity = primaryKeys.Count() != 1 || primaryKeys.None(p => p.IsEntityId());
+
+            return GetDictionaryDataFromReplacement(replacement);
         }
 
         private static string DecodeCSharpType(string type) =>
