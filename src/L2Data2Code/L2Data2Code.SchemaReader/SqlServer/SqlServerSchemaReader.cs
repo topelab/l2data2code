@@ -295,7 +295,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
             List<Schema.Index> result = new();
 
-            var sql = @"SELECT i.name as IndexName, c.name AS ColumnName, ic.index_column_id as ""Order"", i.is_unique
+            var sql = @"SELECT i.name as IndexName, c.name AS ColumnName, ic.index_column_id as ""Order"", i.is_unique, ic.is_descending_key as ""IsDescending""
                 FROM sys.indexes AS i 
                 INNER JOIN sys.index_columns AS ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id 
                 INNER JOIN sys.objects AS o ON i.object_id = o.object_id 
@@ -314,7 +314,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
                 using var rdr = cmd.ExecuteReader();
                 var lastIndexName = string.Empty;
-                Dictionary<string, int> fields = new();
+                List<IndexColumn> fields = new();
                 var isUnique = false;
 
                 while (rdr.Read())
@@ -323,6 +323,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     var fieldName = rdr.GetString(1);
                     var fieldOrder = rdr.GetInt32(2);
                     isUnique = rdr.GetBoolean(3);
+                    var isDescending = rdr.GetBoolean(4);
 
                     if (indexName != lastIndexName)
                     {
@@ -332,7 +333,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                         }
                         fields.Clear();
                     }
-                    fields.Add(fieldName, fieldOrder);
+                    fields.Add(new IndexColumn(fieldName, fieldOrder, isDescending));
                 }
 
                 if (fields.Any() && !string.IsNullOrEmpty(lastIndexName))
@@ -344,10 +345,9 @@ namespace L2Data2Code.SchemaReader.SqlServer
             return result;
         }
 
-        private static void AddIndex(List<Schema.Index> result, string lastIndexName, Dictionary<string, int> fields, bool isUnique)
+        private static void AddIndex(List<Schema.Index> result, string lastIndexName, List<IndexColumn> fields, bool isUnique)
         {
-            var index = new Schema.Index { Name = lastIndexName, IsUnique = isUnique };
-            index.Columns.AddRange(fields);
+            var index = new Schema.Index(lastIndexName, isUnique, fields);
             result.Add(index);
         }
 
