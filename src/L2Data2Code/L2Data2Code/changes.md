@@ -1,3 +1,7 @@
+### 3.0.4
+
+- **New**: Added capability to get indexes information from DB
+
 ### 3.0.3
 
 - Upgrade Topelab.Core.Resolver to 1.4.12
