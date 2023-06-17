@@ -66,6 +66,7 @@ namespace L2Data2Code
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
                 .AddSingleton<IVarsFactory, VarsFactory>()
+                .AddSingleton<IReplacementCollectionFactory, ReplacementCollectionFactory>()
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()

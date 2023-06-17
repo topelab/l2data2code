@@ -1,19 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace L2Data2Code.BaseGenerator.Entities
 {
     /// <summary>
     /// Class that represent de object used for replacement in a mustache context
     /// </summary>
-    public class Replacement : IDictionary<string, object>
+    public partial class Replacement : IDictionary<string, object>
     {
-        private IEnumerable<Property> FilteredColumns => UnfilteredColumns
-                    .Where(p => !IgnoreColumns.Contains(p.Name, IgnoreCaseComparer.Instance))
-                    .Where(p => !(IgnoreColumns.Contains(Constants.ID) && p.IsEntityId()));
-
         public string Template { get; set; }
         public Entity Entity { get; set; }
         public string Module { get; set; }
@@ -31,61 +25,21 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string ConnectionString { get; set; }
         public string DataProvider { get; set; }
         public Dictionary<string, object> Vars { get; set; } = new Dictionary<string, object>();
-
-        public Property[] AllColumns => FilteredColumns
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public Property[] Columns => FilteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public Property[] PersistedColumns => FilteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.IsComputed && !p.PrimaryKey)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-        public Property[] ForeignKeyColumns => FilteredColumns
-                    .Where(p => p.IsForeignKey)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public Property[] Collections => FilteredColumns
-                    .Where(p => p.IsCollection)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public bool HasCollections => FilteredColumns.Any(p => p.IsCollection);
-
-        public bool HasForeignKeys => FilteredColumns.Any(p => p.IsForeignKey);
-
-        public Property[] NotPrimaryKeyColumns => FilteredColumns
-                    .Where(p => !p.PrimaryKey)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public Property[] PrimaryKeys => FilteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection)
-                    .Where(p => p.PrimaryKey)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public Property[] NotPrimaryKeys => FilteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey)
-                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
-                    .ToArray();
-
-        public bool HasNotPrimaryKeyColumns => NotPrimaryKeys.Any();
-        public bool HasPrimaryKeyColumns => PrimaryKeys.Any();
-        public bool MultiplePKColumns => PrimaryKeys.Length > 1;
-        public bool IsWeakEntity
-        {
-            get
-            {
-                var keys = UnfilteredColumns.Where(p => p.PrimaryKey);
-                return keys.Count() != 1 || keys.None(p => p.IsEntityId());
-            }
-        }
+        public Property[] AllColumns { get; set; }
+        public Property[] Columns { get; set; }
+        public Property[] PersistedColumns { get; set; }
+        public Property[] ForeignKeyColumns { get; set; }
+        public Property[] Collections { get; set; }
+        public Property[] NotPrimaryKeyColumns { get; set; }
+        public Property[] PrimaryKeys { get; set; }
+        public Property[] NotPrimaryKeys { get; set; }
+        public EntityIndex[] Indexes { get; set; }
+        public bool HasCollections { get; set; }
+        public bool HasForeignKeys { get; set; }
+        public bool HasNotPrimaryKeyColumns { get; set; }
+        public bool HasPrimaryKeyColumns { get; set; }
+        public bool MultiplePKColumns { get; set; }
+        public bool IsWeakEntity { get; set; }
 
         public ICollection<string> Keys => ((IDictionary<string, object>)Vars).Keys;
 
@@ -98,39 +52,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool CanCreateDB { get; internal set; }
 
         public object this[string key] { get => ((IDictionary<string, object>)Vars)[key]; set => ((IDictionary<string, object>)Vars)[key] = value; }
-
-        private class IgnoreCaseComparer : IEqualityComparer<string>
-        {
-            private IgnoreCaseComparer() { }
-            private static IgnoreCaseComparer _instance = null;
-            private static readonly object _syncRoot = new();
-
-            public static IEqualityComparer<string> Instance
-            {
-                get
-                {
-                    if (_instance == null)
-                    {
-                        lock (_syncRoot)
-                        {
-                            _instance ??= new IgnoreCaseComparer();
-                        }
-                    }
-
-                    return _instance;
-                }
-            }
-
-            public bool Equals(string x, string y)
-            {
-                return x.Equals(y, StringComparison.OrdinalIgnoreCase);
-            }
-
-            public int GetHashCode(string obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
 
         public bool ContainsKey(string key)
         {

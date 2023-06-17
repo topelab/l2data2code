@@ -26,6 +26,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
         private readonly ISchemaFactory schemaFactory;
+        private readonly IReplacementCollectionFactory replacementCollectionFactory;
 
         private readonly Dictionary<string, string> templateFiles;
         private readonly HashSet<string> referencedTables;
@@ -71,7 +72,19 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="mustacheRenderizer">Mustache Renderizer service</param>
         /// <param name="schemaService">Schema service</param>
         /// <param name="logger">Logger service</param>
-        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer, ISchemaService schemaService, ILogger logger, ITemplateService templateService, ISchemaFactory schemaFactory, IConditionalPathRenderizer pathRenderizer, IFileService fileService)
+        /// <param name="templateService">Template service</param>
+        /// <param name="schemaFactory">Scheme factory</param>
+        /// <param name="pathRenderizer">Path renderizer</param>
+        /// <param name="fileService">File service</param>
+        /// <param name="replacementCollectionFactory">Replacement collection factory</param>
+        public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer,
+                                    ISchemaService schemaService,
+                                    ILogger logger,
+                                    ITemplateService templateService,
+                                    ISchemaFactory schemaFactory,
+                                    IConditionalPathRenderizer pathRenderizer,
+                                    IFileService fileService,
+                                    IReplacementCollectionFactory replacementCollectionFactory)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
@@ -80,6 +93,7 @@ namespace L2Data2Code.BaseGenerator.Services
             this.schemaFactory = schemaFactory ?? throw new ArgumentNullException(nameof(schemaFactory));
             this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
             this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
+            this.replacementCollectionFactory = replacementCollectionFactory ?? throw new ArgumentNullException(nameof(replacementCollectionFactory));
 
             referencedTables = new();
             templateFiles = new();
@@ -218,7 +232,7 @@ namespace L2Data2Code.BaseGenerator.Services
         {
             StringExtensions.CurrentLang = schemaService.GetLang(Options.CreatedFromSchemaName);
 
-            var replacement = GetReplacementData(tabla);
+            var replacement = replacementCollectionFactory.Create(tabla, Options, Template, internalVars);
 
             var templatesPath = templateService.GetPath(Template);
 
@@ -489,111 +503,6 @@ namespace L2Data2Code.BaseGenerator.Services
                     internalVars[camps[0].Trim()] = value;
                 }
             }
-        }
-
-        private Dictionary<string, object> GetReplacementData(EntityTable table)
-        {
-            var (ConnectionString, Provider) = schemaService.GetConnectionString(Options.CreatedFromSchemaName);
-
-            var tableName = table.TableName;
-            var normalizeNames = schemaService.NormalizedNames(Options.CreatedFromSchemaName);
-
-            Entity entity = new()
-            {
-                Name = table.ClassName,
-                Type = table.TableType,
-                UseSpanish = schemaService.GetLang(Options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
-                MultiplePKColumns = table.MultiplePKColumns,
-            };
-
-            var properties =
-                table.Columns.Select(
-                    (column, index, isFirst, isLast) =>
-                    {
-                        var name = column.Name;
-                        var type = DecodeCSharpType(column.Type);
-                        Property property = new()
-                        {
-                            Entity = entity,
-                            Table = tableName,
-                            Name = name,
-                            Nullable = column.IsNull,
-                            PrimaryKey = column.PrimaryKey,
-                            IsFirst = isFirst,
-                            IsLast = isLast,
-                            DefaultValue = column.GetDefaultValue(),
-                            InitialValue = column.GetInitialValue(),
-                            HasDefaultValue = column.HasDefaultValue,
-                            Type = type,
-                            OverrideDbType = schemaFactory.GetConversion(Provider, type),
-                            Description = string.IsNullOrWhiteSpace(column.Description) ? null : column.Description.ReplaceEndOfLine(),
-                            IsCollection = column.IsCollection,
-                            IsForeignKey = column.IsForeignKey,
-                            ColumnName = column.ColumnName,
-                            ColumnNameOrName = normalizeNames ? name : column.ColumnName,
-                            IsAutoIncrement = column.IsAutoIncrement,
-                            IsComputed = column.IsComputed,
-                            PkOrder = column.PkOrder,
-                            MultiplePKColumns = table.MultiplePKColumns,
-                            Precision = column.Precision,
-                            Scale = column.Scale,
-                            IsNumeric = column.IsNumeric,
-                            IsString = column.Type.StartsWith("string"),
-                            IsDateOrTime = column.Type.StartsWith("DateTime") || column.Type.StartsWith("TimeSpan"),
-                            Join = column.Join,
-                            FromField = column.FromField,
-                            ToField = column.ToField,
-                            DbJoin = column.DbJoin,
-                            DbFromField = column.DbFromField,
-                            DbToField = column.DbToField,
-                        };
-                        return property;
-                    }).ToArray();
-
-            Replacement currentReplacement = new()
-            {
-                Template = Template.Name,
-                Entity = entity,
-                IsView = table.IsView,
-                IsUpdatable = table.IsUpdatable,
-                Description = string.IsNullOrWhiteSpace(table.Description) ? null : table.Description.ReplaceEndOfLine(),
-                ConnectionString = ConnectionString,
-                DataProvider = Provider,
-                Module = Template.Module,
-                Area = Template.Area,
-                Company = Template.Company,
-                TableName = tableName,
-                TableNameOrEntity = normalizeNames ? entity.Name : tableName,
-                GenerateReferences = Options.GenerateReferenced,
-                IgnoreColumns = Template.IgnoreColumns == null ? Array.Empty<string>() : Template.IgnoreColumns.Replace(" ", "").Split(Path.PathSeparator),
-                UnfilteredColumns = properties,
-                GenerateBase = false,
-                Vars = internalVars,
-                CanCreateDB = schemaService.CanCreateDB(Options.CreatedFromSchemaName),
-            };
-
-            return GetDictionaryDataFromReplacement(currentReplacement);
-        }
-
-        private static string DecodeCSharpType(string type) =>
-            type.StartsWith(Constants.InternalTypes.Collection) || type.StartsWith(Constants.InternalTypes.ReferenceTo) ? type[1..] : type;
-
-        private static Dictionary<string, object> GetDictionaryDataFromReplacement(Replacement replacementData)
-        {
-            var data = new Dictionary<string, object>();
-
-            var properties = replacementData.GetType().GetProperties();
-            foreach (var property in properties.Where(p => p.Name != "Item"))
-            {
-                data[property.Name] = property.GetValue(replacementData);
-            }
-
-            foreach (var key in replacementData.Vars.Keys)
-            {
-                data[key] = replacementData.Vars[key];
-            }
-
-            return data;
         }
 
         [GeneratedRegex("(?<start>^|\\\\)addtofile-(?<part>[0-9]+)-(?<name>.+)$", RegexOptions.Compiled | RegexOptions.Singleline)]

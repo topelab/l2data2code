@@ -19,6 +19,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public List<EntityColumn> Columns = new();
         public List<Relation> OneToMany = new();
         public List<Relation> ManyToOne = new();
+        public List<EntityIndex> Indexes = new();
 
         public int NumeroCamposPK { get; set; }
 
@@ -33,6 +34,14 @@ namespace L2Data2Code.BaseGenerator.Entities
             MultiplePKColumns = table.PK.Count() > 1;
             Description = table.Description;
 
+            CreateCampos(table);
+            CreateIndexes(table);
+            CreateOneToManyRelations(table);
+            CreateManyToOneRelations(table);
+        }
+
+        private void CreateCampos(Table table)
+        {
             foreach (var column in table.Columns)
             {
                 EntityColumn campo = new()
@@ -59,6 +68,23 @@ namespace L2Data2Code.BaseGenerator.Entities
                 NumeroCamposPK += campo.PrimaryKey ? 1 : 0;
 
             }
+        }
+
+        private void CreateIndexes(Table table)
+        {
+            var columns = Columns.ToDictionary(k => k.ColumnName, k => k);
+
+            foreach (var item in table.Indexes)
+            {
+                var fields = item.Columns.Select(c => new EntityIndexColumn(columns[c.Name], c.Order, c.IsDescending)).ToList();
+                EntityIndex entityIndex = new(item.Name, item.IsUnique, fields);
+                Indexes.Add(entityIndex);
+            }
+        }
+
+        private void CreateOneToManyRelations(Table table)
+        {
+            var byWord = StringExtensions.CurrentLang == "es" ? "Por" : "By";
 
             OneToMany = table.OuterKeys.Select(r => new Relation
             {
@@ -70,9 +96,6 @@ namespace L2Data2Code.BaseGenerator.Entities
                 DbRelatedColumn = r.ColumnReferencing.Name,
                 CanBeNull = r.ColumnReferencing.IsNullable,
             }).ToList();
-
-            var byWord = StringExtensions.CurrentLang == "es" ? "Por" : "By";
-            var withWord = StringExtensions.CurrentLang == "es" ? "Con" : "With";
 
             foreach (var item in OneToMany)
             {
@@ -97,6 +120,11 @@ namespace L2Data2Code.BaseGenerator.Entities
                 };
                 Columns.Add(campo);
             }
+        }
+
+        private void CreateManyToOneRelations(Table table)
+        {
+            var withWord = StringExtensions.CurrentLang == "es" ? "Con" : "With";
 
             ManyToOne = table.InnerKeys.Select(r => new Relation
             {
@@ -131,10 +159,6 @@ namespace L2Data2Code.BaseGenerator.Entities
                 };
                 Columns.Add(campo);
             }
-
-
         }
-
     }
-
 }

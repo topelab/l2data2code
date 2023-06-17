@@ -185,7 +185,8 @@ namespace L2Data2Code.SchemaReader.Schema
             jsonResolver.IgnoreProperty(typeof(Table),
                 nameof(Table.PK),
                 nameof(Table.CleanName),
-                nameof(Table.ClassName)
+                nameof(Table.ClassName),
+                nameof(Table.Type)
                 );
             jsonResolver.IgnoreProperty(typeof(Key),
                 nameof(Key.ColumnReferenced),

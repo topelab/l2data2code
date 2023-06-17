@@ -59,6 +59,7 @@ namespace L2Data2Code.SchemaReader.MySql
                             }
                         }
 
+                        tbl.Indexes = GetIndexes(tbl.Name);
                     }
                 }
                 catch (Exception x)
@@ -204,6 +205,28 @@ namespace L2Data2Code.SchemaReader.MySql
             {
                 result.Add(row["COLUMN_NAME"].ToString(), Convert.ToInt32(row["ORDINAL_POSITION"]));
             }
+
+            return result;
+        }
+
+        private List<Schema.Index> GetIndexes(string table)
+        {
+            List<Schema.Index> result = new();
+
+            var databaseIndexes = connection.GetSchema("Indexes", new string[4] { null, null, table, null }).Rows.Cast<DataRow>();
+            var databaseIndexColumns = connection.GetSchema("IndexColumns", new string[4] { null, null, table, null }).Rows.Cast<DataRow>();
+
+            databaseIndexes.Where(r => !(bool)r["PRIMARY_KEY"])
+                .Select(r => new { IndexName = (string)r["INDEX_NAME"], IsUnique = (bool)r["UNIQUE"] })
+                .ToList()
+                .ForEach(i =>
+                {
+                    var columns = databaseIndexColumns.Where(r => (string)r["CONSTRAINT_NAME"] == i.IndexName)
+                            .Select(r => new IndexColumn((string)r["COLUMN_NAME"], Convert.ToInt32(r["ORDINAL_POSITION"]), (string)r["SORT_MODE"] != "ASC"))
+                            .ToList();
+
+                    result.Add(new Schema.Index(i.IndexName, i.IsUnique, columns));
+                });
 
             return result;
         }

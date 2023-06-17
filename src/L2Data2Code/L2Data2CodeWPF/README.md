@@ -293,7 +293,7 @@ Module combo will be filled with information supplied at this section.
 
 ## Build solution
 
-You can load SLN file with Visual Studio 2019 (Community it's OK) or run `dotnet build` from command line at directory containing SLN file.
+You can load SLN file with Visual Studio 2022 (Community it's OK) or run `dotnet build` from command line at directory containing SLN file.
 
 ## Definitions
 
@@ -304,6 +304,7 @@ You can load SLN file with Visual Studio 2019 (Community it's OK) or run `dotnet
     "Replacement": {
         "Template": "string",
         "Entity": "Entity",
+        "Indexes": [ "Index", "Index", "..." ]
         "Module": "string",
         "Area": "string",
         "Company": "string",
@@ -365,6 +366,28 @@ You can load SLN file with Visual Studio 2019 (Community it's OK) or run `dotnet
         "MultiplePKColumns": "bool",
     }
 }
+```
+
+
+**Index**:
+
+```json
+    "Index": {
+        "Name": "string",
+        "IsUnique": "bool",
+        "IndexColumns": [ "IndexColum", "IndexColumn", "..." ]
+    }
+```
+
+**IndexColumn**:
+
+```json
+    "IndexColumn": {
+        "ColumnName": "string",
+        "Name": "string",
+        "Order": "int",
+        "IsDescending": "bool"
+    }
 ```
 
 **Property**:

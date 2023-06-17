@@ -132,6 +132,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             }
                         }
 
+                        tbl.Indexes = GetIndexes(tbl.Name);
                     }
                 }
                 catch (Exception x)
@@ -287,6 +288,67 @@ namespace L2Data2Code.SchemaReader.SqlServer
             }
 
             return result;
+        }
+
+        private List<Schema.Index> GetIndexes(string table)
+        {
+
+            List<Schema.Index> result = new();
+
+            var sql = @"SELECT i.name as IndexName, c.name AS ColumnName, ic.index_column_id as ""Order"", i.is_unique, ic.is_descending_key as ""IsDescending""
+                FROM sys.indexes AS i 
+                INNER JOIN sys.index_columns AS ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id 
+                INNER JOIN sys.objects AS o ON i.object_id = o.object_id 
+                LEFT OUTER JOIN sys.columns AS c ON ic.object_id = c.object_id AND c.column_id = ic.column_id
+                WHERE (i.is_primary_key = 0) AND (i.is_unique_constraint = 0) AND (o.name = @tableName)
+                ORDER BY 1,3";
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+
+                var p = cmd.CreateParameter();
+                p.ParameterName = "@tableName";
+                p.Value = table;
+                cmd.Parameters.Add(p);
+
+                using var rdr = cmd.ExecuteReader();
+                var lastIndexName = string.Empty;
+                List<IndexColumn> fields = new();
+                var isUnique = false;
+
+                while (rdr.Read())
+                {
+                    var indexName = rdr.GetString(0);
+                    var fieldName = rdr.GetString(1);
+                    var fieldOrder = rdr.GetInt32(2);
+                    isUnique = rdr.GetBoolean(3);
+                    var isDescending = rdr.GetBoolean(4);
+
+                    if (indexName != lastIndexName)
+                    {
+                        if (!string.IsNullOrEmpty(lastIndexName))
+                        {
+                            AddIndex(result, lastIndexName, fields, isUnique);
+                        }
+                        fields.Clear();
+                    }
+                    fields.Add(new IndexColumn(fieldName, fieldOrder, isDescending));
+                }
+
+                if (fields.Any() && !string.IsNullOrEmpty(lastIndexName))
+                {
+                    AddIndex(result, lastIndexName, fields, isUnique);
+                }
+            }
+
+            return result;
+        }
+
+        private static void AddIndex(List<Schema.Index> result, string lastIndexName, List<IndexColumn> fields, bool isUnique)
+        {
+            var index = new Schema.Index(lastIndexName, isUnique, fields);
+            result.Add(index);
         }
 
         private static string GetPropertyType(string sqlType)
