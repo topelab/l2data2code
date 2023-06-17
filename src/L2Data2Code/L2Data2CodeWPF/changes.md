@@ -1,3 +1,12 @@
+### 2.13.16
+
+- Upgrade topelab.core.resolver.microsoft to 1.4.13
+- Upgrade Material.Icons.Avalonia to 2.0.1
+- Upgrade NLog to 5.2.0
+- Upgrade System.Data.SQLite.Core to 1.0.118
+- Upgrade System.Management to 7.0.2
+- Upgrade topelab.core.resolver to 1
+
 ### 2.13.15
 
 - **New**: Added capability to get indexes information from DB
