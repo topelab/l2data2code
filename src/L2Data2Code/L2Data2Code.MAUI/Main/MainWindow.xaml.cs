@@ -1,10 +1,10 @@
-﻿namespace L2Data2Code.MAUI
+namespace L2Data2Code.MAUI.Main
 {
-    public partial class MainPage : ContentPage
+    public partial class MainWindow : ContentPage
     {
         int count = 0;
 
-        public MainPage()
+        public MainWindow()
         {
             InitializeComponent();
         }
