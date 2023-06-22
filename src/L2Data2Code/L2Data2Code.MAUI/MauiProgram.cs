@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using Topelab.Core.Resolver.Entities;
+using Topelab.Core.Resolver.Microsoft;
 
 namespace L2Data2Code.MAUI
 {
@@ -14,6 +16,8 @@ namespace L2Data2Code.MAUI
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            builder.Services.AddResolver(new ResolveInfoCollection());
 
 #if DEBUG
 		builder.Logging.AddDebug();

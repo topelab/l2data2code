@@ -2,9 +2,9 @@ using L2Data2Code.MAUI.Main;
 
 namespace L2Data2Code.MAUI.Main.Interfaces
 {
-    internal interface IMainWindowVMBindManager
+    internal interface IMainPageVMBindManager
     {
-        void Start(MainWindowVM mainWindowVM);
+        void Start(MainPageVM mainWindowVM);
         void Stop();
     }
 }

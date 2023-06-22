@@ -1,15 +1,14 @@
 using L2Data2Code.MAUI.Base;
+using L2Data2Code.MAUI.Commands.Interfaces;
 using L2Data2Code.MAUI.Main.CommandBar;
 using L2Data2Code.MAUI.Main.MessagePanel;
 using L2Data2Code.MAUI.Main.TablePanel;
-using L2Data2Code.MAUI.Commands.Interfaces;
 using L2Data2CodeUI.Shared.Dto;
-using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace L2Data2Code.MAUI.Main
 {
-    internal class MainWindowVM : ViewModelBase
+    internal class MainPageVM : ViewModelBase
     {
         private IEnumerable<string> _areaList;
         private bool _emptyFolders;

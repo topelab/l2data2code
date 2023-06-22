@@ -8,7 +8,7 @@ namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     internal class MessagePanelBindManager : IMessagePanelBindManager
     {
-        private MainWindowVM mainVM;
+        private MainPageVM mainVM;
         private MessagePanelVM controlVM;
 
         private readonly IMessagePanelService messagePanelService;
@@ -20,7 +20,7 @@ namespace L2Data2Code.MAUI.Main.MessagePanel
             this.messageService = messageService ?? throw new System.ArgumentNullException(nameof(messageService));
         }
 
-        public void Start(MainWindowVM mainVM, MessagePanelVM controlVM)
+        public void Start(MainPageVM mainVM, MessagePanelVM controlVM)
         {
             Stop();
             this.mainVM = mainVM;
@@ -86,10 +86,10 @@ namespace L2Data2Code.MAUI.Main.MessagePanel
         {
             switch (e.PropertyName)
             {
-                case nameof(MainWindowVM.Working):
+                case nameof(MainPageVM.Working):
                     controlVM.Working = mainVM.Working;
                     break;
-                case nameof(MainWindowVM.RunningGenerateCode):
+                case nameof(MainPageVM.RunningGenerateCode):
                     controlVM.RunningGenerateCode = mainVM.RunningGenerateCode;
                     if (mainVM.RunningGenerateCode)
                     {

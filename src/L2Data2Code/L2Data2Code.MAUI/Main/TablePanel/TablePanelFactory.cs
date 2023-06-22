@@ -18,7 +18,7 @@ namespace L2Data2Code.MAUI.Main.TablePanel
             this.setDataItemCommand = setDataItemCommand ?? throw new ArgumentNullException(nameof(setDataItemCommand));
         }
 
-        public TablePanelVM Create(MainWindowVM mainVM)
+        public TablePanelVM Create(MainPageVM mainVM)
         {
             TablePanelVM tablePanelVM = new();
             loadTablesCommand.Initialize(tablePanelVM);

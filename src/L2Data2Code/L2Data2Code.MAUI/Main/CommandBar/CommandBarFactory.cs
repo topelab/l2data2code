@@ -32,7 +32,7 @@ namespace L2Data2Code.MAUI.Main.CommandBar
             this.openVarsWindowCommand = openVarsWindowCommand ?? throw new ArgumentNullException(nameof(openVarsWindowCommand));
         }
 
-        public CommandBarVM Create(MainWindowVM mainVM)
+        public CommandBarVM Create(MainPageVM mainVM)
         {
             CommandBarVM commandBarVM = new();
             commandBarVM.SetCommands(openFolderCommand, editTemplateCommand, openSettingsCommand, openVSCommand, openVSCodeCommand, openPSCommand, openVarsWindowCommand);

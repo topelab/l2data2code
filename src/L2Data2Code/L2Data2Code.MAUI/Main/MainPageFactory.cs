@@ -2,21 +2,20 @@ using L2Data2Code.MAUI.Commands.Interfaces;
 using L2Data2Code.MAUI.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
-using System;
 using Topelab.Core.Resolver.Interfaces;
 
 namespace L2Data2Code.MAUI.Main
 {
-    internal class MainWindowFactory : IMainWindowFactory
+    internal class MainPageFactory : IMainPageFactory
     {
         private readonly IResolver resolver;
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly IMainWindowEventManager mainWindowEventManager;
-        private readonly IMainWindowVMBindManager mainWindowVMBindManager;
-        private readonly IMainWindowVMInitializer mainWindowVMInitializer;
-        private MainWindowVM mainWindowVM;
+        private readonly IMainPageEventManager mainWindowEventManager;
+        private readonly IMainPageVMBindManager mainWindowVMBindManager;
+        private readonly IMainPageVMInitializer mainWindowVMInitializer;
+        private MainPageVM mainWindowVM;
 
-        public MainWindowFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMBindManager mainWindowVMBindManager, IMainWindowVMInitializer mainWindowVMInitializer)
+        public MainPageFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainPageEventManager mainWindowEventManager, IMainPageVMBindManager mainWindowVMBindManager, IMainPageVMInitializer mainWindowVMInitializer)
         {
             this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
@@ -27,7 +26,7 @@ namespace L2Data2Code.MAUI.Main
 
         public Page Create()
         {
-            mainWindowVM = resolver.Get<MainWindowVM>();
+            mainWindowVM = resolver.Get<MainPageVM>();
             var generateCommand = resolver.Get<IGenerateCommand>();
             mainWindowVM.SetCommands(generateCommand);
 

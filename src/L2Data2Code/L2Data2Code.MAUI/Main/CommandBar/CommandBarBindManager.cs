@@ -11,7 +11,7 @@ namespace L2Data2Code.MAUI.Main.CommandBar
 {
     internal class CommandBarBindManager : ICommandBarBindManager
     {
-        private MainWindowVM mainVM;
+        private MainPageVM mainVM;
         private CommandBarVM controlVM;
 
         private readonly IDispatcherWrapper dispatcher;
@@ -23,7 +23,7 @@ namespace L2Data2Code.MAUI.Main.CommandBar
             this.fileMonitorService = fileMonitorService ?? throw new System.ArgumentNullException(nameof(fileMonitorService));
         }
 
-        public void Start(MainWindowVM mainVM, CommandBarVM controlVM)
+        public void Start(MainPageVM mainVM, CommandBarVM controlVM)
         {
             Stop();
             this.mainVM = mainVM;
@@ -51,22 +51,22 @@ namespace L2Data2Code.MAUI.Main.CommandBar
         {
             switch (e.PropertyName)
             {
-                case nameof(MainWindowVM.Working):
+                case nameof(MainPageVM.Working):
                     controlVM.Working = mainVM.Working;
                     break;
-                case nameof(MainWindowVM.ShowVarsWindow):
+                case nameof(MainPageVM.ShowVarsWindow):
                     controlVM.ShowVarsWindow = mainVM.ShowVarsWindow;
                     break;
-                case nameof(MainWindowVM.HaveVSCodeInstalled):
+                case nameof(MainPageVM.HaveVSCodeInstalled):
                     controlVM.HaveVSCodeInstalled = mainVM.HaveVSCodeInstalled;
                     break;
-                case nameof(MainWindowVM.HavePSInstalled):
+                case nameof(MainPageVM.HavePSInstalled):
                     controlVM.HavePSInstalled = mainVM.HavePSInstalled;
                     break;
-                case (nameof(MainWindowVM.VSCodePath)):
+                case (nameof(MainPageVM.VSCodePath)):
                     controlVM.VSCodePath = mainVM.VSCodePath;
                     break;
-                case (nameof(MainWindowVM.SlnFile)):
+                case (nameof(MainPageVM.SlnFile)):
                     controlVM.SlnFile = mainVM.SlnFile;
                     controlVM.OnPropertyChanged(nameof(controlVM.ChangeButtons));
                     controlVM.OnPropertyChanged(nameof(controlVM.OpenVSCommand));
@@ -74,16 +74,16 @@ namespace L2Data2Code.MAUI.Main.CommandBar
                     controlVM.OnPropertyChanged(nameof(controlVM.OpenPSCommand));
                     controlVM.OnPropertyChanged(nameof(controlVM.OpenVSCodeCommand));
                     break;
-                case nameof(MainWindowVM.AppType):
+                case nameof(MainPageVM.AppType):
                     controlVM.CanShowVSButton = mainVM.AppType == AppType.VisualStudio;
                     break;
-                case nameof(MainWindowVM.OutputPath):
+                case nameof(MainPageVM.OutputPath):
                     if (mainVM.OutputPath != null)
                     {
                         WatchOutputPath();
                     }
                     break;
-                case nameof(MainWindowVM.RunningGenerateCode):
+                case nameof(MainPageVM.RunningGenerateCode):
                     if (!mainVM.RunningGenerateCode)
                     {
                         WatchOutputPath();

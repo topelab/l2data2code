@@ -13,10 +13,10 @@ namespace L2Data2Code.MAUI.Main.TablePanel
             this.adapter = adapter ?? throw new System.ArgumentNullException(nameof(adapter));
         }
 
-        private MainWindowVM mainVM;
+        private MainPageVM mainVM;
         private TablePanelVM controlVM;
 
-        public void Start(MainWindowVM mainVM, TablePanelVM controlVM)
+        public void Start(MainPageVM mainVM, TablePanelVM controlVM)
         {
             Stop();
             this.mainVM = mainVM;
@@ -37,14 +37,14 @@ namespace L2Data2Code.MAUI.Main.TablePanel
         {
             switch (e.PropertyName)
             {
-                case nameof(MainWindowVM.Working):
+                case nameof(MainPageVM.Working):
                     controlVM.Working = mainVM.Working;
                     break;
-                case nameof(MainWindowVM.SetRelatedTables):
+                case nameof(MainPageVM.SetRelatedTables):
                     controlVM.SetRelatedTables = mainVM.SetRelatedTables;
                     controlVM.SetDataItemsCommand.Execute(null);
                     break;
-                case nameof(MainWindowVM.SelectedModule):
+                case nameof(MainPageVM.SelectedModule):
                     if (mainVM.SelectedModule != null)
                     {
                         IncludeExcludeTablesChanged(mainVM.SelectedModule);

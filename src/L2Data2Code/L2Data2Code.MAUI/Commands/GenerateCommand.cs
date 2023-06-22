@@ -27,7 +27,7 @@ namespace L2Data2Code.MAUI.Commands
 
         public override bool CanExecute(object parameter)
         {
-            var mainWindowVM = parameter as MainWindowVM;
+            var mainWindowVM = parameter as MainPageVM;
 
             if (mainWindowVM?.OutputPath == null)
             {
@@ -52,7 +52,7 @@ namespace L2Data2Code.MAUI.Commands
 
         public override void Execute(object parameter)
         {
-            var mainWindowVM = parameter as MainWindowVM;
+            var mainWindowVM = parameter as MainPageVM;
 
             mainWindowVM.Working = true;
             mainWindowVM.RunningGenerateCode = true;

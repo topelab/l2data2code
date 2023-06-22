@@ -9,7 +9,7 @@ namespace L2Data2Code.MAUI.Main.MessagePanel
             this.bindManager = bindManager ?? throw new ArgumentNullException(nameof(bindManager));
         }
 
-        public MessagePanelVM Create(MainWindowVM mainVM)
+        public MessagePanelVM Create(MainPageVM mainVM)
         {
             MessagePanelVM messagePanelVM = new();
             bindManager.Start(mainVM, messagePanelVM);

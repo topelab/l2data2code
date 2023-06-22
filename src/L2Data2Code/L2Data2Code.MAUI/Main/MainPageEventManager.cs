@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace L2Data2Code.MAUI.Main
 {
-    internal class MainWindowEventManager : IMainWindowEventManager
+    internal class MainPageEventManager : IMainPageEventManager
     {
         private readonly IDispatcherWrapper dispatcherWrapper;
         private readonly IFileMonitorService fileMonitorService;
@@ -18,7 +18,7 @@ namespace L2Data2Code.MAUI.Main
 
         public Timer CheckOpenedTimer { get; private set; }
 
-        public MainWindowEventManager(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService, IProcessManager processManager, IGeneratorAdapter generatorAdapter)
+        public MainPageEventManager(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService, IProcessManager processManager, IGeneratorAdapter generatorAdapter)
         {
             this.dispatcherWrapper = dispatcherWrapper ?? throw new ArgumentNullException(nameof(dispatcherWrapper));
             this.fileMonitorService = fileMonitorService ?? throw new ArgumentNullException(nameof(fileMonitorService));
@@ -26,7 +26,7 @@ namespace L2Data2Code.MAUI.Main
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
         }
 
-        public void Start(Page window, MainWindowVM mainWindowVM)
+        public void Start(Page window, MainPageVM mainWindowVM)
         {
             var appBasePath = AppDomain.CurrentDomain.BaseDirectory.TrimPathSeparator();
             fileMonitorService.StartMonitoring((file) => ReStartApplication(window, file), appBasePath, BasicNameValueConfiguration.APP_SETTINGS_FILE);
@@ -51,7 +51,7 @@ namespace L2Data2Code.MAUI.Main
             }
         }
 
-        public async void CheckOpenedTimerCallBack(MainWindowVM mainWindowVM)
+        public async void CheckOpenedTimerCallBack(MainPageVM mainWindowVM)
         {
             if (mainWindowVM.PauseTimer)
             {
@@ -67,7 +67,7 @@ namespace L2Data2Code.MAUI.Main
             }
             catch (Exception ex)
             {
-                App.Logger.Error($"{nameof(MainWindowVM)}.{nameof(CheckOpenedTimerCallBack)}(): {ex.Message}");
+                App.Logger.Error($"{nameof(MainPageVM)}.{nameof(CheckOpenedTimerCallBack)}(): {ex.Message}");
             }
 
             mainWindowVM.PauseTimer = false;
