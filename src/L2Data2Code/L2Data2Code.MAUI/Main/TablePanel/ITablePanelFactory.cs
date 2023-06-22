@@ -1,6 +1,4 @@
-using L2Data2Code.Main;
-
-namespace L2Data2Code.Main.TablePanel
+namespace L2Data2Code.MAUI.Main.TablePanel
 {
     internal interface ITablePanelFactory
     {

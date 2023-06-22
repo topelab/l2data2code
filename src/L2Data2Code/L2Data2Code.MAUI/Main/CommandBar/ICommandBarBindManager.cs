@@ -1,5 +1,3 @@
-using L2Data2Code.Main.CommandBar;
-
 namespace L2Data2Code.MAUI.Main.CommandBar
 {
     internal interface ICommandBarBindManager

@@ -1,10 +1,8 @@
-using Avalonia.Controls;
 using L2Data2CodeUI.Shared.Adapters;
 using System.ComponentModel;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace L2Data2Code.Main.TablePanel
+namespace L2Data2Code.MAUI.Main.TablePanel
 {
     internal class TablePanelBindManager : ITablePanelBindManager
     {

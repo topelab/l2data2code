@@ -1,5 +1,5 @@
-using L2Data2Code.Base;
-using L2Data2Code.Main.TablePanel;
+using L2Data2Code.MAUI.Base;
+using L2Data2Code.MAUI.Main.TablePanel;
 using System.Linq;
 using L2Data2Code.MAUI.Commands.Interfaces;
 

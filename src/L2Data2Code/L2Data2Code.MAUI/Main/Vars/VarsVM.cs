@@ -1,8 +1,7 @@
-using L2Data2Code.Base;
-using System.Collections.Generic;
+using L2Data2Code.MAUI.Base;
 using System.Collections.ObjectModel;
 
-namespace L2Data2CodeWPF.Vars
+namespace L2Data2Code.MAUI.Main.Vars
 {
     public class Variable
     {

@@ -1,12 +1,10 @@
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
-using L2Data2Code.Main;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 
-namespace L2Data2Code.Main.MessagePanel
+namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     internal class MessagePanelBindManager : IMessagePanelBindManager
     {

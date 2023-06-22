@@ -1,7 +1,7 @@
 using L2Data2Code.SchemaReader.Schema;
-using L2Data2Code.Base;
+using L2Data2Code.MAUI.Base;
 
-namespace L2Data2Code.Main.TablePanel
+namespace L2Data2Code.MAUI.Main.TablePanel
 {
     public class TableVM : ViewModelBase
     {

@@ -1,7 +1,7 @@
-using L2Data2Code.Base;
+using L2Data2Code.MAUI.Base;
 using System.Collections.ObjectModel;
 
-namespace L2Data2Code.Main.MessagePanel
+namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     public class MessagePanelVM : ViewModelBase
     {

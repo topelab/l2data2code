@@ -1,6 +1,6 @@
-﻿using L2Data2Code.Main;
+using L2Data2Code.MAUI.Main;
 
-namespace L2Data2Code.Main.MessagePanel
+namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     internal interface IMessagePanelBindManager
     {

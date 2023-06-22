@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace L2Data2Code.Main.MessagePanel
+namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     public interface IMessagePanelService
     {

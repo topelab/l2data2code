@@ -1,7 +1,7 @@
-using L2Data2Code.Commands.Interfaces;
+using L2Data2Code.MAUI.Commands.Interfaces;
 using System;
 
-namespace L2Data2Code.Main.TablePanel
+namespace L2Data2Code.MAUI.Main.TablePanel
 {
     internal class TablePanelFactory : ITablePanelFactory
     {

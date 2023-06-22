@@ -1,6 +1,6 @@
+using L2Data2Code.MAUI.Main.Vars;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
-using L2Data2CodeWPF.Vars;
 
 namespace L2Data2Code.Main.Vars
 {
@@ -13,12 +13,12 @@ namespace L2Data2Code.Main.Vars
             this.adapter = adapter;
         }
 
-        public VarsWindow Create()
+        public Page Create()
         {
             VarsVM varsVM = new(adapter.CompiledVars);
-            VarsWindow window = new()
+            Page window = new()
             {
-                DataContext = varsVM,
+                BindingContext = varsVM,
                 Title = Strings.VarsTitle
             };
             return window;

@@ -1,11 +1,11 @@
-using L2Data2Code.Base;
+using L2Data2Code.MAUI.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Threading;
 
-namespace L2Data2Code.Main.MessagePanel
+namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     public class MessagePanelService : IMessagePanelService
     {

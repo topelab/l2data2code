@@ -1,9 +1,8 @@
-using L2Data2Code.Base;
-using L2Data2Code.Main.TablePanel;
+using L2Data2Code.MAUI.Base;
 using L2Data2Code.MAUI.Commands.Interfaces;
+using L2Data2Code.MAUI.Main.TablePanel;
 using L2Data2CodeUI.Shared.Adapters;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace L2Data2Code.MAUI.Commands

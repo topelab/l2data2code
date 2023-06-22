@@ -48,38 +48,8 @@
     <ProjectReference Include="..\L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="CommandBar\CommandBarUserControl.axaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
     <Compile Update="Main\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Update="MessagePanel\MessagePanelUserControl.axaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="TablePanel\TablePanelUserControl.axaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="Vars\VarsWindow.axaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="CommandBar\CommandBarUserControl.axaml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="MessagePanel\MessagePanelUserControl.axaml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="TablePanel\TablePanelUserControl.axaml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="Vars\VarsWindow.axaml">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
 </Project>

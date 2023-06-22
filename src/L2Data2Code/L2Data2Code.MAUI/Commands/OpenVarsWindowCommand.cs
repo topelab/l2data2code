@@ -1,9 +1,6 @@
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using L2Data2Code.Base;
-using L2Data2Code.Main.Vars;
+using L2Data2Code.MAUI.Main.Vars;
+using L2Data2Code.MAUI.Base;
 using L2Data2Code.MAUI.Commands.Interfaces;
-using System;
 
 namespace L2Data2Code.MAUI.Commands
 {
@@ -19,10 +16,8 @@ namespace L2Data2Code.MAUI.Commands
         public override void Execute(object parameter)
         {
             var varsWindow = varsFactory.Create();
-            if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                varsWindow.ShowDialog(desktop.MainWindow);
-            }
+            varsWindow.Focus();
+            // varsWindow.ShowDialog(desktop.MainWindow);
         }
     }
 }

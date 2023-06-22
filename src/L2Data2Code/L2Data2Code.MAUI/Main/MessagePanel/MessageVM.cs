@@ -1,8 +1,6 @@
-using L2Data2Code.Base;
-using System;
-using System.Windows.Media;
+using L2Data2Code.MAUI.Base;
 
-namespace L2Data2Code.Main.MessagePanel
+namespace L2Data2Code.MAUI.Main.MessagePanel
 {
     public class MessageVM : ViewModelBase
     {

@@ -1,11 +1,10 @@
-using Avalonia.Controls;
-using L2Data2Code.Base;
-using L2Data2Code.Commands.Interfaces;
+using L2Data2Code.MAUI.Base;
+using L2Data2Code.MAUI.Commands.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace L2Data2Code.Main.TablePanel
+namespace L2Data2Code.MAUI.Main.TablePanel
 {
     /// <summary>
     /// View model for table panel
