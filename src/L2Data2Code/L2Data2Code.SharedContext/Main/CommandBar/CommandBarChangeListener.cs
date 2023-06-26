@@ -8,7 +8,7 @@ using System.IO;
 
 namespace L2Data2Code.SharedContext.Main.CommandBar
 {
-    internal class CommandBarChangeListener : ICommandBarBindManager
+    public class CommandBarChangeListener : ICommandBarChangeListener
     {
         private MainWindowVM mainVM;
         private CommandBarVM controlVM;

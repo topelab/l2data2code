@@ -6,7 +6,7 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class OpenPSCommand : ReactiveBaseCommand, IOpenPSCommand
+    public class OpenPSCommand : ReactiveBaseCommand, IOpenPSCommand
     {
         private readonly IAppService appService;
         private readonly IProcessManager processManager;

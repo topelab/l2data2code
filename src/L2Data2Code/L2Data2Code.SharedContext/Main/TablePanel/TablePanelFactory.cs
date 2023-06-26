@@ -3,7 +3,7 @@ using System;
 
 namespace L2Data2Code.SharedContext.Main.TablePanel
 {
-    internal class TablePanelFactory : ITablePanelFactory
+    public class TablePanelFactory : ITablePanelFactory
     {
         private readonly ITablePanelChangeListener bindManager;
         private readonly ILoadTablesCommand loadTablesCommand;

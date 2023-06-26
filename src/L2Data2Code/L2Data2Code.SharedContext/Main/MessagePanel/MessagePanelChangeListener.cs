@@ -1,25 +1,27 @@
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
-using L2Data2CodeWPF.Main;
+using NLog;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace L2Data2CodeWPF.Controls.MessagePanel
+namespace L2Data2Code.SharedContext.Main.MessagePanel
 {
-    internal class MessagePanelBindManager : IMessagePanelBindManager
+    public class MessagePanelChangeListener : IMessagePanelChangeListener
     {
         private MainWindowVM mainVM;
         private MessagePanelVM controlVM;
 
         private readonly IMessagePanelService messagePanelService;
         private readonly IMessageService messageService;
+        private readonly ILogger logger;
 
-        public MessagePanelBindManager(IMessagePanelService messagePanelService, IMessageService messageService)
+        public MessagePanelChangeListener(IMessagePanelService messagePanelService, IMessageService messageService, ILogger logger)
         {
             this.messagePanelService = messagePanelService ?? throw new System.ArgumentNullException(nameof(messagePanelService));
             this.messageService = messageService ?? throw new System.ArgumentNullException(nameof(messageService));
+            this.logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
         }
 
         public void Start(MainWindowVM mainVM, MessagePanelVM controlVM)
@@ -39,14 +41,19 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
             {
                 mainVM.PropertyChanged -= OnMainVMPropertyChanged;
             }
+            if (controlVM != null)
+            {
+                controlVM.PropertyChanged -= OnControlVMPropertyChanged;
+            }
+            messagePanelService.AllMessages.CollectionChanged -= OnAllMessagesCollectionChanged;
         }
 
         private void OnControlVMPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(controlVM.MessagePanelOpened):
-                    messagePanelService.ViewAll(controlVM.MessagePanelOpened);
+                case nameof(controlVM.MessagePanelVisible):
+                    messagePanelService.ViewAll(controlVM.MessagePanelVisible);
                     break;
                 default:
                     break;
@@ -55,7 +62,6 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
 
         private void OnAllMessagesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            controlVM.MessagePanelVisible = messagePanelService.AllMessages.Any();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -76,6 +82,8 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
                 default:
                     break;
             }
+
+            controlVM.MessagePanelVisible = messagePanelService.AllMessages.Any();
         }
 
         private void OnMainVMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -89,7 +97,7 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
                     controlVM.RunningGenerateCode = mainVM.RunningGenerateCode;
                     if (mainVM.RunningGenerateCode)
                     {
-                        controlVM.MessagePanelOpened = true;
+                        controlVM.MessagePanelVisible = true;
                     }
                     break;
                 default:
@@ -101,7 +109,7 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
         {
             if (showMessage.NotEmpty())
             {
-                messagePanelService.Add(showMessage, controlVM.MessagePanelOpened, code);
+                messagePanelService.Add(showMessage, controlVM.MessagePanelVisible, code);
             }
 
             if (message.NotEmpty())
@@ -109,13 +117,13 @@ namespace L2Data2CodeWPF.Controls.MessagePanel
                 switch (messageType)
                 {
                     case MessageType.Info:
-                        App.Logger.Info(message);
+                        logger.Info(message);
                         break;
                     case MessageType.Warning:
-                        App.Logger.Warn(message);
+                        logger.Warn(message);
                         break;
                     case MessageType.Error:
-                        App.Logger.Error(message);
+                        logger.Error(message);
                         break;
                     default:
                         break;

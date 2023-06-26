@@ -1,6 +1,6 @@
 namespace L2Data2Code.SharedContext.Main.Interfaces
 {
-    internal interface IMainWindowVMInitializer
+    public interface IMainWindowVMInitializer
     {
         void Initialize(MainWindowVM viewModel);
     }

@@ -6,7 +6,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:s="clr-namespace:L2Data2CodeWPF.SharedLib"
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
-             xmlns:commandbar="clr-namespace:L2Data2CodeWPF.Controls.CommandBar"
+             xmlns:commandbar="clr-namespace:L2Data2Code.SharedContext.Main.CommandBar;assembly=L2Data2Code.SharedContext"
              d:DataContext="{d:DesignInstance Type=commandbar:CommandBarVM}"
              mc:Ignorable="d"
              d:DesignHeight="450"

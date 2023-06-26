@@ -5,7 +5,7 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                 xmlns:vm="clr-namespace:L2Data2CodeWPF.Main"
+                 xmlns:vm="clr-namespace:L2Data2Code.SharedContext.Main;assembly=L2Data2Code.SharedContext"
                  xmlns:cb="clr-namespace:L2Data2CodeWPF.Controls.CommandBar"
                  xmlns:tp="clr-namespace:L2Data2CodeWPF.Controls.TablePanel"
                  xmlns:mp="clr-namespace:L2Data2CodeWPF.Controls.MessagePanel"

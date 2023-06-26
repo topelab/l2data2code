@@ -1,6 +1,6 @@
 namespace L2Data2Code.SharedContext.Main.CommandBar
 {
-    internal interface ICommandBarFactory
+    public interface ICommandBarFactory
     {
         CommandBarVM Create(MainWindowVM mainVM);
     }

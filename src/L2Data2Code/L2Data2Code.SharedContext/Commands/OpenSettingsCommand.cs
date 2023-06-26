@@ -7,7 +7,7 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class OpenSettingsCommand : ReactiveBaseCommand, IOpenSettingsCommand
+    public class OpenSettingsCommand : ReactiveBaseCommand, IOpenSettingsCommand
     {
         private readonly IEditorLocatorService editorLocatorService;
 

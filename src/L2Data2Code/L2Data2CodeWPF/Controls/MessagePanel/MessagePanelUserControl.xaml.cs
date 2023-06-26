@@ -1,6 +1,6 @@
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Main.MessagePanel;
 using L2Data2CodeWPF.Base;
-using L2Data2CodeWPF.Main;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 

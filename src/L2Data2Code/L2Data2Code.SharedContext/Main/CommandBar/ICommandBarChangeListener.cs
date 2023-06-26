@@ -1,6 +1,6 @@
-﻿namespace L2Data2Code.SharedContext.Main.CommandBar
+namespace L2Data2Code.SharedContext.Main.CommandBar
 {
-    internal interface ICommandBarBindManager
+    public interface ICommandBarChangeListener
     {
         void Start(MainWindowVM mainVM, CommandBarVM controlVM);
         void Stop();

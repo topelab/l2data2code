@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace L2Data2Code.SharedContext.Main
 {
-    internal class MainWindowVM : ViewModelBase
+    public class MainWindowVM : ViewModelBase
     {
         private IEnumerable<string> _areaList;
         private bool _emptyFolders;

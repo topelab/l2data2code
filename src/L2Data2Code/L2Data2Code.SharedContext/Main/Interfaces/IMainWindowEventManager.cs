@@ -1,7 +1,7 @@
 namespace L2Data2Code.SharedContext.Main.Interfaces
 {
-    internal interface IMainWindowEventManager
+    public interface IMainWindowEventManager
     {
-        void Start(ISimpleWindow window, MainWindowVM mainWindowVM);
+        void Start(MainWindowVM mainWindowVM);
     }
 }

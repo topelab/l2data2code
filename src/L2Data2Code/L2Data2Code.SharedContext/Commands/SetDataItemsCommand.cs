@@ -4,7 +4,7 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class SetDataItemsCommand : ReactiveBaseCommand, ISetDataItemsCommand
+    public class SetDataItemsCommand : ReactiveBaseCommand, ISetDataItemsCommand
     {
         private TablePanelVM controlVM;
 

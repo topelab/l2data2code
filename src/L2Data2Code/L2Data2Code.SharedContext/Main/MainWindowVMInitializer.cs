@@ -11,7 +11,7 @@ using NLog;
 
 namespace L2Data2Code.SharedContext.Main
 {
-    internal class MainWindowVMInitializer : IMainWindowVMInitializer
+    public class MainWindowVMInitializer : IMainWindowVMInitializer
     {
         private readonly IGeneratorAdapter generatorAdapter;
         private readonly ICommandBarFactory commandBarFactory;

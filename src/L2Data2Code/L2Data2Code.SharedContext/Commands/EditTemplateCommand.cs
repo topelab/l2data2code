@@ -9,7 +9,7 @@ using System.IO;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class EditTemplateCommand : ReactiveBaseCommand, IEditTemplateCommand
+    public class EditTemplateCommand : ReactiveBaseCommand, IEditTemplateCommand
     {
         private readonly IGeneratorAdapter adapter;
         private readonly IMessageService messageService;

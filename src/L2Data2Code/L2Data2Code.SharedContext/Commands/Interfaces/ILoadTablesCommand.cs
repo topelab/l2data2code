@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace L2Data2Code.SharedContext.Commands.Interfaces
 {
-    internal interface ILoadTablesCommand : ICommand
+    public interface ILoadTablesCommand : ICommand
     {
         void Initialize(TablePanelVM controlVM);
     }

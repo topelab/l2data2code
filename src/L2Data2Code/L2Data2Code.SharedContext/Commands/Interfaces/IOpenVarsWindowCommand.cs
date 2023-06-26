@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace L2Data2Code.SharedContext.Commands.Interfaces
 {
-    internal interface IOpenVarsWindowCommand : ICommand
+    public interface IOpenVarsWindowCommand : ICommand
     {
     }
 }

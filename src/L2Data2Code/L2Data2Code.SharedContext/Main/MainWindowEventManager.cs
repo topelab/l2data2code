@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace L2Data2Code.SharedContext.Main
 {
-    internal class MainWindowEventManager : IMainWindowEventManager
+    public class MainWindowEventManager : IMainWindowEventManager
     {
         private readonly IDispatcherWrapper dispatcherWrapper;
         private readonly IFileMonitorService fileMonitorService;
@@ -35,26 +35,26 @@ namespace L2Data2Code.SharedContext.Main
             this.messageBox = messageBox ?? throw new ArgumentNullException(nameof(messageBox));
         }
 
-        public void Start(ISimpleWindow window, MainWindowVM mainWindowVM)
+        public void Start(MainWindowVM mainWindowVM)
         {
             var appBasePath = AppDomain.CurrentDomain.BaseDirectory.TrimPathSeparator();
-            fileMonitorService.StartMonitoring((file) => ReStartApplication(window, file), appBasePath, BasicNameValueConfiguration.APP_SETTINGS_FILE);
+            fileMonitorService.StartMonitoring((file) => ReStartApplication(file), appBasePath, BasicNameValueConfiguration.APP_SETTINGS_FILE);
             CheckOpenedTimer = new Timer((state) => CheckOpenedTimerCallBack(mainWindowVM), null, 3000, 3000);
         }
 
-        private void ReStartApplication(ISimpleWindow window, string fileChanged)
+        private void ReStartApplication(string fileChanged)
         {
             if (fileChanged.Equals(BasicNameValueConfiguration.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
             {
                 dispatcherWrapper?.Invoke(() =>
                 {
-                    eventAggregator.GetEvent<SimpleWindowEvent>().Publish(new SimpleWindowEventArgs { Target = nameof(MainWindowVM), Action = SimpleWindowEventActions.Activate });
+                    eventAggregator.GetEvent<ActivateMainWindowEvent>().Publish();
                     var result = messageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxWrapperButton.OKCancel, MessageBoxWrapperImage.Question);
                     if (result == MessageBoxWrapperResult.Cancel)
                     {
                         return;
                     }
-                    eventAggregator.GetEvent<SimpleWindowEvent>().Publish(new SimpleWindowEventArgs { Target = nameof(MainWindowVM), Action = SimpleWindowEventActions.Restart });
+                    eventAggregator.GetEvent<CloseApplicationEvent>().Publish(true);
                 });
             }
         }

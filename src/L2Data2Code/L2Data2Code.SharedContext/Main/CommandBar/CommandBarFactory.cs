@@ -3,9 +3,9 @@ using System;
 
 namespace L2Data2Code.SharedContext.Main.CommandBar
 {
-    internal class CommandBarFactory : ICommandBarFactory
+    public class CommandBarFactory : ICommandBarFactory
     {
-        private readonly ICommandBarBindManager bindManager;
+        private readonly ICommandBarChangeListener bindManager;
         private readonly IOpenFolderCommand openFolderCommand;
         private readonly IEditTemplateCommand editTemplateCommand;
         private readonly IOpenSettingsCommand openSettingsCommand;
@@ -14,7 +14,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         private readonly IOpenPSCommand openPSCommand;
         private readonly IOpenVarsWindowCommand openVarsWindowCommand;
 
-        public CommandBarFactory(ICommandBarBindManager bindManager,
+        public CommandBarFactory(ICommandBarChangeListener bindManager,
                                  IOpenFolderCommand openFolderCommand,
                                  IEditTemplateCommand editTemplateCommand,
                                  IOpenSettingsCommand openSettingsCommand,

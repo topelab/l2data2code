@@ -5,7 +5,7 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class OpenFolderCommand : ReactiveBaseCommand, IOpenFolderCommand
+    public class OpenFolderCommand : ReactiveBaseCommand, IOpenFolderCommand
     {
         private readonly IProcessManager processManager;
 

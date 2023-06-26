@@ -6,7 +6,7 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class OpenVSCommand : ReactiveBaseCommand, IOpenVSCommand
+    public class OpenVSCommand : ReactiveBaseCommand, IOpenVSCommand
     {
         private readonly IAppService appService;
 

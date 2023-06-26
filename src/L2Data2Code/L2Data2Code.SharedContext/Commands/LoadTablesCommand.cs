@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class LoadTablesCommand : ReactiveBaseCommand, ILoadTablesCommand
+    public class LoadTablesCommand : ReactiveBaseCommand, ILoadTablesCommand
     {
         private TablePanelVM controlVM;
 

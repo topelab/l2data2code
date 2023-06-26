@@ -6,7 +6,7 @@ using System.IO;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class OpenVSCodeCommand : ReactiveBaseCommand, IOpenVSCodeCommand
+    public class OpenVSCodeCommand : ReactiveBaseCommand, IOpenVSCodeCommand
     {
         private readonly IEditorLocatorService editorLocatorService;
 

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace L2Data2Code.SharedContext.Main
 {
-    internal class MainWindowVMChangeListener : IMainWindowVMChangeListener
+    public class MainWindowVMChangeListener : IMainWindowVMChangeListener
     {
         private readonly IGeneratorAdapter generatorAdapter;
         private readonly ICommandManager commandManager;

@@ -2,7 +2,7 @@ using System;
 
 namespace L2Data2Code.SharedContext.Main.MessagePanel
 {
-    internal class MessagePanelFactory : IMessagePanelFactory
+    public class MessagePanelFactory : IMessagePanelFactory
     {
         private readonly IMessagePanelChangeListener bindManager;
 

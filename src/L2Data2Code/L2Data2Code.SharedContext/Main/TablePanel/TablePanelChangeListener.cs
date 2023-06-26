@@ -1,22 +1,21 @@
+using L2Data2Code.SharedContext.Base;
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2CodeWPF.Main;
-using L2Data2CodeWPF.SharedLib;
+using NLog;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace L2Data2CodeWPF.Controls.TablePanel
+namespace L2Data2Code.SharedContext.Main.TablePanel
 {
-    internal class TablePanelBindManager : ITablePanelBindManager
+    public class TablePanelChangeListener : ITablePanelChangeListener
     {
         private readonly IGeneratorAdapter adapter;
-        private readonly IDispatcherWrapper dispatcher;
+        private readonly ILogger logger;
 
-        public TablePanelBindManager(IGeneratorAdapter adapter, IDispatcherWrapper dispatcher)
+        public TablePanelChangeListener(IGeneratorAdapter adapter, ILogger logger)
         {
             this.adapter = adapter ?? throw new System.ArgumentNullException(nameof(adapter));
-            this.dispatcher = dispatcher ?? throw new System.ArgumentNullException(nameof(dispatcher));
+            this.logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
         }
 
         private MainWindowVM mainVM;
@@ -65,33 +64,26 @@ namespace L2Data2CodeWPF.Controls.TablePanel
 
         private void IncludeExcludeTablesChanged(string selectedModule)
         {
-            controlVM.Working = true;
-            controlVM.LoadingTables = true;
-            controlVM.ViewsVisible = false;
-            var includeTables = adapter.ModulesConfiguration[selectedModule].IncludeTables;
-            var excludeTables = adapter.ModulesConfiguration[selectedModule].ExcludeTables;
-            var includeTablesRegex = includeTables == null ? null : new Regex(includeTables);
-            var excludeTablesRegex = excludeTables == null ? null : new Regex(excludeTables);
-
-            Task.Run(() =>
+            controlVM.WorkOnAction(() =>
             {
+                controlVM.LoadingTables = true;
+                controlVM.ViewsVisible = false;
+                var includeTables = adapter.ModulesConfiguration[selectedModule].IncludeTables;
+                var excludeTables = adapter.ModulesConfiguration[selectedModule].ExcludeTables;
+                var includeTablesRegex = includeTables == null ? null : new Regex(includeTables);
+                var excludeTablesRegex = excludeTables == null ? null : new Regex(excludeTables);
+
                 mainVM.PauseTimer = true;
                 PopulateDataItems(includeTablesRegex, excludeTablesRegex);
-            }).ContinueWith((t) =>
-            {
-                dispatcher.Invoke(() =>
-                {
-                    controlVM.LoadingTables = false;
-                    controlVM.Working = false;
-                    mainVM.PauseTimer = false;
-                });
+                controlVM.LoadingTables = false;
+                mainVM.PauseTimer = false;
             });
         }
 
         private void PopulateDataItems(Regex includeTablesRegex = null, Regex excludeTablesRegex = null)
         {
-            App.Logger.Info("Populating tables and view lists");
-            dispatcher.Invoke(ClearDataItemsLists);
+            logger.Info("Populating tables and view lists");
+            ClearDataItemsLists();
 
             foreach (var element in controlVM.AllDataItems.Values.OrderBy(k => k.Name))
             {
@@ -100,10 +92,18 @@ namespace L2Data2CodeWPF.Controls.TablePanel
                 {
                     element.IsVisible = !excludeTablesRegex.IsMatch(element.Name);
                 }
-                dispatcher.Invoke(controlVM.AddToViews, element);
+                controlVM.AddToViews(element);
             }
-            dispatcher.Invoke(() => controlVM.ViewsVisible = controlVM.AllViews.Any());
-            App.Logger.Info("All items populated");
+            controlVM.ViewsVisible = controlVM.AllViews.Any();
+            if (controlVM.ViewsVisible)
+            {
+                controlVM.AutoHeight = "50*";
+            }
+            else
+            {
+                controlVM.AutoHeight = "*";
+            }
+            logger.Info("All items populated");
         }
 
         void ClearDataItemsLists()

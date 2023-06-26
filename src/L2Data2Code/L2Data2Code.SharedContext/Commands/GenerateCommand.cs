@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    internal class GenerateCommand : ReactiveBaseCommand, IGenerateCommand
+    public class GenerateCommand : ReactiveBaseCommand, IGenerateCommand
     {
         private readonly IProcessManager processManager;
         private readonly IMessagePanelService messagePanelService;

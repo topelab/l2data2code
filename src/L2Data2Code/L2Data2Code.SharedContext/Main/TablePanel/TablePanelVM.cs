@@ -9,7 +9,7 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
     /// <summary>
     /// View model for table panel
     /// </summary>
-    internal class TablePanelVM : ViewModelBase
+    public class TablePanelVM : ViewModelBase
     {
         private string _autoHeight = "50*";
         private bool _selectAllTables;
