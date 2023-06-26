@@ -87,19 +87,16 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            var start = DateTime.Now;
+            while (runningPurger)
             {
-                var start = DateTime.Now;
-                while (runningPurger)
+                var dif = DateTime.Now - start;
+                if (dif > TimeSpan.FromMinutes(1))
                 {
-                    var dif = DateTime.Now - start;
-                    if (dif > TimeSpan.FromMinutes(1))
-                    {
-                        runningPurger = false;
-                        throw new Exception("To many time waiting to Purge");
-                    }
+                    runningPurger = false;
+                    throw new Exception("To many time waiting to Purge");
                 }
-            });
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -126,10 +123,12 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
             {
                 return;
             }
-
-            runningPurger = true;
-            action.Invoke();
-            runningPurger = false;
+            dispatcher.Invoke(() =>
+            {
+                runningPurger = true;
+                action.Invoke();
+                runningPurger = false;
+            });
         }
     }
 }

@@ -10,6 +10,7 @@ using L2Data2Code.SchemaReader.MySql;
 using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SchemaReader.SqlServer;
+using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Commands;
 using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Main;
@@ -61,6 +62,8 @@ namespace L2Data2CodeWPF
                 .AddSingleton<ISchemaService, SchemaService>()
                 .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
                 .AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
+                .AddSingleton<IMessageBoxWrapper, MessageBoxWrapper>()
+                .AddSingleton<ICommandManager, CommandManagerWrapper>()
                 .AddSingleton<INameResolver, NameResolver>()
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IProcessManager, ProcessManager>()

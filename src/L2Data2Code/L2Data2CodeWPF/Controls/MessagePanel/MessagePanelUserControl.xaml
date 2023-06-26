@@ -17,7 +17,7 @@
         <Expander Header="{x:Static str:Strings.MessageBoard}"
                     HorizontalAlignment="Stretch"
                     Height="Auto"
-                    IsExpanded="{Binding MessagePanelOpened}"
+                    IsExpanded="True"
                     Background="{DynamicResource MahApps.Brushes.Accent4}">
             <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <ListView ItemsSource="{Binding AllMessages}"
@@ -26,7 +26,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Text}"
-                                        Foreground="{Binding Path=Color}"
+                                        Foreground="{Binding Path=Color, Converter={x:Static s:Converters.ToColor}}"
                                         TextWrapping="Wrap" />
                         </DataTemplate>
                     </ListView.ItemTemplate>

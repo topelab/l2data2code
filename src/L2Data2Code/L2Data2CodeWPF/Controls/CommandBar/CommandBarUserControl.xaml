@@ -37,10 +37,11 @@
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Padding="5"
+                        x:Name="OpenWithIDEButton"
                         Command="{Binding OpenVSCommand}"
                         CommandParameter="{Binding SlnFile}"
                         Visibility="{Binding CanShowVSButton, Converter={x:Static s:Converters.VisibleIfTrue}}"
-                        Content="{Binding OpenCmdIcon}"
+                        Content="{iconPacks:Material Kind=FileCodeOutline}"
                         ToolTip="{Binding OpenCmdToolTip}" />
                 <Button HorizontalAlignment="Left"
                         VerticalAlignment="Top"

@@ -21,14 +21,9 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         private string slnFile;
         private bool canShowVSButton;
         private string openCmdToolTip;
-        //private MaterialIcon openCmdIcon;
 
         public CommandBarVM()
         {
-            //openCmdIcon = new MaterialIcon
-            //{
-            //    Kind = MaterialIconKind.Visualstudio
-            //};
             openCmdToolTip = Strings.OpenVSSolution;
         }
 
@@ -56,7 +51,6 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         public string VSCodePath { get => vSCodePath; internal set => SetProperty(ref vSCodePath, value); }
         public string SlnFile { get => slnFile; internal set => SetProperty(ref slnFile, value); }
         public bool CanShowVSButton { get => canShowVSButton; internal set => SetProperty(ref canShowVSButton, value); }
-        //public MaterialIcon OpenCmdIcon { get => openCmdIcon; internal set => SetProperty(ref openCmdIcon, value); }
         public string OpenCmdToolTip { get => openCmdToolTip; internal set => SetProperty(ref openCmdToolTip, value); }
 
         /// <summary>

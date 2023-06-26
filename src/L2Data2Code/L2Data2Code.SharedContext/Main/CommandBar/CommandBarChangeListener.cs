@@ -1,8 +1,10 @@
 using L2Data2Code.SharedContext.Base;
+using L2Data2Code.SharedContext.Events;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
+using Prism.Events;
 using System.ComponentModel;
 using System.IO;
 
@@ -15,11 +17,13 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
 
         private readonly IDispatcherWrapper dispatcher;
         private readonly IFileMonitorService fileMonitorService;
+        private readonly IEventAggregator eventAggregator;
 
-        public CommandBarChangeListener(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService)
+        public CommandBarChangeListener(IDispatcherWrapper dispatcherWrapper, IFileMonitorService fileMonitorService, IEventAggregator eventAggregator)
         {
             dispatcher = dispatcherWrapper ?? throw new System.ArgumentNullException(nameof(dispatcherWrapper));
             this.fileMonitorService = fileMonitorService ?? throw new System.ArgumentNullException(nameof(fileMonitorService));
+            this.eventAggregator = eventAggregator ?? throw new System.ArgumentNullException(nameof(eventAggregator));
         }
 
         public void Start(MainWindowVM mainVM, CommandBarVM controlVM)
@@ -111,16 +115,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
                 case nameof(CommandBarVM.ChangeButtons):
                     dispatcher.Invoke(() =>
                     {
-                        //controlVM.OpenCmdIcon.Kind = mainVM.AppType switch
-                        //{
-                        //    AppType.VisualStudio => MaterialIconKind.MicrosoftVisualStudio,
-                        //    AppType.VisualStudioCode => MaterialIconKind.MicrosoftVisualStudioCode,
-                        //    AppType.ApacheNetBeans => MaterialIconKind.Application,
-                        //    AppType.Eclipse => MaterialIconKind.Application,
-                        //    AppType.IntelliJIdea => MaterialIconKind.Application,
-                        //    _ => MaterialIconKind.Application
-                        //};
-                        //controlVM.OnPropertyChanged(nameof(controlVM.OpenCmdIcon));
+                        eventAggregator.GetEvent<SelectAppTypeEvent>().Publish(mainVM.AppType);
 
                         controlVM.OpenCmdToolTip = mainVM.AppType switch
                         {

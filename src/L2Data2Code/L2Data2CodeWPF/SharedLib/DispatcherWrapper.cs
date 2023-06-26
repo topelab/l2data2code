@@ -1,3 +1,4 @@
+using L2Data2Code.SharedContext.Base;
 using System;
 using System.Windows;
 using System.Windows.Threading;
@@ -15,9 +16,9 @@ namespace L2Data2CodeWPF.SharedLib
         /// Constructor
         /// </summary>
         /// <param name="dispatcher">Defined dispatcher or null to get current applicarion dispatcher</param>
-        public DispatcherWrapper(Dispatcher dispatcher = null)
+        public DispatcherWrapper()
         {
-            this.dispatcher = dispatcher ?? Application.Current.Dispatcher;
+            this.dispatcher = Application.Current.Dispatcher;
         }
 
         /// <summary>

@@ -1,6 +1,8 @@
+using L2Data2Code.SharedContext.Base;
 using LambdaConverters;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace L2Data2CodeWPF.SharedLib
 {
@@ -25,5 +27,16 @@ namespace L2Data2CodeWPF.SharedLib
 
         public static readonly IValueConverter ToUpperCase =
             ValueConverter.Create<string, string>(e => e.Value.ToUpper());
+
+        public static readonly IValueConverter ToColor = ValueConverter.Create<InternalColors, Color>(e =>
+        {
+            switch (e.Value)
+            {
+                case InternalColors.Red:
+                    return Colors.Red;
+                default:
+                    return Colors.Black;
+            }
+        });
     }
 }
