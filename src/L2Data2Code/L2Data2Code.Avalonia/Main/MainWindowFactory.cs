@@ -1,3 +1,4 @@
+using L2Data2Code.Avalonia.Base;
 using L2Data2Code.Avalonia.Main;
 using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Main;
@@ -16,15 +17,22 @@ namespace L2Data2Code.Main
         private readonly IMainWindowEventManager mainWindowEventManager;
         private readonly IMainWindowVMChangeListener mainWindowVMChangeListener;
         private readonly IMainWindowVMInitializer mainWindowVMInitializer;
+        private readonly IGlobalEventManager globalEventManager;
         private MainWindowVM mainWindowVM;
 
-        public MainWindowFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMChangeListener mainWindowVMChangeListener, IMainWindowVMInitializer mainWindowVMInitializer)
+        public MainWindowFactory(IResolver resolver,
+                                 IGeneratorAdapter generatorAdapter,
+                                 IMainWindowEventManager mainWindowEventManager,
+                                 IMainWindowVMChangeListener mainWindowVMChangeListener,
+                                 IMainWindowVMInitializer mainWindowVMInitializer,
+                                 IGlobalEventManager globalEventManager)
         {
             this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
             this.mainWindowEventManager = mainWindowEventManager ?? throw new ArgumentNullException(nameof(mainWindowEventManager));
             this.mainWindowVMChangeListener = mainWindowVMChangeListener ?? throw new ArgumentNullException(nameof(mainWindowVMChangeListener));
             this.mainWindowVMInitializer = mainWindowVMInitializer ?? throw new ArgumentNullException(nameof(mainWindowVMInitializer));
+            this.globalEventManager = globalEventManager ?? throw new ArgumentNullException(nameof(globalEventManager));
         }
 
         public MainWindow Create()
@@ -42,6 +50,7 @@ namespace L2Data2Code.Main
                 mainWindowVMChangeListener.Start(mainWindowVM);
                 mainWindowVMInitializer.Initialize(mainWindowVM);
                 mainWindowEventManager.Start(mainWindowVM);
+                globalEventManager.Start(window);
             };
             window.Title = $"{Strings.Title} v{generatorAdapter.GeneratorVersion}";
             return window;

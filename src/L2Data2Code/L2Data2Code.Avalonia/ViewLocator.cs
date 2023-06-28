@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using L2Data2Code.Base;
+using L2Data2Code.SharedContext.Base;
 using System;
 
 namespace L2Data2Code

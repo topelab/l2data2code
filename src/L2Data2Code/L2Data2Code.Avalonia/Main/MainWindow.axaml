@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:L2Data2Code.Main"
         xmlns:cb="using:L2Data2Code.Main.CommandBar"
         xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
         xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
@@ -18,10 +17,6 @@
         Background="#80000000"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterScreen">
-
-    <Design.DataContext>
-        <vm:MainWindowVM/>
-    </Design.DataContext>
 
     <Grid ColumnDefinitions="40*, 30*, 10"
           RowDefinitions="45, *">

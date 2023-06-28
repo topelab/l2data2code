@@ -2,15 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="using:L2Data2Code.Main.CommandBar"
              xmlns:s="using:L2Data2CodeUI.Shared.SharedLib"
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="L2Data2Code.Main.CommandBar.CommandBarUserControl">
-    <Design.DataContext>
-        <local:CommandBarVM />
-    </Design.DataContext>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -51,11 +47,12 @@
                 <materialIcons:MaterialIcon Kind="FolderOutline"/>
             </Button>
             <Button Classes="Flat Mine"
-                    Content="{Binding OpenCmdIcon}"
                     ToolTip.Tip="{Binding OpenCmdToolTip}"
                     Command="{Binding OpenVSCommand}"
-                    CommandParameter="{Binding SlnFile}" />
-            <Button Classes="Flat Mine"
+                    CommandParameter="{Binding SlnFile}">
+                <materialIcons:MaterialIcon Kind="CodeBraces"/>
+            </Button>
+                <Button Classes="Flat Mine"
                     ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
                     IsVisible="{Binding HaveVSCodeInstalled}"
                     Command="{Binding OpenVSCodeCommand}"

@@ -1,3 +1,4 @@
+using L2Data2Code.Avalonia.Base;
 using L2Data2Code.Avalonia.Main;
 using L2Data2Code.Base;
 using L2Data2Code.BaseGenerator.Configuration;
@@ -28,7 +29,9 @@ using L2Data2Code.SharedLib.Helpers;
 using L2Data2Code.SharedLib.Interfaces;
 using L2Data2Code.SharedLib.Services;
 using L2Data2CodeUI.Shared.Adapters;
+using L2Data2CodeWPF.SharedLib;
 using NLog;
+using Prism.Events;
 using Topelab.Core.Resolver.Entities;
 
 namespace L2Data2Code
@@ -63,6 +66,8 @@ namespace L2Data2Code
                 .AddSingleton<ISchemaService, SchemaService>()
                 .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
                 .AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
+                .AddSingleton<IMessageBoxWrapper, MessageBoxWrapper>()
+                .AddSingleton<ICommandManager, CommandManagerWrapper>()
                 .AddSingleton<INameResolver, NameResolver>()
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IProcessManager, ProcessManager>()
@@ -70,6 +75,8 @@ namespace L2Data2Code
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
                 .AddSingleton<IVarsFactory, VarsFactory>()
                 .AddSingleton<IReplacementCollectionFactory, ReplacementCollectionFactory>()
+                .AddSingleton<IGlobalEventManager, GlobalEventManager>()
+                .AddSingleton<IEventAggregator, EventAggregator>()
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()

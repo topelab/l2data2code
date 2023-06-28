@@ -2,15 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:L2Data2Code.Main.TablePanel"
              xmlns:s="using:L2Data2CodeUI.Shared.SharedLib"
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
              x:Class="L2Data2Code.Main.TablePanel.TablePanelUserControl">
-    <Design.DataContext>
-        <vm:TablePanelVM/>
-    </Design.DataContext>
     <Grid IsEnabled="{Binding !Working}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />

@@ -11,6 +11,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
     {
         private bool runningPurger;
         private readonly IDispatcherWrapper dispatcher;
+        private Timer timer;
 
         public ObservableCollection<MessageVM> AllMessages { get; }
 
@@ -18,9 +19,8 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
         {
             this.dispatcher = dispatcher;
             AllMessages = new ObservableCollection<MessageVM>();
-            Timer timer = new(TimeSpan.FromMilliseconds(250));
+            timer = new(TimeSpan.FromMilliseconds(1000));
             timer.Elapsed += Timer_Tick;
-            timer.Start();
         }
 
         public void Add(string text, bool viewStatus = false, string code = null)
@@ -37,6 +37,10 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
                     else
                     {
                         previous.EnlargeLife(viewStatus);
+                    }
+                    if (!timer.Enabled)
+                    {
+                        timer.Start();
                     }
                 }
             });
@@ -76,6 +80,10 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
                 {
                     item.ClearPinned();
                 }
+                if (!AllMessages.Any())
+                {
+                    timer.Stop();
+                }
                 runningPurger = false;
             });
         }
@@ -113,6 +121,10 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
                 lock (AllMessages)
                 {
                     toRemove.ForEach(item => AllMessages.Remove(item));
+                }
+                if (!AllMessages.Any())
+                {
+                    timer.Stop();
                 }
             }
         }
