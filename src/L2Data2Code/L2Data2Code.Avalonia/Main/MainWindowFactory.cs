@@ -1,5 +1,7 @@
-using L2Data2Code.Commands.Interfaces;
-using L2Data2Code.Main.Interfaces;
+using L2Data2Code.Avalonia.Main;
+using L2Data2Code.SharedContext.Commands.Interfaces;
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
 using System;
@@ -12,16 +14,16 @@ namespace L2Data2Code.Main
         private readonly IResolver resolver;
         private readonly IGeneratorAdapter generatorAdapter;
         private readonly IMainWindowEventManager mainWindowEventManager;
-        private readonly IMainWindowVMBindManager mainWindowVMBindManager;
+        private readonly IMainWindowVMChangeListener mainWindowVMChangeListener;
         private readonly IMainWindowVMInitializer mainWindowVMInitializer;
         private MainWindowVM mainWindowVM;
 
-        public MainWindowFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMBindManager mainWindowVMBindManager, IMainWindowVMInitializer mainWindowVMInitializer)
+        public MainWindowFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMChangeListener mainWindowVMChangeListener, IMainWindowVMInitializer mainWindowVMInitializer)
         {
             this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
             this.mainWindowEventManager = mainWindowEventManager ?? throw new ArgumentNullException(nameof(mainWindowEventManager));
-            this.mainWindowVMBindManager = mainWindowVMBindManager ?? throw new ArgumentNullException(nameof(mainWindowVMBindManager));
+            this.mainWindowVMChangeListener = mainWindowVMChangeListener ?? throw new ArgumentNullException(nameof(mainWindowVMChangeListener));
             this.mainWindowVMInitializer = mainWindowVMInitializer ?? throw new ArgumentNullException(nameof(mainWindowVMInitializer));
         }
 
@@ -37,9 +39,9 @@ namespace L2Data2Code.Main
             };
             window.Opened += (sender, args) =>
             {
-                mainWindowVMBindManager.Start(mainWindowVM);
+                mainWindowVMChangeListener.Start(mainWindowVM);
                 mainWindowVMInitializer.Initialize(mainWindowVM);
-                mainWindowEventManager.Start(window, mainWindowVM);
+                mainWindowEventManager.Start(mainWindowVM);
             };
             window.Title = $"{Strings.Title} v{generatorAdapter.GeneratorVersion}";
             return window;

@@ -1,21 +1,14 @@
-using L2Data2CodeUI.Shared.Adapters;
+using L2Data2Code.SharedContext.Main.Vars;
 using L2Data2CodeUI.Shared.Localize;
-using L2Data2CodeWPF.Vars;
+using System.Collections.Generic;
 
 namespace L2Data2Code.Main.Vars
 {
     internal class VarsFactory : IVarsFactory
     {
-        private readonly IGeneratorAdapter adapter;
-
-        public VarsFactory(IGeneratorAdapter adapter)
+        public VarsWindow Create(Dictionary<string, object> vars)
         {
-            this.adapter = adapter;
-        }
-
-        public VarsWindow Create()
-        {
-            VarsVM varsVM = new(adapter.CompiledVars);
+            VarsVM varsVM = new(vars);
             VarsWindow window = new()
             {
                 DataContext = varsVM,

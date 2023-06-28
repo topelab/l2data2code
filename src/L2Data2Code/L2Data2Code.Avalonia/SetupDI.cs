@@ -1,15 +1,11 @@
+using L2Data2Code.Avalonia.Main;
 using L2Data2Code.Base;
 using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.BaseHandleBars;
-using L2Data2Code.Commands.Interfaces;
-using L2Data2Code.Commands;
 using L2Data2Code.Main;
-using L2Data2Code.Main.CommandBar;
-using L2Data2Code.Main.Interfaces;
-using L2Data2Code.Main.MessagePanel;
-using L2Data2Code.Main.TablePanel;
+using L2Data2Code.Main.Vars;
 using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;
@@ -18,6 +14,14 @@ using L2Data2Code.SchemaReader.MySql;
 using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SchemaReader.SqlServer;
+using L2Data2Code.SharedContext.Base;
+using L2Data2Code.SharedContext.Commands;
+using L2Data2Code.SharedContext.Commands.Interfaces;
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Main.CommandBar;
+using L2Data2Code.SharedContext.Main.Interfaces;
+using L2Data2Code.SharedContext.Main.MessagePanel;
+using L2Data2Code.SharedContext.Main.TablePanel;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
@@ -26,7 +30,6 @@ using L2Data2Code.SharedLib.Services;
 using L2Data2CodeUI.Shared.Adapters;
 using NLog;
 using Topelab.Core.Resolver.Entities;
-using L2Data2Code.Main.Vars;
 
 namespace L2Data2Code
 {
@@ -70,11 +73,11 @@ namespace L2Data2Code
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()
-                .AddTransient<IMainWindowVMBindManager, MainWindowVMBindManager>()
+                .AddTransient<IMainWindowVMChangeListener, MainWindowVMChangeListener>()
                 .AddTransient<IMainWindowVMInitializer, MainWindowVMInitializer>()
-                .AddTransient<ICommandBarBindManager, CommandBarBindManager>()
-                .AddTransient<ITablePanelBindManager, TablePanelBindManager>()
-                .AddTransient<IMessagePanelBindManager, MessagePanelBindManager>()
+                .AddTransient<ICommandBarChangeListener, CommandBarChangeListener>()
+                .AddTransient<ITablePanelChangeListener, TablePanelChangeListener>()
+                .AddTransient<IMessagePanelChangeListener, MessagePanelChangeListener>()
                 .AddTransient<IGenerateCommand, GenerateCommand>()
                 .AddTransient<IEditTemplateCommand, EditTemplateCommand>()
                 .AddTransient<IOpenFolderCommand, OpenFolderCommand>()

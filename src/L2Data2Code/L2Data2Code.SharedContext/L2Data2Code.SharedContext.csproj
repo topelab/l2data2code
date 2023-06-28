@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="19.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.SharedLib\L2Data2Code.SharedLib.csproj" />
     <ProjectReference Include="..\L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-﻿namespace L2Data2Code.Main.Interfaces
+﻿using L2Data2Code.Main;
+
+namespace L2Data2Code.Avalonia.Main
 {
     internal interface IMainWindowFactory
     {

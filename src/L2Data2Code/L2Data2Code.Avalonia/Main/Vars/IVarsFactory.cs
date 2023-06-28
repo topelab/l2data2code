@@ -1,7 +1,9 @@
-﻿namespace L2Data2Code.Main.Vars
+using System.Collections.Generic;
+
+namespace L2Data2Code.Main.Vars
 {
     internal interface IVarsFactory
     {
-        VarsWindow Create();
+        VarsWindow Create(Dictionary<string, object> vars);
     }
 }

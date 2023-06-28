@@ -1,4 +1,5 @@
 using Avalonia.Threading;
+using L2Data2Code.SharedContext.Base;
 using System;
 
 namespace L2Data2Code.Base
@@ -13,10 +14,10 @@ namespace L2Data2Code.Base
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="dispatcher">Defined dispatcher or null to get current applicarion dispatcher</param>
-        public DispatcherWrapper(Dispatcher dispatcher = null)
+        /// <param name="dispatcher">Defined dispatcher or null to get current application dispatcher</param>
+        public DispatcherWrapper()
         {
-            this.dispatcher = new Lazy<Dispatcher>(() => dispatcher ?? Dispatcher.UIThread);
+            this.dispatcher = new Lazy<Dispatcher>(() => Dispatcher.UIThread);
         }
 
         /// <summary>

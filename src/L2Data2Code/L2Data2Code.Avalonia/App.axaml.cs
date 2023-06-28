@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using L2Data2Code.Main.Interfaces;
+using L2Data2Code.Avalonia.Main;
 using L2Data2Code.SharedLib.Configuration;
 using NLog;
 using System;

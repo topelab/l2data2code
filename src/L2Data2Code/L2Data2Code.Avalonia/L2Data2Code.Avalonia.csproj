@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseHandleBars\L2Data2Code.BaseHandleBars.csproj" />
+    <ProjectReference Include="..\L2Data2Code.SharedContext\L2Data2Code.SharedContext.csproj" />
     <ProjectReference Include="..\L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>

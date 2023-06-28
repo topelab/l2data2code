@@ -1,13 +1,16 @@
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace L2Data2Code.SharedContext.Base
 {
-    public class ViewModelBase : ReactiveObject
+    public class ViewModelBase : INotifyPropertyChanged, INotifyPropertyChanging
     {
         private bool _working;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangingEventHandler PropertyChanging;
 
         public virtual bool Working
         {
@@ -24,16 +27,16 @@ namespace L2Data2Code.SharedContext.Base
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
             {
-                this.RaisePropertyChanging(propertyName);
+                PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
                 field = newValue;
                 onChange?.Invoke();
-                this.RaisePropertyChanged(propertyName);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            this.RaisePropertyChanged(propertyName);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
