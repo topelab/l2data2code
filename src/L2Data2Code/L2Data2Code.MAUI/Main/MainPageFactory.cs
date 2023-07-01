@@ -1,8 +1,9 @@
-using L2Data2Code.MAUI.Commands.Interfaces;
-using L2Data2Code.MAUI.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
 using Topelab.Core.Resolver.Interfaces;
+using L2Data2Code.SharedContext.Main.Interfaces;
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Commands.Interfaces;
 
 namespace L2Data2Code.MAUI.Main
 {
@@ -10,23 +11,23 @@ namespace L2Data2Code.MAUI.Main
     {
         private readonly IResolver resolver;
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly IMainPageEventManager mainWindowEventManager;
-        private readonly IMainPageVMBindManager mainWindowVMBindManager;
-        private readonly IMainPageVMInitializer mainWindowVMInitializer;
-        private MainPageVM mainWindowVM;
+        private readonly IMainWindowEventManager mainWindowEventManager;
+        private readonly IMainWindowVMChangeListener mainWindowVMChangeListener;
+        private readonly IMainWindowVMInitializer mainWindowVMInitializer;
+        private MainWindowVM mainWindowVM;
 
-        public MainPageFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainPageEventManager mainWindowEventManager, IMainPageVMBindManager mainWindowVMBindManager, IMainPageVMInitializer mainWindowVMInitializer)
+        public MainPageFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMChangeListener mainWindowVMChangeListener, IMainWindowVMInitializer mainWindowVMInitializer)
         {
             this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
             this.mainWindowEventManager = mainWindowEventManager ?? throw new ArgumentNullException(nameof(mainWindowEventManager));
-            this.mainWindowVMBindManager = mainWindowVMBindManager ?? throw new ArgumentNullException(nameof(mainWindowVMBindManager));
+            this.mainWindowVMChangeListener = mainWindowVMChangeListener ?? throw new ArgumentNullException(nameof(mainWindowVMChangeListener));
             this.mainWindowVMInitializer = mainWindowVMInitializer ?? throw new ArgumentNullException(nameof(mainWindowVMInitializer));
         }
 
         public Page Create()
         {
-            mainWindowVM = resolver.Get<MainPageVM>();
+            mainWindowVM = resolver.Get<MainWindowVM>();
             var generateCommand = resolver.Get<IGenerateCommand>();
             mainWindowVM.SetCommands(generateCommand);
 
@@ -37,9 +38,9 @@ namespace L2Data2Code.MAUI.Main
             };
             window.Loaded += (sender, args) =>
             {
-                mainWindowVMBindManager.Start(mainWindowVM);
+                mainWindowVMChangeListener.Start(mainWindowVM);
                 mainWindowVMInitializer.Initialize(mainWindowVM);
-                mainWindowEventManager.Start(window, mainWindowVM);
+                mainWindowEventManager.Start(mainWindowVM);
             };
             return window;
         }

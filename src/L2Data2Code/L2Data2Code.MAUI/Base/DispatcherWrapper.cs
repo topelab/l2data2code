@@ -1,3 +1,5 @@
+using L2Data2Code.SharedContext.Base;
+
 namespace L2Data2Code.MAUI.Base
 {
     /// <summary>

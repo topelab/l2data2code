@@ -16,12 +16,12 @@ namespace L2Data2Code.Main.Vars
         public Page Create()
         {
             VarsVM varsVM = new(adapter.CompiledVars);
-            Page window = new()
+            Page page = new()
             {
                 BindingContext = varsVM,
                 Title = Strings.VarsTitle
             };
-            return window;
+            return page;
         }
     }
 }

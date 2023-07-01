@@ -1,5 +1,11 @@
+using L2Data2Code.MAUI.Main;
+using L2Data2Code.SharedLib.Configuration;
 using NLog;
+using System.Diagnostics;
+using System.Globalization;
+using System.Reflection;
 using Topelab.Core.Resolver.Interfaces;
+using Topelab.Core.Resolver.Microsoft;
 
 namespace L2Data2Code.MAUI
 {
@@ -11,8 +17,30 @@ namespace L2Data2Code.MAUI
 
         public App()
         {
+            Resolver = ResolverFactory.Create(SetupDI.Register());
+            Logger = Resolver.Get<ILogger>();
+            var settings = Resolver.Get<IAppSettingsConfiguration>();
+
+            var uiCulture = settings["UICulture"];
+            if (uiCulture != null && !uiCulture.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(uiCulture);
+            }
+
             InitializeComponent();
-            MainPage = new AppShell();
+            var pageFactory = Resolver.Get<IMainPageFactory>();
+            MainPage = pageFactory.Create();
+        }
+
+        public override void CloseWindow(Window window)
+        {
+            Logger.Info("Application ending");
+            if (RestartApp)
+            {
+                Logger.Info($"Restarting application at {Assembly.GetExecutingAssembly().Location}");
+                Process.Start(Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "exe"));
+            }
+            base.CloseWindow(window);
         }
 
         protected override Window CreateWindow(IActivationState activationState)
@@ -26,11 +54,6 @@ namespace L2Data2Code.MAUI
             window.Height = newHeight;
 
             return window;
-        }
-
-        protected override void OnStart()
-        {
-            base.OnStart();
         }
     }
 }
