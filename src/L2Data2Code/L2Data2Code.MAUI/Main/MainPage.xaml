@@ -132,7 +132,7 @@
                         <Switch Grid.Row="5"
                                 HorizontalOptions="End"
                                 IsToggled="{Binding SetRelatedTables}"
-                                IsEnabled="{Binding GenerateOnlyJson, Converter={StaticResource InvertedBoolConveter}}" />
+                                IsEnabled="{Binding GenerateOnlyJson, Converter={StaticResource InvertedBoolConverter}}" />
                         <Label Grid.Row="5"
                                Grid.Column="1"
                                VerticalTextAlignment="Center"
@@ -141,7 +141,7 @@
                         <Switch Grid.Row="6"
                                 HorizontalOptions="End"
                                 IsToggled="{Binding EmptyFolders}"
-                                IsEnabled="{Binding GenerateOnlyJson, Converter={StaticResource InvertedBoolConveter}}" />
+                                IsEnabled="{Binding GenerateOnlyJson, Converter={StaticResource InvertedBoolConverter}}" />
                         <Label Grid.Row="6"
                                Grid.Column="1"
                                VerticalTextAlignment="Center"

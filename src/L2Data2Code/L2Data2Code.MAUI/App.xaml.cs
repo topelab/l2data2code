@@ -17,6 +17,7 @@ namespace L2Data2Code.MAUI
 
         public App()
         {
+            Directory.SetCurrentDirectory($"{AppDomain.CurrentDomain.BaseDirectory}\\..");
             Resolver = ResolverFactory.Create(SetupDI.Register());
             Logger = Resolver.Get<ILogger>();
             var settings = Resolver.Get<IAppSettingsConfiguration>();

@@ -20,10 +20,8 @@ namespace L2Data2Code.MAUI
                     fonts.AddFont("materialdesignicons-webfont.ttf", "MaterialDesignIcons");
                 });
 
-            builder.Services.AddResolver(new ResolveInfoCollection());
-
 #if DEBUG
-		builder.Logging.AddDebug();
+		    builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
