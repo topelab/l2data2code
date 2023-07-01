@@ -28,14 +28,14 @@ namespace L2Data2CodeWPF.SharedLib
         public static readonly IValueConverter ToUpperCase =
             ValueConverter.Create<string, string>(e => e.Value.ToUpper());
 
-        public static readonly IValueConverter ToColor = ValueConverter.Create<InternalColors, Color>(e =>
+        public static readonly IValueConverter ToColor = ValueConverter.Create<MessageStatus, SolidColorBrush>(e =>
         {
             switch (e.Value)
             {
-                case InternalColors.Red:
-                    return Colors.Red;
+                case MessageStatus.Error:
+                    return new SolidColorBrush(Colors.Red);
                 default:
-                    return Colors.Black;
+                    return new SolidColorBrush(Colors.Black);
             }
         });
     }
