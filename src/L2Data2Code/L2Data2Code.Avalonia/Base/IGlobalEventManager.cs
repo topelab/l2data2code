@@ -1,4 +1,4 @@
-using L2Data2Code.Main;
+using L2Data2Code.Avalonia.Main;
 
 namespace L2Data2Code.Avalonia.Base
 {

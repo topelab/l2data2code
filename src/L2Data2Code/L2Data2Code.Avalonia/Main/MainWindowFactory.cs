@@ -1,5 +1,4 @@
 using L2Data2Code.Avalonia.Base;
-using L2Data2Code.Avalonia.Main;
 using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Main;
 using L2Data2Code.SharedContext.Main.Interfaces;
@@ -8,7 +7,7 @@ using L2Data2CodeUI.Shared.Localize;
 using System;
 using Topelab.Core.Resolver.Interfaces;
 
-namespace L2Data2Code.Main
+namespace L2Data2Code.Avalonia.Main
 {
     internal class MainWindowFactory : IMainWindowFactory
     {

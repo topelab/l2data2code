@@ -1,7 +1,7 @@
 using L2Data2Code.SharedContext.Base;
 using System.Windows;
 
-namespace L2Data2CodeWPF.SharedLib
+namespace L2Data2Code.Avalonia.Base
 {
     internal class MessageBoxWrapper : IMessageBoxWrapper
     {

@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="L2Data2Code.Main.Vars.VarsWindow"
+        x:Class="L2Data2Code.Avalonia.Main.Vars.VarsWindow"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Title="Vars"

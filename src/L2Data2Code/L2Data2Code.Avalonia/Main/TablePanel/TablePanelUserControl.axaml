@@ -6,7 +6,7 @@
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
-             x:Class="L2Data2Code.Main.TablePanel.TablePanelUserControl">
+             x:Class="L2Data2Code.Avalonia.Main.TablePanel.TablePanelUserControl">
     <Grid IsEnabled="{Binding !Working}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />

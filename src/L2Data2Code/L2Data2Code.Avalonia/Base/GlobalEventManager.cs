@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using L2Data2Code.Main;
-using L2Data2Code.Main.Vars;
+using L2Data2Code.Avalonia.Main;
+using L2Data2Code.Avalonia.Main.Vars;
 using L2Data2Code.SharedContext.Events;
 using Prism.Events;
 using System;
