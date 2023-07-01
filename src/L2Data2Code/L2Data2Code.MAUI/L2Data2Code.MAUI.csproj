@@ -40,11 +40,14 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="ReactiveUI" Version="19.2.1" />
     <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.13" />
+    <PackageReference Include="LambdaConverters" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\L2Data2Code.SharedContext\L2Data2Code.SharedContext.csproj" />
     <ProjectReference Include="..\L2Data2Code.SharedLib\L2Data2Code.SharedLib.csproj" />
     <ProjectReference Include="..\L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj" />
   </ItemGroup>

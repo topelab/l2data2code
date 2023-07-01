@@ -1,39 +1,187 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="L2Data2Code.MAUI.Main.MainPage">
+             xmlns:s="clr-namespace:L2Data2Code.MAUI.Base"
+             xmlns:conv="clr-namespace:L2Data2Code.MAUI.Converters"
+             xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
+             xmlns:vm="clr-namespace:L2Data2Code.SharedContext.Main;assembly=L2Data2Code.SharedContext"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="L2Data2Code.MAUI.Main.MainPage"
+             x:DataType="vm:MainWindowVM">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <conv:MessageStatusToColorConverter x:Key="MessageStatusToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
 
     <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+        <VerticalStackLayout Spacing="25"
+                             Padding="30,0"
+                             VerticalOptions="Center">
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
+            <Grid x:Name="PrincipalGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40*" />
+                    <ColumnDefinition Width="30*" />
+                    <ColumnDefinition Width="10" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+                <!--<cb:CommandBarUserControl Grid.Row="1"
+                                  Grid.ColumnSpan="3" />-->
 
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="200*" />
+                    </Grid.RowDefinitions>
+                    <Grid Margin="10,10,10,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="200*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="163*" />
+                            <ColumnDefinition Width="344*" />
+                        </Grid.ColumnDefinitions>
 
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+                        <Label Text="{x:Static str:Strings.Template}"
+                               HorizontalTextAlignment="End"
+                               Margin="10,0" />
+
+
+                        <Picker Grid.Column="1"
+                                x:Name="cbTemplate"
+                                ItemsSource="{Binding TemplateList}"
+                                SelectedItem="{Binding SelectedTemplate}"
+                                HorizontalOptions="StartAndExpand"
+                                Margin="0,5" />
+
+                        <Label Grid.Row="2"
+                               HorizontalTextAlignment="End"
+                               Margin="10,0"
+                               VerticalTextAlignment="Center"
+                               Text="{x:Static str:Strings.Vars}"
+                               IsVisible="{Binding VarsVisible}" />
+                        <Grid Grid.Row="2"
+                              IsVisible="{Binding VarsVisible}"
+                              Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Picker Grid.Column="0"
+                                    x:Name="cbVars"
+                                    ItemsSource="{Binding VarsList}"
+                                    SelectedItem="{Binding SelectedVars}"
+                                    Margin="0,5" />
+
+                        </Grid>
+                        <Label Grid.Row="1"
+                               HorizontalTextAlignment="End"
+                               Margin="10,0"
+                               VerticalTextAlignment="Center"
+                               Text="{x:Static str:Strings.DataSource}" />
+                        <Picker Grid.Row="1"
+                                Grid.Column="1"
+                                x:Name="cbArea"
+                                ItemsSource="{Binding DataSourceList}"
+                                SelectedItem="{Binding SelectedDataSource}"
+                                Margin="0,5" />
+
+                        <Label Grid.Row="3"
+                               HorizontalTextAlignment="End"
+                               Margin="10,0"
+                               VerticalTextAlignment="Center"
+                               Text="{x:Static str:Strings.Module}" />
+                        <Picker Grid.Row="3"
+                                Grid.Column="1"
+                                x:Name="cbModule"
+                                ItemsSource="{Binding ModuleList}"
+                                SelectedItem="{Binding SelectedModule}"
+                                Margin="0,5" />
+
+                        <Label Grid.Row="4"
+                               VerticalTextAlignment="Center"
+                               HorizontalTextAlignment="End"
+                               Margin="10,0"
+                               Text="{x:Static str:Strings.SaveAt}" />
+
+                        <Entry Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="0,5"
+                               Text="{Binding OutputPath}"
+                               IsReadOnly="True" />
+
+                        <Switch Grid.Row="5"
+                                HorizontalOptions="End"
+                                IsToggled="{Binding SetRelatedTables}"
+                                IsEnabled="{Binding GenerateOnlyJson, Converter={StaticResource InvertedBoolConveter}}" />
+                        <Label Grid.Row="5"
+                               Grid.Column="1"
+                               VerticalTextAlignment="Center"
+                               Text="{x:Static str:Strings.SelectRelatedTables}" />
+
+                        <Switch Grid.Row="6"
+                                HorizontalOptions="End"
+                                IsToggled="{Binding EmptyFolders}"
+                                IsEnabled="{Binding GenerateOnlyJson, Converter={StaticResource InvertedBoolConveter}}" />
+                        <Label Grid.Row="6"
+                               Grid.Column="1"
+                               VerticalTextAlignment="Center"
+                               Text="{x:Static str:Strings.EmptyFolders}" />
+
+                        <Switch Grid.Row="7"
+                                HorizontalOptions="End"
+                                IsToggled="{Binding GenerateOnlyJson}"
+                                IsVisible="{Binding GenerateOnlyJsonVisible}" />
+                        <Label Grid.Row="7"
+                               Grid.Column="1"
+                               VerticalTextAlignment="Center"
+                               Text="{x:Static str:Strings.EmptyFolders}" />
+
+
+                        <Button Grid.Column="1"
+                                Grid.Row="8"
+                                Command="{Binding GenerateCodeCommand}"
+                                CommandParameter="{Binding}"
+                                Text="Run"
+                                HeightRequest="72"
+                                Margin="0, 10"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Start"
+                                ToolTipProperties.Text="{x:Static str:Strings.Generate}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialDesignIcons"
+                                                 Glyph="{x:Static s:MaterialDesignIconFonts.RunFast}"
+                                                 Size="64" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+
+                    <!--<mp:MessagePanelUserControl Grid.Row="1" />-->
+
+                </Grid>
+
+                <!--<tp:TablePanelUserControl Grid.Row="2"
+                                  Grid.Column="1" />-->
+
+            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>
