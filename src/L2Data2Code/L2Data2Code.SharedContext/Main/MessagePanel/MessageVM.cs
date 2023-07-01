@@ -22,7 +22,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
             set => SetProperty(ref _viewed, value, () =>
             {
                 OnPropertyChanged(nameof(IsGoingToDie));
-                OnPropertyChanged(nameof(Color));
+                OnPropertyChanged(nameof(Status));
             });
         }
         public DateTime Created { get => _created; set => SetProperty(ref _created, value); }
@@ -32,7 +32,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
             set => SetProperty(ref _timeOfLife, value, () =>
             {
                 OnPropertyChanged(nameof(IsGoingToDie));
-                OnPropertyChanged(nameof(Color));
+                OnPropertyChanged(nameof(Status));
             });
         }
         public bool Pinned
@@ -41,14 +41,14 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
             set => SetProperty(ref _pinned, value, () =>
             {
                 OnPropertyChanged(nameof(IsGoingToDie));
-                OnPropertyChanged(nameof(Color));
+                OnPropertyChanged(nameof(Status));
             });
         }
         public string Code { get => _code; set => SetProperty(ref _code, value, () => Pinned = !string.IsNullOrWhiteSpace(value)); }
         public bool IsGoingToDie { get => !_pinned && _viewed && DateTime.Now > _created + _timeOfLife; }
 
 
-        public InternalColors Color => _pinned ? InternalColors.Red : InternalColors.Black;
+        public MessageStatus Status => _pinned ? MessageStatus.Error : MessageStatus.Ok;
 
         public MessageVM(string text, bool viewed = false, string code = null, double timeOfLifeInSeconds = GlobalTimeOfLife)
         {
