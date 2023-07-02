@@ -1,9 +1,7 @@
-using L2Data2Code.MAUI.Main;
-
 namespace L2Data2Code.MAUI.Base
 {
     internal interface IGlobalEventManager
     {
-        void Start(MainPage mainPage);
+        void Start(Page mainPage);
     }
 }

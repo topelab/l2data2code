@@ -7,6 +7,8 @@
              xmlns:vm="clr-namespace:L2Data2Code.SharedContext.Main;assembly=L2Data2Code.SharedContext"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:cb="clr-namespace:L2Data2Code.MAUI.Main.CommandBar"
+             xmlns:mp="clr-namespace:L2Data2Code.MAUI.Main.MessagePanel"
+             xmlns:tp="clr-namespace:L2Data2Code.MAUI.Main.TablePanel"
              x:Class="L2Data2Code.MAUI.Main.MainPage"
              x:DataType="vm:MainWindowVM">
 
@@ -35,7 +37,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <cb:CommandBarContentView Grid.Row="1"
+                <cb:CommandBarContentView BindingContext="{Binding CommandBarVM}"
+                                          Grid.Row="1"
                                           Grid.ColumnSpan="3" />
 
                 <Grid Grid.Row="2">
@@ -154,7 +157,8 @@
                         <Label Grid.Row="7"
                                Grid.Column="1"
                                VerticalTextAlignment="Center"
-                               Text="{x:Static str:Strings.EmptyFolders}" />
+                               IsVisible="{Binding GenerateOnlyJsonVisible}"
+                               Text="{x:Static str:Strings.GenerateOnlyJson}" />
 
 
                         <Button Grid.Column="1"
@@ -175,12 +179,14 @@
                         </Button>
                     </Grid>
 
-                    <!--<mp:MessagePanelUserControl Grid.Row="1" />-->
+                    <mp:MessagePanelContentView BindingContext="{Binding MessagePanelVM}"
+                                                Grid.Row="1" />
 
                 </Grid>
 
-                <!--<tp:TablePanelUserControl Grid.Row="2"
-                                  Grid.Column="1" />-->
+                <tp:TablePanelContentView BindingContext="{Binding TablePanelVM}"
+                                          Grid.Row="2"
+                                          Grid.Column="1" />
 
             </Grid>
 

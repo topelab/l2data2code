@@ -1,4 +1,3 @@
-using L2Data2Code.MAUI.Main;
 using L2Data2Code.SharedContext.Events;
 using Prism.Events;
 
@@ -6,7 +5,7 @@ namespace L2Data2Code.MAUI.Base
 {
     internal class GlobalEventManager : IGlobalEventManager
     {
-        private MainPage mainPage;
+        private Page mainPage;
         private readonly IEventAggregator eventAggregator;
 
         public GlobalEventManager(IEventAggregator eventAggregator)
@@ -14,7 +13,7 @@ namespace L2Data2Code.MAUI.Base
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         }
 
-        public void Start(MainPage mainPage)
+        public void Start(Page mainPage)
         {
             this.mainPage = mainPage;
             SubscribeToEvents();

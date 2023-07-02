@@ -64,6 +64,22 @@
                 Command="{Binding OpenVSCommand}"
                 Text="{x:Static s:MaterialDesignIconFonts.CodeBraces}" />
 
+        <Button IsVisible="{Binding HaveVSCodeInstalled}"
+                Command="{Binding OpenVSCodeCommand}"
+                CommandParameter="{Binding SlnFile}"
+                Text="{x:Static s:MaterialDesignIconFonts.MicrosoftVisualStudioCode}"
+                ToolTipProperties.Text="{x:Static str:Strings.OpenVSC}" />
+        
+        <Button IsVisible="{Binding HavePSInstalled}"
+                Command="{Binding OpenPSCommand}"
+                CommandParameter="{Binding SlnFile}"
+                Text="{x:Static s:MaterialDesignIconFonts.Powershell}"
+                ToolTipProperties.Text="{x:Static str:Strings.OpenPSCommand}" />
+        
+        <Button Command="{Binding OpenVarsWindowCommand}"
+                IsVisible="{Binding ShowVarsWindow}"
+                Text="{x:Static s:MaterialDesignIconFonts.VariableBox}"
+                ToolTipProperties.Text="{x:Static str:Strings.OpenVarsWindow}" />
 
     </HorizontalStackLayout>
 </ContentView>

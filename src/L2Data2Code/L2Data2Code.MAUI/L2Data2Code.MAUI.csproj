@@ -64,16 +64,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Main\MessagePanel\" />
-    <Folder Include="Main\TablePanel\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <MauiXaml Update="Main\CommandBar\CommandBarContentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Main\MessagePanel\MessagePanelContentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Main\TablePanel\TablePanelContentView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

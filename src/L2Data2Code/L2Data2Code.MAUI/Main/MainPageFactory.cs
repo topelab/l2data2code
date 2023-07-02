@@ -4,6 +4,7 @@ using Topelab.Core.Resolver.Interfaces;
 using L2Data2Code.SharedContext.Main.Interfaces;
 using L2Data2Code.SharedContext.Main;
 using L2Data2Code.SharedContext.Commands.Interfaces;
+using L2Data2Code.MAUI.Base;
 
 namespace L2Data2Code.MAUI.Main
 {
@@ -14,15 +15,17 @@ namespace L2Data2Code.MAUI.Main
         private readonly IMainWindowEventManager mainWindowEventManager;
         private readonly IMainWindowVMChangeListener mainWindowVMChangeListener;
         private readonly IMainWindowVMInitializer mainWindowVMInitializer;
+        private readonly IGlobalEventManager globalEventManager;
         private MainWindowVM mainWindowVM;
 
-        public MainPageFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMChangeListener mainWindowVMChangeListener, IMainWindowVMInitializer mainWindowVMInitializer)
+        public MainPageFactory(IResolver resolver, IGeneratorAdapter generatorAdapter, IMainWindowEventManager mainWindowEventManager, IMainWindowVMChangeListener mainWindowVMChangeListener, IMainWindowVMInitializer mainWindowVMInitializer, IGlobalEventManager globalEventManager)
         {
             this.resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
             this.mainWindowEventManager = mainWindowEventManager ?? throw new ArgumentNullException(nameof(mainWindowEventManager));
             this.mainWindowVMChangeListener = mainWindowVMChangeListener ?? throw new ArgumentNullException(nameof(mainWindowVMChangeListener));
             this.mainWindowVMInitializer = mainWindowVMInitializer ?? throw new ArgumentNullException(nameof(mainWindowVMInitializer));
+            this.globalEventManager = globalEventManager ?? throw new ArgumentNullException(nameof(globalEventManager));
         }
 
         public Page Create()
@@ -30,23 +33,18 @@ namespace L2Data2Code.MAUI.Main
             mainWindowVM = resolver.Get<MainWindowVM>();
             var generateCommand = resolver.Get<IGenerateCommand>();
             mainWindowVM.SetCommands(generateCommand);
+            mainWindowVMChangeListener.Start(mainWindowVM);
+            mainWindowVMInitializer.Initialize(mainWindowVM);
+            mainWindowEventManager.Start(mainWindowVM);
 
             Page window = new AppShell
             {
                 BindingContext = mainWindowVM,
                 Title = $"{Strings.Title} v{generatorAdapter.GeneratorVersion}"
             };
-            window.Loaded += (sender, args) =>
-            {
-                mainWindowVMChangeListener.Start(mainWindowVM);
-                mainWindowVMInitializer.Initialize(mainWindowVM);
-                mainWindowEventManager.Start(mainWindowVM);
-            };
-            return window;
-        }
+            globalEventManager.Start(window);
 
-        private void OnWindowLoaded(object sender, EventArgs e)
-        {
+            return window;
         }
     }
 }
