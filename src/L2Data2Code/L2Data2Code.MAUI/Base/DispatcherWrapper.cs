@@ -12,10 +12,10 @@ namespace L2Data2Code.MAUI.Base
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="dispatcher">Defined dispatcher or null to get current applicarion dispatcher</param>
-        public DispatcherWrapper(IDispatcher dispatcher = null)
+        /// <param name="dispatcher">Defined dispatcher or null to get current application dispatcher</param>
+        public DispatcherWrapper()
         {
-            this.dispatcher = new Lazy<IDispatcher>(() => dispatcher ?? Dispatcher.GetForCurrentThread());
+            this.dispatcher = new Lazy<IDispatcher>(() => Dispatcher.GetForCurrentThread());
         }
 
         /// <summary>

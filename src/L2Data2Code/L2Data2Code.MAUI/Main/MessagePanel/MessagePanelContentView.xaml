@@ -29,8 +29,10 @@
                       Background="Transparent">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="vm:MessageVM">
-                        <TextCell Text="{Binding Text}"
-                                  TextColor="{Binding Status, Converter={StaticResource MessageStatusToColorConverter}}"/>
+                        <ViewCell>
+                            <Label Text="{Binding Text}"
+                                   TextColor="{Binding Status, Converter={StaticResource MessageStatusToColorConverter}}" />
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

@@ -53,17 +53,17 @@ namespace L2Data2Code.SharedContext.Main
             mainWindowVM.EmptyFolders = true;
             mainWindowVM.SetRelatedTables = true;
 
-            mainWindowVM.TemplateList = generatorAdapter.GetTemplateList();
-            mainWindowVM.DataSourceList = generatorAdapter.GetAreaList();
+            generatorAdapter.GetTemplateList().ToList().ForEach(t => mainWindowVM.TemplateList.Add(t));
+            generatorAdapter.GetAreaList().ToList().ForEach(t => mainWindowVM.DataSourceList.Add(t));
 
             var selectedTemplate = mainWindowVM.TemplateList.FirstOrDefault();
             var selectedDataSource = mainWindowVM.DataSourceList.FirstOrDefault();
 
             mainWindowVM.SelectedTemplate = selectedTemplate;
             mainWindowVM.SelectedDataSource = selectedDataSource;
-            mainWindowVM.ModuleList = generatorAdapter.GetModuleList(selectedDataSource);
+            generatorAdapter.GetModuleList(selectedDataSource).ToList().ForEach(t => mainWindowVM.ModuleList.Add(t));
             mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(selectedDataSource);
-            mainWindowVM.VarsList = generatorAdapter.GetVarsList(selectedTemplate, selectedDataSource);
+            generatorAdapter.GetVarsList(selectedTemplate, selectedDataSource).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
             mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
 
             mainWindowVM.TablePanelVM.SelectAllTables = false;

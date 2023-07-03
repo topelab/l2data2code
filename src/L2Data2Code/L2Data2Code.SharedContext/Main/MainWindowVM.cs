@@ -5,19 +5,22 @@ using L2Data2Code.SharedContext.Main.MessagePanel;
 using L2Data2Code.SharedContext.Main.TablePanel;
 using L2Data2CodeUI.Shared.Dto;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace L2Data2Code.SharedContext.Main
 {
     public class MainWindowVM : ViewModelBase
     {
-        private IEnumerable<string> _areaList;
+        private ObservableCollection<string> _areaList = new();
+        private ObservableCollection<string> _moduleList = new();
+        private ObservableCollection<string> _templateList = new();
+        private ObservableCollection<string> _varsList = new();
         private bool _emptyFolders;
         private bool _generateOnlyJson;
         private bool _generateOnlyJsonVisible;
         private bool _havePSInstalled;
         private bool _haveVSCodeInstalled;
-        private IEnumerable<string> _moduleList;
         private string _outputPath;
         private bool _runningGenerateCode = false;
         private string _selectedDataSource;
@@ -27,8 +30,6 @@ namespace L2Data2Code.SharedContext.Main
         private bool _setRelatedTables;
         private bool _showVarsWindow;
         private string _slnFile;
-        private IEnumerable<string> _templateList;
-        private IEnumerable<string> _varsList;
         private bool varsVisible = true;
         private AppType appType;
         private CommandBarVM commandBarVM;
@@ -36,7 +37,7 @@ namespace L2Data2Code.SharedContext.Main
         private MessagePanelVM messagePanelVM;
 
         public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
-        public IEnumerable<string> DataSourceList
+        public ObservableCollection<string> DataSourceList
         {
             get { return _areaList; }
             set { SetProperty(ref _areaList, value); }
@@ -76,7 +77,7 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _haveVSCodeInstalled, value); }
         }
 
-        public IEnumerable<string> ModuleList
+        public ObservableCollection<string> ModuleList
         {
             get { return _moduleList; }
             set { SetProperty(ref _moduleList, value); }
@@ -139,12 +140,12 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _slnFile, value); }
         }
 
-        public IEnumerable<string> TemplateList
+        public ObservableCollection<string> TemplateList
         {
             get { return _templateList; }
             set { SetProperty(ref _templateList, value); }
         }
-        public IEnumerable<string> VarsList
+        public ObservableCollection<string> VarsList
         {
             get { return _varsList; }
             set { SetProperty(ref _varsList, value); }

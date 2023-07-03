@@ -104,9 +104,13 @@ namespace L2Data2Code.SharedContext.Main
                 mainWindowVM.PauseTimer = true;
                 generatorAdapter.SetCurrentDataSource(mainWindowVM.SelectedDataSource);
                 mainWindowVM.TablePanelVM.LoadTablesCommand.Execute(null);
-                mainWindowVM.ModuleList = generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource);
+
+                mainWindowVM.ModuleList.Clear();
+                generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.ModuleList.Add(t));
                 mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(mainWindowVM.SelectedDataSource);
-                mainWindowVM.VarsList = generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource);
+
+                mainWindowVM.VarsList.Clear();
+                generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
                 mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
 
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
@@ -122,8 +126,11 @@ namespace L2Data2Code.SharedContext.Main
             mainWindowVM.WorkOnAction(() =>
             {
                 generatorAdapter.SetCurrentTemplate(mainWindowVM.SelectedTemplate);
-                mainWindowVM.VarsList = generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate);
+
+                mainWindowVM.VarsList.Clear();
+                generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
                 mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
+
                 mainWindowVM.VarsVisible = mainWindowVM.SelectedVars != null;
                 mainWindowVM.EmptyFolders = generatorAdapter.TemplatesConfiguration.HasToRemoveFolders(mainWindowVM.SelectedTemplate);
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
