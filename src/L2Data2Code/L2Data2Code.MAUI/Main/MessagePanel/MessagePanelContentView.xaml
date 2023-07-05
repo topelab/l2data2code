@@ -16,6 +16,7 @@
 
     <VerticalStackLayout>
         <Border Background="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                StrokeShape="RoundRectangle 5"
                 Margin="10,0"
                 Padding="10">
             <Label Text="{x:Static str:Strings.MessageBoard}"
