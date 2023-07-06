@@ -20,7 +20,7 @@
         </StackPanel>
 
         <DataGrid Grid.Row="1"
-                  Items="{Binding Variables}"
+                  ItemsSource="{Binding Variables}"
                   CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static str:Strings.Name}"

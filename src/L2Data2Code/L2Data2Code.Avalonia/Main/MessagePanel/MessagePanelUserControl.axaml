@@ -29,7 +29,7 @@
                            FontSize="15"
                            FontWeight="ExtraBlack"/>
         </Border>
-        <ListBox Items="{Binding AllMessages}"
+        <ListBox ItemsSource="{Binding AllMessages}"
                  Margin="10,0"
                  DockPanel.Dock="Top"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"

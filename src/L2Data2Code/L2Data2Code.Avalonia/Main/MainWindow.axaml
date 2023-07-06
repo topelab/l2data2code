@@ -45,7 +45,7 @@
 
                 <ComboBox Grid.Column="1"
                           x:Name="cbTemplate"
-                          Items="{Binding TemplateList}"
+                          ItemsSource="{Binding TemplateList}"
                           SelectedItem="{Binding SelectedTemplate}"
                           Margin="0,5"/>
 
@@ -63,7 +63,7 @@
                       ColumnDefinitions="*, Auto">
                     <ComboBox Grid.Column="0"
                               x:Name="cbVars"
-                              Items="{Binding VarsList}"
+                              ItemsSource="{Binding VarsList}"
                               SelectedItem="{Binding SelectedVars}"
                               Margin="0,5" />
                 </Grid>
@@ -77,7 +77,7 @@
                 <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           x:Name="cbArea"
-                          Items="{Binding DataSourceList}"
+                          ItemsSource="{Binding DataSourceList}"
                           SelectedItem="{Binding SelectedDataSource}"
                           Margin="0,5" />
 
@@ -90,7 +90,7 @@
                 <ComboBox Grid.Row="3"
                           Grid.Column="1"
                           x:Name="cbModule"
-                          Items="{Binding ModuleList}"
+                          ItemsSource="{Binding ModuleList}"
                           SelectedItem="{Binding SelectedModule}"
                           Margin="0,5" />
 

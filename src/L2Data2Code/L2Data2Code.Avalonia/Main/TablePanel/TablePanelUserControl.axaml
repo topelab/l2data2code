@@ -33,7 +33,7 @@
                       IsVisible="{Binding !LoadingTables}" />
             <ListBox DockPanel.Dock="Top"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     Items="{Binding AllTables}"
+                     ItemsSource="{Binding AllTables}"
                      IsVisible="{Binding !LoadingTables}"
                      Background="Transparent"
                      Margin="0,0,0,10">
@@ -76,7 +76,7 @@
                       Margin="10" />
             <ListBox DockPanel.Dock="Top"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     Items="{Binding AllViews}"
+                     ItemsSource="{Binding AllViews}"
                      Background="Transparent"
                      Margin="0,0,0,10">
                 <ListBox.Styles>
