@@ -54,8 +54,8 @@ namespace L2Data2Code
             Logger.Info("Application ending");
             if (RestartApp)
             {
-                Logger.Info($"Restarting application at {Assembly.GetExecutingAssembly().Location}");
-                Process.Start(Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "exe"));
+                Logger.Info($"Restarting application at {AppContext.BaseDirectory}");
+                Process.Start(Path.ChangeExtension(AppContext.BaseDirectory, "exe"));
             }
         }
     }

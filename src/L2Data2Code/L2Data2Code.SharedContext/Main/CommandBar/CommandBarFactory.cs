@@ -6,37 +6,43 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
     public class CommandBarFactory : ICommandBarFactory
     {
         private readonly ICommandBarChangeListener bindManager;
-        private readonly IOpenFolderCommand openFolderCommand;
-        private readonly IEditTemplateCommand editTemplateCommand;
-        private readonly IOpenSettingsCommand openSettingsCommand;
-        private readonly IOpenVSCommand openVSCommand;
-        private readonly IOpenVSCodeCommand openVSCodeCommand;
-        private readonly IOpenPSCommand openPSCommand;
-        private readonly IOpenVarsWindowCommand openVarsWindowCommand;
+        private readonly IOpenFolderCommandFactory openFolderCommandFactory;
+        private readonly IEditTemplateCommandFactory editTemplateCommandFactory;
+        private readonly IOpenSettingsCommandFactory openSettingsCommandFactory;
+        private readonly IOpenVSCommandFactory openVSCommandFactory;
+        private readonly IOpenVSCodeCommandFactory openVSCodeCommandFactory;
+        private readonly IOpenPSCommandFactory openPSCommandFactory;
+        private readonly IOpenVarsWindowCommandFactory openVarsWindowCommandFactory;
 
         public CommandBarFactory(ICommandBarChangeListener bindManager,
-                                 IOpenFolderCommand openFolderCommand,
-                                 IEditTemplateCommand editTemplateCommand,
-                                 IOpenSettingsCommand openSettingsCommand,
-                                 IOpenVSCommand openVSCommand,
-                                 IOpenVSCodeCommand openVSCodeCommand,
-                                 IOpenPSCommand openPSCommand,
-                                 IOpenVarsWindowCommand openVarsWindowCommand)
+                                 IOpenFolderCommandFactory openFolderCommandFactory,
+                                 IEditTemplateCommandFactory editTemplateCommandFactory,
+                                 IOpenSettingsCommandFactory openSettingsCommandFactory,
+                                 IOpenVSCommandFactory openVSCommandFactory,
+                                 IOpenVSCodeCommandFactory openVSCodeCommandFactory,
+                                 IOpenPSCommandFactory openPSCommandFactory,
+                                 IOpenVarsWindowCommandFactory openVarsWindowCommandFactory)
         {
             this.bindManager = bindManager ?? throw new ArgumentNullException(nameof(bindManager));
-            this.openFolderCommand = openFolderCommand ?? throw new ArgumentNullException(nameof(openFolderCommand));
-            this.editTemplateCommand = editTemplateCommand ?? throw new ArgumentNullException(nameof(editTemplateCommand));
-            this.openSettingsCommand = openSettingsCommand ?? throw new ArgumentNullException(nameof(openSettingsCommand));
-            this.openVSCommand = openVSCommand ?? throw new ArgumentNullException(nameof(openVSCommand));
-            this.openVSCodeCommand = openVSCodeCommand ?? throw new ArgumentNullException(nameof(openVSCodeCommand));
-            this.openPSCommand = openPSCommand ?? throw new ArgumentNullException(nameof(openPSCommand));
-            this.openVarsWindowCommand = openVarsWindowCommand ?? throw new ArgumentNullException(nameof(openVarsWindowCommand));
+            this.openFolderCommandFactory = openFolderCommandFactory ?? throw new ArgumentNullException(nameof(openFolderCommandFactory));
+            this.editTemplateCommandFactory = editTemplateCommandFactory ?? throw new ArgumentNullException(nameof(editTemplateCommandFactory));
+            this.openSettingsCommandFactory = openSettingsCommandFactory ?? throw new ArgumentNullException(nameof(openSettingsCommandFactory));
+            this.openVSCommandFactory = openVSCommandFactory ?? throw new ArgumentNullException(nameof(openVSCommandFactory));
+            this.openVSCodeCommandFactory = openVSCodeCommandFactory ?? throw new ArgumentNullException(nameof(openVSCodeCommandFactory));
+            this.openPSCommandFactory = openPSCommandFactory ?? throw new ArgumentNullException(nameof(openPSCommandFactory));
+            this.openVarsWindowCommandFactory = openVarsWindowCommandFactory ?? throw new ArgumentNullException(nameof(openVarsWindowCommandFactory));
         }
 
         public CommandBarVM Create(MainWindowVM mainVM)
         {
             CommandBarVM commandBarVM = new();
-            commandBarVM.SetCommands(openFolderCommand, editTemplateCommand, openSettingsCommand, openVSCommand, openVSCodeCommand, openPSCommand, openVarsWindowCommand);
+            commandBarVM.SetCommands(openFolderCommandFactory.Create(),
+                                     editTemplateCommandFactory.Create(),
+                                     openSettingsCommandFactory.Create(),
+                                     openVSCommandFactory.Create(),
+                                     openVSCodeCommandFactory.Create(),
+                                     openPSCommandFactory.Create(),
+                                     openVarsWindowCommandFactory.Create());
             bindManager.Start(mainVM, commandBarVM);
 
             return commandBarVM;

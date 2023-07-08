@@ -9,20 +9,20 @@ using System.IO;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class EditTemplateCommand : ReactiveBaseCommand, IEditTemplateCommand
+    public class EditTemplateCommandFactory : DelegateCommandFactory, IEditTemplateCommandFactory
     {
         private readonly IGeneratorAdapter adapter;
         private readonly IMessageService messageService;
         private readonly IEditorLocatorService editorLocatorService;
 
-        public EditTemplateCommand(IGeneratorAdapter adapter, IMessageService messageService, IEditorLocatorService editorLocatorService, ICommandManager commandManager) : base(commandManager)
+        public EditTemplateCommandFactory(IGeneratorAdapter adapter, IMessageService messageService, IEditorLocatorService editorLocatorService)
         {
             this.adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
             this.messageService = messageService ?? throw new ArgumentNullException(nameof(messageService));
             this.editorLocatorService = editorLocatorService ?? throw new ArgumentNullException(nameof(editorLocatorService));
         }
 
-        public override bool CanExecute(object parameter)
+        protected override bool CanExecute()
         {
             if (adapter.SelectedTemplate.IsEmpty())
             {
@@ -43,7 +43,7 @@ namespace L2Data2Code.SharedContext.Commands
             }
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute()
         {
             var basePath = adapter.SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;

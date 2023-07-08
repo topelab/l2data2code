@@ -1,5 +1,4 @@
 using L2Data2Code.SharedContext.Base;
-using L2Data2Code.SharedContext.Commands.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,9 +16,9 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
         private bool _selectAllViews;
         private bool viewsVisible = true;
         private bool setRelatedTables;
-        private ILoadTablesCommand loadTablesCommand;
-        private ISetDataItemsCommand setDataItemsCommand;
-        private ISetDataItemCommand setDataItemCommand;
+        private IDelegateCommand loadTablesCommand;
+        private IDelegateCommand setDataItemsCommand;
+        private IDelegateCommand setDataItemCommand;
 
         public ObservableCollection<TableVM> AllTables { get; set; } = new ObservableCollection<TableVM>();
         public ObservableCollection<TableVM> AllViews { get; set; } = new ObservableCollection<TableVM>();
@@ -74,25 +73,25 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
             internal set => SetProperty(ref setRelatedTables, value);
         }
 
-        public ILoadTablesCommand LoadTablesCommand
+        public IDelegateCommand LoadTablesCommand
         {
             get => loadTablesCommand;
             internal set => SetProperty(ref loadTablesCommand, value);
         }
 
-        public ISetDataItemsCommand SetDataItemsCommand
+        public IDelegateCommand SetDataItemsCommand
         {
             get => setDataItemsCommand;
             internal set => SetProperty(ref setDataItemsCommand, value);
         }
 
-        public ISetDataItemCommand SetDataItemCommand
+        public IDelegateCommand SetDataItemCommand
         {
             get => setDataItemCommand;
             internal set => SetProperty(ref setDataItemCommand, value);
         }
 
-        public void SetCommands(ILoadTablesCommand loadTablesCommand, ISetDataItemsCommand setDataItemsCommand, ISetDataItemCommand setDataItemCommand)
+        public void SetCommands(IDelegateCommand loadTablesCommand, IDelegateCommand setDataItemsCommand, IDelegateCommand setDataItemCommand)
         {
             LoadTablesCommand = loadTablesCommand;
             SetDataItemsCommand = setDataItemsCommand;

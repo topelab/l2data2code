@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class GenerateCommand : ReactiveBaseCommand, IGenerateCommand
+    public class GenerateCommandFactory : DelegateCommandFactory<MainWindowVM>, IGenerateCommandFactory
     {
         private readonly IProcessManager processManager;
         private readonly IMessagePanelService messagePanelService;
         private readonly IGeneratorAdapter generatorAdapter;
         private readonly IDispatcherWrapper dispatcherWrapper;
 
-        public GenerateCommand(IProcessManager processManager, IMessagePanelService messagePanelService, IGeneratorAdapter generatorAdapter, IDispatcherWrapper dispatcherWrapper, ICommandManager commandManager) : base(commandManager)
+        public GenerateCommandFactory(IProcessManager processManager, IMessagePanelService messagePanelService, IGeneratorAdapter generatorAdapter, IDispatcherWrapper dispatcherWrapper)
         {
             this.processManager = processManager ?? throw new ArgumentNullException(nameof(processManager));
             this.messagePanelService = messagePanelService ?? throw new ArgumentNullException(nameof(messagePanelService));
@@ -29,10 +29,8 @@ namespace L2Data2Code.SharedContext.Commands
             this.dispatcherWrapper = dispatcherWrapper ?? throw new ArgumentNullException(nameof(dispatcherWrapper));
         }
 
-        public override bool CanExecute(object parameter)
+        protected override bool CanExecute(MainWindowVM mainWindowVM)
         {
-            var mainWindowVM = parameter as MainWindowVM;
-
             if (mainWindowVM?.OutputPath == null)
             {
                 return false;
@@ -54,10 +52,8 @@ namespace L2Data2Code.SharedContext.Commands
             return result;
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute(MainWindowVM mainWindowVM)
         {
-            var mainWindowVM = parameter as MainWindowVM;
-
             mainWindowVM.Working = true;
             mainWindowVM.RunningGenerateCode = true;
             mainWindowVM.CheckButtonStates();

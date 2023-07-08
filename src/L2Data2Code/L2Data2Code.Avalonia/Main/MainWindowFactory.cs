@@ -37,7 +37,7 @@ namespace L2Data2Code.Avalonia.Main
         public MainWindow Create()
         {
             mainWindowVM = resolver.Get<MainWindowVM>();
-            var generateCommand = resolver.Get<IGenerateCommand>();
+            var generateCommand = resolver.Get<IGenerateCommandFactory>().Create();
             mainWindowVM.SetCommands(generateCommand);
 
             var window = new MainWindow

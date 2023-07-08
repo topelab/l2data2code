@@ -1,12 +1,9 @@
 using L2Data2Code.SharedContext.Base;
-using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Main.CommandBar;
 using L2Data2Code.SharedContext.Main.MessagePanel;
 using L2Data2Code.SharedContext.Main.TablePanel;
 using L2Data2CodeUI.Shared.Dto;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace L2Data2Code.SharedContext.Main
 {
@@ -25,7 +22,7 @@ namespace L2Data2Code.SharedContext.Main
         private bool _runningGenerateCode = false;
         private string _selectedDataSource;
         private string _selectedModule;
-        private string _selectedtemplate;
+        private string _selectedTemplate;
         private string _selectedVars;
         private bool _setRelatedTables;
         private bool _showVarsWindow;
@@ -112,8 +109,8 @@ namespace L2Data2Code.SharedContext.Main
 
         public string SelectedTemplate
         {
-            get { return _selectedtemplate; }
-            set { SetProperty(ref _selectedtemplate, value); }
+            get { return _selectedTemplate; }
+            set { SetProperty(ref _selectedTemplate, value); }
         }
 
         public string SelectedVars
@@ -157,7 +154,7 @@ namespace L2Data2Code.SharedContext.Main
         }
         public string VSCodePath { get; set; }
 
-        public ICommand GenerateCodeCommand { get; private set; }
+        public IDelegateCommand GenerateCodeCommand { get; private set; }
 
         public void CheckButtonStates()
         {
@@ -165,7 +162,7 @@ namespace L2Data2Code.SharedContext.Main
             OnPropertyChanged(nameof(SlnFile));
         }
 
-        public void SetCommands(IGenerateCommand generateCommand)
+        public void SetCommands(IDelegateCommand generateCommand)
         {
             GenerateCodeCommand = generateCommand;
         }

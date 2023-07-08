@@ -6,23 +6,22 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class OpenVSCommand : ReactiveBaseCommand, IOpenVSCommand
+    public class OpenVSCommandFactory : DelegateCommandFactory<string>, IOpenVSCommandFactory
     {
         private readonly IAppService appService;
 
-        public OpenVSCommand(IAppService appService, ICommandManager commandManager) : base(commandManager)
+        public OpenVSCommandFactory(IAppService appService)
         {
             this.appService = appService ?? throw new ArgumentNullException(nameof(appService));
         }
 
-        public override bool CanExecute(object parameter)
+        protected override bool CanExecute(string slnFile)
         {
-            return parameter is string slnFile && slnFile.ToLower().EndsWith(".sln") && File.Exists(slnFile);
+            return slnFile != null && slnFile.ToLower().EndsWith(".sln") && File.Exists(slnFile);
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute(string slnFile)
         {
-            var slnFile = parameter as string;
             appService.Open(slnFile);
         }
     }

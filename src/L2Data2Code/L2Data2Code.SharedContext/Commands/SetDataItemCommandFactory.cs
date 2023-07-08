@@ -5,27 +5,17 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class SetDataItemCommand : ReactiveBaseCommand, ISetDataItemCommand
+    public class SetDataItemCommandFactory : DelegateCommandFactory<TableVM>, ISetDataItemCommandFactory
     {
         private TablePanelVM controlVM;
-
-        public SetDataItemCommand(ICommandManager commandManager) : base(commandManager)
-        {
-        }
 
         public void Initialize(TablePanelVM controlVM)
         {
             this.controlVM = controlVM;
         }
 
-        public override bool CanExecute(object parameter)
+        protected override void Execute(TableVM tableVM)
         {
-            return parameter is TableVM;
-        }
-
-        public override void Execute(object parameter)
-        {
-            var tableVM = (TableVM)parameter;
             SetDataItem(tableVM);
         }
 

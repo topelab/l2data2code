@@ -8,27 +8,22 @@ using System.Linq;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class LoadTablesCommand : ReactiveBaseCommand, ILoadTablesCommand
+    public class LoadTablesCommandFactory : DelegateCommandFactory, ILoadTablesCommandFactory
     {
         private TablePanelVM controlVM;
 
         private readonly IGeneratorAdapter adapter;
         private readonly ILogger logger;
 
-        public LoadTablesCommand(IGeneratorAdapter adapter, ILogger logger, ICommandManager commandManager) : base(commandManager)
+        public LoadTablesCommandFactory(IGeneratorAdapter adapter, ILogger logger)
         {
             this.adapter = adapter ?? throw new System.ArgumentNullException(nameof(adapter));
             this.logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute()
         {
             LoadAllTables();
-        }
-
-        public override bool CanExecute(object parameter)
-        {
-            return true;
         }
 
         public void Initialize(TablePanelVM controlVM)
@@ -42,37 +37,14 @@ namespace L2Data2Code.SharedContext.Commands
         private void LoadAllTables()
         {
             logger.Info("Loading data base items");
-            controlVM.AllDataItems.Values.ToList().ForEach(e => e.PropertyChanged -= OnTableVMPropertyChanged);
             controlVM.AllDataItems.Clear();
 
             foreach (var item in adapter.Tables.OrderBy(k => k.Key))
             {
                 TableVM element = new(item.Value);
-                element.PropertyChanged += OnTableVMPropertyChanged;
                 controlVM.AllDataItems.Add(element.Name, element);
             }
             logger.Info("All data base items loaded");
-        }
-
-
-        private void OnTableVMPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(TableVM.IsSelected))
-            {
-                var item = (TableVM)sender;
-                if (item.IsSelected)
-                {
-                    logger.Trace($"*** Table: {item.Name} has been selected");
-                    controlVM.SetDataItemCommand.Execute(item);
-                }
-                else
-                {
-                    logger.Trace($"*** Table: {item.Name} has unselected");
-                    item.IsRelated = false;
-                }
-
-                commandManager.InvalidateRequerySuggested();
-            }
         }
     }
 }

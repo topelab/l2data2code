@@ -46,10 +46,10 @@ namespace L2Data2Code.SharedContext.Main
         {
             if (fileChanged.Equals(BasicNameValueConfiguration.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
             {
-                dispatcherWrapper?.Invoke(() =>
+                dispatcherWrapper?.Invoke(async () =>
                 {
                     eventAggregator.GetEvent<ActivateMainWindowEvent>().Publish();
-                    var result = messageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxWrapperButton.OKCancel, MessageBoxWrapperImage.Question);
+                    var result = await messageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxWrapperButton.OKCancel, MessageBoxWrapperImage.Question).ConfigureAwait(false);
                     if (result == MessageBoxWrapperResult.Cancel)
                     {
                         return;

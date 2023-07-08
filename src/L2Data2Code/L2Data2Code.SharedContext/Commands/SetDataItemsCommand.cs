@@ -1,23 +1,19 @@
-using L2Data2Code.SharedContext.Main.TablePanel;
-using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Base;
+using L2Data2Code.SharedContext.Commands.Interfaces;
+using L2Data2Code.SharedContext.Main.TablePanel;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class SetDataItemsCommand : ReactiveBaseCommand, ISetDataItemsCommand
+    public class SetDataItemsCommand : DelegateCommandFactory, ISetDataItemsCommandFactory
     {
         private TablePanelVM controlVM;
-
-        public SetDataItemsCommand(ICommandManager commandManager) : base(commandManager)
-        {
-        }
 
         public void Initialize(TablePanelVM controlVM)
         {
             this.controlVM = controlVM;
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute()
         {
             SetDataItems();
         }

@@ -7,18 +7,18 @@ using System;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class OpenVarsWindowCommand : ReactiveBaseCommand, IOpenVarsWindowCommand
+    public class OpenVarsWindowCommandFactory : DelegateCommandFactory, IOpenVarsWindowCommandFactory
     {
         private readonly IEventAggregator eventAggregator;
         private readonly IGeneratorAdapter adapter;
 
-        public OpenVarsWindowCommand(IEventAggregator eventAggregator, ICommandManager commandManager, IGeneratorAdapter adapter) : base(commandManager)
+        public OpenVarsWindowCommandFactory(IEventAggregator eventAggregator, IGeneratorAdapter adapter)
         {
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             this.adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute()
         {
             eventAggregator.GetEvent<OpenVarsWindowEvent>().Publish(adapter.CompiledVars);
         }

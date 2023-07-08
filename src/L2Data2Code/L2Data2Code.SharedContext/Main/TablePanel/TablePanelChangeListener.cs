@@ -1,6 +1,7 @@
 using L2Data2Code.SharedContext.Base;
 using L2Data2CodeUI.Shared.Adapters;
 using NLog;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,7 +29,45 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
             this.controlVM = controlVM;
 
             this.mainVM.PropertyChanged += OnParentVMPropertyChanged;
+            this.controlVM.AllTables.CollectionChanged += OnAllTablesCollectionChanged;
         }
+
+        private void OnAllTablesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    e.NewItems.OfType<TableVM>().ToList().ForEach(e => e.PropertyChanged += OnTableVMPropertyChanged);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    e.OldItems.OfType<TableVM>().ToList().ForEach(e => e.PropertyChanged -= OnTableVMPropertyChanged);
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    e.OldItems.OfType<TableVM>().ToList().ForEach(e => e.PropertyChanged -= OnTableVMPropertyChanged);
+                    e.NewItems.OfType<TableVM>().ToList().ForEach(e => e.PropertyChanged += OnTableVMPropertyChanged);
+                    break;
+            }
+        }
+
+        private void OnTableVMPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TableVM.IsSelected))
+            {
+                var item = (TableVM)sender;
+                if (item.IsSelected)
+                {
+                    logger.Trace($"*** Table: {item.Name} has been selected");
+                    controlVM.SetDataItemCommand.Execute(item);
+                }
+                else
+                {
+                    logger.Trace($"*** Table: {item.Name} has unselected");
+                    item.IsRelated = false;
+                }
+                mainVM.GenerateCodeCommand.RaiseCanExecuteChanged();
+            }
+        }
+
 
         public void Stop()
         {
@@ -48,6 +87,7 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
                 case nameof(MainWindowVM.SetRelatedTables):
                     controlVM.SetRelatedTables = mainVM.SetRelatedTables;
                     controlVM.SetDataItemsCommand.Execute(null);
+                    mainVM.GenerateCodeCommand.RaiseCanExecuteChanged();
                     break;
                 case nameof(MainWindowVM.SelectedModule):
                     if (mainVM.SelectedModule != null)

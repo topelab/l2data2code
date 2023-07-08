@@ -1,5 +1,4 @@
 using L2Data2Code.SharedContext.Base;
-using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
 using System;
@@ -11,12 +10,10 @@ namespace L2Data2Code.SharedContext.Main
     public class MainWindowVMChangeListener : IMainWindowVMChangeListener
     {
         private readonly IGeneratorAdapter generatorAdapter;
-        private readonly ICommandManager commandManager;
 
-        public MainWindowVMChangeListener(IGeneratorAdapter generatorAdapter, ICommandManager commandManager)
+        public MainWindowVMChangeListener(IGeneratorAdapter generatorAdapter)
         {
             this.generatorAdapter = generatorAdapter ?? throw new ArgumentNullException(nameof(generatorAdapter));
-            this.commandManager = commandManager ?? throw new ArgumentNullException(nameof(commandManager));
         }
 
         public void Start(MainWindowVM mainWindowVM)
@@ -47,7 +44,7 @@ namespace L2Data2Code.SharedContext.Main
                 case nameof(MainWindowVM.ModuleList):
                     break;
                 case nameof(MainWindowVM.OutputPath):
-                    commandManager.InvalidateRequerySuggested();
+                    RefreshCommands(mainWindowVM);
                     break;
                 case nameof(MainWindowVM.PauseTimer):
                     break;
@@ -80,17 +77,24 @@ namespace L2Data2Code.SharedContext.Main
                 case nameof(MainWindowVM.VarsVisible):
                     break;
                 case nameof(MainWindowVM.GenerateCodeCommand):
-                    commandManager.InvalidateRequerySuggested();
+                    RefreshCommands(mainWindowVM);
                     break;
                 case nameof(MainWindowVM.Working):
                     if (!mainWindowVM.Working)
                     {
-                        commandManager.InvalidateRequerySuggested();
+                        RefreshCommands(mainWindowVM);
                     }
                     break;
                 default:
                     break;
             }
+        }
+
+        private void RefreshCommands(MainWindowVM mainWindowVM)
+        {
+            mainWindowVM.GenerateCodeCommand.RaiseCanExecuteChanged();
+            mainWindowVM.CommandBarVM.RefreshCommands();
+
         }
 
         private void AreaChanged(MainWindowVM mainWindowVM)

@@ -31,7 +31,7 @@ namespace L2Data2Code.MAUI.Main
         public Page Create()
         {
             mainWindowVM = resolver.Get<MainWindowVM>();
-            var generateCommand = resolver.Get<IGenerateCommand>();
+            var generateCommand = resolver.Get<IGenerateCommandFactory>().Create();
             mainWindowVM.SetCommands(generateCommand);
             mainWindowVMChangeListener.Start(mainWindowVM);
             mainWindowVMInitializer.Initialize(mainWindowVM);

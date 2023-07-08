@@ -5,24 +5,22 @@ using L2Data2Code.SharedContext.Base;
 
 namespace L2Data2Code.SharedContext.Commands
 {
-    public class OpenFolderCommand : ReactiveBaseCommand, IOpenFolderCommand
+    public class OpenFolderCommandFactory : DelegateCommandFactory<string>, IOpenFolderCommandFactory
     {
         private readonly IProcessManager processManager;
 
-        public OpenFolderCommand(IProcessManager processManager, ICommandManager commandManager) : base(commandManager)
+        public OpenFolderCommandFactory(IProcessManager processManager)
         {
             this.processManager = processManager ?? throw new System.ArgumentNullException(nameof(processManager));
         }
 
-        public override bool CanExecute(object parameter)
+        protected override bool CanExecute(string slnFile)
         {
-            var slnFile = parameter as string;
             return Directory.Exists(Path.GetDirectoryName(slnFile));
         }
 
-        public override void Execute(object parameter)
+        protected override void Execute(string slnFile)
         {
-            var slnFile = parameter as string;
             processManager.Run(Path.GetDirectoryName(slnFile));
         }
     }

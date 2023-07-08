@@ -6,25 +6,25 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
     public class TablePanelFactory : ITablePanelFactory
     {
         private readonly ITablePanelChangeListener bindManager;
-        private readonly ILoadTablesCommand loadTablesCommand;
-        private readonly ISetDataItemsCommand setDataItemsCommand;
-        private readonly ISetDataItemCommand setDataItemCommand;
+        private readonly ILoadTablesCommandFactory loadTablesCommandFactory;
+        private readonly ISetDataItemsCommandFactory setDataItemsCommandFactory;
+        private readonly ISetDataItemCommandFactory setDataItemCommandFactory;
 
-        public TablePanelFactory(ITablePanelChangeListener bindManager, ILoadTablesCommand loadTablesCommand, ISetDataItemsCommand setDataItemsCommand, ISetDataItemCommand setDataItemCommand)
+        public TablePanelFactory(ITablePanelChangeListener bindManager, ILoadTablesCommandFactory loadTablesCommandFactory, ISetDataItemsCommandFactory setDataItemsCommandFactory, ISetDataItemCommandFactory setDataItemCommandFactory)
         {
             this.bindManager = bindManager ?? throw new ArgumentNullException(nameof(bindManager));
-            this.loadTablesCommand = loadTablesCommand ?? throw new ArgumentNullException(nameof(loadTablesCommand));
-            this.setDataItemsCommand = setDataItemsCommand ?? throw new ArgumentNullException(nameof(setDataItemsCommand));
-            this.setDataItemCommand = setDataItemCommand ?? throw new ArgumentNullException(nameof(setDataItemCommand));
+            this.loadTablesCommandFactory = loadTablesCommandFactory ?? throw new ArgumentNullException(nameof(loadTablesCommandFactory));
+            this.setDataItemsCommandFactory = setDataItemsCommandFactory ?? throw new ArgumentNullException(nameof(setDataItemsCommandFactory));
+            this.setDataItemCommandFactory = setDataItemCommandFactory ?? throw new ArgumentNullException(nameof(setDataItemCommandFactory));
         }
 
         public TablePanelVM Create(MainWindowVM mainVM)
         {
             TablePanelVM tablePanelVM = new();
-            loadTablesCommand.Initialize(tablePanelVM);
-            setDataItemsCommand.Initialize(tablePanelVM);
-            setDataItemCommand.Initialize(tablePanelVM);
-            tablePanelVM.SetCommands(loadTablesCommand, setDataItemsCommand, setDataItemCommand);
+            loadTablesCommandFactory.Initialize(tablePanelVM);
+            setDataItemsCommandFactory.Initialize(tablePanelVM);
+            setDataItemCommandFactory.Initialize(tablePanelVM);
+            tablePanelVM.SetCommands(loadTablesCommandFactory.Create(), setDataItemsCommandFactory.Create(), setDataItemCommandFactory.Create());
             bindManager.Start(mainVM, tablePanelVM);
 
             return tablePanelVM;

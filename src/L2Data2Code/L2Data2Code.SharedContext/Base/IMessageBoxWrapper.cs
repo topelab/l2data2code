@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace L2Data2Code.SharedContext.Base
 {
     public interface IMessageBoxWrapper
     {
-        MessageBoxWrapperResult Show(string messageBoxText, string caption, MessageBoxWrapperButton button, MessageBoxWrapperImage icon);
+        Task<MessageBoxWrapperResult> Show(string messageBoxText, string caption, MessageBoxWrapperButton button, MessageBoxWrapperImage icon);
     }
 
     public enum MessageBoxWrapperResult
