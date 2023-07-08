@@ -42,20 +42,26 @@ namespace L2Data2Code.SharedContext.Main
             CheckOpenedTimer = new Timer((state) => CheckOpenedTimerCallBack(mainWindowVM), null, 3000, 3000);
         }
 
+        private bool isReStartApplicationRunning;
+
         private void ReStartApplication(string fileChanged)
         {
             if (fileChanged.Equals(BasicNameValueConfiguration.APP_SETTINGS_FILE, StringComparison.CurrentCultureIgnoreCase))
             {
-                dispatcherWrapper?.Invoke(async () =>
+                if (!isReStartApplicationRunning)
                 {
-                    eventAggregator.GetEvent<ActivateMainWindowEvent>().Publish();
-                    var result = await messageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxWrapperButton.OKCancel, MessageBoxWrapperImage.Question).ConfigureAwait(false);
-                    if (result == MessageBoxWrapperResult.Cancel)
+                    dispatcherWrapper?.Invoke(async () =>
                     {
-                        return;
-                    }
-                    eventAggregator.GetEvent<CloseApplicationEvent>().Publish(true);
-                });
+                        isReStartApplicationRunning = true;
+                        eventAggregator.GetEvent<ActivateMainWindowEvent>().Publish();
+                        var result = await messageBox.Show(Strings.ConfigChanged, Strings.Warning, MessageBoxWrapperButton.OKCancel, MessageBoxWrapperImage.Question).ConfigureAwait(false);
+                        if (result == MessageBoxWrapperResult.OK)
+                        {
+                            eventAggregator.GetEvent<CloseApplicationEvent>().Publish(true);
+                        }
+                        isReStartApplicationRunning = false;
+                    });
+                }
             }
         }
 

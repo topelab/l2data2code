@@ -1,3 +1,4 @@
+using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Events;
 using L2Data2Code.SharedContext.Main.Vars;
 using L2Data2CodeWPF.Main;
@@ -12,10 +13,12 @@ namespace L2Data2CodeWPF.SharedLib
     {
         private MainWindow window;
         private readonly IEventAggregator eventAggregator;
+        private readonly IDispatcherWrapper dispatcherWrapper;
 
-        public GlobalEventManager(IEventAggregator eventAggregator)
+        public GlobalEventManager(IEventAggregator eventAggregator, IDispatcherWrapper dispatcherWrapper)
         {
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            this.dispatcherWrapper = dispatcherWrapper ?? throw new ArgumentNullException(nameof(dispatcherWrapper));
         }
 
         public void Start(MainWindow window)
@@ -38,8 +41,11 @@ namespace L2Data2CodeWPF.SharedLib
 
         private void OnCloseApplication(bool hasToRestart)
         {
-            App.RestartApp = hasToRestart;
-            window.Close();
+            dispatcherWrapper.Invoke(() =>
+            {
+                App.RestartApp = hasToRestart;
+                window.Close();
+            });
         }
 
         private void OnOpenVarsWindow(Dictionary<string, object> vars)

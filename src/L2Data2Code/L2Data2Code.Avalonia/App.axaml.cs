@@ -9,7 +9,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using Topelab.Core.Resolver.Interfaces;
 using Topelab.Core.Resolver.Microsoft;
@@ -54,8 +53,9 @@ namespace L2Data2Code
             Logger.Info("Application ending");
             if (RestartApp)
             {
-                Logger.Info($"Restarting application at {AppContext.BaseDirectory}");
-                Process.Start(Path.ChangeExtension(AppContext.BaseDirectory, "exe"));
+                var fileName = Process.GetCurrentProcess().MainModule.FileName;
+                Logger.Info($"Restarting application {fileName}");
+                Process.Start(Path.ChangeExtension(fileName, "exe"));
             }
         }
     }

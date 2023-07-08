@@ -18,6 +18,14 @@
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="ButtonBackground" Color="{DynamicResource SystemAccentColor}" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource SystemAccentColorLight1}" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{DynamicResource SystemAccentColorDark3}" />
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid ColumnDefinitions="40*, 30*, 10"
           RowDefinitions="45, *">
 
@@ -133,7 +141,6 @@
                         CommandParameter="{Binding}"
                         Height="72"
                         Margin="0, 10"
-                        Background="{DynamicResource ThemeAccentBrush}"
                         Content="{materialIcons:MaterialIconExt Kind=RunFast, Size=64}"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"

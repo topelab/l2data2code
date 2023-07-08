@@ -1,3 +1,4 @@
+using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Events;
 using Prism.Events;
 
@@ -7,10 +8,12 @@ namespace L2Data2Code.MAUI.Base
     {
         private Page mainPage;
         private readonly IEventAggregator eventAggregator;
+        private readonly IDispatcherWrapper dispatcherWrapper;
 
-        public GlobalEventManager(IEventAggregator eventAggregator)
+        public GlobalEventManager(IEventAggregator eventAggregator, IDispatcherWrapper dispatcherWrapper)
         {
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            this.dispatcherWrapper = dispatcherWrapper ?? throw new ArgumentNullException(nameof(dispatcherWrapper));
         }
 
         public void Start(Page mainPage)
@@ -33,8 +36,11 @@ namespace L2Data2Code.MAUI.Base
 
         private void OnCloseApplication(bool hasToRestart)
         {
-            App.RestartApp = hasToRestart;
-            App.Current.CloseWindow(mainPage.Window);
+            dispatcherWrapper.Invoke(() =>
+            {
+                App.RestartApp = hasToRestart;
+                App.Current.CloseWindow(mainPage.Window);
+            });
         }
 
         private void OnOpenVarsWindow(Dictionary<string, object> vars)
