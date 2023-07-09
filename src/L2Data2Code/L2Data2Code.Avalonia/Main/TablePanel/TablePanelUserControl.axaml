@@ -5,12 +5,20 @@
              xmlns:s="using:L2Data2CodeUI.Shared.SharedLib"
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:conv="clr-namespace:L2Data2Code.Avalonia.Converters;assembly=L2Data2Code.Avalonia"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
              x:Class="L2Data2Code.Avalonia.Main.TablePanel.TablePanelUserControl">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <conv:GridLengthConverter x:Key="GridLengthConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+   
     <Grid IsEnabled="{Binding !Working}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />
-            <RowDefinition Height="{Binding AutoHeight}" />
+            <RowDefinition Height="{Binding AutoHeight, Converter={StaticResource GridLengthConverter}}" />
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0"
                    Margin="0,10">
