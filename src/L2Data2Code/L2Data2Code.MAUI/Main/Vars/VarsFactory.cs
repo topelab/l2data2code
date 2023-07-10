@@ -1,4 +1,5 @@
 using L2Data2Code.MAUI.Main.Vars;
+using L2Data2Code.SharedContext.Main.Vars;
 using L2Data2CodeUI.Shared.Adapters;
 using L2Data2CodeUI.Shared.Localize;
 
