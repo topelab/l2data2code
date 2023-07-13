@@ -50,11 +50,6 @@
                                TextWrapping="Wrap" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <DockPanel LastChildFill="False" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
 
         </ListBox>
     </DockPanel>

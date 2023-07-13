@@ -67,7 +67,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
                 case NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems.Cast<MessageVM>())
                     {
-                        controlVM.AllMessages.Add(item);
+                        controlVM.AllMessages.Insert(0, item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:

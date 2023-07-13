@@ -14,8 +14,13 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <VerticalStackLayout>
+    <Grid IsVisible="{Binding MessagePanelVisible}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Border Background="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                MaximumHeightRequest="50"
                 StrokeShape="RoundRectangle 5"
                 Margin="10,0"
                 Padding="10">
@@ -24,9 +29,10 @@
                    FontSize="15"
                    FontAttributes="Bold" />
         </Border>
-        <ScrollView>
+        <ScrollView Margin="10"
+                    Grid.Row="1">
             <ListView ItemsSource="{Binding AllMessages}"
-                      Margin="10,0"
+                      Margin="5"
                       Background="Transparent">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="vm:MessageVM">
@@ -38,5 +44,5 @@
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollView>
-    </VerticalStackLayout>
+    </Grid>
 </ContentView>

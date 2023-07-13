@@ -32,7 +32,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
                     var previous = AllMessages.FirstOrDefault(m => m.Text == text);
                     if (previous == null)
                     {
-                        AllMessages.Insert(0, new MessageVM(text, viewStatus, code));
+                        AllMessages.Add(new MessageVM(text, viewStatus, code));
                     }
                     else
                     {
