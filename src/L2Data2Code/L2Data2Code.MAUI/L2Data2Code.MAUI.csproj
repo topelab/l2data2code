@@ -13,7 +13,7 @@
     <ApplicationId>com.companyname.l2data2code.maui</ApplicationId>
     <ApplicationIdGuid>5d98401c-f88b-4cdb-a9dd-0cd2d44afe65</ApplicationIdGuid>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -21,6 +21,7 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
@@ -44,8 +45,8 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="ReactiveUI" Version="19.2.1" />
-    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.13" />
+    <PackageReference Include="ReactiveUI" Version="19.4.1" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.14" />
     <PackageReference Include="LambdaConverters" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
