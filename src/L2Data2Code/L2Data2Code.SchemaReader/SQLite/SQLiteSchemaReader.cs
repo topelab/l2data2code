@@ -151,7 +151,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 col.NumericScale = row["NUMERIC_SCALE"].IfNull(0);
                 col.IsNumeric = row["NUMERIC_PRECISION"].IfNull(0) > 0;
                 col.IsComputed = tbl.IsView;
-                col.DefaultValue = row["COLUMN_DEFAULT"] == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'');
+                col.DefaultValue = row["COLUMN_DEFAULT"].IfNull<string>(null) == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'');
                 col.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
                 result.Add(col);
             }

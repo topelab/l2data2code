@@ -1,3 +1,7 @@
+### 2.13.19
+
+- Fix SQLite reader
+
 ### 2.13.16
 
 - Upgrade topelab.core.resolver.microsoft to 1.4.13
