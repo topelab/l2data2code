@@ -15,11 +15,13 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsUpdatable { get; internal set; }
         public bool MultiplePKColumns { get; private set; }
         public string Description { get; private set; }
+        public bool IsEnum => EnumValues?.Any() ?? false;
 
         public List<EntityColumn> Columns = new();
         public List<Relation> OneToMany = new();
         public List<Relation> ManyToOne = new();
         public List<EntityIndex> Indexes = new();
+        public List<EnumTableValue> EnumValues = new();
 
         public int NumeroCamposPK { get; set; }
 
@@ -30,6 +32,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             TableName = table.Name;
             TableType = table.Type;
             IsView = table.IsView;
+            EnumValues = table.EnumValues;
             IsUpdatable = table.IsUpdatable;
             MultiplePKColumns = table.PK.Count() > 1;
             Description = table.Description;

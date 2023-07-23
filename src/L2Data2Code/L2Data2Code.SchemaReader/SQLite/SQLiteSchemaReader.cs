@@ -60,6 +60,7 @@ namespace L2Data2Code.SchemaReader.MySql
                         }
 
                         tbl.Indexes = GetIndexes(tbl.Name);
+                        tbl.EnumValues = GetEnumValues(tbl);
                     }
                 }
                 catch (Exception x)
@@ -100,6 +101,23 @@ namespace L2Data2Code.SchemaReader.MySql
             return result;
         }
 
+        private List<EnumTableValue> GetEnumValues(Table tbl)
+        {
+            List<EnumTableValue> values = new List<EnumTableValue>();
+            if (tbl.IsEnum)
+            {
+                var sql = $"select t.{tbl.EnumValue}, t.{tbl.EnumName} from {tbl.Name} t";
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = sql;
+                using var rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    values.Add(new EnumTableValue { Id = rdr.GetInt32(0), Name = rdr.GetString(1) });
+                }
+            }
+            return values;
+        }
+
         private void AddItems(Regex tableRegex, Dictionary<string, string> alternativeDescriptions, Tables result, DataTable tables, bool fromViews)
         {
             foreach (DataRow row in tables.Rows)
@@ -119,6 +137,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 tbl.IsUpdatable = fromViews && (bool)row["IS_UPDATABLE"];
                 tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.Type = nameResolver.ResolveTableType(tbl.Name);
+                (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : (fromViews ? (string)row["DESCRIPTION"] : string.Empty);
 

@@ -76,6 +76,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.IsView = string.Compare((string)rdr["TABLE_TYPE"], "VIEW", true) == 0;
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.Type = nameResolver.ResolveTableType(tbl.Name);
+                            (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value
                                 : options.AlternativeDescriptions.TryGetValue(tbl.Name, out var alternativeValue) ? alternativeValue : null;
@@ -105,6 +106,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.IsUpdatable = (string)rdr["IS_UPDATABLE"] == "YES";
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.Type = nameResolver.ResolveTableType(tbl.Name);
+                            (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
 
@@ -133,6 +135,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                         }
 
                         tbl.Indexes = GetIndexes(tbl.Name);
+                        tbl.EnumValues = GetEnumValues(tbl);
                     }
                 }
                 catch (Exception x)
@@ -174,6 +177,23 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
 
             return result;
+        }
+
+        private List<EnumTableValue> GetEnumValues(Table tbl)
+        {
+            List<EnumTableValue> values = new List<EnumTableValue>();
+            if (tbl.IsEnum)
+            {
+                var sql = $"select t.{tbl.EnumValue}, t.{tbl.EnumName} from {tbl.Name} t";
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = sql;
+                using var rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    values.Add(new EnumTableValue { Id = rdr.GetInt32(0), Name = rdr.GetString(1) });
+                }
+            }
+            return values;
         }
 
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true)

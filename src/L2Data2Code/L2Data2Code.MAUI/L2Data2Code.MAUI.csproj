@@ -13,7 +13,7 @@
     <ApplicationId>com.companyname.l2data2code.maui</ApplicationId>
     <ApplicationIdGuid>5d98401c-f88b-4cdb-a9dd-0cd2d44afe65</ApplicationIdGuid>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>

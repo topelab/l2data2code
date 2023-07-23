@@ -1,3 +1,8 @@
+### 2.13.20
+
+- **New**: Added `EnumTables` on `Schemes[]` used to mark tables to read its values (`Id` and `Name`) into a `List<EnumTableValue>`
+- **New**: Added new alises for strings `ToPascalCleanName` and `ToCamelCleanName`
+
 ### 2.13.19
 
 - Fix SQLite reader

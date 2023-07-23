@@ -84,6 +84,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 Template = template.Name,
                 Entity = entity,
                 Indexes = table.Indexes.ToArray(),
+                EnumValues = table.EnumValues.ToArray(),
                 IsView = table.IsView,
                 IsUpdatable = table.IsUpdatable,
                 Description = string.IsNullOrWhiteSpace(table.Description) ? null : table.Description.ReplaceEndOfLine(),

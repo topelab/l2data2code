@@ -27,11 +27,11 @@ namespace L2Data2Code.BaseHandleBars
 
             if (firstParameterType == typeof(string))
             {
-                aliasProvider.AddAlias(typeof(object), method.Name, a => a is JArray ? string.Empty : method.Invoke(null, new[] { a.ToString() }));
+                aliasProvider.AddAlias<string>(method.Name, a => method.Invoke(null, new[] { a }));
             }
             else
             {
-                aliasProvider.AddAlias(typeof(object), method.Name, a => method.Invoke(null, new[] { a }));
+                aliasProvider.AddAlias(typeof(object), method.Name, a => a is JArray ? string.Empty : method.Invoke(null, new[] { a.ToString() }));
             }
 
         }

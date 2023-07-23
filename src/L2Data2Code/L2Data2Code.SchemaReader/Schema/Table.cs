@@ -1,3 +1,4 @@
+using L2Data2Code.SharedLib.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,6 +24,10 @@ namespace L2Data2Code.SchemaReader.Schema
         /// <summary>Gets the outer keys.</summary>
         /// <value>The outer keys.</value>
         public List<Key> OuterKeys { get; set; } = new();
+        /// <summary>
+        /// Gets or sets the values for an enum table
+        /// </summary>
+        public List<EnumTableValue> EnumValues { get; set; } = new();
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         public string Name { get; set; }
@@ -63,6 +68,11 @@ namespace L2Data2Code.SchemaReader.Schema
         /// Table type
         /// </summary>
         public string Type { get; set; }
+
+        public string EnumValue { get; set; }
+        public string EnumName { get; set; }
+
+        public bool IsEnum => EnumValue.NotEmpty() && EnumName.NotEmpty();
 
         /// <summary>Gets the pk.</summary>
         /// <value>The pk.</value>
