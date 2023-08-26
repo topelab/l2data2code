@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>2.13.20</Version>
+    <Version>2.13.21</Version>
     <ApplicationIcon>web-code.ico</ApplicationIcon>
     <NeutralLanguage>en</NeutralLanguage>
     <RestoreAdditionalProjectSources>

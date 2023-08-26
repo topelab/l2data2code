@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -46,7 +47,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             void ErrorDataReceived(object s, DataReceivedEventArgs e)
             {
-                messageService.Error(e.Data, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
+                if (e.Data != null)
+                {
+                    messageService.Error(e.Data, $"{string.Format(Messages.ParametrizedErrorMessage, command.Name)}: {e.Data}", MessageCodes.RUN_COMMAND);
+                }
             }
 
             void DataReceived(object s, DataReceivedEventArgs e)
@@ -55,7 +59,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 {
                     if (command.ShowMessages)
                     {
-                        messageService.Info(e.Data);
+                        messageService.Info(Encoding.UTF8.GetString(Encoding.Default.GetBytes(e.Data)));
                     }
                     outputData.AppendLine(e.Data);
                 }
