@@ -59,7 +59,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 {
                     if (command.ShowMessages)
                     {
-                        messageService.Info(Encoding.UTF8.GetString(Encoding.Default.GetBytes(e.Data)));
+                        messageService.Info(e.Data);
                     }
                     outputData.AppendLine(e.Data);
                 }

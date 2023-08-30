@@ -144,7 +144,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 EntityColumn campo = new()
                 {
                     Table = ClassName,
-                    Name = $"{item.Table.ToPlural()}{withWord}{item.RelatedColumn}",
+                    Name = $"{item.Table.ToPlural()}{withWord}{item.Column}",
                     Type = Constants.InternalTypes.Collection + item.Table,
                     IsNull = false,
                     Size = 0,

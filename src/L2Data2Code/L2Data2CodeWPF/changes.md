@@ -1,3 +1,8 @@
+### 2.13.22
+
+- Fix remove folders: when is set to false on template it doesn't allow activate on run
+- Fix relation names on tables
+
 ### 2.13.20
 
 - **New**: Added `EnumTables` on `Schemes[]` used to mark tables to read its values (`Id` and `Name`) into a `List<EnumTableValue>`
