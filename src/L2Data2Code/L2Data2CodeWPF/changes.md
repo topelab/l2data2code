@@ -1,3 +1,7 @@
+### 2.13.23
+
+- **New**: Added property `Command.Skip` useful to skip commands on `Templates.PreCommands` or `Templates.PostCommands`. Can use variables `Vars` defined at `DataSources` level.
+
 ### 2.13.22
 
 - Fix remove folders: when is set to false on template it doesn't allow activate on run

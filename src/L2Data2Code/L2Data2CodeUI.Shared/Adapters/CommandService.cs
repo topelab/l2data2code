@@ -40,6 +40,11 @@ namespace L2Data2CodeUI.Shared.Adapters
         public void Exec(Command command, Dictionary<string, object> compiledVars = null)
         {
             Process process = null;
+            if (compiledVars != null && command.Skip != null ? mustacheRenderizer.Render(command.Skip, compiledVars).IsTrue() : false)
+            {
+                return;
+            }
+
             var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
             var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));

@@ -1,3 +1,21 @@
+### 3.1.6
+
+- **New**: Added property `Command.Skip` useful to skip commands on `Templates.PreCommands` or `Templates.PostCommands`. Can use variables `Vars` defined at `DataSources` level.
+
+### 3.1.5
+
+- Fix remove folders: when is set to false on template it doesn't allow activate on run
+- Fix relation names on tables
+
+### 3.1.3
+
+- **New**: Added `EnumTables` on `Schemes[]` used to mark tables to read its values (`Id` and `Name`) into a `List<EnumTableValue>`
+- **New**: Added new alises for strings `ToPascalCleanName` and `ToCamelCleanName`
+
+### 3.1.2
+
+- Fix SQLite reader
+
 ### 3.0.5
 
 - Upgrade topelab.core.resolver.microsoft to 1.4.13
