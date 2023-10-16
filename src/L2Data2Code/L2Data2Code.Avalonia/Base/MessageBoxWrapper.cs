@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using L2Data2Code.SharedContext.Base;
-using MessageBox.Avalonia.Enums;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using System.Threading.Tasks;
