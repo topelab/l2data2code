@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="clr-namespace:L2Data2CodeWPF.SharedLib"
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
-             xmlns:MessagePanel="clr-namespace:L2Data2CodeWPF.Controls.MessagePanel"
+             xmlns:MessagePanel="clr-namespace:L2Data2Code.SharedContext.Main.MessagePanel;assembly=L2Data2Code.SharedContext"
              d:DataContext="{d:DesignInstance Type=MessagePanel:MessagePanelVM}"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -17,7 +17,7 @@
         <Expander Header="{x:Static str:Strings.MessageBoard}"
                     HorizontalAlignment="Stretch"
                     Height="Auto"
-                    IsExpanded="{Binding MessagePanelOpened}"
+                    IsExpanded="True"
                     Background="{DynamicResource MahApps.Brushes.Accent4}">
             <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <ListView ItemsSource="{Binding AllMessages}"
@@ -26,7 +26,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Text}"
-                                        Foreground="{Binding Path=Color}"
+                                        Foreground="{Binding Path=Status, Converter={x:Static s:Converters.ToColor}}"
                                         TextWrapping="Wrap" />
                         </DataTemplate>
                     </ListView.ItemTemplate>

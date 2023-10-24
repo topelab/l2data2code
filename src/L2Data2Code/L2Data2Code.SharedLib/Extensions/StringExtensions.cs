@@ -1,6 +1,7 @@
 using L2Data2Code.SharedLib.Inflector;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace L2Data2Code.SharedLib.Extensions
@@ -71,7 +72,29 @@ namespace L2Data2Code.SharedLib.Extensions
 
         public static string PascalCase(this string word)
         {
-            return Service().Pascalize(word);
+            return Service().Pascalize(word.Replace(" ", "_"));
+        }
+
+        public static string ToPascalCleanName(this string phrase)
+        {
+            var words = phrase.ToSlug().Split('-');
+            string result = string.Empty;
+            foreach (var word in words)
+            {
+                result = string.Concat(result, word.PascalCase());
+            }
+            return result;
+        }
+
+        public static string ToCamelCleanName(this string phrase)
+        {
+            var words = phrase.ToSlug().Split('-');
+            string result = string.Empty;
+            foreach (var word in words)
+            {
+                result = string.Concat(result, word.CamelCase());
+            }
+            return result;
         }
 
         public static string Camelize(this string word) => CamelCase(word);
@@ -280,14 +303,13 @@ namespace L2Data2Code.SharedLib.Extensions
         /// <returns></returns>
         public static string ToSlug(this string fileName, string validCharsToAdd)
         {
-
-            var ValidChars = "0123456789abcdefghijklmnopqrstuvwxyz" + validCharsToAdd;
+            var ValidChars = string.Concat("0123456789abcdefghijklmnopqrstuvwxyz", validCharsToAdd);
             const string ReplaceableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúàèìòùñÁÉÍÓÚÀÈÌÒÙÑäëïöüÄËÏÖÜâêîôûÂÊÎÔÛÇç";
             const string ReplacingChars = "abcdefghijklmnopqrstuvwxyzaeiouaeiounaeiouaeiounaeiouaeiouaeiouaeioucc";
-            const string Separator = "-";
+            const char Separator = '-';
 
-            string CharToAdd;
-            var PrevChar = string.Empty;
+            char CharToAdd;
+            var PrevChar = '\0';
 
             var sCleanUrl = string.Empty;
 
@@ -295,16 +317,17 @@ namespace L2Data2Code.SharedLib.Extensions
             {
                 while (fileName.Length != 0)
                 {
-                    if (ValidChars.Contains(fileName[..1]))
+                    var firstChar = fileName[0];
+                    if (ValidChars.Contains(firstChar))
                     {
-                        CharToAdd = fileName[..1];
+                        CharToAdd = firstChar;
                         PrevChar = CharToAdd;
                     }
                     else
                     {
-                        if (ReplaceableChars.Contains(fileName[..1]))
+                        if (ReplaceableChars.Contains(firstChar))
                         {
-                            CharToAdd = ReplacingChars[ReplaceableChars.IndexOf(fileName[..1])..1];
+                            CharToAdd = ReplacingChars[ReplaceableChars.IndexOf(firstChar)];
                             PrevChar = CharToAdd;
                         }
                         else
@@ -312,14 +335,17 @@ namespace L2Data2Code.SharedLib.Extensions
                             CharToAdd = Separator;
                             if (PrevChar.Equals(Separator))
                             {
-                                CharToAdd = "";
+                                CharToAdd = '\0';
                             }
                             PrevChar = Separator;
                         }
                     }
 
-                    sCleanUrl += CharToAdd;
-                    fileName = fileName[1..];
+                    if (CharToAdd != 0)
+                    {
+                        sCleanUrl += CharToAdd;
+                    }
+                    fileName = fileName.Substring(1);
                 }
             }
 

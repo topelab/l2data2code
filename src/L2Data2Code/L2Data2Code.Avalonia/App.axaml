@@ -1,0 +1,26 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:local="using:L2Data2Code"
+             x:Class="L2Data2Code.App">
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="SystemAccentColor">#ff8f00</Color>
+            <Color x:Key="SystemAccentColorDark1">#da9000</Color>
+            <Color x:Key="SystemAccentColorDark2">#b87a00</Color>
+            <Color x:Key="SystemAccentColorDark3">#a86f00</Color>
+            <Color x:Key="SystemAccentColorLight1">#ffcb65</Color>
+            <Color x:Key="SystemAccentColorLight2">#ffda93</Color>
+            <Color x:Key="SystemAccentColorLight3">#ffedcb</Color>
+            <SolidColorBrush x:Key="ButtonForeground" Color="{DynamicResource SystemAccentColor}" />
+        </ResourceDictionary>
+    </Application.Resources>
+    <Application.Styles>
+        <FluentTheme />
+        <materialIcons:MaterialIconStyles />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+    </Application.Styles>
+</Application>

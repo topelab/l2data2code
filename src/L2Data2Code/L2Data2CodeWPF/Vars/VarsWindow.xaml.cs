@@ -1,3 +1,4 @@
+using L2Data2Code.SharedContext.Main.Vars;
 using MahApps.Metro.Controls;
 
 namespace L2Data2CodeWPF.Vars

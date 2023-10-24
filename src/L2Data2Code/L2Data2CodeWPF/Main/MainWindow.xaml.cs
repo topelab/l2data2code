@@ -1,3 +1,4 @@
+using L2Data2Code.SharedContext.Main;
 using L2Data2CodeWPF.Base;
 using MahApps.Metro.Controls;
 using System.Windows.Input;

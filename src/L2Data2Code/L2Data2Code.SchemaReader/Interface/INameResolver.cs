@@ -6,5 +6,6 @@ namespace L2Data2Code.SchemaReader.Interface
         string ResolveColumnName(string originalTableName, string originalColumnName);
         string ResolveTableName(string originalTableName);
         string ResolveTableType(string originalTableName);
+        (string id, string name) ResolveEnumTables(string originalTableName);
     }
 }

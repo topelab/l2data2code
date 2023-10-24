@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="L2Data2Code.Avalonia.Main.Vars.VarsWindow"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Title="Vars"
+        Width="800"
+        Height="600"
+        Topmost="True"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#80000000"
+        ExtendClientAreaToDecorationsHint="True">
+    <Grid RowDefinitions="45, *">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="10,5" Text="{Binding $parent[Window].Title} " />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Variables}"
+                  CanUserResizeColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static str:Strings.Name}"
+                                    Width="Auto"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Path=Name}" />
+                <DataGridTextColumn Header="{x:Static str:Strings.Value}"
+                                    Width="*"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Path=Value}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

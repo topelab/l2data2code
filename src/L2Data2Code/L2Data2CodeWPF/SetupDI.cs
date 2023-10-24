@@ -10,20 +10,24 @@ using L2Data2Code.SchemaReader.MySql;
 using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SchemaReader.SqlServer;
+using L2Data2Code.SharedContext.Base;
+using L2Data2Code.SharedContext.Commands;
+using L2Data2Code.SharedContext.Commands.Interfaces;
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Main.CommandBar;
+using L2Data2Code.SharedContext.Main.Interfaces;
+using L2Data2Code.SharedContext.Main.MessagePanel;
+using L2Data2Code.SharedContext.Main.TablePanel;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
 using L2Data2Code.SharedLib.Interfaces;
 using L2Data2Code.SharedLib.Services;
 using L2Data2CodeUI.Shared.Adapters;
-using L2Data2CodeWPF.Commands;
-using L2Data2CodeWPF.Commands.Interfaces;
-using L2Data2CodeWPF.Controls.CommandBar;
-using L2Data2CodeWPF.Controls.MessagePanel;
-using L2Data2CodeWPF.Controls.TablePanel;
 using L2Data2CodeWPF.Main;
 using L2Data2CodeWPF.SharedLib;
 using NLog;
+using Prism.Events;
 using Topelab.Core.Resolver.Entities;
 
 namespace L2Data2CodeWPF
@@ -58,31 +62,34 @@ namespace L2Data2CodeWPF
                 .AddSingleton<ISchemaService, SchemaService>()
                 .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
                 .AddSingleton<IDispatcherWrapper, DispatcherWrapper>()
+                .AddSingleton<IMessageBoxWrapper, MessageBoxWrapper>()
                 .AddSingleton<INameResolver, NameResolver>()
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<ISchemaFactory, SchemaFactory>()
                 .AddSingleton<IMainWindowFactory, MainWindowFactory>()
                 .AddSingleton<IReplacementCollectionFactory, ReplacementCollectionFactory>()
+                .AddSingleton<IGlobalEventManager, GlobalEventManager>()
+                .AddSingleton<IEventAggregator, EventAggregator>()
 
                 .AddTransient<MainWindowVM, MainWindowVM>()
                 .AddTransient<IMainWindowEventManager, MainWindowEventManager>()
-                .AddTransient<IMainWindowVMBindManager, MainWindowVMBindManager>()
+                .AddTransient<IMainWindowVMChangeListener, MainWindowVMChangeListener>()
                 .AddTransient<IMainWindowVMInitializer, MainWindowVMInitializer>()
-                .AddTransient<ICommandBarBindManager, CommandBarBindManager>()
-                .AddTransient<ITablePanelBindManager, TablePanelBindManager>()
-                .AddTransient<IMessagePanelBindManager, MessagePanelBindManager>()
-                .AddTransient<IGenerateCommand, GenerateCommand>()
-                .AddTransient<IEditTemplateCommand, EditTemplateCommand>()
-                .AddTransient<IOpenFolderCommand, OpenFolderCommand>()
-                .AddTransient<IOpenPSCommand, OpenPSCommand>()
-                .AddTransient<IOpenSettingsCommand, OpenSettingsCommand>()
-                .AddTransient<IOpenVarsWindowCommand, OpenVarsWindowCommand>()
-                .AddTransient<IOpenVSCodeCommand, OpenVSCodeCommand>()
-                .AddTransient<IOpenVSCommand, OpenVSCommand>()
-                .AddTransient<ILoadTablesCommand, LoadTablesCommand>()
-                .AddTransient<ISetDataItemsCommand, SetDataItemsCommand>()
-                .AddTransient<ISetDataItemCommand, SetDataItemCommand>()
+                .AddTransient<ICommandBarChangeListener, CommandBarChangeListener>()
+                .AddTransient<ITablePanelChangeListener, TablePanelChangeListener>()
+                .AddTransient<IMessagePanelChangeListener, MessagePanelChangeListener>()
+                .AddTransient<IGenerateCommandFactory, GenerateCommandFactory>()
+                .AddTransient<IEditTemplateCommandFactory, EditTemplateCommandFactory>()
+                .AddTransient<IOpenFolderCommandFactory, OpenFolderCommandFactory>()
+                .AddTransient<IOpenPSCommandFactory, OpenPSCommandFactory>()
+                .AddTransient<IOpenSettingsCommandFactory, OpenSettingsCommandFactory>()
+                .AddTransient<IOpenVarsWindowCommandFactory, OpenVarsWindowCommandFactory>()
+                .AddTransient<IOpenVSCodeCommandFactory, OpenVSCodeCommandFactory>()
+                .AddTransient<IOpenVSCommandFactory, OpenVSCommandFactory>()
+                .AddTransient<ILoadTablesCommandFactory, LoadTablesCommandFactory>()
+                .AddTransient<ISetDataItemsCommandFactory, SetDataItemsCommand>()
+                .AddTransient<ISetDataItemCommandFactory, SetDataItemCommandFactory>()
 
                 .AddTransient<IFileMonitorService, FileMonitorService>()
                 .AddTransient<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))

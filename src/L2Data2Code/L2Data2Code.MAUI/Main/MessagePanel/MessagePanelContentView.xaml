@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="L2Data2Code.MAUI.Main.MessagePanel.MessagePanelContentView"
+             xmlns:vm="clr-namespace:L2Data2Code.SharedContext.Main.MessagePanel;assembly=L2Data2Code.SharedContext"
+             xmlns:s="clr-namespace:L2Data2Code.MAUI.Base"
+             xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
+             xmlns:conv="clr-namespace:L2Data2Code.MAUI.Converters;assembly=L2Data2Code.MAUI"
+             x:DataType="vm:MessagePanelVM">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <conv:MessageStatusToColorConverter x:Key="MessageStatusToColorConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid IsVisible="{Binding MessagePanelVisible}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Background="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                MaximumHeightRequest="50"
+                StrokeShape="RoundRectangle 5"
+                Margin="10,0"
+                Padding="10">
+            <Label Text="{x:Static str:Strings.MessageBoard}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="15"
+                   FontAttributes="Bold" />
+        </Border>
+        <ScrollView Margin="10"
+                    Grid.Row="1">
+            <ListView ItemsSource="{Binding AllMessages}"
+                      Margin="5"
+                      Background="Transparent">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MessageVM">
+                        <ViewCell>
+                            <Label Text="{Binding Text}"
+                                   TextColor="{Binding Status, Converter={StaticResource MessageStatusToColorConverter}}" />
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollView>
+    </Grid>
+</ContentView>

@@ -1,0 +1,1425 @@
+[
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "ActiveProductsFedarated",
+        "Name": "ProductID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "ActiveProductsFedarated",
+        "Name": "ProductName",
+        "PropertyType": "string",
+        "Precision": 40
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "ActiveProductsFedarated",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "ID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "Address",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 60
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "City",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "Region",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "PostalCode",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 50
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "Country",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "AddressSplit",
+        "Name": "ContactType",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 50
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "AddressSplit",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "BaseContactSplit",
+        "Name": "ID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "BaseContactSplit",
+        "Name": "CompanyName",
+        "PropertyType": "string",
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "BaseContactSplit",
+        "Name": "ContactName",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "BaseContactSplit",
+        "Name": "Phone",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "BaseContactSplit",
+        "Name": "ContactType",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 50
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "BaseContactSplit",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "BaseProductsFedarated",
+        "Name": "ProductID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "BaseProductsFedarated",
+        "Name": "ProductName",
+        "PropertyType": "string",
+        "Precision": 40
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "BaseProductsFedarated",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Categories",
+        "Name": "CategoryID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Categories",
+        "Name": "CategoryName",
+        "PropertyType": "string",
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Categories",
+        "Name": "Description",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 1073741823
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Categories",
+        "Name": "Picture",
+        "PropertyType": "byte[]",
+        "IsNullable": true,
+        "Precision": 2147483647
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Products_Categories",
+        "Referenced": "Categories.CategoryID",
+        "Referencing": "Products.CategoryID"
+      }
+    ],
+    "OuterKeys": [],
+    "Name": "Categories",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "ContactNameSplit",
+        "Name": "ID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "ContactNameSplit",
+        "Name": "Name",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "ContactNameSplit",
+        "Name": "Title",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "ContactNameSplit",
+        "Name": "Fax",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "ContactNameSplit",
+        "Name": "ContactType",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 50
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "ContactNameSplit",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "ContactID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "ContactType",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 50
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "CompanyName",
+        "PropertyType": "string",
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "ContactName",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "ContactTitle",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Address",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 60
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "City",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Region",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "PostalCode",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Country",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Phone",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Extension",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 4
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Fax",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "HomePage",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 1073741823
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "PhotoPath",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 255
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Contacts",
+        "Name": "Photo",
+        "PropertyType": "byte[]",
+        "IsNullable": true,
+        "Precision": 2147483647
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "Contacts",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "CustomerCustomerDemo",
+        "Name": "CustomerID",
+        "PropertyType": "string",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 5
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "CustomerCustomerDemo",
+        "Name": "CustomerTypeID",
+        "PropertyType": "string",
+        "IsPK": true,
+        "PkOrder": 2,
+        "Precision": 10
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [
+      {
+        "Name": "FK_CustomerCustomerDemo",
+        "Referenced": "CustomerDemographics.CustomerTypeID",
+        "Referencing": "CustomerCustomerDemo.CustomerTypeID"
+      },
+      {
+        "Name": "FK_CustomerCustomerDemo_Customers",
+        "Referenced": "Customers.CustomerID",
+        "Referencing": "CustomerCustomerDemo.CustomerID"
+      }
+    ],
+    "Name": "CustomerCustomerDemo",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "CustomerDemographics",
+        "Name": "CustomerTypeID",
+        "PropertyType": "string",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "CustomerDemographics",
+        "Name": "CustomerDesc",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 1073741823
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_CustomerCustomerDemo",
+        "Referenced": "CustomerDemographics.CustomerTypeID",
+        "Referencing": "CustomerCustomerDemo.CustomerTypeID"
+      }
+    ],
+    "OuterKeys": [],
+    "Name": "CustomerDemographics",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "CustomerID",
+        "PropertyType": "string",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 5
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "CompanyName",
+        "PropertyType": "string",
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "ContactName",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "ContactTitle",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "Address",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 60
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "City",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "Region",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "PostalCode",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "Country",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "Phone",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Customers",
+        "Name": "Fax",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Orders_Customers",
+        "Referenced": "Customers.CustomerID",
+        "Referencing": "Orders.CustomerID"
+      },
+      {
+        "Name": "FK_CustomerCustomerDemo_Customers",
+        "Referenced": "Customers.CustomerID",
+        "Referencing": "CustomerCustomerDemo.CustomerID"
+      }
+    ],
+    "OuterKeys": [],
+    "Name": "Customers",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "DiscontinuedProductsFedarated",
+        "Name": "ProductID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "DiscontinuedProductsFedarated",
+        "Name": "ProductName",
+        "PropertyType": "string",
+        "Precision": 40
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "DiscontinuedProductsFedarated",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "EmployeeID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "LastName",
+        "PropertyType": "string",
+        "Precision": 20
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "FirstName",
+        "PropertyType": "string",
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Title",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "TitleOfCourtesy",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 25
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "BirthDate",
+        "PropertyType": "DateTime",
+        "IsNullable": true,
+        "Precision": 3
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "HireDate",
+        "PropertyType": "DateTime",
+        "IsNullable": true,
+        "Precision": 3
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Address",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 60
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "City",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Region",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "PostalCode",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Country",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "HomePhone",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Extension",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 4
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Photo",
+        "PropertyType": "byte[]",
+        "IsNullable": true,
+        "Precision": 2147483647
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "Notes",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 1073741823
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "ReportsTo",
+        "PropertyType": "int",
+        "IsNullable": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Employees",
+        "Name": "PhotoPath",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 255
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Orders_Employees",
+        "Referenced": "Employees.EmployeeID",
+        "Referencing": "Orders.EmployeeID"
+      },
+      {
+        "Name": "FK_EmployeeTerritories_Employees",
+        "Referenced": "Employees.EmployeeID",
+        "Referencing": "EmployeeTerritories.EmployeeID"
+      },
+      {
+        "Name": "FK_Employees_Employees",
+        "Referenced": "Employees.EmployeeID",
+        "Referencing": "Employees.ReportsTo"
+      }
+    ],
+    "OuterKeys": [
+      {
+        "Name": "FK_Employees_Employees",
+        "Referenced": "Employees.EmployeeID",
+        "Referencing": "Employees.ReportsTo"
+      }
+    ],
+    "Name": "Employees",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "EmployeeSplit",
+        "Name": "ID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "EmployeeSplit",
+        "Name": "Extension",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 4
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "EmployeeSplit",
+        "Name": "PhotoPath",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 255
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [],
+    "Name": "EmployeeSplit",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "EmployeeTerritories",
+        "Name": "EmployeeID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "EmployeeTerritories",
+        "Name": "TerritoryID",
+        "PropertyType": "string",
+        "IsPK": true,
+        "PkOrder": 2,
+        "Precision": 20
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [
+      {
+        "Name": "FK_EmployeeTerritories_Territories",
+        "Referenced": "Territories.TerritoryID",
+        "Referencing": "EmployeeTerritories.TerritoryID"
+      },
+      {
+        "Name": "FK_EmployeeTerritories_Employees",
+        "Referenced": "Employees.EmployeeID",
+        "Referencing": "EmployeeTerritories.EmployeeID"
+      }
+    ],
+    "Name": "EmployeeTerritories",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Order Details",
+        "Name": "OrderID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Order Details",
+        "Name": "ProductID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 2,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Order Details",
+        "Name": "UnitPrice",
+        "PropertyType": "decimal",
+        "Precision": 19,
+        "NumericScale": 4,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Order Details",
+        "Name": "Quantity",
+        "PropertyType": "short",
+        "Precision": 5,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Order Details",
+        "Name": "Discount",
+        "PropertyType": "float",
+        "Precision": 24,
+        "IsNumeric": true
+      }
+    ],
+    "InnerKeys": [],
+    "OuterKeys": [
+      {
+        "Name": "FK_Order_Details_Orders",
+        "Referenced": "Orders.OrderID",
+        "Referencing": "Order Details.OrderID"
+      },
+      {
+        "Name": "FK_Order_Details_Products",
+        "Referenced": "Products.ProductID",
+        "Referencing": "Order Details.ProductID"
+      }
+    ],
+    "Name": "Order Details",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "OrderID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "CustomerID",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 5
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "EmployeeID",
+        "PropertyType": "int",
+        "IsNullable": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "OrderDate",
+        "PropertyType": "DateTime",
+        "IsNullable": true,
+        "Precision": 3
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "RequiredDate",
+        "PropertyType": "DateTime",
+        "IsNullable": true,
+        "Precision": 3
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShippedDate",
+        "PropertyType": "DateTime",
+        "IsNullable": true,
+        "Precision": 3
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipVia",
+        "PropertyType": "int",
+        "IsNullable": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "Freight",
+        "PropertyType": "decimal",
+        "IsNullable": true,
+        "Precision": 19,
+        "NumericScale": 4,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipName",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipAddress",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 60
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipCity",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipRegion",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipPostalCode",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Orders",
+        "Name": "ShipCountry",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Order_Details_Orders",
+        "Referenced": "Orders.OrderID",
+        "Referencing": "Order Details.OrderID"
+      }
+    ],
+    "OuterKeys": [
+      {
+        "Name": "FK_Orders_Employees",
+        "Referenced": "Employees.EmployeeID",
+        "Referencing": "Orders.EmployeeID"
+      },
+      {
+        "Name": "FK_Orders_Customers",
+        "Referenced": "Customers.CustomerID",
+        "Referencing": "Orders.CustomerID"
+      },
+      {
+        "Name": "FK_Orders_Shippers",
+        "Referenced": "Shippers.ShipperID",
+        "Referencing": "Orders.ShipVia"
+      }
+    ],
+    "Name": "Orders",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "ProductID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "ProductName",
+        "PropertyType": "string",
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "SupplierID",
+        "PropertyType": "int",
+        "IsNullable": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "CategoryID",
+        "PropertyType": "int",
+        "IsNullable": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "QuantityPerUnit",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 20
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "UnitPrice",
+        "PropertyType": "decimal",
+        "IsNullable": true,
+        "Precision": 19,
+        "NumericScale": 4,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "UnitsInStock",
+        "PropertyType": "short",
+        "IsNullable": true,
+        "Precision": 5,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "UnitsOnOrder",
+        "PropertyType": "short",
+        "IsNullable": true,
+        "Precision": 5,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "ReorderLevel",
+        "PropertyType": "short",
+        "IsNullable": true,
+        "Precision": 5,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Products",
+        "Name": "Discontinued",
+        "PropertyType": "bool"
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Order_Details_Products",
+        "Referenced": "Products.ProductID",
+        "Referencing": "Order Details.ProductID"
+      }
+    ],
+    "OuterKeys": [
+      {
+        "Name": "FK_Products_Categories",
+        "Referenced": "Categories.CategoryID",
+        "Referencing": "Products.CategoryID"
+      },
+      {
+        "Name": "FK_Products_Suppliers",
+        "Referenced": "Suppliers.SupplierID",
+        "Referencing": "Products.SupplierID"
+      }
+    ],
+    "Name": "Products",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Region",
+        "Name": "RegionID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Region",
+        "Name": "RegionDescription",
+        "PropertyType": "string",
+        "Precision": 50
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Territories_Region",
+        "Referenced": "Region.RegionID",
+        "Referencing": "Territories.RegionID"
+      }
+    ],
+    "OuterKeys": [],
+    "Name": "Region",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Shippers",
+        "Name": "ShipperID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Shippers",
+        "Name": "CompanyName",
+        "PropertyType": "string",
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Shippers",
+        "Name": "Phone",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Orders_Shippers",
+        "Referenced": "Shippers.ShipperID",
+        "Referencing": "Orders.ShipVia"
+      }
+    ],
+    "OuterKeys": [],
+    "Name": "Shippers",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "SupplierID",
+        "PropertyType": "int",
+        "IsPK": true,
+        "PkOrder": 1,
+        "IsAutoIncrement": true,
+        "Precision": 10,
+        "IsNumeric": true
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "CompanyName",
+        "PropertyType": "string",
+        "Precision": 40
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "ContactName",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "ContactTitle",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 30
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "Address",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 60
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "City",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "Region",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "PostalCode",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 10
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "Country",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 15
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "Phone",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "Fax",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 24
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Suppliers",
+        "Name": "HomePage",
+        "PropertyType": "string",
+        "IsNullable": true,
+        "Precision": 1073741823
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_Products_Suppliers",
+        "Referenced": "Suppliers.SupplierID",
+        "Referencing": "Products.SupplierID"
+      }
+    ],
+    "OuterKeys": [],
+    "Name": "Suppliers",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  },
+  {
+    "Columns": [
+      {
+        "Owner": "dbo",
+        "TableName": "Territories",
+        "Name": "TerritoryID",
+        "PropertyType": "string",
+        "IsPK": true,
+        "PkOrder": 1,
+        "Precision": 20
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Territories",
+        "Name": "TerritoryDescription",
+        "PropertyType": "string",
+        "Precision": 50
+      },
+      {
+        "Owner": "dbo",
+        "TableName": "Territories",
+        "Name": "RegionID",
+        "PropertyType": "int",
+        "Precision": 10,
+        "IsNumeric": true
+      }
+    ],
+    "InnerKeys": [
+      {
+        "Name": "FK_EmployeeTerritories_Territories",
+        "Referenced": "Territories.TerritoryID",
+        "Referencing": "EmployeeTerritories.TerritoryID"
+      }
+    ],
+    "OuterKeys": [
+      {
+        "Name": "FK_Territories_Region",
+        "Referenced": "Region.RegionID",
+        "Referencing": "Territories.RegionID"
+      }
+    ],
+    "Name": "Territories",
+    "Schema": "dbo",
+    "IsUpdatable": true
+  }
+]

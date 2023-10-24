@@ -10,5 +10,6 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool ShowMessageWhenExitCodeNotZero { get; set; } = true;
         public bool ShowMessageWhenExitCodeZero { get; set; } = true;
         public string DependsOn { get; set; }
+        public string Skip { get; set; }
     }
 }

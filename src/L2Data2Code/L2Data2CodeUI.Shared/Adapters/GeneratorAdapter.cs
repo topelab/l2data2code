@@ -206,12 +206,6 @@ namespace L2Data2CodeUI.Shared.Adapters
                 return;
             }
 
-            if (baseOptions.RemoveFolders && !TemplatesConfiguration.HasToRemoveFolders(SelectedTemplate))
-            {
-                options.RemoveFolders = false;
-                messageService.Info(Messages.ErrorCannotRemoveFolders, MessageCodes.RUN_GENERATOR);
-            }
-
             var path = $"{options.OutputPath}";
             gitService.GitCommit(path);
 

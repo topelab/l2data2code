@@ -1,0 +1,101 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+    <TrimMode>copyused</TrimMode>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationIcon>Assets\l2data2code-v3.ico</ApplicationIcon>
+    <Version>3.1.8</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <AvaloniaXaml Remove="Models\**" />
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
+    <Compile Remove="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs" />
+    <None Remove=".gitignore" />
+    <None Remove="Assets\l2data2code-v3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <!--This helps with theme dll-s trimming.
+	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+    <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmableAssembly Include="Avalonia.Themes.Default" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.5" />
+    <PackageReference Include="Material.Avalonia" Version="3.0.2" />
+    <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.4.16" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\L2Data2Code.BaseHandleBars\L2Data2Code.BaseHandleBars.csproj" />
+    <ProjectReference Include="..\L2Data2Code.SharedContext\L2Data2Code.SharedContext.csproj" />
+    <ProjectReference Include="..\L2Data2CodeUI.Shared\L2Data2CodeUI.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Main\MessagePanel\MessagePanelUserControl.axaml.cs">
+      <DependentUpon>MessagePanelUserControl.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="changes.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\datasource-section.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\modules-section.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\template-configuration.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\template-section.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="issues.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\northwind-dbinfo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Northwind.ERP.Domain.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\GlobalFiles\readme.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\ItemFiles\{{Area}}.{{Module}}.{{Entity}}.demo.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleData\Templates\template-settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

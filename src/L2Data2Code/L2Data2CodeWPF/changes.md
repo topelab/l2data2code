@@ -1,3 +1,25 @@
+### 2.13.25
+
+- Upgrade Avalonia UI packages to 11.0.5
+
+### 2.13.23
+
+- **New**: Added property `Command.Skip` useful to skip commands on `Templates.PreCommands` or `Templates.PostCommands`. Can use variables `Vars` defined at `DataSources` level.
+
+### 2.13.22
+
+- Fix remove folders: when is set to false on template it doesn't allow activate on run
+- Fix relation names on tables
+
+### 2.13.20
+
+- **New**: Added `EnumTables` on `Schemes[]` used to mark tables to read its values (`Id` and `Name`) into a `List<EnumTableValue>`
+- **New**: Added new alises for strings `ToPascalCleanName` and `ToCamelCleanName`
+
+### 2.13.19
+
+- Fix SQLite reader
+
 ### 2.13.16
 
 - Upgrade topelab.core.resolver.microsoft to 1.4.13

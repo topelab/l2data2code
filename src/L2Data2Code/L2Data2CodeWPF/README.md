@@ -71,7 +71,7 @@ Every template has a name and these properties:
 
   - PreCommands will be executed before output is being generated.
   - PostCommands will be executed after output is generated.
-  - Both PreCommands and PostCommands have same attributes: *Name*, *Directory*, *Exec*, *ShowWindow*, *ShowMessages*, *ShowMessageWhenExitCodeNotZero* and *ShowMessageWhenExitCodeZero*. All *ShowMessage* attributes are true by default.
+  - Both PreCommands and PostCommands have same attributes: *Name*, *Directory*, *Exec*, *ShowWindow*, *ShowMessages*, *ShowMessageWhenExitCodeNotZero*, *ShowMessageWhenExitCodeZero* and *Skip*. All *ShowMessage* attributes are true by default. *Directory*, *Exec* and *Skip* can use compiled vars.
   - Example:
     ```json
     "PostCommands": [
@@ -79,7 +79,8 @@ Every template has a name and these properties:
             "Name": "Build",
             "Directory": "{{SavePath}}",
             "Exec": "start .",
-            "ShowWindow": false
+            "ShowWindow": false,
+            "Skip": {{SkipBuild}} // SkipBuild can be defined on DataSource.Vars collection
         }
     ],
     ```

@@ -1,5 +1,6 @@
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Main.TablePanel;
 using L2Data2CodeWPF.Base;
-using L2Data2CodeWPF.Main;
 using System.Windows.Controls;
 using System.Windows.Input;
 

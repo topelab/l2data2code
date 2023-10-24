@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -39,6 +40,11 @@ namespace L2Data2CodeUI.Shared.Adapters
         public void Exec(Command command, Dictionary<string, object> compiledVars = null)
         {
             Process process = null;
+            if (compiledVars != null && command.Skip != null ? mustacheRenderizer.Render(command.Skip, compiledVars).IsTrue() : false)
+            {
+                return;
+            }
+
             var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
             var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
@@ -46,7 +52,10 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             void ErrorDataReceived(object s, DataReceivedEventArgs e)
             {
-                messageService.Error(e.Data, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
+                if (e.Data != null)
+                {
+                    messageService.Error(e.Data, $"{string.Format(Messages.ParametrizedErrorMessage, command.Name)}: {e.Data}", MessageCodes.RUN_COMMAND);
+                }
             }
 
             void DataReceived(object s, DataReceivedEventArgs e)

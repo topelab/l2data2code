@@ -1,4 +1,5 @@
-using L2Data2CodeWPF.Main;
+using L2Data2Code.SharedContext.Main;
+using L2Data2Code.SharedContext.Main.CommandBar;
 using System.Windows.Controls;
 
 namespace L2Data2CodeWPF.Controls.CommandBar

@@ -14,3 +14,8 @@ Now, you have some tools:
 - **Renewed UI Tool** [L2Data2Code](src/L2Data2Code/L2Data2Code/README.md) made using AvaloniaUI that will be the next version of L2Data2CodeWPF, and possibly, a replacement for it.
 
 
+## .Net MAUI resources I used
+
+- [Custom Fonts & Material Design Icons in .NET MAUI](https://cedricgabrang.medium.com/custom-fonts-material-design-icons-in-net-maui-acf59c9f98fe)
+- [Material Design Icons web font](https://github.com/Templarian/MaterialDesign-Webfont/blob/master/fonts/materialdesignicons-webfont.ttf)
+- [Material Design Icons home page](https://pictogrammers.com/library/mdi/)
