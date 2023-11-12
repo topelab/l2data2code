@@ -95,7 +95,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             TemplatesConfiguration = templatesConfiguration;
 
             GeneratorApplication = Strings.Title;
-            GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            GeneratorVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Piece(0,'+');
 
             SettingsConfiguration.Merge(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]);
             SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH] ??= Path.GetDirectoryName(SettingsConfiguration[ConfigurationLabels.TEMPLATE_SETTINGS]).AddPathSeparator();
