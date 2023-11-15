@@ -18,15 +18,6 @@ namespace L2Data2Code.SchemaReader.Schema
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tables"/> class.
-        /// </summary>
-        /// <param name="serializationInfo">The serialization information.</param>
-        /// <param name="streamingContext">The streaming context.</param>
-        protected Tables(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        {
-        }
-
-        /// <summary>
         /// Gets the table.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>

@@ -13,7 +13,7 @@
     <ApplicationId>com.companyname.l2data2code.maui</ApplicationId>
     <ApplicationIdGuid>5d98401c-f88b-4cdb-a9dd-0cd2d44afe65</ApplicationIdGuid>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.1.0-beta1</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -42,11 +42,11 @@
     <Compile Remove="SampleData\Templates\ItemFiles\csharp\{{Entity}}.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.0-rc.2.9530" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="ReactiveUI" Version="19.5.1" />
-    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.5.0-beta1" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.5.0" />
     <PackageReference Include="LambdaConverters" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
