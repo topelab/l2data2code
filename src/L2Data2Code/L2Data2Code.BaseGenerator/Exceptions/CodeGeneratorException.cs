@@ -1,6 +1,5 @@
 using L2Data2Code.SharedLib.Helpers;
 using System;
-using System.Runtime.Serialization;
 
 namespace L2Data2Code.BaseGenerator.Exceptions
 {
@@ -36,10 +35,6 @@ namespace L2Data2Code.BaseGenerator.Exceptions
             LastExceptionType = exceptionType;
             LogService.Error(LastError);
             OnError?.Invoke(message);
-        }
-
-        protected CodeGeneratorException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
         }
     }
 
