@@ -1,3 +1,9 @@
+### 3.2.2
+
+- Upgrade Handlebars.Net.Helpers to 2.4.1.2
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.1.2
+- Upgrade Handlebars.Net.Helpers.Json to 2.4.1.2
+
 ### 3.2.1
 
 - Upgrade topelab.core.resolver.microsoft to 1.5.3
