@@ -1,3 +1,8 @@
+### 3.2.3
+
+- Upgrade Material.Icons.Avalonia to 2.1.0
+- Removed WPF and MAUI projects, focalize on AvaloniaUI only
+
 ### 3.2.2
 
 - Upgrade Handlebars.Net.Helpers to 2.4.1.2
