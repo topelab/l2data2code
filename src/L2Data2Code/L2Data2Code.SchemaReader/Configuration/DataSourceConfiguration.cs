@@ -32,6 +32,11 @@ namespace L2Data2Code.SchemaReader.Configuration
         public string OutputSchema { get => outputSchema ?? Schema; set => outputSchema = value; }
 
         /// <summary>
+        /// Modules
+        /// </summary>
+        public string ModulesGroup { get; set; }
+
+        /// <summary>
         /// Vars configuration
         /// </summary>
         [JsonProperty(nameof(Vars))]

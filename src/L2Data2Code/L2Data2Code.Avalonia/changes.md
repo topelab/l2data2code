@@ -1,3 +1,9 @@
+### 3.2.4
+
+- Posibility to group name spaces using module groups
+- **New**: Added `ModulesGroup` to `DataSources`
+- **New**: Added `Group` to `Modules`
+
 ### 3.2.3
 
 - Upgrade Material.Icons.Avalonia to 2.1.0

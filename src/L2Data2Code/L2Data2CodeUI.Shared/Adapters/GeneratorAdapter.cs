@@ -138,7 +138,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             => DataSourcesConfiguration.GetKeys();
 
         public IEnumerable<string> GetModuleList(string selectedDataSource)
-            => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(DataSourcesConfiguration[selectedDataSource].Area + "."));
+            => ModulesConfiguration.GetKeys().Where(s => ModulesConfiguration[s].Group == DataSourcesConfiguration[selectedDataSource].ModulesGroup);
 
         public string GetDefaultModule(string selectedDataSource)
         {

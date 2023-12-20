@@ -34,6 +34,11 @@ namespace L2Data2Code.SharedLib.Configuration
             return _values.Keys;
         }
 
+        public IEnumerable<T> GetValues()
+        {
+            return _values.Values;
+        }
+
         public T FirstOrDefault()
         {
             return _values.Values.FirstOrDefault();
