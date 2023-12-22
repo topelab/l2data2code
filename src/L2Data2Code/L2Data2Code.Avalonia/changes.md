@@ -1,6 +1,6 @@
 ### 3.2.4
 
-- Posibility to group name spaces using module groups
+- Added possibility to group name spaces using module groups
 - **New**: Added `ModulesGroup` to `DataSources`
 - **New**: Added `Group` to `Modules`
 

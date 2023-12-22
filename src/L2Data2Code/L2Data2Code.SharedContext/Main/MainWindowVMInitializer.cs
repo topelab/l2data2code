@@ -61,6 +61,7 @@ namespace L2Data2Code.SharedContext.Main
 
             mainWindowVM.SelectedTemplate = selectedTemplate;
             mainWindowVM.SelectedDataSource = selectedDataSource;
+            mainWindowVM.ModuleList.Clear();
             generatorAdapter.GetModuleList(selectedDataSource).ToList().ForEach(t => mainWindowVM.ModuleList.Add(t));
             mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(selectedDataSource);
             generatorAdapter.GetVarsList(selectedTemplate, selectedDataSource).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
