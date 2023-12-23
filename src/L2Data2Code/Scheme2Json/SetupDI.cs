@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SchemaReader.Fake;
 using L2Data2Code.SchemaReader.Interface;

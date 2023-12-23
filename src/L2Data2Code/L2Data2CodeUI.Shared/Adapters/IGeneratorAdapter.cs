@@ -25,7 +25,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         string SelectedDataSource { get; }
         string SelectedModule { get; }
         string SelectedTemplate { get; }
-        string SelectedVars { get; }
+        string SelectedSetting { get; }
         string SlnFile { get; }
         string SolutionType { get; set; }
         Tables Tables { get; }
@@ -35,11 +35,11 @@ namespace L2Data2CodeUI.Shared.Adapters
         IEnumerable<string> GetAreaList();
         IEnumerable<string> GetModuleList(string selectedDataSource);
         IEnumerable<string> GetTemplateList();
-        IEnumerable<string> GetVarsList(string selectedTemplate, string selectedDataSource = null);
+        IEnumerable<string> GetSettings(string selectedTemplate, string selectedDataSource = null);
         void SetCurrentDataSource(string selectedDataSource);
         void SetCurrentModule(string selectedModule, bool triggered = false);
         void SetCurrentTemplate(string selectedTemplate, bool triggered = false);
-        void SetCurrentVars(string selectedVars, bool triggered = false);
+        void SetCurrentSetting(string selectedVars, bool triggered = false);
         void Run(CodeGeneratorDto baseOptions);
         string GetDefaultModule(string selectedDataSource);
     }

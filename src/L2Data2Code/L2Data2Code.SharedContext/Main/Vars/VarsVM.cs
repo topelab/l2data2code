@@ -12,7 +12,7 @@ namespace L2Data2Code.SharedContext.Main.Vars
 
     public class VarsVM : ViewModelBase
     {
-        private ObservableCollection<Variable> _vars = new();
+        private ObservableCollection<Variable> _vars = [];
 
         public ObservableCollection<Variable> Variables
         {

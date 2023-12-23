@@ -118,7 +118,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         public string SelectedDataSource { get; private set; }
         public string SelectedModule { get; private set; }
         public string SelectedTemplate { get; private set; }
-        public string SelectedVars { get; private set; }
+        public string SelectedSetting { get; private set; }
         public string SlnFile => slnFiles?.FirstOrDefault() ?? $"{OutputPath?.TrimPathSeparator()}\\{SelectedModule}.sln".ToLower();
         public string SolutionType { get; set; }
         public Tables Tables { get => tables ?? new Tables(); }
@@ -150,11 +150,28 @@ namespace L2Data2CodeUI.Shared.Adapters
         public IEnumerable<string> GetTemplateList()
             => TemplatesConfiguration.GetKeys();
 
-        public IEnumerable<string> GetVarsList(string selectedTemplate, string selectedDataSource = null)
+        public IEnumerable<string> GetSettings(string selectedTemplate, string selectedDataSource = null)
         {
-            return selectedDataSource == null
-                ? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable()
-                : DataSourcesConfiguration[selectedDataSource].Configurations?.AllKeys.AsEnumerable() ?? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable();
+            if (TemplatesConfiguration[selectedTemplate].Settings.Count != 0)
+            {
+                var allSettings = TemplatesConfiguration[selectedTemplate].Settings;
+                var dataSourceSettings = selectedDataSource == null ? null : DataSourcesConfiguration[selectedDataSource].Settings;
+
+                var selectedSettings = selectedDataSource == null
+                    ? TemplatesConfiguration[selectedTemplate].Settings
+                    : (dataSourceSettings == null
+                        ? allSettings
+                        : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key))
+                    );
+
+                return selectedSettings.Select(s => s.Name);
+            }
+            else
+            {
+                return selectedDataSource == null
+                    ? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable()
+                    : DataSourcesConfiguration[selectedDataSource].Configurations?.AllKeys.AsEnumerable() ?? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable();
+            }
         }
 
         public void Run(CodeGeneratorDto baseOptions)
@@ -177,7 +194,10 @@ namespace L2Data2CodeUI.Shared.Adapters
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
                 OutputPath = baseOptions.OutputPath.AddPathSeparator(),
                 CreatedFromSchemaName = outputSchemaName,
-                UserVariables = TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
+                UserVariables = string.Concat(
+                    DataSourcesConfiguration[SelectedDataSource].Vars.ToSemiColonSeparatedString(),
+                    TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedSetting],
+                    TemplatesConfiguration[SelectedTemplate].Settings.Find(s => s.Name == SelectedSetting)?.Vars.ToSemiColonSeparatedString()),
                 TemplatePath = Path.Combine(basePath, templatePath),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
                 GeneratorApplication = baseOptions.GeneratorApplication,
@@ -333,17 +353,31 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
 
             SelectedTemplate = selectedTemplate;
-            SetCurrentVars(GetVarsList(selectedTemplate, SelectedDataSource).FirstOrDefault(), true);
+            SetCurrentSetting(GetSettings(selectedTemplate, SelectedDataSource).FirstOrDefault(), true);
         }
 
-        public void SetCurrentVars(string selectedVars, bool triggered = false)
+        public void SetCurrentSetting(string selectedSetting, bool triggered = false)
         {
-            if (selectedVars == SelectedVars && !triggered)
+            if (selectedSetting == SelectedSetting && !triggered)
             {
                 return;
             }
 
-            SelectedVars = selectedVars;
+            SelectedSetting = selectedSetting;
+            if (SelectedDataSource != null)
+            {
+                var dataSourceSettings = DataSourcesConfiguration[SelectedDataSource].Settings;
+                var allSettings = TemplatesConfiguration[SelectedTemplate].Settings;
+                if (dataSourceSettings != null && allSettings != null)
+                {
+                    var key = allSettings.Find(s => s.Name == selectedSetting).Key;
+                    if (key != null)
+                    {
+                        SelectedModule = DataSourcesConfiguration[SelectedDataSource].Settings[key]
+                            ?? SelectedModule;
+                    }
+                }
+            }
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
             slnFiles = appService.Set(SolutionType).Find(OutputPath);
             AppType = appService.AppType;
@@ -425,8 +459,10 @@ namespace L2Data2CodeUI.Shared.Adapters
                 OutputPath = null,
                 CreatedFromSchemaName = outputSchemaName,
                 UserVariables = string.Concat(
-                    TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
-                    DataSourcesConfiguration[SelectedDataSource].Vars.ToSemiColonSeparatedString()),
+                    DataSourcesConfiguration[SelectedDataSource].Vars.ToSemiColonSeparatedString(),
+                    TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedSetting],
+                    TemplatesConfiguration[SelectedTemplate].Settings.Find(s => s.Name == SelectedSetting)?.Vars.ToSemiColonSeparatedString()
+                    ),
                 TemplatePath = Path.Combine(basePath, template),
                 TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
                 SchemaName = schemaNameToFake,

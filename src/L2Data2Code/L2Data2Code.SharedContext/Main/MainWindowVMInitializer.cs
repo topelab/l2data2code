@@ -48,7 +48,7 @@ namespace L2Data2Code.SharedContext.Main
 
             mainWindowVM.CommandBarVM.CanShowVSButton = mainWindowVM.AppType == AppType.VisualStudio;
 
-            mainWindowVM.ShowVarsWindow = bool.TryParse(generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
+            mainWindowVM.ShowSettingsWindow = bool.TryParse(generatorAdapter.SettingsConfiguration["showVarsWindow"], out var showVarsWindow) && showVarsWindow;
 
             mainWindowVM.EmptyFolders = true;
             mainWindowVM.SetRelatedTables = true;
@@ -64,8 +64,9 @@ namespace L2Data2Code.SharedContext.Main
             mainWindowVM.ModuleList.Clear();
             generatorAdapter.GetModuleList(selectedDataSource).ToList().ForEach(t => mainWindowVM.ModuleList.Add(t));
             mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(selectedDataSource);
-            generatorAdapter.GetVarsList(selectedTemplate, selectedDataSource).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
-            mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
+            mainWindowVM.Settings.Clear();
+            generatorAdapter.GetSettings(selectedTemplate, selectedDataSource).ToList().ForEach(t => mainWindowVM.Settings.Add(t));
+            mainWindowVM.SelectedSetting = mainWindowVM.Settings.FirstOrDefault();
 
             mainWindowVM.TablePanelVM.SelectAllTables = false;
             mainWindowVM.TablePanelVM.SelectAllViews = false;

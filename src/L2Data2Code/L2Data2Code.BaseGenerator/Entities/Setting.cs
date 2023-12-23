@@ -23,7 +23,15 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// Vars configuration
         /// </summary>
         [JsonProperty(nameof(Vars))]
-        public JToken VarsConfiguration { get => varsConfiguration; set { varsConfiguration = value; Vars = value.ToNameValueCollection(); } }
+        public JToken VarsConfiguration
+        {
+            get => varsConfiguration;
+            set
+            {
+                varsConfiguration = value;
+                Vars = value.ToNameValueCollection();
+            }
+        }
 
         /// <summary>
         /// Vars

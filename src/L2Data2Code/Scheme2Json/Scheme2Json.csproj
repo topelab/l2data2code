@@ -14,7 +14,7 @@
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\L2Data2Code.SchemaReader\L2Data2Code.SchemaReader.csproj" />
+    <ProjectReference Include="..\L2Data2Code.BaseGenerator\L2Data2Code.BaseGenerator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

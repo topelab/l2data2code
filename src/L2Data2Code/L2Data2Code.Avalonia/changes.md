@@ -1,3 +1,8 @@
+### 3.3.0
+
+- **New**: Added `Settings` that will replace `Configurations` when it exists
+- **New**: Module can be stablished when template configuration changes (new `Settings`)
+
 ### 3.2.4
 
 - Added possibility to group name spaces using module groups

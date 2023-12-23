@@ -20,9 +20,9 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
         private IDelegateCommand setDataItemsCommand;
         private IDelegateCommand setDataItemCommand;
 
-        public ObservableCollection<TableVM> AllTables { get; set; } = new ObservableCollection<TableVM>();
-        public ObservableCollection<TableVM> AllViews { get; set; } = new ObservableCollection<TableVM>();
-        public Dictionary<string, TableVM> AllDataItems { get; set; } = new Dictionary<string, TableVM>();
+        public ObservableCollection<TableVM> AllTables { get; set; } = [];
+        public ObservableCollection<TableVM> AllViews { get; set; } = [];
+        public Dictionary<string, TableVM> AllDataItems { get; set; } = [];
 
         public string AutoHeight
         {

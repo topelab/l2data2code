@@ -18,7 +18,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
         public MessagePanelService(IDispatcherWrapper dispatcher)
         {
             this.dispatcher = dispatcher;
-            AllMessages = new ObservableCollection<MessageVM>();
+            AllMessages = [];
             timer = new(TimeSpan.FromMilliseconds(1000));
             timer.Elapsed += Timer_Tick;
         }

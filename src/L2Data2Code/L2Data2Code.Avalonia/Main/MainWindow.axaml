@@ -71,8 +71,8 @@
                       ColumnDefinitions="*, Auto">
                     <ComboBox Grid.Column="0"
                               x:Name="cbVars"
-                              ItemsSource="{Binding VarsList}"
-                              SelectedItem="{Binding SelectedVars}"
+                              ItemsSource="{Binding Settings}"
+                              SelectedItem="{Binding SelectedSetting}"
                               Margin="0,5" />
                 </Grid>
 

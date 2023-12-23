@@ -9,10 +9,10 @@ namespace L2Data2Code.SharedContext.Main
 {
     public class MainWindowVM : ViewModelBase
     {
-        private ObservableCollection<string> _areaList = new();
-        private ObservableCollection<string> _moduleList = new();
-        private ObservableCollection<string> _templateList = new();
-        private ObservableCollection<string> _varsList = new();
+        private ObservableCollection<string> _areaList = [];
+        private ObservableCollection<string> _moduleList = [];
+        private ObservableCollection<string> _templateList = [];
+        private ObservableCollection<string> _varsList = [];
         private bool _emptyFolders;
         private bool _generateOnlyJson;
         private bool _generateOnlyJsonVisible;
@@ -25,7 +25,7 @@ namespace L2Data2Code.SharedContext.Main
         private string _selectedTemplate;
         private string _selectedVars;
         private bool _setRelatedTables;
-        private bool _showVarsWindow;
+        private bool _showSettingsWindow;
         private string _slnFile;
         private bool varsVisible = true;
         private AppType appType;
@@ -113,7 +113,7 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _selectedTemplate, value); }
         }
 
-        public string SelectedVars
+        public string SelectedSetting
         {
             get { return _selectedVars; }
             set { SetProperty(ref _selectedVars, value); }
@@ -125,10 +125,10 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _setRelatedTables, value); }
         }
 
-        public bool ShowVarsWindow
+        public bool ShowSettingsWindow
         {
-            get { return _showVarsWindow; }
-            set { SetProperty(ref _showVarsWindow, value); }
+            get { return _showSettingsWindow; }
+            set { SetProperty(ref _showSettingsWindow, value); }
         }
 
         public string SlnFile
@@ -142,7 +142,7 @@ namespace L2Data2Code.SharedContext.Main
             get { return _templateList; }
             set { SetProperty(ref _templateList, value); }
         }
-        public ObservableCollection<string> VarsList
+        public ObservableCollection<string> Settings
         {
             get { return _varsList; }
             set { SetProperty(ref _varsList, value); }

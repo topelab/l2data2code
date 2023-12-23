@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
 
-namespace L2Data2Code.SchemaReader.Configuration
+namespace L2Data2Code.BaseGenerator.Configuration
 {
     /// <summary>
     /// Data source configuration
