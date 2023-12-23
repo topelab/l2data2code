@@ -15,7 +15,7 @@ namespace L2Data2Code.SharedLib.Configuration
         {
             this.jsonSetting = jsonSetting;
             this.list = list;
-            _values = new Dictionary<string, T>();
+            _values = [];
             SetupValues(jsonSetting.Config[list]);
 
             jsonSetting.PropertyChanged += JsonSetting_PropertyChanged;

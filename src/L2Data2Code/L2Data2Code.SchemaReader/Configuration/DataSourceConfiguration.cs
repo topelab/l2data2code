@@ -13,6 +13,7 @@ namespace L2Data2Code.SchemaReader.Configuration
         private string outputSchema;
         private JToken varsConfiguration;
         private JToken configurationsConfiguration;
+        private JToken settingsConfiguration;
 
         /// <summary>
         /// Area
@@ -40,13 +41,43 @@ namespace L2Data2Code.SchemaReader.Configuration
         /// Vars configuration
         /// </summary>
         [JsonProperty(nameof(Vars))]
-        public JToken VarsConfiguration { get => varsConfiguration; set { varsConfiguration = value; Vars = value.ToNameValueCollection(); } }
+        public JToken VarsConfiguration
+        {
+            get => varsConfiguration;
+            set
+            {
+                varsConfiguration = value;
+                Vars = value.ToNameValueCollection();
+            }
+        }
 
         /// <summary>
         /// Configurations configuration
         /// </summary>
         [JsonProperty(nameof(Configurations))]
-        public JToken ConfigurationsConfiguration { get => configurationsConfiguration; set { configurationsConfiguration = value; Configurations = value.ToNameValueCollection(); } }
+        public JToken ConfigurationsConfiguration
+        {
+            get => configurationsConfiguration;
+            set
+            {
+                configurationsConfiguration = value;
+                Configurations = value.ToNameValueCollection();
+            }
+        }
+
+        /// <summary>
+        /// Settings configuration
+        /// </summary>
+        [JsonProperty(nameof(Settings))]
+        public JToken SettingsConfiguration
+        {
+            get => settingsConfiguration;
+            set
+            {
+                settingsConfiguration = value;
+                Settings = value.ToNameValueCollection();
+            }
+        }
 
         /// <summary>
         /// Vars
@@ -59,6 +90,13 @@ namespace L2Data2Code.SchemaReader.Configuration
         /// </summary>
         [JsonIgnore]
         public NameValueCollection Configurations { get; set; }
+
+        /// <summary>
+        /// Settings
+        /// </summary>
+        [JsonIgnore]
+        public NameValueCollection Settings { get; set; }
+
 
         public DataSourceConfiguration()
         {

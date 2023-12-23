@@ -1,8 +1,7 @@
-using L2Data2Code.SchemaReader.Configuration;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Helpers;
 
-namespace L2Data2Code.BaseGenerator.Configuration
+namespace L2Data2Code.SchemaReader.Configuration
 {
     public class DataSourcesConfiguration : BasicConfiguration<DataSourceConfiguration>, IDataSorcesConfiguration
     {
