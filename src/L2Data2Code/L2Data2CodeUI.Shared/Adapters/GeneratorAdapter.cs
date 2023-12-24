@@ -156,13 +156,13 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 var allSettings = TemplatesConfiguration[selectedTemplate].Settings;
                 var dataSourceSettings = selectedDataSource == null ? null : DataSourcesConfiguration[selectedDataSource].Settings;
+                var dataSourceSelectableSettings = dataSourceSettings == null
+                        ? allSettings
+                        : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key));
 
                 var selectedSettings = selectedDataSource == null
                     ? TemplatesConfiguration[selectedTemplate].Settings
-                    : (dataSourceSettings == null
-                        ? allSettings
-                        : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key))
-                    );
+                    : dataSourceSelectableSettings;
 
                 return selectedSettings.Select(s => s.Name);
             }
