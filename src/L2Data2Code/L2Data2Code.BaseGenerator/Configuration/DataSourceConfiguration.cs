@@ -1,6 +1,7 @@
 using L2Data2Code.SharedLib.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace L2Data2Code.BaseGenerator.Configuration
@@ -14,6 +15,7 @@ namespace L2Data2Code.BaseGenerator.Configuration
         private JToken varsConfiguration;
         private JToken configurationsConfiguration;
         private JToken settingsConfiguration;
+        private JToken modulesConfiguration;
 
         /// <summary>
         /// Area
@@ -76,6 +78,21 @@ namespace L2Data2Code.BaseGenerator.Configuration
             {
                 settingsConfiguration = value;
                 Settings = value.ToNameValueCollection();
+            }
+        }
+
+        [JsonIgnore]
+        public List<ModuleConfiguration> Modules { get; set; }
+
+
+        [JsonProperty(nameof(Modules))]
+        public JToken ModulesConfiguration
+        {
+            get => modulesConfiguration;
+            set
+            {
+                modulesConfiguration = value;
+                Modules = value.ToListOf<ModuleConfiguration>();
             }
         }
 

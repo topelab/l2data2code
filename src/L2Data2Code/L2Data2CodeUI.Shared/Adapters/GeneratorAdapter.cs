@@ -370,7 +370,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 var allSettings = TemplatesConfiguration[SelectedTemplate].Settings;
                 if (dataSourceSettings != null && allSettings != null)
                 {
-                    var key = allSettings.Find(s => s.Name == selectedSetting).Key;
+                    var key = allSettings.Find(s => s.Name == selectedSetting)?.Key;
                     if (key != null)
                     {
                         SelectedModule = DataSourcesConfiguration[SelectedDataSource].Settings[key]

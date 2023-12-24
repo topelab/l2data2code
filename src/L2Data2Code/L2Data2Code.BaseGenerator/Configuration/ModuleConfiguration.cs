@@ -1,6 +1,8 @@
+using L2Data2Code.SharedLib.Interfaces;
+
 namespace L2Data2Code.BaseGenerator.Configuration
 {
-    public class ModuleConfiguration
+    public class ModuleConfiguration : IKeyed
     {
         public string Key { get; set; }
         public string Name { get; set; }
