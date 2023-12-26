@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Main.CommandBar;
 using L2Data2Code.SharedContext.Main.MessagePanel;
@@ -10,8 +11,8 @@ namespace L2Data2Code.SharedContext.Main
     public class MainWindowVM : ViewModelBase
     {
         private ObservableCollection<string> _areaList = [];
-        private ObservableCollection<string> _moduleList = [];
-        private ObservableCollection<string> _templateList = [];
+        private ObservableCollection<ModuleConfiguration> _moduleList = [];
+        private ObservableCollection<TemplateConfiguration> _templateList = [];
         private ObservableCollection<string> _varsList = [];
         private bool _emptyFolders;
         private bool _generateOnlyJson;
@@ -21,8 +22,8 @@ namespace L2Data2Code.SharedContext.Main
         private string _outputPath;
         private bool _runningGenerateCode = false;
         private string _selectedDataSource;
-        private string _selectedModule;
-        private string _selectedTemplate;
+        private ModuleConfiguration _selectedModule;
+        private TemplateConfiguration _selectedTemplate;
         private string _selectedVars;
         private bool _setRelatedTables;
         private bool _showSettingsWindow;
@@ -74,7 +75,7 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _haveVSCodeInstalled, value); }
         }
 
-        public ObservableCollection<string> ModuleList
+        public ObservableCollection<ModuleConfiguration> ModuleList
         {
             get { return _moduleList; }
             set { SetProperty(ref _moduleList, value); }
@@ -101,13 +102,13 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _selectedDataSource, value); }
         }
 
-        public string SelectedModule
+        public ModuleConfiguration SelectedModule
         {
             get { return _selectedModule; }
             set { SetProperty(ref _selectedModule, value); }
         }
 
-        public string SelectedTemplate
+        public TemplateConfiguration SelectedTemplate
         {
             get { return _selectedTemplate; }
             set { SetProperty(ref _selectedTemplate, value); }
@@ -137,7 +138,7 @@ namespace L2Data2Code.SharedContext.Main
             set { SetProperty(ref _slnFile, value); }
         }
 
-        public ObservableCollection<string> TemplateList
+        public ObservableCollection<TemplateConfiguration> TemplateList
         {
             get { return _templateList; }
             set { SetProperty(ref _templateList, value); }

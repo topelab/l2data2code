@@ -100,6 +100,7 @@
                           x:Name="cbModule"
                           ItemsSource="{Binding ModuleList}"
                           SelectedItem="{Binding SelectedModule}"
+                          DisplayMemberBinding="{Binding Key}"
                           Margin="0,5" />
 
                 <TextBlock Grid.Row="4"

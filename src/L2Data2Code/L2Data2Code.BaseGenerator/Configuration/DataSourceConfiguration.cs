@@ -11,11 +11,14 @@ namespace L2Data2Code.BaseGenerator.Configuration
     /// </summary>
     public class DataSourceConfiguration
     {
+        private const string DEFAULT_KEY = "localserver";
+
         private string outputSchema;
         private JToken varsConfiguration;
         private JToken configurationsConfiguration;
         private JToken settingsConfiguration;
         private JToken modulesConfiguration;
+        private string schema;
 
         /// <summary>
         /// Area
@@ -28,7 +31,7 @@ namespace L2Data2Code.BaseGenerator.Configuration
         /// <summary>
         /// Schema
         /// </summary>
-        public string Schema { get; set; }
+        public string Schema { get => schema ?? DEFAULT_KEY; set => schema = value; }
         /// <summary>
         /// Output schema
         /// </summary>

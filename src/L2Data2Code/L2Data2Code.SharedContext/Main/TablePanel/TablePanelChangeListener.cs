@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.SharedContext.Base;
 using L2Data2CodeUI.Shared.Adapters;
 using NLog;
@@ -102,14 +103,14 @@ namespace L2Data2Code.SharedContext.Main.TablePanel
             }
         }
 
-        private void IncludeExcludeTablesChanged(string selectedModule)
+        private void IncludeExcludeTablesChanged(ModuleConfiguration selectedModule)
         {
             controlVM.WorkOnAction(() =>
             {
                 controlVM.LoadingTables = true;
                 controlVM.ViewsVisible = false;
-                var includeTables = adapter.ModulesConfiguration[selectedModule].IncludeTables;
-                var excludeTables = adapter.ModulesConfiguration[selectedModule].ExcludeTables;
+                var includeTables = selectedModule.IncludeTables;
+                var excludeTables = selectedModule.ExcludeTables;
                 var includeTablesRegex = includeTables == null ? null : new Regex(includeTables);
                 var excludeTablesRegex = excludeTables == null ? null : new Regex(excludeTables);
 

@@ -22,25 +22,25 @@ namespace L2Data2CodeUI.Shared.Adapters
         string GeneratorVersion { get; set; }
         string InputSourceType { get; }
         string OutputPath { get; set; }
-        string SelectedDataSource { get; }
-        string SelectedModule { get; }
-        string SelectedTemplate { get; }
-        string SelectedSetting { get; }
+        DataSourceConfiguration SelectedDataSource { get; }
+        ModuleConfiguration SelectedModule { get; }
+        TemplateConfiguration SelectedTemplate { get; }
+        Setting SelectedSetting { get; }
         string SlnFile { get; }
         string SolutionType { get; set; }
         Tables Tables { get; }
         AppType AppType { get; }
 
         IEnumerable<Table> GetAllTables();
-        IEnumerable<string> GetAreaList();
-        IEnumerable<string> GetModuleList(string selectedDataSource);
-        IEnumerable<string> GetTemplateList();
-        IEnumerable<string> GetSettings(string selectedTemplate, string selectedDataSource = null);
-        void SetCurrentDataSource(string selectedDataSource);
-        void SetCurrentModule(string selectedModule, bool triggered = false);
-        void SetCurrentTemplate(string selectedTemplate, bool triggered = false);
-        void SetCurrentSetting(string selectedVars, bool triggered = false);
+        IEnumerable<DataSourceConfiguration> GetAreaList();
+        IEnumerable<ModuleConfiguration> GetModuleList(DataSourceConfiguration selectedDataSource);
+        IEnumerable<TemplateConfiguration> GetTemplateList();
+        IEnumerable<Setting> GetSettings(TemplateConfiguration selectedTemplate, DataSourceConfiguration selectedDataSource = null);
+        void SetCurrentDataSource(DataSourceConfiguration selectedDataSource);
+        void SetCurrentModule(ModuleConfiguration selectedModule, bool triggered = false);
+        void SetCurrentTemplate(TemplateConfiguration selectedTemplate, bool triggered = false);
+        void SetCurrentSetting(Setting setting, bool triggered = false);
         void Run(CodeGeneratorDto baseOptions);
-        string GetDefaultModule(string selectedDataSource);
+        ModuleConfiguration GetDefaultModule(DataSourceConfiguration selectedDataSource);
     }
 }
