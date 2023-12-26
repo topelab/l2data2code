@@ -1,4 +1,5 @@
 using L2Data2Code.BaseGenerator.Configuration;
+using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Main.CommandBar;
 using L2Data2Code.SharedContext.Main.MessagePanel;
@@ -10,10 +11,10 @@ namespace L2Data2Code.SharedContext.Main
 {
     public class MainWindowVM : ViewModelBase
     {
-        private ObservableCollection<string> _areaList = [];
-        private ObservableCollection<ModuleConfiguration> _moduleList = [];
-        private ObservableCollection<TemplateConfiguration> _templateList = [];
-        private ObservableCollection<string> _varsList = [];
+        private ObservableCollection<DataSourceConfiguration> dataSourceList = [];
+        private ObservableCollection<ModuleConfiguration> moduleList = [];
+        private ObservableCollection<TemplateConfiguration> templateList = [];
+        private ObservableCollection<Setting> settingsList = [];
         private bool _emptyFolders;
         private bool _generateOnlyJson;
         private bool _generateOnlyJsonVisible;
@@ -21,10 +22,10 @@ namespace L2Data2Code.SharedContext.Main
         private bool _haveVSCodeInstalled;
         private string _outputPath;
         private bool _runningGenerateCode = false;
-        private string _selectedDataSource;
-        private ModuleConfiguration _selectedModule;
-        private TemplateConfiguration _selectedTemplate;
-        private string _selectedVars;
+        private DataSourceConfiguration selectedDataSource;
+        private ModuleConfiguration selectedModule;
+        private TemplateConfiguration selectedTemplate;
+        private Setting selectedSetting;
         private bool _setRelatedTables;
         private bool _showSettingsWindow;
         private string _slnFile;
@@ -35,10 +36,10 @@ namespace L2Data2Code.SharedContext.Main
         private MessagePanelVM messagePanelVM;
 
         public AppType AppType { get => appType; internal set => SetProperty(ref appType, value); }
-        public ObservableCollection<string> DataSourceList
+        public ObservableCollection<DataSourceConfiguration> DataSourceList
         {
-            get { return _areaList; }
-            set { SetProperty(ref _areaList, value); }
+            get { return dataSourceList; }
+            set { SetProperty(ref dataSourceList, value); }
         }
 
         public CommandBarVM CommandBarVM { get => commandBarVM; internal set => SetProperty(ref commandBarVM, value); }
@@ -77,8 +78,8 @@ namespace L2Data2Code.SharedContext.Main
 
         public ObservableCollection<ModuleConfiguration> ModuleList
         {
-            get { return _moduleList; }
-            set { SetProperty(ref _moduleList, value); }
+            get { return moduleList; }
+            set { SetProperty(ref moduleList, value); }
         }
 
         public string OutputPath
@@ -96,28 +97,28 @@ namespace L2Data2Code.SharedContext.Main
             set => SetProperty(ref _runningGenerateCode, value);
         }
 
-        public string SelectedDataSource
+        public DataSourceConfiguration SelectedDataSource
         {
-            get { return _selectedDataSource; }
-            set { SetProperty(ref _selectedDataSource, value); }
+            get { return selectedDataSource; }
+            set { SetProperty(ref selectedDataSource, value); }
         }
 
         public ModuleConfiguration SelectedModule
         {
-            get { return _selectedModule; }
-            set { SetProperty(ref _selectedModule, value); }
+            get { return selectedModule; }
+            set { SetProperty(ref selectedModule, value); }
         }
 
         public TemplateConfiguration SelectedTemplate
         {
-            get { return _selectedTemplate; }
-            set { SetProperty(ref _selectedTemplate, value); }
+            get { return selectedTemplate; }
+            set { SetProperty(ref selectedTemplate, value); }
         }
 
-        public string SelectedSetting
+        public Setting SelectedSetting
         {
-            get { return _selectedVars; }
-            set { SetProperty(ref _selectedVars, value); }
+            get { return selectedSetting; }
+            set { SetProperty(ref selectedSetting, value); }
         }
 
         public bool SetRelatedTables
@@ -140,13 +141,13 @@ namespace L2Data2Code.SharedContext.Main
 
         public ObservableCollection<TemplateConfiguration> TemplateList
         {
-            get { return _templateList; }
-            set { SetProperty(ref _templateList, value); }
+            get { return templateList; }
+            set { SetProperty(ref templateList, value); }
         }
-        public ObservableCollection<string> Settings
+        public ObservableCollection<Setting> Settings
         {
-            get { return _varsList; }
-            set { SetProperty(ref _varsList, value); }
+            get { return settingsList; }
+            set { SetProperty(ref settingsList, value); }
         }
         public bool VarsVisible
         {

@@ -138,7 +138,18 @@ namespace L2Data2CodeUI.Shared.Adapters
             => DataSourcesConfiguration.GetValues();
 
         public IEnumerable<ModuleConfiguration> GetModuleList(DataSourceConfiguration selectedDataSource)
-            => selectedDataSource.Modules ?? [new ModuleConfiguration(selectedDataSource.DefaultModule)];
+        {
+            if (selectedDataSource.Modules == null && selectedDataSource.Settings == null)
+            {
+                selectedDataSource.Modules = [new ModuleConfiguration(selectedDataSource.DefaultModule)];
+            }
+            else if (selectedDataSource.Modules == null)
+            {
+                selectedDataSource.Modules = selectedDataSource.Settings.AllKeys.Select(k => selectedDataSource.Settings[k]).Distinct().Select(k => new ModuleConfiguration(k)).ToList();
+            }
+
+            return selectedDataSource.Modules;
+        }
 
         public ModuleConfiguration GetDefaultModule(DataSourceConfiguration selectedDataSource)
         {
@@ -168,11 +179,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
             else
             {
-                // TODO: convert Configurations to Settings
-                return null;
-                //return selectedDataSource == null
-                //    ? selectedTemplate.Configurations?.AllKeys.AsEnumerable()
-                //    : selectedDataSource.Configurations?.AllKeys.AsEnumerable() ?? selectedTemplate.Configurations?.AllKeys.AsEnumerable();
+                return [];
             }
         }
 
@@ -322,7 +329,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public void SetCurrentDataSource(DataSourceConfiguration selectedDataSource)
         {
-            if (selectedDataSource?.Area == SelectedDataSource?.Area)
+            if (selectedDataSource?.Key == SelectedDataSource?.Key)
             {
                 return;
             }
@@ -366,7 +373,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
 
             SelectedSetting = selectedSetting;
-            if (SelectedDataSource != null)
+            if (SelectedDataSource != null && selectedSetting != null)
             {
                 var dataSourceSettings = SelectedDataSource.Settings;
                 var allSettings = SelectedTemplate.Settings;
@@ -503,9 +510,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var templatePath = Path.Combine(basePath, SelectedTemplate.Path);
 
-            schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);
+            schemaName = SelectedDataSource.Schema;
             _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName);
-            outputSchemaName = DataSourcesConfiguration.OutputSchema(SelectedDataSource);
+            outputSchemaName = SelectedDataSource.OutputSchema;
             schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer));
             if (schemaReader == null)
             {

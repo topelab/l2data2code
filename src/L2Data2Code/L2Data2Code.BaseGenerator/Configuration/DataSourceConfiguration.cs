@@ -21,6 +21,11 @@ namespace L2Data2Code.BaseGenerator.Configuration
         private string schema;
 
         /// <summary>
+        /// Key
+        /// </summary>
+        public string Key { get; set; }
+
+        /// <summary>
         /// Area
         /// </summary>
         public string Area { get; set; }

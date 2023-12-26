@@ -18,18 +18,6 @@ namespace L2Data2Code.BaseGenerator.Configuration
             };
         }
 
-        public bool HasToRemoveFolders(string key, string varValue = null)
-        {
-            var result = this[key]?.RemoveFolders ?? true;
-            if (varValue != null)
-            {
-                result = bool.TryParse(varValue, out var varResultValue) ? varResultValue : result;
-            }
-            return result;
-        }
-
-        public string Resource(string key) => this[key]?.ResourcesFolder ?? "General";
-
         private void SetVars()
         {
             foreach (var key in GetKeys())

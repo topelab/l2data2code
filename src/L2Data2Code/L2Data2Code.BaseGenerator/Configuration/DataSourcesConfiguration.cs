@@ -21,6 +21,7 @@ namespace L2Data2Code.BaseGenerator.Configuration
         {
             foreach (var key in GetKeys())
             {
+                this[key].Key = key;
                 if (this[key].ModulesGroup == null)
                 {
                     this[key].ModulesGroup = this[key].DefaultModule;
