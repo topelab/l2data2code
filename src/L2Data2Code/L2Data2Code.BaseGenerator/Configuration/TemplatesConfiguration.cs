@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
@@ -22,9 +23,9 @@ namespace L2Data2Code.BaseGenerator.Configuration
         {
             foreach (var key in GetKeys())
             {
-                this[key].Configurations = this[key].ConfigurationsConfiguration.ToNameValueCollection();
                 this[key].Vars = this[key].VarsConfiguration.ToNameValueCollection();
                 this[key].FinalVars = this[key].FinalVarsConfiguration.ToNameValueCollection();
+                this[key].Settings = this[key].SettingsConfiguration.ToListOf<Setting>();
             }
         }
     }

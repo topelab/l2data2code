@@ -1,4 +1,5 @@
 using L2Data2Code.BaseGenerator.Entities;
+using L2Data2Code.SharedLib.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -24,10 +25,16 @@ namespace L2Data2Code.BaseGenerator.Configuration
         public bool IsGeneral { get; set; }
         public List<Command> PreCommands { get; set; } = [];
         public List<Command> PostCommands { get; set; } = [];
+
+        [JsonIgnore]
+        public NameValueCollection Vars { get; set; }
+
+        [JsonIgnore]
+        public NameValueCollection FinalVars { get; set; }
+
+        [JsonIgnore]
         public List<Setting> Settings { get; set; } = [];
 
-        [JsonProperty(nameof(Configurations))]
-        public JToken ConfigurationsConfiguration { get; set; }
 
         [JsonProperty(nameof(Vars))]
         public JToken VarsConfiguration { get; set; }
@@ -35,14 +42,8 @@ namespace L2Data2Code.BaseGenerator.Configuration
         [JsonProperty(nameof(FinalVars))]
         public JToken FinalVarsConfiguration { get; set; }
 
-        [JsonIgnore]
-        public NameValueCollection Configurations { get; set; }
-
-        [JsonIgnore]
-        public NameValueCollection Vars { get; set; }
-
-        [JsonIgnore]
-        public NameValueCollection FinalVars { get; set; }
+        [JsonProperty(nameof(Settings))]
+        public JToken SettingsConfiguration { get; set; }
 
     }
 }

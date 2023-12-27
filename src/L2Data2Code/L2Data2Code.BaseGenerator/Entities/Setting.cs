@@ -1,11 +1,12 @@
 using L2Data2Code.SharedLib.Extensions;
+using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
 
 namespace L2Data2Code.BaseGenerator.Entities
 {
-    public class Setting
+    public class Setting: IKeyed
     {
         private JToken varsConfiguration;
 
