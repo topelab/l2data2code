@@ -80,7 +80,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     SavePath = template.SavePath,
                     SolutionType = template.SolutionType,
                     UserVariables = template.Vars.ToSemiColonSeparatedString(),
-                    FinalVariables = template.FinalVars.ToSemiColonSeparatedString(),
+                    FinalVariables = string.Concat(template.FinalConditions),
                     Parent = library
                 });
 

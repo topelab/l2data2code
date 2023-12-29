@@ -1,8 +1,10 @@
+using L2Data2Code.SharedLib.Interfaces;
+
 namespace L2Data2Code.BaseGenerator.Entities
 {
-    public class Command
+    public class Command : IKeyed
     {
-        public string Name { get; set; }
+        public string Key { get; set; }
         public string Directory { get; set; }
         public string Exec { get; set; }
         public bool ShowWindow { get; set; }

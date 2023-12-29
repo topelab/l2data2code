@@ -163,6 +163,8 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public IEnumerable<Setting> GetSettings(TemplateConfiguration selectedTemplate, DataSourceConfiguration selectedDataSource = null)
         {
+            IEnumerable<Setting> selectedSettings = [];
+
             if (selectedTemplate.Settings?.Count != 0)
             {
                 var allSettings = selectedTemplate.Settings;
@@ -171,16 +173,13 @@ namespace L2Data2CodeUI.Shared.Adapters
                         ? allSettings
                         : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key));
 
-                var selectedSettings = selectedDataSource == null
+                selectedSettings = selectedDataSource == null
                     ? selectedTemplate.Settings
                     : dataSourceSelectableSettings;
 
-                return selectedSettings;
             }
-            else
-            {
-                return [];
-            }
+
+            return selectedSettings;
         }
 
         public void Run(CodeGeneratorDto baseOptions)
@@ -208,7 +207,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     SelectedSetting?.Vars.ToSemiColonSeparatedString()
                     ),
                 TemplatePath = Path.Combine(basePath, templatePath),
-                TemplateResource = SelectedTemplate.ResourcesFolder ?? "General",
+                TemplateResource = SelectedTemplate.ResourcesFolder ?? Constants.GeneralResourceFolder,
                 GeneratorApplication = baseOptions.GeneratorApplication,
                 GeneratorVersion = baseOptions.GeneratorVersion,
                 GeneateOnlyJson = baseOptions.GeneateOnlyJson,
@@ -473,7 +472,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                     SelectedSetting?.Vars.ToSemiColonSeparatedString()
                     ),
                 TemplatePath = Path.Combine(basePath, template),
-                TemplateResource = SelectedTemplate.ResourcesFolder ?? "General",
+                TemplateResource = SelectedTemplate.ResourcesFolder ?? Constants.GeneralResourceFolder,
                 SchemaName = schemaNameToFake,
                 TableList = new List<string>() { "first_table" },
                 GeneratorApplication = GeneratorApplication,

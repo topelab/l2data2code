@@ -2,6 +2,7 @@
 
 - **New**: Added `Settings` that will replace `Configurations` when it exists
 - **New**: Module can be stablished when template configuration changes (new `Settings`)
+- **New**: `FinalConditions` replace `FinalVars`
 
 ### 3.2.4
 

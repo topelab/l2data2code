@@ -47,14 +47,14 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
             var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
-            messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Name));
+            messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Key));
             StringBuilder outputData = new();
 
             void ErrorDataReceived(object s, DataReceivedEventArgs e)
             {
                 if (e.Data != null)
                 {
-                    messageService.Error(e.Data, $"{string.Format(Messages.ParametrizedErrorMessage, command.Name)}: {e.Data}", MessageCodes.RUN_COMMAND);
+                    messageService.Error(e.Data, $"{string.Format(Messages.ParametrizedErrorMessage, command.Key)}: {e.Data}", MessageCodes.RUN_COMMAND);
                 }
             }
 
@@ -72,7 +72,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             try
             {
-                resultExecution[command.Name] = false;
+                resultExecution[command.Key] = false;
                 if (command.DependsOn == null || (command.DependsOn != null && resultExecution.TryGetValue(command.DependsOn, out var value) && value))
                 {
                     process = new();
@@ -96,18 +96,18 @@ namespace L2Data2CodeUI.Shared.Adapters
                     process.WaitForExit();
                     if (process.ExitCode > 0 && command.ShowMessageWhenExitCodeNotZero)
                     {
-                        messageService.Error(string.Format(Messages.ParametrizedErrorMessage, command.Name), outputData.ToString(), MessageCodes.RUN_COMMAND);
+                        messageService.Error(string.Format(Messages.ParametrizedErrorMessage, command.Key), outputData.ToString(), MessageCodes.RUN_COMMAND);
                     }
                     if (process.ExitCode == 0 && command.ShowMessageWhenExitCodeZero)
                     {
-                        messageService.Info(string.Format(Messages.ParametrizedStoppingProcess, command.Name));
-                        resultExecution[command.Name] = true;
+                        messageService.Info(string.Format(Messages.ParametrizedStoppingProcess, command.Key));
+                        resultExecution[command.Key] = true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                messageService.Error(ex.Message, string.Format(Messages.ParametrizedErrorMessage, command.Name), MessageCodes.RUN_COMMAND);
+                messageService.Error(ex.Message, string.Format(Messages.ParametrizedErrorMessage, command.Key), MessageCodes.RUN_COMMAND);
             }
             finally
             {

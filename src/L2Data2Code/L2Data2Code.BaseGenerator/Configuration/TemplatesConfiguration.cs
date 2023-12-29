@@ -24,8 +24,10 @@ namespace L2Data2Code.BaseGenerator.Configuration
             foreach (var key in GetKeys())
             {
                 this[key].Vars = this[key].VarsConfiguration.ToNameValueCollection();
-                this[key].FinalVars = this[key].FinalVarsConfiguration.ToNameValueCollection();
                 this[key].Settings = this[key].SettingsConfiguration.ToListOf<Setting>();
+                this[key].PreCommands = this[key].PreCommandsConfiguration.ToListOf<Command>();
+                this[key].PostCommands = this[key].PostCommandsConfiguration.ToListOf<Command>();
+                this[key].FinalConditions = this[key].FinalConditionsConfiguration.ToListOf<FinalCondition>();
             }
         }
     }
