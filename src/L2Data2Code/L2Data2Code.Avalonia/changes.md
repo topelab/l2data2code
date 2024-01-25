@@ -1,3 +1,11 @@
+### 3.3.1
+
+- Upgrade NLog to 5.2.8
+- Upgrade Handlebars.Net.Helpers to 2.4.1
+- Upgrade MySql.Data to 8.3.0
+- Upgrade System.Data.SqlClient to 4.8.6
+- Upgrade Avalonia to 11.0.7
+
 ### 3.3.0
 
 - **New**: Added `Settings` that will replace `Configurations` when it exists
