@@ -24,7 +24,7 @@ namespace L2Data2Code.SharedContext.Commands
 
         protected override bool CanExecute()
         {
-            if (adapter.SelectedTemplate.IsEmpty())
+            if (adapter.SelectedTemplate == null)
             {
                 return false;
             }
@@ -32,7 +32,7 @@ namespace L2Data2Code.SharedContext.Commands
             try
             {
                 var basePath = adapter.SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
-                var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
+                var template = adapter.SelectedTemplate.Path;
                 var TemplatePath = Path.Combine(basePath, template);
                 return Directory.Exists(TemplatePath);
             }
@@ -46,7 +46,7 @@ namespace L2Data2Code.SharedContext.Commands
         protected override void Execute()
         {
             var basePath = adapter.SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
-            var template = adapter.TemplatesConfiguration[adapter.SelectedTemplate].Path;
+            var template = adapter.SelectedTemplate.Path;
             var TemplatePath = Path.Combine(basePath, template);
             editorLocatorService.OpenWithEditor(TemplatePath);
         }

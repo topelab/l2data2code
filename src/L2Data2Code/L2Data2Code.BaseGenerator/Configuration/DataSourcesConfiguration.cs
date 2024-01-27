@@ -3,9 +3,9 @@ using L2Data2Code.SharedLib.Helpers;
 
 namespace L2Data2Code.BaseGenerator.Configuration
 {
-    public class ModulesConfiguration : BasicConfiguration<ModuleConfiguration>
+    public class DataSourcesConfiguration : BasicConfiguration<DataSourceConfiguration>, IDataSorcesConfiguration
     {
-        public ModulesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, GeneratorSectionLabels.MODULES)
+        public DataSourcesConfiguration(IJsonSetting jsonSetting) : base(jsonSetting, ConfigurationLabels.DATA_SOURCES)
         {
             SetVars();
             jsonSetting.PropertyChanged += (s, e) =>
@@ -22,12 +22,11 @@ namespace L2Data2Code.BaseGenerator.Configuration
             foreach (var key in GetKeys())
             {
                 this[key].Key = key;
-                if (this[key].Group == null)
+                if (this[key].ModulesGroup == null)
                 {
-                    this[key].Group = key;
+                    this[key].ModulesGroup = this[key].DefaultModule;
                 }
             }
         }
-
     }
 }

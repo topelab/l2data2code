@@ -115,10 +115,10 @@ namespace L2Data2CodeUI.Shared.Adapters
         public ITemplatesConfiguration TemplatesConfiguration { get; }
         public IGlobalsConfiguration GlobalsConfiguration { get; }
         public string OutputPath { get; set; }
-        public string SelectedDataSource { get; private set; }
-        public string SelectedModule { get; private set; }
-        public string SelectedTemplate { get; private set; }
-        public string SelectedVars { get; private set; }
+        public DataSourceConfiguration SelectedDataSource { get; private set; }
+        public ModuleConfiguration SelectedModule { get; private set; }
+        public TemplateConfiguration SelectedTemplate { get; private set; }
+        public Setting SelectedSetting { get; private set; }
         public string SlnFile => slnFiles?.FirstOrDefault() ?? $"{OutputPath?.TrimPathSeparator()}\\{SelectedModule}.sln".ToLower();
         public string SolutionType { get; set; }
         public Tables Tables { get => tables ?? new Tables(); }
@@ -134,27 +134,52 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public IEnumerable<Table> GetAllTables() => Tables.Select(t => t.Value);
 
-        public IEnumerable<string> GetAreaList()
-            => DataSourcesConfiguration.GetKeys();
+        public IEnumerable<DataSourceConfiguration> GetAreaList()
+            => DataSourcesConfiguration.GetValues();
 
-        public IEnumerable<string> GetModuleList(string selectedDataSource)
-            => ModulesConfiguration.GetKeys().Where(s => s.StartsWith(DataSourcesConfiguration[selectedDataSource].Area + "."));
-
-        public string GetDefaultModule(string selectedDataSource)
+        public IEnumerable<ModuleConfiguration> GetModuleList(DataSourceConfiguration selectedDataSource)
         {
-            var defaultModule = DataSourcesConfiguration[selectedDataSource].DefaultModule;
-            var moduleList = GetModuleList(selectedDataSource);
-            return moduleList.Contains(defaultModule) ? defaultModule : moduleList.FirstOrDefault();
+            if (selectedDataSource.Modules == null && selectedDataSource.Settings == null)
+            {
+                selectedDataSource.Modules = [new ModuleConfiguration(selectedDataSource.DefaultModule)];
+            }
+            else if (selectedDataSource.Modules == null)
+            {
+                selectedDataSource.Modules = selectedDataSource.Settings.AllKeys.Select(k => selectedDataSource.Settings[k]).Distinct().Select(k => new ModuleConfiguration(k)).ToList();
+            }
+
+            return selectedDataSource.Modules;
         }
 
-        public IEnumerable<string> GetTemplateList()
-            => TemplatesConfiguration.GetKeys();
-
-        public IEnumerable<string> GetVarsList(string selectedTemplate, string selectedDataSource = null)
+        public ModuleConfiguration GetDefaultModule(DataSourceConfiguration selectedDataSource)
         {
-            return selectedDataSource == null
-                ? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable()
-                : DataSourcesConfiguration[selectedDataSource].Configurations?.AllKeys.AsEnumerable() ?? TemplatesConfiguration[selectedTemplate].Configurations?.AllKeys.AsEnumerable();
+            var defaultModule = selectedDataSource.DefaultModule;
+            var moduleList = GetModuleList(selectedDataSource);
+            return moduleList.FirstOrDefault(m => m.Key == defaultModule);
+        }
+
+        public IEnumerable<TemplateConfiguration> GetTemplateList()
+            => TemplatesConfiguration.GetValues();
+
+        public IEnumerable<Setting> GetSettings(TemplateConfiguration selectedTemplate, DataSourceConfiguration selectedDataSource = null)
+        {
+            IEnumerable<Setting> selectedSettings = [];
+
+            if (selectedTemplate.Settings?.Count != 0)
+            {
+                var allSettings = selectedTemplate.Settings;
+                var dataSourceSettings = selectedDataSource == null ? null : selectedDataSource.Settings;
+                var dataSourceSelectableSettings = dataSourceSettings == null
+                        ? allSettings
+                        : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key));
+
+                selectedSettings = selectedDataSource == null
+                    ? selectedTemplate.Settings
+                    : dataSourceSelectableSettings;
+
+            }
+
+            return selectedSettings;
         }
 
         public void Run(CodeGeneratorDto baseOptions)
@@ -168,18 +193,21 @@ namespace L2Data2CodeUI.Shared.Adapters
             gitService.GitInit(baseOptions.OutputPath);
 
             var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
-            var templatePath = TemplatesConfiguration[SelectedTemplate].Path;
+            var templatePath = SelectedTemplate.Path;
             CodeGeneratorDto options = new()
             {
-                Area = DataSourcesConfiguration[SelectedDataSource].Area,
-                Module = ModulesConfiguration[SelectedModule].Name,
+                Area = SelectedDataSource.Area,
+                Module = SelectedModule.Name,
                 GenerateReferenced = baseOptions.GenerateReferenced,
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
                 OutputPath = baseOptions.OutputPath.AddPathSeparator(),
                 CreatedFromSchemaName = outputSchemaName,
-                UserVariables = TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
+                UserVariables = string.Concat(
+                    SelectedDataSource.Vars.ToSemiColonSeparatedString(),
+                    SelectedSetting?.Vars.ToSemiColonSeparatedString()
+                    ),
                 TemplatePath = Path.Combine(basePath, templatePath),
-                TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
+                TemplateResource = SelectedTemplate.ResourcesFolder ?? Constants.GeneralResourceFolder,
                 GeneratorApplication = baseOptions.GeneratorApplication,
                 GeneratorVersion = baseOptions.GeneratorVersion,
                 GeneateOnlyJson = baseOptions.GeneateOnlyJson,
@@ -298,9 +326,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             messageService.Info(Messages.CodeGeneratedOK);
         }
 
-        public void SetCurrentDataSource(string selectedDataSource)
+        public void SetCurrentDataSource(DataSourceConfiguration selectedDataSource)
         {
-            if (selectedDataSource == SelectedDataSource)
+            if (selectedDataSource?.Key == SelectedDataSource?.Key)
             {
                 return;
             }
@@ -312,9 +340,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             InputSourceType = schemaFactory.GetProviderDefinitionKey(schemaName);
         }
 
-        public void SetCurrentModule(string selectedModule, bool triggered = false)
+        public void SetCurrentModule(ModuleConfiguration selectedModule, bool triggered = false)
         {
-            if (selectedModule == SelectedModule && !triggered)
+            if (selectedModule?.Key == SelectedModule?.Key && !triggered)
             {
                 return;
             }
@@ -325,25 +353,40 @@ namespace L2Data2CodeUI.Shared.Adapters
             AppType = appService.AppType;
         }
 
-        public void SetCurrentTemplate(string selectedTemplate, bool triggered = false)
+        public void SetCurrentTemplate(TemplateConfiguration selectedTemplate, bool triggered = false)
         {
-            if (selectedTemplate == SelectedTemplate && !triggered)
+            if (selectedTemplate?.Name == SelectedTemplate?.Name && !triggered)
             {
                 return;
             }
 
             SelectedTemplate = selectedTemplate;
-            SetCurrentVars(GetVarsList(selectedTemplate, SelectedDataSource).FirstOrDefault(), true);
+            SetCurrentSetting(GetSettings(selectedTemplate, SelectedDataSource).FirstOrDefault(), true);
         }
 
-        public void SetCurrentVars(string selectedVars, bool triggered = false)
+        public void SetCurrentSetting(Setting selectedSetting, bool triggered = false)
         {
-            if (selectedVars == SelectedVars && !triggered)
+            if (selectedSetting == SelectedSetting && !triggered)
             {
                 return;
             }
 
-            SelectedVars = selectedVars;
+            SelectedSetting = selectedSetting;
+            if (SelectedDataSource != null && selectedSetting != null)
+            {
+                var dataSourceSettings = SelectedDataSource.Settings;
+                var allSettings = SelectedTemplate.Settings;
+                if (dataSourceSettings != null && allSettings != null)
+                {
+                    var key = allSettings.Find(s => s.Name == selectedSetting.Name)?.Key;
+                    if (key != null)
+                    {
+                        var moduleKey = SelectedDataSource.Settings[key];
+                        SelectedModule = SelectedDataSource.Modules.FirstOrDefault(m => m.Key == moduleKey)
+                            ?? SelectedModule;
+                    }
+                }
+            }
             (OutputPath, SolutionType) = GetSavePathFromSelectedTemplate();
             slnFiles = appService.Set(SolutionType).Find(OutputPath);
             AppType = appService.AppType;
@@ -415,20 +458,21 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
 
             var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
-            var template = TemplatesConfiguration[SelectedTemplate].Path;
+            var template = SelectedTemplate.Path;
             CodeGeneratorDto options = new()
             {
-                Area = DataSourcesConfiguration[SelectedDataSource].Area,
-                Module = ModulesConfiguration[SelectedModule].Name,
-                Template = TemplatesConfiguration[SelectedTemplate].Name,
+                Area = SelectedDataSource.Area,
+                Module = SelectedModule.Name,
+                Template = SelectedTemplate.Name,
                 GenerateReferenced = false,
                 OutputPath = null,
                 CreatedFromSchemaName = outputSchemaName,
                 UserVariables = string.Concat(
-                    TemplatesConfiguration[SelectedTemplate].Configurations?[SelectedVars],
-                    DataSourcesConfiguration[SelectedDataSource].Vars.ToSemiColonSeparatedString()),
+                    SelectedDataSource.Vars.ToSemiColonSeparatedString(),
+                    SelectedSetting?.Vars.ToSemiColonSeparatedString()
+                    ),
                 TemplatePath = Path.Combine(basePath, template),
-                TemplateResource = TemplatesConfiguration.Resource(SelectedTemplate),
+                TemplateResource = SelectedTemplate.ResourcesFolder ?? Constants.GeneralResourceFolder,
                 SchemaName = schemaNameToFake,
                 TableList = new List<string>() { "first_table" },
                 GeneratorApplication = GeneratorApplication,
@@ -463,11 +507,11 @@ namespace L2Data2CodeUI.Shared.Adapters
         private void SetupInitial()
         {
             var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
-            var templatePath = Path.Combine(basePath, TemplatesConfiguration[SelectedTemplate].Path);
+            var templatePath = Path.Combine(basePath, SelectedTemplate.Path);
 
-            schemaName = DataSourcesConfiguration.Schema(SelectedDataSource);
+            schemaName = SelectedDataSource.Schema;
             _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName);
-            outputSchemaName = DataSourcesConfiguration.OutputSchema(SelectedDataSource);
+            outputSchemaName = SelectedDataSource.OutputSchema;
             schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer));
             if (schemaReader == null)
             {

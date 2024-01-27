@@ -11,8 +11,8 @@ namespace L2Data2Code.BaseGenerator.Configuration
         public string Name { get; set; }
         public string Path { get; set; } = string.Empty;
         public bool RemoveFolders { get; set; } = true;
-        public string ResourcesFolder { get; set; } = "General";
-        public List<string> ItemsResources { get; set; } = new List<string>();
+        public string ResourcesFolder { get; set; } = Constants.GeneralResourceFolder;
+        public List<string> ItemsResources { get; set; } = [];
         public string Partials { get; set; }
         public string Company { get; set; }
         public string Area { get; set; }
@@ -22,26 +22,37 @@ namespace L2Data2Code.BaseGenerator.Configuration
         public string SolutionType { get; set; } = "vs,*.sln";
         public string NextResource { get; set; }
         public bool IsGeneral { get; set; }
-        public List<Command> PreCommands { get; set; } = new List<Command>();
-        public List<Command> PostCommands { get; set; } = new List<Command>();
-
-        [JsonProperty(nameof(Configurations))]
-        public JToken ConfigurationsConfiguration { get; set; }
-
-        [JsonProperty(nameof(Vars))]
-        public JToken VarsConfiguration { get; set; }
-
-        [JsonProperty(nameof(FinalVars))]
-        public JToken FinalVarsConfiguration { get; set; }
 
         [JsonIgnore]
-        public NameValueCollection Configurations { get; set; }
+        public List<Command> PreCommands { get; set; } = [];
+
+        [JsonIgnore]
+        public List<Command> PostCommands { get; set; } = [];
 
         [JsonIgnore]
         public NameValueCollection Vars { get; set; }
 
         [JsonIgnore]
-        public NameValueCollection FinalVars { get; set; }
+        public List<Setting> Settings { get; set; } = [];
+
+        [JsonIgnore]
+        public List<FinalCondition> FinalConditions { get; set; }
+
+
+        [JsonProperty(nameof(PostCommands))]
+        public JToken PostCommandsConfiguration { get; set; }
+
+        [JsonProperty(nameof(PreCommands))]
+        public JToken PreCommandsConfiguration { get; set; }
+
+        [JsonProperty(nameof(Vars))]
+        public JToken VarsConfiguration { get; set; }
+
+        [JsonProperty(nameof(Settings))]
+        public JToken SettingsConfiguration { get; set; }
+
+        [JsonProperty(nameof(FinalConditions))]
+        public JToken FinalConditionsConfiguration { get; set; }
 
     }
 }

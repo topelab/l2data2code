@@ -11,6 +11,11 @@ namespace L2Data2Code.BaseGenerator.Entities
         public const string ID = "Id";
 
         /// <summary>
+        /// General label
+        /// </summary>
+        public const string GeneralResourceFolder = "General";
+
+        /// <summary>
         /// Database constants
         /// </summary>
         public class DataBase

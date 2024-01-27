@@ -1,3 +1,184 @@
+### 3.3.1
+
+- Upgrade NLog to 5.2.8
+- Upgrade Handlebars.Net.Helpers to 2.4.1
+- Upgrade MySql.Data to 8.3.0
+- Upgrade System.Data.SqlClient to 4.8.6
+- Upgrade Avalonia to 11.0.7
+
+### 3.3.0
+
+#### Summary of changes on templates from 3.2.3
+
+1. `PostCommands` and `PreCommands` are now key elements in place of an array, and previous *name* is now key of the element:
+
+    *Before*
+
+    ```json
+          "PostCommands": [
+            {
+              "Name": "Build",
+              "Directory": "{{SavePath}}",
+              "Exec": "dotnet build -v quiet",
+              "ShowWindow": false
+            },
+            {
+              "Name": "CopyNuPkg",
+              "DependsOn": "Build",
+              "Directory": "{{SavePath}}",
+              "Exec": "to-local-repo.ps1",
+              "ShowWindow": false,
+              "Skip": "{{CopyNuPkgSkip}}"
+            }
+          ]
+    ```
+
+    *Now*
+
+    ```json
+          "PostCommands": {
+            "Build": {
+              "Directory": "{{SavePath}}",
+              "Exec": "dotnet build -v quiet",
+              "ShowWindow": false
+            },
+            "CopyNuPkg": {
+              "DependsOn": "Build",
+              "Directory": "{{SavePath}}",
+              "Exec": "to-local-repo.ps1",
+              "ShowWindow": false,
+              "Skip": "{{CopyNuPkgSkip}}"
+            }
+          }
+    ```
+
+1. `Configurations` has been transformed to `Settings` with a key than can be used inside *DataSources* without repeating vars expressions.
+
+    *Before*
+
+    ```json
+      "Configurations": {
+        "Services (no UseCases, No models)": "SetServices=true;SetDefaultModels=false;",
+        "Services (no UseCases)": "SetServices=true;"
+      }
+    ```
+
+    *Now*
+
+    ```json
+      "Settings": {
+        "ServicesNoUseCasesNoModels": {
+          "Name": "Services (no UseCases, No models)",
+          "Vars": {
+            "SetServices": true,
+            "SetDefaultModels": false
+          }
+        },
+        "ServicesNoUseCases": {
+          "Name": "Services (no UseCases)",
+          "Vars": {
+            "SetServices": true
+          }
+        }
+      }
+    ```
+
+    Setting key (like *ServicesNoUseCasesNoModels*) will be usable in *DataSources*
+
+1. `FinalVars` are now `FinalConditions` with a more readable syntax:
+
+    *Before*
+
+    ```json
+      "FinalVars": {
+        "if SetWebApi=true SetWebApiControllers": true,
+        "if SetWebApiControllers=true SetUseCases": true,
+        "if SetUseCases=true SetBusiness": true
+      }
+    ```
+
+    *Now*
+
+    ```json
+      "FinalConditions": {
+        "010": {
+          "When": "SetWebApi",
+          "Eq": true,
+          "Then": {
+            "SetWebApiControllers": true
+          }
+        },
+        "020": {
+          "When": "SetWebApiControllers",
+          "Eq": true,
+          "Then": {
+            "SetUseCases": true
+          }
+        },
+        "030":{
+          "When": "SetUseCases",
+          "Eq": true,
+          "Then": {
+            "SetBusiness": true
+          }
+        }
+      }
+    ```
+
+1. `DataSources` has a new element `Modules`, that replace root child `Modules`. This will permit define modules for different data sources. `Settings` is a new element where we can attach a module to a specified `Setting`:
+
+    *Before*
+
+    ```json
+      "DataSources": {
+        "Calendarios (json-sqlite)": {
+          "Area": "Topelab",
+          "DefaultModule": "Topelab.CalendarLite",
+          "Schema": "calendariosjson",
+          "OutputSchema": "calendariossqlite",
+          "Vars": {
+            "CopyNuPkgSkip" : false
+          }
+        },
+      }
+    ```
+
+    *Now*
+
+    ```json
+      "DataSources": {
+        "Calendarios (json-sqlite)": {
+          "Area": "Topelab",
+          "DefaultModule": "Topelab.CalendarLite",
+          "Modules": {
+            "Topelab.CalendarLite": {
+              "Name": "CalendarLite"
+            },
+            "Topelab.CalendarLiteAPI": {
+              "Name": "CalendarLiteAPI"
+            }
+          },
+          "Schema": "calendariosjson",
+          "OutputSchema": "calendariossqlite",
+          "Vars": {
+            "CopyNuPkgSkip": false,
+            "RemoveFolders": true
+          },
+          "Settings": {
+            "ServicesNoUseCasesNoModels": "Topelab.CalendarLite",
+            "WebAPI": "Topelab.CalendarLiteAPI"
+          }
+        },
+      }
+    ```
+
+
+### 3.2.4
+
+- Added possibility to group name spaces using module groups
+- **New**: Added `ModulesGroup` to `DataSources`
+- **New**: Added `Group` to `Modules`
+
 ### 3.2.3
 
 - Upgrade Material.Icons.Avalonia to 2.1.0

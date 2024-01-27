@@ -15,7 +15,7 @@ namespace L2Data2Code.SharedLib.Configuration
         {
             this.jsonSetting = jsonSetting;
             this.list = list;
-            _values = new Dictionary<string, T>();
+            _values = [];
             SetupValues(jsonSetting.Config[list]);
 
             jsonSetting.PropertyChanged += JsonSetting_PropertyChanged;
@@ -32,6 +32,11 @@ namespace L2Data2Code.SharedLib.Configuration
         public IEnumerable<string> GetKeys()
         {
             return _values.Keys;
+        }
+
+        public IEnumerable<T> GetValues()
+        {
+            return _values.Values;
         }
 
         public T FirstOrDefault()

@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Helpers;
@@ -18,16 +19,15 @@ namespace L2Data2Code.BaseGenerator.Configuration
             };
         }
 
-        public bool HasToRemoveFolders(string key) => this[key]?.RemoveFolders ?? true;
-        public string Resource(string key) => this[key]?.ResourcesFolder ?? "General";
-
         private void SetVars()
         {
             foreach (var key in GetKeys())
             {
-                this[key].Configurations = this[key].ConfigurationsConfiguration.ToNameValueCollection();
                 this[key].Vars = this[key].VarsConfiguration.ToNameValueCollection();
-                this[key].FinalVars = this[key].FinalVarsConfiguration.ToNameValueCollection();
+                this[key].Settings = this[key].SettingsConfiguration.ToListOf<Setting>();
+                this[key].PreCommands = this[key].PreCommandsConfiguration.ToListOf<Command>();
+                this[key].PostCommands = this[key].PostCommandsConfiguration.ToListOf<Command>();
+                this[key].FinalConditions = this[key].FinalConditionsConfiguration.ToListOf<FinalCondition>();
             }
         }
     }

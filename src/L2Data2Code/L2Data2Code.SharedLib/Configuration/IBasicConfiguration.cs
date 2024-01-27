@@ -10,5 +10,6 @@ namespace L2Data2Code.SharedLib.Configuration
 
         T FirstOrDefault();
         IEnumerable<string> GetKeys();
+        IEnumerable<T> GetValues();
     }
 }

@@ -57,8 +57,8 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
                 case nameof(MainWindowVM.Working):
                     controlVM.Working = mainVM.Working;
                     break;
-                case nameof(MainWindowVM.ShowVarsWindow):
-                    controlVM.ShowVarsWindow = mainVM.ShowVarsWindow;
+                case nameof(MainWindowVM.ShowSettingsWindow):
+                    controlVM.ShowVarsWindow = mainVM.ShowSettingsWindow;
                     break;
                 case nameof(MainWindowVM.HaveVSCodeInstalled):
                     controlVM.HaveVSCodeInstalled = mainVM.HaveVSCodeInstalled;

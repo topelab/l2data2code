@@ -11,7 +11,7 @@ namespace L2Data2Code.SharedContext.Main.MessagePanel
 
         public MessagePanelVM()
         {
-            AllMessages = new ObservableCollection<MessageVM>();
+            AllMessages = [];
         }
 
         public bool MessagePanelVisible

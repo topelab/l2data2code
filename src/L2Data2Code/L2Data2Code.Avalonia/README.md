@@ -76,15 +76,14 @@ Every template has a name and these properties:
   - Both PreCommands and PostCommands have same attributes: *Name*, *Directory*, *Exec*, *ShowWindow*, *ShowMessages*, *ShowMessageWhenExitCodeNotZero*, *ShowMessageWhenExitCodeZero* and *Skip*. All *ShowMessage* attributes are true by default. *Directory*, *Exec* and *Skip* can use compiled vars.
   - Example:
     ```json
-    "PostCommands": [
-        {
-            "Name": "Build",
+    "PostCommands": {
+        "Build": {
             "Directory": "{{SavePath}}",
             "Exec": "start .",
             "ShowWindow": false,
             "Skip": {{SkipBuild}} // SkipBuild can be defined on DataSource.Vars collection
         }
-    ],
+    },
     ```
 - **Vars**: A collection of name-value values.
 - **Configurations**: A collection of vars configuration that will be showed as *Template Configuration* in UI.

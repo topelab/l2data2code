@@ -32,7 +32,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             Command command = new()
             {
-                Name = "git add",
+                Key = "git add",
                 Directory = path,
                 Exec = "git add -A",
                 ShowMessages = false,
@@ -49,7 +49,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             Command command = new()
             {
-                Name = "git commit",
+                Key = "git commit",
                 Directory = path,
                 Exec = "git add -A && git commit -a -m \"Automated internal commit by L2Data2CodeWPF\"",
                 ShowMessages = false,
@@ -66,7 +66,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             Command command = new()
             {
-                Name = "git reset",
+                Key = "git reset",
                 Directory = path,
                 Exec = "git reset --hard",
                 ShowMessages = false,
@@ -85,7 +85,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 Command command = new()
                 {
-                    Name = "git init",
+                    Key = "git init",
                     Directory = path,
                     Exec = "git init",
                     ShowMessageWhenExitCodeNotZero = false,

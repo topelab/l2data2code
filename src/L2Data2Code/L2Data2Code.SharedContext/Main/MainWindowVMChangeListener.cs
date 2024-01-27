@@ -1,3 +1,4 @@
+using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Main.Interfaces;
 using L2Data2CodeUI.Shared.Adapters;
@@ -60,19 +61,19 @@ namespace L2Data2Code.SharedContext.Main
                 case nameof(MainWindowVM.SelectedTemplate):
                     TemplateChanged(mainWindowVM);
                     break;
-                case nameof(MainWindowVM.SelectedVars):
+                case nameof(MainWindowVM.SelectedSetting):
                     VarsChanged(mainWindowVM);
                     break;
                 case nameof(MainWindowVM.SetRelatedTables):
                     break;
-                case nameof(MainWindowVM.ShowVarsWindow):
+                case nameof(MainWindowVM.ShowSettingsWindow):
                     break;
                 case nameof(MainWindowVM.SlnFile):
                     mainWindowVM.OnPropertyChanged(nameof(mainWindowVM.GenerateCodeCommand));
                     break;
                 case nameof(MainWindowVM.TemplateList):
                     break;
-                case nameof(MainWindowVM.VarsList):
+                case nameof(MainWindowVM.Settings):
                     break;
                 case nameof(MainWindowVM.VarsVisible):
                     break;
@@ -113,9 +114,11 @@ namespace L2Data2Code.SharedContext.Main
                 generatorAdapter.GetModuleList(mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.ModuleList.Add(t));
                 mainWindowVM.SelectedModule = generatorAdapter.GetDefaultModule(mainWindowVM.SelectedDataSource);
 
-                mainWindowVM.VarsList.Clear();
-                generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
-                mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
+                mainWindowVM.Settings.Clear();
+                generatorAdapter.GetSettings(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.Settings.Add(t));
+                mainWindowVM.SelectedSetting = mainWindowVM.Settings.FirstOrDefault();
+
+                mainWindowVM.EmptyFolders = bool.TryParse(mainWindowVM.SelectedDataSource.Vars?[nameof(TemplateConfiguration.RemoveFolders)], out var hasToRemoveFolders) ? hasToRemoveFolders : mainWindowVM.SelectedTemplate.RemoveFolders;
 
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
@@ -131,12 +134,12 @@ namespace L2Data2Code.SharedContext.Main
             {
                 generatorAdapter.SetCurrentTemplate(mainWindowVM.SelectedTemplate);
 
-                mainWindowVM.VarsList.Clear();
-                generatorAdapter.GetVarsList(mainWindowVM.SelectedTemplate).ToList().ForEach(t => mainWindowVM.VarsList.Add(t));
-                mainWindowVM.SelectedVars = mainWindowVM.VarsList.FirstOrDefault();
+                mainWindowVM.Settings.Clear();
+                generatorAdapter.GetSettings(mainWindowVM.SelectedTemplate).ToList().ForEach(t => mainWindowVM.Settings.Add(t));
+                mainWindowVM.SelectedSetting = mainWindowVM.Settings.FirstOrDefault();
 
-                mainWindowVM.VarsVisible = mainWindowVM.SelectedVars != null;
-                mainWindowVM.EmptyFolders = generatorAdapter.TemplatesConfiguration.HasToRemoveFolders(mainWindowVM.SelectedTemplate);
+                mainWindowVM.VarsVisible = mainWindowVM.SelectedSetting != null;
+                mainWindowVM.EmptyFolders = mainWindowVM.SelectedTemplate.RemoveFolders;
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
             });
@@ -157,7 +160,8 @@ namespace L2Data2Code.SharedContext.Main
         {
             mainWindowVM.WorkOnAction(() =>
             {
-                generatorAdapter.SetCurrentVars(mainWindowVM.SelectedVars);
+                generatorAdapter.SetCurrentSetting(mainWindowVM.SelectedSetting);
+                mainWindowVM.SelectedModule = generatorAdapter.SelectedModule;
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
                 mainWindowVM.AppType = generatorAdapter.AppType;
