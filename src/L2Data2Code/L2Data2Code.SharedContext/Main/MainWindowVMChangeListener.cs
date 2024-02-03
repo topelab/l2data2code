@@ -117,6 +117,7 @@ namespace L2Data2Code.SharedContext.Main
                 mainWindowVM.Settings.Clear();
                 generatorAdapter.GetSettings(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.Settings.Add(t));
                 mainWindowVM.SelectedSetting = mainWindowVM.Settings.FirstOrDefault();
+                mainWindowVM.VarsVisible = mainWindowVM.SelectedSetting != null;
 
                 mainWindowVM.EmptyFolders = bool.TryParse(mainWindowVM.SelectedDataSource.Vars?[nameof(TemplateConfiguration.RemoveFolders)], out var hasToRemoveFolders) ? hasToRemoveFolders : mainWindowVM.SelectedTemplate.RemoveFolders;
 

@@ -1,3 +1,9 @@
+### 3.3.2
+
+- Upgrade topelab.core.resolver.microsoft to 1.5.4
+- Upgrade topelab.core.resolver to 1.5.4
+- Fix refresh on data source selected
+
 ### 3.3.1
 
 - Upgrade NLog to 5.2.8
