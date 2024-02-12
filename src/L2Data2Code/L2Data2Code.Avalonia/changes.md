@@ -1,3 +1,14 @@
+### 3.3.3
+
+- Upgrade Avalonia to 11.0.9
+- Upgrade Avalonia.Controls.DataGrid to 11.0.9
+- Upgrade Avalonia.Desktop to 11.0.9
+- Upgrade Avalonia.Themes.Simple to 11.0.9
+- Upgrade Avalonia.Diagnostics to 11.0.9
+- Upgrade Avalonia.ReactiveUI to 11.0.9
+- Upgrade Avalonia.Themes.Fluent to 11.0.9
+
+
 ### 3.3.2
 
 - Upgrade topelab.core.resolver.microsoft to 1.5.4
