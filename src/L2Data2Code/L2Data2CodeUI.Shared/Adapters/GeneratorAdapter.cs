@@ -139,13 +139,16 @@ namespace L2Data2CodeUI.Shared.Adapters
 
         public IEnumerable<ModuleConfiguration> GetModuleList(DataSourceConfiguration selectedDataSource)
         {
-            if (selectedDataSource.Modules == null && selectedDataSource.Settings == null)
+            if (selectedDataSource.Modules == null)
             {
-                selectedDataSource.Modules = [new ModuleConfiguration(selectedDataSource.DefaultModule)];
-            }
-            else if (selectedDataSource.Modules == null)
-            {
-                selectedDataSource.Modules = selectedDataSource.Settings.AllKeys.Select(k => selectedDataSource.Settings[k]).Distinct().Select(k => new ModuleConfiguration(k)).ToList();
+                if (selectedDataSource.Settings == null)
+                {
+                    selectedDataSource.Modules = [new ModuleConfiguration(selectedDataSource.DefaultModule)];
+                }
+                else
+                {
+                    selectedDataSource.Modules = selectedDataSource.Settings.AllKeys.Select(k => selectedDataSource.Settings[k]).Distinct().Select(k => new ModuleConfiguration(k)).ToList();
+                }
             }
 
             return selectedDataSource.Modules;
@@ -155,7 +158,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         {
             var defaultModule = selectedDataSource.DefaultModule;
             var moduleList = GetModuleList(selectedDataSource);
-            return moduleList.FirstOrDefault(m => m.Key == defaultModule);
+            return moduleList.FirstOrDefault(m => defaultModule == null || m.Key == defaultModule);
         }
 
         public IEnumerable<TemplateConfiguration> GetTemplateList()

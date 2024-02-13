@@ -552,10 +552,9 @@
         "Northwind (json file)": {
             "Area": "Northwind",
             "Schema": "northwindtest",
-            "Modules": {
-                "Northwind.Test": { "Name": "Test" },
-                "Northwind.Demo1": { "Name": "Demo1" },
-                "Northwind.Demo2": { "Name": "Demo2" }
+            "Settings": {
+                "ServicesNoUseCasesNoModels": "Northwind.Test",
+                "WebAPI": "Northwind.WebAPI"
             }
         },
         "Northwind (assembly entities)": {
