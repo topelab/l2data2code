@@ -3,7 +3,6 @@ using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
 using System.Data;
