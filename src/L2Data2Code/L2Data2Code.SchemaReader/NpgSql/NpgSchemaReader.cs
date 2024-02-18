@@ -15,13 +15,22 @@ namespace L2Data2Code.SchemaReader.NpgSql
     {
         private readonly string connectionString;
         private readonly INameResolver nameResolver;
+        private readonly IForeignKeysGetter<NpgsqlConnection> foreignKeysGetter;
+        private readonly IColumnsGetter<NpgsqlConnection> columnsGetter;
         private NpgsqlConnection connection;
-        private readonly string defaultDBSchema = "public";
 
-        public NpgSchemaReader(INameResolver nameResolver, ISchemaOptions options) : base(options.SummaryWriter)
+        public  static readonly string DefaultDBSchema = "public";
+
+        public NpgSchemaReader(INameResolver nameResolver,
+                               ISchemaOptions options,
+                               IForeignKeysGetter<NpgsqlConnection> foreignKeysGetter,
+                               IColumnsGetter<NpgsqlConnection> columnsGetter) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
+            this.foreignKeysGetter = foreignKeysGetter ?? throw new ArgumentNullException(nameof(foreignKeysGetter));
+            this.columnsGetter = columnsGetter ?? throw new ArgumentNullException(nameof(columnsGetter));
+
             this.nameResolver.Initialize(options.SchemaName);
         }
 
@@ -33,7 +42,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
             {
                 connection.Open();
 
-                string[] schema = [connection.Database, defaultDBSchema, null, null];
+                string[] schema = [connection.Database, DefaultDBSchema, null, null];
 
                 var tables = connection.GetSchema("Tables", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, tables, false);
@@ -45,10 +54,10 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 {
                     foreach (var tbl in result.Values)
                     {
-                        tbl.Columns = LoadColumns(tbl, options.RemoveFirstWord, options.AlternativeDescriptions);
+                        tbl.Columns = columnsGetter.GetColumns(connection, tbl, options, nameResolver);
 
-                        // Mark the primary key
-                        var PrimaryKey = GetPK(tbl.Name);
+                        var allIndexs = GetAllIndex();
+                        var PrimaryKey = GetPK(tbl.Name, allIndexs);
 
                         foreach (var col in tbl.Columns)
                         {
@@ -59,7 +68,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                             }
                         }
 
-                        tbl.Indexes = GetIndexes(tbl.Name);
+                        tbl.Indexes = GetIndexes(tbl.Name, allIndexs);
                         tbl.EnumValues = GetEnumValues(tbl);
                     }
                 }
@@ -76,7 +85,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
 
                 try
                 {
-                    var relations = LoadRelations(result);
+                    var relations = foreignKeysGetter.GetForeignKeys(connection, result);
                     foreach (var tbl in result.Values)
                     {
                         tbl.OuterKeys = relations.Where(r => r.ColumnReferencing.Table.Name.Equals(tbl.Name)).ToList();
@@ -122,7 +131,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
         {
             foreach (DataRow row in tables.Rows)
             {
-                if ((string)row["table_schema"] != connection.Database)
+                if ((string)row["table_catalog"] != connection.Database)
                 {
                     continue;
                 }
@@ -138,7 +147,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                     continue;
                 }
 
-                tbl.Schema = (string)row["table_schema"];
+                tbl.Schema = (string)row["table_catalog"];
                 tbl.IsView = fromViews;
                 tbl.IsUpdatable = !fromViews || (string)row["is_updatable"] == "YES";
                 tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
@@ -151,100 +160,42 @@ namespace L2Data2Code.SchemaReader.NpgSql
             }
         }
 
-        private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true, Dictionary<string, string> alternativeDescriptions = null)
+        private DataTable GetAllIndex()
         {
-            List<Column> result = [];
-
-            string[] schema = [connection.Database, defaultDBSchema, tbl.Name, null];
-
-            // Columnas
-            var SchemaTabla = connection.GetSchema("Columns", schema);
-            foreach (DataRow row in SchemaTabla.Rows)
-            {
-                Column col = new()
-                {
-                    Table = tbl,
-                    TableName = tbl.Name,
-                    Owner = null,
-                    Name = (string)row["column_name"],
-                    Precision = (int)row["character_maximum_length"].IfNull(row["numeric_precision"].IfNull(row["datetime_precision"].IfNull((ulong)0)))
-                };
-                col.PropertyName = nameResolver.ResolveColumnName(tbl.Name, col.Name).PascalCamelCase(removeFirstWord);
-                col.PropertyType = GetPropertyType((string)row["data_type"], col.Precision);
-                col.Precision = col.PropertyType == "bool" ? 1 : col.Precision;
-                col.IsNullable = ((string)row["is_nullable"]) == "YES";
-                col.NumericScale = (int)row["numeric_scale"].IfNull((ulong)0);
-                col.IsNumeric = row["numeric_precision"].IfNull(0) > 0;
-                col.IsComputed = tbl.IsView;
-                col.DefaultValue = row["column_default"].IfNull<string>(null) == null ? null : ((string)row["column_default"]).RemoveOuter('(', ')').RemoveOuter('\'').Replace("current_timestamp", "DateTime.Now", StringComparison.CurrentCultureIgnoreCase);
-                col.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : (string)row["column_comment"];
-                if (col.DefaultValue != null && col.PropertyType == "decimal" && !col.DefaultValue.EndsWith("m") && col.DefaultValue.Contains('.'))
-                {
-                    col.DefaultValue += "m";
-                }
-                result.Add(col);
-            }
-
-            return result;
-        }
-
-        private List<Key> LoadRelations(Tables tables)
-        {
-            List<Key> result = [];
             using var cmd = connection.CreateCommand();
-            cmd.CommandText = ALL_FOREIGN_KEYS;
+            cmd.CommandText = ALL_INDEXS_COLUMNS;
+
             using var reader = cmd.ExecuteReader();
 
-            while (reader.Read())
-            {
-                Key key = new();
-                var referencingTable = reader["table_name"].ToString();
-                var referencingColumn = reader["column_name"].ToString();
-                var referencedTable = reader["referenced_table_name"].ToString();
-                var referencedColumn = reader["referenced_column_name"].ToString();
-
-                WriteLine($"// referencedColumn: {referencedColumn}, referencingColumn: {referencingColumn}");
-
-                var tableReferencing = tables[referencingTable];
-                var tableReferenced = tables[referencedTable];
-
-                key.Name = reader["constraint_name"].ToString();
-                key.ColumnReferencing = tableReferencing.GetColumn(referencingColumn);
-                key.ColumnReferenced = tableReferenced.GetColumn(referencedColumn);
-
-                result.Add(key);
-            }
-
-            return result;
+            DataTable allIndexes = new();
+            allIndexes.Load(reader);
+            return allIndexes;
         }
 
-        private Dictionary<string, int> GetPK(string table)
+        private Dictionary<string, int> GetPK(string table, DataTable allIndexes)
         {
-
             Dictionary<string, int> result = new();
 
-            var databaseIndexColumns = connection.GetSchema("IndexColumns", [connection.Database, defaultDBSchema, table, null]);
-
-            foreach (DataRow row in databaseIndexColumns.Rows)
+            foreach (DataRow row in allIndexes.Rows.Cast<DataRow>().Where(r => (string)r["table_name"] == table))
             {
-                if (row["index_name"].ToString().Equals("primary"))
+                if (row["primary"].IfNull(false))
                 {
-                    result.Add(row["column_name"].ToString(), Convert.ToInt32(row["ordinal_position"]));
+                    result.Add(row["column_name"].ToString(), row["ordinal_position"].IfNull(0));
                 }
             }
 
             return result;
         }
 
-        private List<Schema.Index> GetIndexes(string table)
+        private List<Schema.Index> GetIndexes(string table, DataTable allIndexes)
         {
             List<Schema.Index> result = [];
 
-            var databaseIndexes = connection.GetSchema("Indexes", [connection.Database, defaultDBSchema, table, null]).Rows.Cast<DataRow>();
-            var databaseIndexColumns = connection.GetSchema("IndexColumns", [connection.Database, defaultDBSchema, table, null]).Rows.Cast<DataRow>();
+            var databaseIndexes = connection.GetSchema("Indexes", [connection.Database, DefaultDBSchema, table, null]).Rows.Cast<DataRow>();
+            var databaseIndexColumns = connection.GetSchema("IndexColumns", [connection.Database, DefaultDBSchema, table, null]).Rows.Cast<DataRow>();
 
             databaseIndexes.Where(r => !(bool)r["primary"])
-                .Select(r => new { IndexName = (string)r["index_name"], IsUnique = (bool)r["unique"] })
+                .Select(r => new { IndexName = (string)r["index_name"], IsUnique = r["unique"].IfNull(false) })
                 .ToList()
                 .ForEach(i =>
                 {
@@ -256,64 +207,6 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 });
 
             return result;
-        }
-
-        private static string GetPropertyType(string sqlType, int precision = 0, string dbTypeOriginal = null)
-        {
-            var sysType = "string";
-            switch (sqlType)
-            {
-                case "blob":
-                case "binary":
-                case "mediumblob":
-                case "longblob":
-                case "varbinary":
-                    sysType = "byte[]";
-                    break;
-                case "bit":
-                case "bool":
-                case "boolean":
-                    sysType = "bool";
-                    break;
-                case "char":
-                    sysType = "char";
-                    break;
-                case "date":
-                case "datetime":
-                case "timestamp":
-                    sysType = "DateTime";
-                    break;
-                case "time":
-                    sysType = "TimeSpan";
-                    break;
-                case "float":
-                case "decimal":
-                    sysType = "decimal";
-                    break;
-                case "double":
-                    sysType = "double";
-                    break;
-                case "bigint":
-                    sysType = "long";
-                    break;
-                case "smallint":
-                case "int":
-                case "mediumint":
-                    if (precision < 12)
-                    {
-                        sysType = "int";
-                    }
-                    else
-                    {
-                        sysType = "long";
-                    }
-                    break;
-                case "tinyint":
-                    sysType = precision == 1 || dbTypeOriginal == "tinyint(1)" ? "bool" : "sbyte";
-                    break;
-
-            }
-            return sysType;
         }
 
         private static string RemoveTablePrefixes(string word)
@@ -332,24 +225,6 @@ namespace L2Data2Code.SchemaReader.NpgSql
             return cleanword;
         }
 
-        private const string ALL_FOREIGN_KEYS = """
-            SELECT
-                tc.table_schema, 
-                tc.constraint_name, 
-                tc.table_name, 
-                kcu.column_name, 
-                ccu.table_schema AS referenced_table_schema,
-                ccu.table_name AS referenced_table_name,
-                ccu.column_name AS referenced_column_name 
-            FROM information_schema.table_constraints AS tc 
-            JOIN information_schema.key_column_usage AS kcu
-                ON tc.constraint_name = kcu.constraint_name
-                AND tc.table_schema = kcu.table_schema
-            JOIN information_schema.constraint_column_usage AS ccu
-                ON ccu.constraint_name = tc.constraint_name
-            WHERE tc.constraint_type = 'FOREIGN KEY'
-                AND tc.table_schema='public'; 
-            """;
 
     }
 }

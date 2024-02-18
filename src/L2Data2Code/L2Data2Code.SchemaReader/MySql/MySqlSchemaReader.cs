@@ -253,10 +253,10 @@ namespace L2Data2Code.SchemaReader.MySql
                 .ForEach(i =>
                 {
                     var columns = databaseIndexColumns.Where(r => (string)r["INDEX_NAME"] == i.IndexName)
-                            .Select(r => new IndexColumn((string)r["COLUMN_NAME"], Convert.ToInt32(r["ORDINAL_POSITION"]), (string)r["SORT_ORDER"] != "A"))
+                            .Select(r => new IndexColumn(table, i.IndexName, (string)r["COLUMN_NAME"], Convert.ToInt32(r["ORDINAL_POSITION"]), (string)r["SORT_ORDER"] != "A"))
                             .ToList();
 
-                    result.Add(new Schema.Index(i.IndexName, i.IsUnique, columns));
+                    result.Add(new Schema.Index(table, i.IndexName, i.IsUnique, false, columns));
                 });
 
             return result;

@@ -349,26 +349,20 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     {
                         if (!string.IsNullOrEmpty(lastIndexName))
                         {
-                            AddIndex(result, lastIndexName, fields, isUnique);
+                            result.Add(new Schema.Index(table, lastIndexName, isUnique, false, fields));
                         }
                         fields.Clear();
                     }
-                    fields.Add(new IndexColumn(fieldName, fieldOrder, isDescending));
+                    fields.Add(new IndexColumn(table, indexName, fieldName, fieldOrder, isDescending));
                 }
 
                 if (fields.Any() && !string.IsNullOrEmpty(lastIndexName))
                 {
-                    AddIndex(result, lastIndexName, fields, isUnique);
+                    result.Add(new Schema.Index(table, lastIndexName, isUnique, false, fields));
                 }
             }
 
             return result;
-        }
-
-        private static void AddIndex(List<Schema.Index> result, string lastIndexName, List<IndexColumn> fields, bool isUnique)
-        {
-            var index = new Schema.Index(lastIndexName, isUnique, fields);
-            result.Add(index);
         }
 
         private static string GetPropertyType(string sqlType)
