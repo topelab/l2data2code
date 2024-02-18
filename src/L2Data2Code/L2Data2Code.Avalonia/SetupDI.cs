@@ -31,6 +31,7 @@ using NLog;
 using Prism.Events;
 using Topelab.Core.Resolver.Entities;
 using L2Data2Code.SchemaReader.NpgSql;
+using Npgsql;
 
 namespace L2Data2Code
 {
@@ -102,6 +103,10 @@ namespace L2Data2Code
                 .AddTransient<ISchemaReader, ObjectSchemaReader>(nameof(ObjectSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, SQLiteSchemaReader>(nameof(SQLiteSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, NpgSchemaReader>(nameof(NpgSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+
+                .AddTransient<IForeignKeysGetter<NpgsqlConnection>, NpgForeignKeysGetter>()
+                .AddTransient<IColumnsGetter<NpgsqlConnection>, NpgColumnsGetter>()
+                .AddTransient<IIndexesGetter<NpgsqlConnection>, NpgIndexesGetter>()
 
                 .AddInstance<ILogger>(LogManager.GetCurrentClassLogger())
 

@@ -1,20 +1,25 @@
 using L2Data2Code.SchemaReader.Interface;
+using L2Data2Code.SchemaReader.Schema;
 using Npgsql;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace L2Data2Code.SchemaReader.NpgSql
 {
-    internal class NpgIndexesGetter : IIndexesGetter<NpgsqlConnection>
+    public class NpgIndexesGetter : IIndexesGetter<NpgsqlConnection>
     {
         private const string ALL_INDEXES = """
             SELECT 
-            	i.indrelid::regclass as table_name, 
-            	i.indexrelid::regclass as index_name, 
+            	tc.relname as table_name, 
+            	c.relname as index_name, 
             	i.indisunique as unique,
             	i.indisprimary as primary
-            FROM   pg_index i
-            join   pg_class c on c.oid = i.indexrelid
-            where c.relnamespace = 'public'::regnamespace;
+            FROM pg_index i
+            join pg_class c on c.oid = i.indexrelid
+            join pg_class tc on tc.oid = i.indrelid  
+            join pg_namespace ns on ns.oid = c.relnamespace
+            where ns.nspname = 'public'
+            order by 1,2
             """;
 
         private enum IndexFields
@@ -65,15 +70,15 @@ namespace L2Data2Code.SchemaReader.NpgSql
             FilterCondition
         }
 
-        public List<Schema.Index> GetIndexes(NpgsqlConnection connection)
+        public List<Index> GetIndexes(NpgsqlConnection connection)
         {
-            Dictionary<string, Schema.Index> indexes = GetIndexHeaders(connection);
+            Dictionary<string, Index> indexes = GetIndexHeaders(connection);
             return GetIndexColumns(connection, indexes);
         }
 
-        private Dictionary<string, Schema.Index> GetIndexHeaders(NpgsqlConnection connection)
+        private Dictionary<string, Index> GetIndexHeaders(NpgsqlConnection connection)
         {
-            Dictionary<string, Schema.Index> indexes = [];
+            Dictionary<string, Index> indexes = [];
             using var cmd = connection.CreateCommand();
             cmd.CommandText = ALL_INDEXES;
 
@@ -83,14 +88,14 @@ namespace L2Data2Code.SchemaReader.NpgSql
             {
                 string tableName = reader.GetString((int)IndexFields.TableName);
                 string indexName = reader.GetString((int)IndexFields.IndexName);
-                var index = new Schema.Index(tableName, indexName, reader.GetBoolean((int)IndexFields.Unique), reader.GetBoolean((int)IndexFields.Primary), new List<Schema.IndexColumn>());
+                var index = new Index(tableName, indexName, reader.GetBoolean((int)IndexFields.Unique), reader.GetBoolean((int)IndexFields.Primary), new List<IndexColumn>());
                 indexes.Add(indexName, index);
             }
 
             return indexes;
         }
 
-        private List<Schema.Index> GetIndexColumns(NpgsqlConnection connection, Dictionary<string, Schema.Index> indexes)
+        private List<Index> GetIndexColumns(NpgsqlConnection connection, Dictionary<string, Index> indexes)
         {
             using var cmd = connection.CreateCommand();
             cmd.CommandText = ALL_INDEXES_COLUMNS;
@@ -99,11 +104,16 @@ namespace L2Data2Code.SchemaReader.NpgSql
 
             while (reader.Read())
             {
-                var index = new Schema.Index(reader.GetString(0), reader.GetString(1), reader.GetBoolean(2), reader.GetBoolean(3), new List<Schema.IndexColumn>());
-                indexes.Add(index);
+                string tableName = reader.GetString((int)IndexColumnFields.TableName);
+                string indexName = reader.GetString((int)IndexColumnFields.IndexName);
+                var indexColumn = new IndexColumn(tableName, indexName, reader.GetString((int)IndexColumnFields.ColumnName), reader.GetInt32((int)IndexColumnFields.OrdinalPosition), reader.GetString((int)IndexColumnFields.SortOrder) != "A");
+                if (indexes.TryGetValue(indexName, out var index))
+                {
+                    index.Columns.Add(indexColumn);
+                }
             }
 
-            return indexes;
+            return indexes.Values.ToList();
         }
     }
 }

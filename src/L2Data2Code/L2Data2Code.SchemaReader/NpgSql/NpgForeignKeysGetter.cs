@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace L2Data2Code.SchemaReader.NpgSql
 {
-    internal class NpgForeignKeysGetter : IForeignKeysGetter<NpgsqlConnection>
+    public class NpgForeignKeysGetter : IForeignKeysGetter<NpgsqlConnection>
     {
         private const string ALL_FOREIGN_KEYS = """
             SELECT

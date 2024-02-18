@@ -9,7 +9,7 @@ using System.Data;
 
 namespace L2Data2Code.SchemaReader.NpgSql
 {
-    internal class NpgColumnsGetter : IColumnsGetter<NpgsqlConnection>
+    public class NpgColumnsGetter : IColumnsGetter<NpgsqlConnection>
     {
         public List<Column> GetColumns(NpgsqlConnection connection, Table table, SchemaReaderOptions options, INameResolver nameResolver)
         {

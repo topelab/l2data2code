@@ -17,6 +17,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
         private readonly INameResolver nameResolver;
         private readonly IForeignKeysGetter<NpgsqlConnection> foreignKeysGetter;
         private readonly IColumnsGetter<NpgsqlConnection> columnsGetter;
+        private readonly IIndexesGetter<NpgsqlConnection> indexesGetter;
         private NpgsqlConnection connection;
 
         public  static readonly string DefaultDBSchema = "public";
@@ -24,12 +25,14 @@ namespace L2Data2Code.SchemaReader.NpgSql
         public NpgSchemaReader(INameResolver nameResolver,
                                ISchemaOptions options,
                                IForeignKeysGetter<NpgsqlConnection> foreignKeysGetter,
-                               IColumnsGetter<NpgsqlConnection> columnsGetter) : base(options.SummaryWriter)
+                               IColumnsGetter<NpgsqlConnection> columnsGetter,
+                               IIndexesGetter<NpgsqlConnection> indexesGetter) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             this.foreignKeysGetter = foreignKeysGetter ?? throw new ArgumentNullException(nameof(foreignKeysGetter));
             this.columnsGetter = columnsGetter ?? throw new ArgumentNullException(nameof(columnsGetter));
+            this.indexesGetter = indexesGetter ?? throw new ArgumentNullException(nameof(indexesGetter));
 
             this.nameResolver.Initialize(options.SchemaName);
         }
@@ -50,14 +53,15 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 var views = connection.GetSchema("Views", schema);
                 AddItems(options.TableRegex, options.AlternativeDescriptions, result, views, true);
 
+                var indexes = indexesGetter.GetIndexes(connection);
+                
                 try
                 {
                     foreach (var tbl in result.Values)
                     {
                         tbl.Columns = columnsGetter.GetColumns(connection, tbl, options, nameResolver);
 
-                        var allIndexs = GetAllIndex();
-                        var PrimaryKey = GetPK(tbl.Name, allIndexs);
+                        var PrimaryKey = GetPK(tbl.Name, indexes);
 
                         foreach (var col in tbl.Columns)
                         {
@@ -68,7 +72,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                             }
                         }
 
-                        tbl.Indexes = GetIndexes(tbl.Name, allIndexs);
+                        tbl.Indexes = indexes.Where(i => i.TableName == tbl.Name && !i.IsPrimary).ToList();
                         tbl.EnumValues = GetEnumValues(tbl);
                     }
                 }
@@ -160,51 +164,11 @@ namespace L2Data2Code.SchemaReader.NpgSql
             }
         }
 
-        private DataTable GetAllIndex()
+        private Dictionary<string, int> GetPK(string table, List<Schema.Index> indexes)
         {
-            using var cmd = connection.CreateCommand();
-            cmd.CommandText = ALL_INDEXS_COLUMNS;
-
-            using var reader = cmd.ExecuteReader();
-
-            DataTable allIndexes = new();
-            allIndexes.Load(reader);
-            return allIndexes;
-        }
-
-        private Dictionary<string, int> GetPK(string table, DataTable allIndexes)
-        {
-            Dictionary<string, int> result = new();
-
-            foreach (DataRow row in allIndexes.Rows.Cast<DataRow>().Where(r => (string)r["table_name"] == table))
-            {
-                if (row["primary"].IfNull(false))
-                {
-                    result.Add(row["column_name"].ToString(), row["ordinal_position"].IfNull(0));
-                }
-            }
-
-            return result;
-        }
-
-        private List<Schema.Index> GetIndexes(string table, DataTable allIndexes)
-        {
-            List<Schema.Index> result = [];
-
-            var databaseIndexes = connection.GetSchema("Indexes", [connection.Database, DefaultDBSchema, table, null]).Rows.Cast<DataRow>();
-            var databaseIndexColumns = connection.GetSchema("IndexColumns", [connection.Database, DefaultDBSchema, table, null]).Rows.Cast<DataRow>();
-
-            databaseIndexes.Where(r => !(bool)r["primary"])
-                .Select(r => new { IndexName = (string)r["index_name"], IsUnique = r["unique"].IfNull(false) })
-                .ToList()
-                .ForEach(i =>
-                {
-                    var columns = databaseIndexColumns.Where(r => (string)r["index_name"] == i.IndexName)
-                            .Select(r => new IndexColumn((string)r["column_name"], Convert.ToInt32(r["ordinal_position"]), (string)r["sort_order"] != "A"))
-                            .ToList();
-
-                    result.Add(new Schema.Index(i.IndexName, i.IsUnique, columns));
-                });
+            Dictionary<string, int> result = [];
+            var primaryKeys = indexes.FirstOrDefault(i => i.TableName == table && i.IsPrimary);
+            primaryKeys?.Columns.ToList().ForEach(c => result.Add(c.Name, c.Order));
 
             return result;
         }
