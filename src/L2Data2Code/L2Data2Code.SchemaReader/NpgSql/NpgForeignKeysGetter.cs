@@ -8,22 +8,34 @@ namespace L2Data2Code.SchemaReader.NpgSql
     public class NpgForeignKeysGetter : IForeignKeysGetter<NpgsqlConnection>
     {
         private const string ALL_FOREIGN_KEYS = """
-            SELECT
-                tc.table_schema, 
-                tc.constraint_name, 
-                tc.table_name, 
-                kcu.column_name, 
-                ccu.table_schema AS referenced_table_schema,
-                ccu.table_name AS referenced_table_name,
-                ccu.column_name AS referenced_column_name 
-            FROM information_schema.table_constraints AS tc 
-            JOIN information_schema.key_column_usage AS kcu
-                ON tc.constraint_name = kcu.constraint_name
-                AND tc.table_schema = kcu.table_schema
-            JOIN information_schema.constraint_column_usage AS ccu
-                ON ccu.constraint_name = tc.constraint_name
-            WHERE tc.constraint_type = 'FOREIGN KEY'
-                AND tc.table_schema='public'; 
+            select 
+            	conname as "constraint_name",
+            	clc.relname as "table_name",
+                att2.attname as "column_name", 
+                cl.relname as "referenced_table_name", 
+                att.attname as "referenced_column_name"
+            from
+               (select 
+                    unnest(con1.conkey) as "parent", 
+                    unnest(con1.confkey) as "child", 
+                    con1.confrelid, 
+                    con1.conrelid,
+                    con1.conname
+                from 
+                    pg_class cl
+                    join pg_namespace ns on cl.relnamespace = ns.oid
+                    join pg_constraint con1 on con1.conrelid = cl.oid
+                where ns.nspname = 'public'
+                    and con1.contype = 'f'
+               ) con
+               join pg_attribute att on
+                   att.attrelid = con.confrelid and att.attnum = con.child
+               join pg_class cl on
+                   cl.oid = con.confrelid
+               join pg_class clc on
+                   clc.oid = con.conrelid
+               join pg_attribute att2 on
+                   att2.attrelid = con.conrelid and att2.attnum = con.parent;
             """;
 
         public IEnumerable<Key> GetForeignKeys(NpgsqlConnection connection, Tables tables)
