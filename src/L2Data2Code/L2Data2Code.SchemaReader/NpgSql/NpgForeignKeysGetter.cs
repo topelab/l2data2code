@@ -1,3 +1,4 @@
+using Dapper;
 using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Schema;
 using Npgsql;
@@ -7,13 +8,19 @@ namespace L2Data2Code.SchemaReader.NpgSql
 {
     public class NpgForeignKeysGetter : IForeignKeysGetter<NpgsqlConnection>
     {
+        private record ForeignKeyDTO(string ConstraintName,
+                                     string TableName,
+                                     string ColumnName,
+                                     string ReferencedTableName,
+                                     string ReferencedColumnName);
+
         private const string ALL_FOREIGN_KEYS = """
             select 
-            	conname as "constraint_name",
-            	clc.relname as "table_name",
-                att2.attname as "column_name", 
-                cl.relname as "referenced_table_name", 
-                att.attname as "referenced_column_name"
+            	conname as "ConstraintName",
+            	clc.relname as "TableName",
+                att2.attname as "ColumnName", 
+                cl.relname as "ReferencedTableName", 
+                att.attname as "ReferencedColumnName"
             from
                (select 
                     unnest(con1.conkey) as "parent", 
@@ -41,22 +48,21 @@ namespace L2Data2Code.SchemaReader.NpgSql
         public IEnumerable<Key> GetForeignKeys(NpgsqlConnection connection, Tables tables)
         {
             List<Key> result = [];
-            using var cmd = connection.CreateCommand();
-            cmd.CommandText = ALL_FOREIGN_KEYS;
-            using var reader = cmd.ExecuteReader();
 
-            while (reader.Read())
+            var foreignKeys = connection.Query<ForeignKeyDTO>(ALL_FOREIGN_KEYS);
+
+            foreach (var foreignKey in foreignKeys)
             {
                 Key key = new();
-                var referencingTable = reader["table_name"].ToString();
-                var referencingColumn = reader["column_name"].ToString();
-                var referencedTable = reader["referenced_table_name"].ToString();
-                var referencedColumn = reader["referenced_column_name"].ToString();
+                var referencingTable = foreignKey.TableName;
+                var referencingColumn = foreignKey.ColumnName;
+                var referencedTable = foreignKey.ReferencedTableName;
+                var referencedColumn = foreignKey.ReferencedColumnName;
 
                 var tableReferencing = tables[referencingTable];
                 var tableReferenced = tables[referencedTable];
 
-                key.Name = reader["constraint_name"].ToString();
+                key.Name = foreignKey.ConstraintName;
                 key.ColumnReferencing = tableReferencing.GetColumn(referencingColumn);
                 key.ColumnReferenced = tableReferenced.GetColumn(referencedColumn);
 

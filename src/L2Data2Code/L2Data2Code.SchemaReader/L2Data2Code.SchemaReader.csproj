@@ -4,6 +4,7 @@
     <Version>3.3.4</Version>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.28" />
     <PackageReference Include="MySql.Data" Version="8.3.0" />
     <PackageReference Include="Npgsql" Version="8.0.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
