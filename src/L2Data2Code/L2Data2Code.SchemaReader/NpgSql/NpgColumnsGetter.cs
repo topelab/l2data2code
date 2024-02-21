@@ -53,15 +53,9 @@ namespace L2Data2Code.SchemaReader.NpgSql
             var sysType = "string";
             switch (sqlType)
             {
-                case "blob":
-                case "binary":
-                case "mediumblob":
-                case "longblob":
-                case "varbinary":
+                case "bytea":
                     sysType = "byte[]";
                     break;
-                case "bit":
-                case "bool":
                 case "boolean":
                     sysType = "bool";
                     break;
@@ -69,37 +63,39 @@ namespace L2Data2Code.SchemaReader.NpgSql
                     sysType = "char";
                     break;
                 case "date":
-                case "datetime":
                 case "timestamp":
                     sysType = "DateTime";
                     break;
                 case "time":
+                case "interval":
                     sysType = "TimeSpan";
                     break;
-                case "float":
-                case "decimal":
+                case "numeric":
+                case "money":
                     sysType = "decimal";
                     break;
-                case "double":
+                case "double precision":
                     sysType = "double";
+                    break;
+                case "real":
+                    sysType = "float";
                     break;
                 case "bigint":
                     sysType = "long";
                     break;
                 case "smallint":
-                case "int":
-                case "mediumint":
-                    if (precision < 12)
-                    {
-                        sysType = "int";
-                    }
-                    else
-                    {
-                        sysType = "long";
-                    }
+                    sysType= "short";
                     break;
-                case "tinyint":
-                    sysType = precision == 1 || dbTypeOriginal == "tinyint(1)" ? "bool" : "sbyte";
+                case "int":
+                    sysType = "int";
+                    break;
+                case "bit":
+                    sysType = precision == 1 || dbTypeOriginal == "bit(1)" ? "bool" : "BitArray";
+                    break;
+                case "oid":
+                case "xid":
+                case "cid":
+                    sysType = "uint";
                     break;
 
             }
