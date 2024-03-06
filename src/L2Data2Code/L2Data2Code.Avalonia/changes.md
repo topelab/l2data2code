@@ -1,3 +1,18 @@
+### 3.3.5
+
+- Update topelab.core.resolver.microsoft to 1.5.5
+- Update Prism.Core to 9.0.401-pre
+- Update Dapper to 2.1.35
+- Update Avalonia to 11.0.10
+- Update Avalonia.Controls.DataGrid to 11.0.10
+- Update Avalonia.Desktop to 11.0.10
+- Update Avalonia.Themes.Simple to 11.0.10
+- Update Avalonia.Diagnostics to 11.0.10
+- Update Avalonia.ReactiveUI to 11.0.10
+- Update Avalonia.Themes.Fluent to 11.0.10
+- Update topelab.core.resolver to 1.5.5
+
+
 ### 3.3.3
 
 - Upgrade Avalonia to 11.0.9

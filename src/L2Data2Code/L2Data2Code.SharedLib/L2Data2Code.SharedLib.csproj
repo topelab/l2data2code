@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>3.3.4</Version>
+    <Version>3.3.5</Version>
     <RestoreAdditionalProjectSources>
         https://nuget.pkg.github.com/topelab/index.json
     </RestoreAdditionalProjectSources>
@@ -10,7 +10,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="System.Management" Version="8.0.0" />
-    <PackageReference Include="Prism.Core" Version="9.0.271-pre" />
-    <PackageReference Include="Topelab.Core.Resolver" Version="1.5.4" />
+    <PackageReference Include="Prism.Core" Version="9.0.401-pre" />
+    <PackageReference Include="Topelab.Core.Resolver" Version="1.5.5" />
   </ItemGroup>
 </Project>
