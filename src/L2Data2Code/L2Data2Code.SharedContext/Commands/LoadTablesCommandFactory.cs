@@ -3,7 +3,6 @@ using L2Data2Code.SharedContext.Commands.Interfaces;
 using L2Data2Code.SharedContext.Main.TablePanel;
 using L2Data2CodeUI.Shared.Adapters;
 using NLog;
-using System.ComponentModel;
 using System.Linq;
 
 namespace L2Data2Code.SharedContext.Commands

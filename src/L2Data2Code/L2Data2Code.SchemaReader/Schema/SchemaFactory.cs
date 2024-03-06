@@ -4,6 +4,7 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Json;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.MySql;
+using L2Data2Code.SchemaReader.NpgSql;
 using L2Data2Code.SchemaReader.Object;
 using L2Data2Code.SchemaReader.SqlServer;
 using L2Data2Code.SharedLib.Configuration;
@@ -31,6 +32,7 @@ namespace L2Data2Code.SchemaReader.Schema
             { "System.Data.JsonClient", new ProviderDefinition { Key = "json", Type = typeof(JsonSchemaReader) } },
             { "Microsoft.Data.Sqlite", new ProviderDefinition { Key = "sqlite", Type = typeof(SQLiteSchemaReader), Conversions = new Dictionary<string, string>() {{ "decimal", "NUMERIC" } } } },
             { "System.Data.ObjectClient", new ProviderDefinition { Key = "object", Type = typeof(ObjectSchemaReader) } },
+            { "Npgsql", new ProviderDefinition { Key = "postgresql", Type = typeof(NpgSchemaReader) } },
 
         };
 
