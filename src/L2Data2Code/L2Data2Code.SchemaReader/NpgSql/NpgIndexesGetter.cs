@@ -85,7 +85,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
             {
                 var tableName = indexColumnDTO.TableName;
                 var indexName = indexColumnDTO.IndexName;
-                var indexColumn = new IndexColumn(tableName, indexName, indexColumnDTO.ColumnName, indexColumnDTO.OrdinalPosition, indexColumnDTO.SortOrder != "A");
+                var indexColumn = new IndexColumn(tableName, indexName, indexColumnDTO.ColumnName.Trim('"'), indexColumnDTO.OrdinalPosition, indexColumnDTO.SortOrder != "A");
                 if (indexes.TryGetValue(indexName, out var index))
                 {
                     index.Columns.Add(indexColumn);
