@@ -119,7 +119,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
             List<EnumTableValue> values = new List<EnumTableValue>();
             if (tbl.IsEnum)
             {
-                var sql = $"select t.{tbl.EnumValue}, t.{tbl.EnumName} from {tbl.Name} t";
+                var sql = $"select t.\"{tbl.EnumValue}\", t.\"{tbl.EnumName}\" from \"{tbl.Name}\" t";
                 using var cmd = connection.CreateCommand();
                 cmd.CommandText = sql;
                 using var rdr = cmd.ExecuteReader();

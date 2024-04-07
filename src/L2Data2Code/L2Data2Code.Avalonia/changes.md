@@ -1,3 +1,8 @@
+### 3.3.6
+
+- Fixed some bugs on PostgreSQL schema reader
+- Upgrade Handlebars
+
 ### 3.3.5
 
 - Update topelab.core.resolver.microsoft to 1.5.5
