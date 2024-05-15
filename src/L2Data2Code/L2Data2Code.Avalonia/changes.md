@@ -1,3 +1,7 @@
+### 3.3.7
+
+- Update some packages
+
 ### 3.3.6
 
 - Fixed some bugs on PostgreSQL schema reader
