@@ -75,6 +75,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             DbJoin = column.DbJoin,
                             DbFromField = column.DbFromField,
                             DbToField = column.DbToField,
+                            HasRelation = column.HasRelation,
                         };
                         return property;
                     }).ToArray();
@@ -123,6 +124,11 @@ namespace L2Data2Code.BaseGenerator.Services
 
             replacement.ForeignKeyColumns = filteredColumns
                     .Where(p => p.IsForeignKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.NotRelatedColumns = filteredColumns
+                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.HasRelation)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 

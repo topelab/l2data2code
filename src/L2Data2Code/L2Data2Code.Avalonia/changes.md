@@ -1,3 +1,7 @@
+### 3.3.8
+
+- Added property `HasRelation` to `Entity` and `NotRelatedColumns` for replacement
+
 ### 3.3.7
 
 - Update some packages

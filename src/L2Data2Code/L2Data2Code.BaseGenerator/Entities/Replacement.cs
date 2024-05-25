@@ -35,6 +35,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public Property[] NotPrimaryKeyColumns { get; set; }
         public Property[] PrimaryKeys { get; set; }
         public Property[] NotPrimaryKeys { get; set; }
+        public Property[] NotRelatedColumns { get; set; }
         public EntityIndex[] Indexes { get; set; }
         public EnumTableValue[] EnumValues { get; set; }
         public bool HasCollections { get; set; }

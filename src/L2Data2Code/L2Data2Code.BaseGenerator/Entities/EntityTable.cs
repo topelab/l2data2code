@@ -122,6 +122,16 @@ namespace L2Data2Code.BaseGenerator.Entities
                     DbToField = item.DbColumn,
                 };
                 Columns.Add(campo);
+                SetRelated(item);
+            }
+        }
+
+        private void SetRelated(Relation item)
+        {
+            var relatedColumn = Columns.Where(c => c.Name == item.RelatedColumn).FirstOrDefault();
+            if (relatedColumn is not null)
+            {
+                relatedColumn.HasRelation = true;
             }
         }
 
