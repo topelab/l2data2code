@@ -31,6 +31,8 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 Name = table.ClassName,
                 Type = table.TableType,
+                FieldDescriptor = table.FieldDescriptor,
+                FirstPK = table.FirstPK,
                 UseSpanish = schemaService.GetLang(options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
             };
@@ -128,7 +130,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     .ToArray();
 
             replacement.NotRelatedColumns = filteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.HasRelation)
+                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey && !p.HasRelation)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 

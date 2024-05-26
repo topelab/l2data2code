@@ -15,6 +15,8 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsUpdatable { get; internal set; }
         public bool MultiplePKColumns { get; private set; }
         public string Description { get; private set; }
+        public string FieldDescriptor { get; private set; }
+        public string FirstPK { get; private set; }
         public bool IsEnum => EnumValues?.Any() ?? false;
 
         public List<EntityColumn> Columns = new();
@@ -67,9 +69,18 @@ namespace L2Data2Code.BaseGenerator.Entities
                     IsComputed = column.IsComputed,
                     DefaultValue = column.DefaultValue,
                 };
+
+                if (campo.Name == $"Nombre{table.ClassName}" || campo.Name == $"{table.ClassName}Name" || campo.Name == "Name" || campo.Name == "Nombre")
+                {
+                    FieldDescriptor = campo.Name;
+                }
+                if (string.IsNullOrEmpty(FieldDescriptor) && column.IsPK && column.PkOrder == 1)
+                {
+                    FirstPK = campo.Name;
+                }
+
                 Columns.Add(campo);
                 NumeroCamposPK += campo.PrimaryKey ? 1 : 0;
-
             }
         }
 

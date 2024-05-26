@@ -22,6 +22,14 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// </summary>
         public bool UseSpanish { get; set; }
         /// <summary>
+        /// Field descriptor for entity
+        /// </summary>
+        public string FieldDescriptor { get; set; }
+        /// <summary>
+        /// First primary key for entity
+        /// </summary>
+        public string FirstPK { get; set; }
+        /// <summary>
         /// Entity name in uppercase format
         /// </summary>
         public string Uppercase => Name.ToUpper(CultureInfo.CurrentCulture);
