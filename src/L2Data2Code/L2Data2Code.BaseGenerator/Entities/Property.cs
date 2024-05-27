@@ -44,6 +44,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string DbJoin { get; set; }
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
+        public bool HasRelation { get; set; }
         public string FirstSample
         {
             get
@@ -127,6 +128,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 DbFromField = DbFromField,
                 ToField = ToField,
                 DbToField = DbToField,
+                HasRelation = HasRelation,
             };
         }
 
