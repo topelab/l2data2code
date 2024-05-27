@@ -1,6 +1,7 @@
 ### 3.3.8
 
 - Added property `HasRelation` to `Entity` and `NotRelatedColumns` for replacement
+- Added `FieldDescriptor` and `FirstPK` to `Entity`
 
 ### 3.3.7
 
