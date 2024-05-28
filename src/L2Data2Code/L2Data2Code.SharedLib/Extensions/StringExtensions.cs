@@ -1,7 +1,7 @@
 using L2Data2Code.SharedLib.Inflector;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace L2Data2Code.SharedLib.Extensions
@@ -401,6 +401,41 @@ namespace L2Data2Code.SharedLib.Extensions
             }
             return result;
         }
+
+        public static string RemoveIdFromName(this string name)
+        {
+            var result = name;
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                result = name.StartsWith("Id", StringComparison.CurrentCultureIgnoreCase) ? name[2..] : name;
+                result = name.EndsWith("Id", StringComparison.CurrentCultureIgnoreCase) ? name[..^2] : result;
+            }
+            return result;
+        }
+
+        public static string RemoveDuplicates(this string text, string lineSeparator = "\n")
+        {
+            var result = text;
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                List<string> lines = [.. result.Split(lineSeparator)];
+                List<string> linesWithoutDuplicates = [];
+                string previousLine = null;
+                foreach (var line in lines)
+                {
+                    if (line != previousLine)
+                    {
+                        linesWithoutDuplicates.Add(line);
+                        previousLine = line;
+                    }
+                }
+
+                result = string.Join(lineSeparator, linesWithoutDuplicates);
+            }
+
+            return result;
+        }
+
 
         public static string StringRepresentation(this string text) => text == null ? "null" : $"\"{text.DoubleSlash()}\"";
     }

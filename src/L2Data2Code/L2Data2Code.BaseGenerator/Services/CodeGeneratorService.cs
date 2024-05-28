@@ -409,7 +409,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 content = TemplateCleanRegex().Replace(content, ";");
             }
 
-            return content;
+            return content.RemoveDuplicates();
         }
 
         private static CommentLine GetCommentLine(string fileExtension) =>

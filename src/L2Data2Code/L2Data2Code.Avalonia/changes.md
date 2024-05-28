@@ -1,3 +1,8 @@
+### 3.3.9
+
+- Remove extra lines equals to previous
+- Added property `ShortName` for relations
+
 ### 3.3.8
 
 - Added property `HasRelation` to `Entity` and `NotRelatedColumns` for replacement

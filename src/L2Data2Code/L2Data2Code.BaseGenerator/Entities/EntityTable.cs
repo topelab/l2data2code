@@ -113,10 +113,19 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var item in OneToMany)
             {
+                var name = $"{item.Table}{byWord}{item.RelatedColumn}";
+                var shortName = item.RelatedColumn.RemoveIdFromName();
+
+                if (Columns.Any(r => r.ShortName == shortName))
+                {
+                    shortName = name;
+                }
+
                 EntityColumn campo = new()
                 {
                     Table = ClassName,
-                    Name = $"{item.Table}{byWord}{item.RelatedColumn}",
+                    Name = name,
+                    ShortName = shortName,
                     Type = Constants.InternalTypes.ReferenceTo + item.Table,
                     IsNull = item.CanBeNull,
                     Size = 0,
@@ -162,10 +171,19 @@ namespace L2Data2Code.BaseGenerator.Entities
 
             foreach (var item in ManyToOne)
             {
+                var name = $"{item.Table.ToPlural()}{withWord}{item.Column}";
+                var shortName = item.Table.ToPlural();
+
+                if (Columns.Any(r => r.ShortName == shortName))
+                {
+                    shortName = name;
+                }
+
                 EntityColumn campo = new()
                 {
                     Table = ClassName,
-                    Name = $"{item.Table.ToPlural()}{withWord}{item.Column}",
+                    Name = name,
+                    ShortName = shortName,
                     Type = Constants.InternalTypes.Collection + item.Table,
                     IsNull = false,
                     Size = 0,

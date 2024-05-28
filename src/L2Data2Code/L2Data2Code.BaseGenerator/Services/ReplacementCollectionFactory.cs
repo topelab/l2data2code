@@ -48,6 +48,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             Entity = entity,
                             Table = table.TableName,
                             Name = name,
+                            ShortName = column.ShortName,
                             Nullable = column.IsNull,
                             PrimaryKey = column.PrimaryKey,
                             IsFirst = isFirst,
