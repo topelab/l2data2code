@@ -1,3 +1,7 @@
+### 3.3.10
+
+- Added management for extensions `.resx` as `.xml`
+
 ### 3.3.9
 
 - Remove extra lines equals to previous
