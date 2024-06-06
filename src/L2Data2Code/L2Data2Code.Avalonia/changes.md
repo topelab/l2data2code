@@ -1,3 +1,7 @@
+### 3.3.11
+
+- Better use for descriptions files: added `bool WriteDescriptionsFile` to schema configuration. When is `true` a description file for all columns is written on `(template_dir)\dataSource\(schemaName)-descriptions.txt`. **Now** it's easy to fill descriptions for columns.
+
 ### 3.3.10
 
 - Added management for extensions `.resx` as `.xml`

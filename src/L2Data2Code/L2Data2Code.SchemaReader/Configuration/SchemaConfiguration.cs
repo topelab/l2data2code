@@ -7,6 +7,7 @@ namespace L2Data2Code.SchemaReader.Configuration
         public string TableNameLanguage { get; set; } = "en";
         public bool RemoveFirstWordOnColumnNames { get; set; } = false;
         public string DescriptionsFile { get; set; }
+        public bool WriteDescriptionsFile { get; set; }
         public string RenameTables { get; set; }
         public string RenameColumns { get; set; }
         public string TableTypes { get; set; }

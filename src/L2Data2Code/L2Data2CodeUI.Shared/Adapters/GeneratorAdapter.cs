@@ -310,6 +310,8 @@ namespace L2Data2CodeUI.Shared.Adapters
                     gitService.GitAdd(path);
                     messageService.Info(Messages.AddedCodeToGit);
                 }
+
+                TryWriteDescriptions();
             }
             catch (CodeGeneratorException ex)
             {
@@ -513,7 +515,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             var templatePath = Path.Combine(basePath, SelectedTemplate.Path);
 
             schemaName = SelectedDataSource.Schema;
-            _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName);
+            _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName, templatePath);
             outputSchemaName = SelectedDataSource.OutputSchema;
             schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer));
             if (schemaReader == null)
@@ -536,13 +538,31 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 tables = schemaReader.ReadSchema(new SchemaReaderOptions(schemaService.ShouldRemoveWord1(schemaName), _alternativeDictionary))
                     ?? new Tables();
-
                 messageService.Clear(MessageCodes.READ_SCHEMA);
             }
             catch (Exception ex)
             {
                 messageService.Error($"GeneratorAdapter.SetupTables() : {ex.Message}", Messages.ErrorReadingSchema, MessageCodes.READ_SCHEMA);
                 tables = new Tables();
+            }
+        }
+
+        private void TryWriteDescriptions()
+        {
+            if (SchemasConfiguration[schemaName].WriteDescriptionsFile)
+            {
+                var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
+                var templatePath = Path.Combine(basePath, SelectedTemplate.Path);
+                var descriptionFilePath = Path.Combine(templatePath, $"dataSource\\{schemaName.ToSlug()}-descriptions.txt");
+
+                var result = string.Join("\n",
+                    tables.Values
+                    .SelectMany(t => t.Columns)
+                    .OrderBy(c => c.TableName)
+                    .ThenBy(c => c.Name)
+                    .Select(c => string.Concat(string.Concat(c.TableName, ".", c.Name).PadRight(69), c.Description)));
+
+                File.WriteAllText(descriptionFilePath, string.Concat(result, "\n"));
             }
         }
 

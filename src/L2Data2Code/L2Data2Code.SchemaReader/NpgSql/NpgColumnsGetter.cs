@@ -37,7 +37,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 col.IsNumeric = row["numeric_precision"].IfNull(0) > 0;
                 col.IsComputed = table.IsView;
                 col.DefaultValue = row["column_default"].IfNull<string>(null) == null ? null : ((string)row["column_default"]).RemoveOuter('(', ')').RemoveOuter('\'').Replace("current_timestamp", "DateTime.Now", StringComparison.CurrentCultureIgnoreCase);
-                col.Description = options.AlternativeDescriptions != null && options.AlternativeDescriptions.TryGetValue(table.Name, out var value) ? value : string.Empty;
+                col.Description = options.AlternativeDescriptions != null && options.AlternativeDescriptions.TryGetValue(col.FullName, out var value) ? value : string.Empty;
                 if (col.DefaultValue != null && col.PropertyType == "decimal" && !col.DefaultValue.EndsWith("m") && col.DefaultValue.Contains('.'))
                 {
                     col.DefaultValue += "m";

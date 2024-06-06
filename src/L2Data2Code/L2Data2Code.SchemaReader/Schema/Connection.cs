@@ -37,6 +37,7 @@ namespace L2Data2Code.SchemaReader.Schema
             RenameTables = schemaInfo.RenameTables;
             TableNameLanguage = schemaInfo.TableNameLanguage;
             DescriptionsFile = schemaInfo.DescriptionsFile;
+            WriteDescriptionsFile = schemaInfo.WriteDescriptionsFile;
 
             if (ConnectionString.Contains("|DataDirectory|"))
             {
@@ -44,8 +45,6 @@ namespace L2Data2Code.SchemaReader.Schema
                 var dataFilePath = GetDataDirectory();
                 ConnectionString = ConnectionString.Replace("|DataDirectory|", dataFilePath);
             }
-
-
         }
 
         /// <summary>Gets the data directory.</summary>

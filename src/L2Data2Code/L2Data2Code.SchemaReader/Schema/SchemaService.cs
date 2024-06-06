@@ -10,13 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
     /// <summary>
     /// Schema service
     /// </summary>
-    public class SchemaService : ISchemaService
+    public partial class SchemaService : ISchemaService
     {
         private readonly string DefaultLang = "en";
         private readonly bool Remove1stDefaultValue = false;
@@ -120,31 +121,31 @@ namespace L2Data2Code.SchemaReader.Schema
             return schemas[schemaName]?.CanCreateDB ?? false;
         }
 
+        private static Regex definitionsRegex = DescriptionTemplate();
+
+
         /// <summary>
         /// Get schema dictionary from file
         /// </summary>
         /// <param name="schemaName">Schema name key</param>
-        public Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName)
+        /// <param name="templatePath">Base directori</param>
+        public Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName, string templatePath)
         {
             Dictionary<string, string> schemaDictionary = new();
             var descriptionFile = schemas[schemaName]?.DescriptionsFile;
-            if (descriptionFile == null || !File.Exists(descriptionFile))
+            if (descriptionFile == null || !File.Exists(Path.Combine(templatePath, descriptionFile)))
             {
                 return schemaDictionary;
             }
 
-            var content = File.ReadAllLines(descriptionFile);
+            var content = File.ReadAllLines(Path.Combine(templatePath, descriptionFile));
             for (var i = 1; i < content.Length; i++)
             {
                 var line = content[i].Trim();
-                if (string.IsNullOrWhiteSpace(line))
+                var matchCondition = DescriptionTemplate().Match(line);
+                if (matchCondition.Success)
                 {
-                    continue;
-                }
-                var values = line.Split('\t');
-                if (values.Length > 1)
-                {
-                    schemaDictionary.Add(values[0], string.Join("\t", values.Skip(1)));
+                    schemaDictionary.Add(matchCondition.Groups["column"].Value, matchCondition.Groups["description"].Value);
                 }
             }
 
@@ -202,5 +203,8 @@ namespace L2Data2Code.SchemaReader.Schema
                     DefaultValueHandling = DefaultValueHandling.Ignore
                 }));
         }
+
+        [GeneratedRegex(@"^\s*(?<column>[^;,\s]+)(;|,|\s)+(?<description>.+)$")]
+        private static partial Regex DescriptionTemplate();
     }
 }

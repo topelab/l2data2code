@@ -42,6 +42,7 @@ namespace L2Data2Code.SchemaReader
 
                 .AddTransient<IForeignKeysGetter<NpgsqlConnection>, NpgForeignKeysGetter>()
                 .AddTransient<IColumnsGetter<NpgsqlConnection>, NpgColumnsGetter>()
+                .AddTransient<IColumnDescriptionsGetter<NpgsqlConnection>, NpgColumnDescriptionsGetter>()
                 .AddTransient<IIndexesGetter<NpgsqlConnection>, NpgIndexesGetter>()
                 ;
         }

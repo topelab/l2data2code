@@ -17,6 +17,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
         private readonly INameResolver nameResolver;
         private readonly IForeignKeysGetter<NpgsqlConnection> foreignKeysGetter;
         private readonly IColumnsGetter<NpgsqlConnection> columnsGetter;
+        private readonly IColumnDescriptionsGetter<NpgsqlConnection> columnDescriptionsGetter;
         private readonly IIndexesGetter<NpgsqlConnection> indexesGetter;
         private NpgsqlConnection connection;
 
@@ -26,12 +27,14 @@ namespace L2Data2Code.SchemaReader.NpgSql
                                ISchemaOptions options,
                                IForeignKeysGetter<NpgsqlConnection> foreignKeysGetter,
                                IColumnsGetter<NpgsqlConnection> columnsGetter,
+                               IColumnDescriptionsGetter<NpgsqlConnection> columnDescriptionsGetter,
                                IIndexesGetter<NpgsqlConnection> indexesGetter) : base(options.SummaryWriter)
         {
             connectionString = options.ConnectionString;
             this.nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             this.foreignKeysGetter = foreignKeysGetter ?? throw new ArgumentNullException(nameof(foreignKeysGetter));
             this.columnsGetter = columnsGetter ?? throw new ArgumentNullException(nameof(columnsGetter));
+            this.columnDescriptionsGetter = columnDescriptionsGetter ?? throw new ArgumentNullException(nameof(columnDescriptionsGetter));
             this.indexesGetter = indexesGetter ?? throw new ArgumentNullException(nameof(indexesGetter));
 
             this.nameResolver.Initialize(options.SchemaName);
@@ -75,6 +78,8 @@ namespace L2Data2Code.SchemaReader.NpgSql
                         tbl.Indexes = indexes.Where(i => i.TableName == tbl.Name && !i.IsPrimary).ToList();
                         tbl.EnumValues = GetEnumValues(tbl);
                     }
+
+                    columnDescriptionsGetter.SetColumnsDescriptions(connection, result);
                 }
                 catch (Exception x)
                 {
