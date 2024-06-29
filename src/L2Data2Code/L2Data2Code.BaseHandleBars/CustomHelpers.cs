@@ -89,5 +89,23 @@ namespace L2Data2Code.BaseHandleBars
             return left == right;
         }
 
+        [HandlebarsWriter(WriterType.Value)]
+        public string IncreaseVersion(int increment = 0)
+        {
+            var result = string.Empty;
+            if (values.TryGetValue("Version", out var value) && value is string version)
+            {
+                result = version;
+                var parts = version.Split('.');
+
+                if (parts.Length >= 3)
+                {
+                    parts[2] = (int.Parse(parts[2]) + (increment < 1 ? 1 : increment)).ToString();
+                    result = string.Join(".", parts);
+                }
+            }
+            return result;
+        }
+
     }
 }

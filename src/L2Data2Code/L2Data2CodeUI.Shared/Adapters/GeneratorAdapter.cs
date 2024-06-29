@@ -267,9 +267,13 @@ namespace L2Data2CodeUI.Shared.Adapters
                     return;
                 }
 
+                Template lastTemplate = null;
                 var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
 
-                var isFirst = true;
+                if (!options.GeneateOnlyJson)
+                {
+                    template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+                }
 
                 while (template != null)
                 {
@@ -287,21 +291,11 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
-                    if (isFirst && !options.GeneateOnlyJson)
-                    {
-                        template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
-                        isFirst = false;
-                    }
-
                     codeGeneratorService.Initialize(options, library, CompiledVars);
                     codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
                                                        template.IsGeneral ? null : _alternativeDictionary);
 
-                    if (options.LastPass && !options.GeneateOnlyJson)
-                    {
-                        template.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
-                    }
-
+                    lastTemplate = template;
                     template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(template.NextResource, StringComparison.CurrentCultureIgnoreCase));
                 }
 
@@ -309,6 +303,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 {
                     gitService.GitAdd(path);
                     messageService.Info(Messages.AddedCodeToGit);
+                    lastTemplate.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                 }
 
                 TryWriteDescriptions();

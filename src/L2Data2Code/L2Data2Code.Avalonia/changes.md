@@ -1,3 +1,10 @@
+### 3.3.12
+
+- Upgrade all Avalaonia packages to 11.0.11
+- Upgrade all HandleBars packages to 2.4.4
+- Move PostCommands execution after internal commit
+- New helper IncreaseVersion [increment = 1]
+
 ### 3.3.11
 
 - Better use for descriptions files: added `bool WriteDescriptionsFile` to schema configuration. When is `true` a description file for all columns is written on `(template_dir)\dataSource\(schemaName)-descriptions.txt`. **Now** it's easy to fill descriptions for columns.
