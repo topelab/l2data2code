@@ -176,7 +176,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                         ? []
                         : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key));
 
-                selectedSettings = selectedDataSource == null
+                selectedSettings = selectedDataSource == null || !dataSourceSelectableSettings.Any()
                     ? selectedTemplate.Settings
                     : dataSourceSelectableSettings;
 
