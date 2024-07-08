@@ -269,12 +269,13 @@ namespace L2Data2Code.BaseGenerator.Services
                         fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
                         var commentLine = GetCommentLine(fileExtension);
 
+                        bool isBinaryFile = Path.GetFileName(templateFile).StartsWith('!');
                         rawContent = templateFiles[templateFile];
                         replacementResult = new(
                             Path.GetFileName(filePath),
                             filePath,
                             filePath.Replace(outputBaseDir, ""),
-                            () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
+                            isBinaryFile ? () => rawContent : () => DoReplacement(replacement, partToReplace, filename, filePath, rawContent, commentLine));
                     }
                     else
                     {
@@ -299,7 +300,8 @@ namespace L2Data2Code.BaseGenerator.Services
                 var listOfTemplates = Directory.GetFiles(templatesPath, "*.*", SearchOption.AllDirectories);
                 foreach (var templateFile in listOfTemplates)
                 {
-                    var templateContent = fileService.ReadWithIncludes(templateFile, templatesPath);
+                    bool isBinaryFile = Path.GetFileName(templateFile).StartsWith('!');
+                    var templateContent = isBinaryFile ? templateFile : fileService.ReadWithIncludes(templateFile, templatesPath);
                     templateFiles.Add(templateFile, templateContent);
                 }
             }
@@ -350,17 +352,25 @@ namespace L2Data2Code.BaseGenerator.Services
             List<ReplacementResult> lastResults = new();
             foreach (var result in results)
             {
+                var fileName = Path.GetFileName(result.FileName).Replace(".template", string.Empty);
                 var path = Path.GetDirectoryName(result.FileName);
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
-                var content = result.Content;
-                if (lastToProcess && Options.LastPass && content.Contains("!!!ENDOF"))
+                if (!result.IsBinaryFile)
                 {
-                    lastResults.Add(result);
+                    var content = result.Content;
+                    if (lastToProcess && Options.LastPass && content.Contains("!!!ENDOF"))
+                    {
+                        lastResults.Add(result);
+                    }
+                    fileService.Write(Path.Combine(path, fileName), content);
                 }
-                fileService.Write(result.FileName.Replace(".template", string.Empty), content);
+                else
+                {
+                    fileService.Copy(result.Content, Path.Combine(path, fileName[1..]));
+                }
             }
 
             foreach (var result in lastResults)

@@ -11,5 +11,6 @@ namespace L2Data2Code.SharedLib.Interfaces
         string ReadWithIncludes(string templateFile, string basePath = null);
         void Initialize(string encodingKey, string endOfLineKey);
         void Write(string file, string content);
+        void Copy(string sourceFile, string targetFile);
     }
 }

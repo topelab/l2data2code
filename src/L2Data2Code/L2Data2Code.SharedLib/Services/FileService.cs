@@ -53,6 +53,11 @@ namespace L2Data2Code.SharedLib.Services
             File.WriteAllText(file, content.ReplaceEndOfLine(endOfLine), encoding);
         }
 
+        public void Copy(string sourceFile, string targetFile)
+        {
+            File.Copy(sourceFile, targetFile);
+        }
+
         public void Initialize(string encodingKey, string endOfLineKey)
         {
             encoding = defaultEncodings.TryGetValue(encodingKey, out var defaultEncoding) ? defaultEncoding : Encoding.GetEncoding(encodingKey);

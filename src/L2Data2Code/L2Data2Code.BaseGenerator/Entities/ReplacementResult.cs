@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace L2Data2Code.BaseGenerator.Entities
 {
@@ -16,12 +17,14 @@ namespace L2Data2Code.BaseGenerator.Entities
             FileName = filename;
             RelativePath = relativePath;
             this.func = func;
+            IsBinaryFile = Path.GetFileName(filename).StartsWith('!');
         }
 
         public string Title { get; private set; }
         public string FileName { get; private set; }
         public string Content => content ??= func?.Invoke() ?? string.Empty;
         public string RelativePath { get; set; }
+        public bool IsBinaryFile {  get; private set; }
     }
 
 }

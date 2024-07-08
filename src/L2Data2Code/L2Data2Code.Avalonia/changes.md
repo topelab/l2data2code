@@ -1,3 +1,7 @@
+### 3.3.13
+
+- Binary files can be used in templates with a '!' as a first char of name. Content will be copied without transform
+
 ### 3.3.12
 
 - Upgrade all Avalaonia packages to 11.0.11
