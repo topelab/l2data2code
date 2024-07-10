@@ -1,3 +1,7 @@
+### 3.3.14
+
+- Added `DistinctForeignKeyColumnsByType`
+
 ### 3.3.13
 
 - Binary files can be used in templates with a '!' as a first char of name. Content will be copied without transform
