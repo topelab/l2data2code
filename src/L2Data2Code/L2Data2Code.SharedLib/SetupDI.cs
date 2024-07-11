@@ -27,6 +27,8 @@ namespace L2Data2Code.SharedLib
                 .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
                 .AddSingleton<IConditionalPathRenderizer, ConditionalPathRenderizer>()
                 .AddSingleton<IFileService, FileService>()
+                .AddSingleton<IMultiPathRenderizer, MultiPathRenderizer>()
+
                 .AddSingleton<IProcessManager, ProcessManager>()
                 .AddSingleton<IEventAggregator, EventAggregator>()
                 .AddInstance<ILogger>(LogManager.GetCurrentClassLogger())

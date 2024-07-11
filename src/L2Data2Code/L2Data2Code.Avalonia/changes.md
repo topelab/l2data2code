@@ -1,3 +1,7 @@
+### 3.3.15
+
+- Now is possible to use `foreach(Collection)filename{{Property}}.ext` as a file name at entity level and L2Data2Code will create a collection of files using `Collection[].Property` where `Collection` is any collection in `Entity` (like `NotRelatedColumns`) and `Property` is any property of item inside collection.
+
 ### 3.3.14
 
 - Added `DistinctForeignKeyColumnsByType`

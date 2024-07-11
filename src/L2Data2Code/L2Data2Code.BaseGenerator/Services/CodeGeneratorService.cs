@@ -22,6 +22,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly ILogger logger;
         private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly IConditionalPathRenderizer pathRenderizer;
+        private readonly IMultiPathRenderizer multiPathRenderizer;
         private readonly IFileService fileService;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
@@ -79,6 +80,7 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="pathRenderizer">Path renderizer</param>
         /// <param name="fileService">File service</param>
         /// <param name="replacementCollectionFactory">Replacement collection factory</param>
+        /// <param name="multiPathRenderizer">Multi file renderizer</param>
         public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer,
                                     ISchemaService schemaService,
                                     ILogger logger,
@@ -86,7 +88,8 @@ namespace L2Data2Code.BaseGenerator.Services
                                     ISchemaFactory schemaFactory,
                                     IConditionalPathRenderizer pathRenderizer,
                                     IFileService fileService,
-                                    IReplacementCollectionFactory replacementCollectionFactory)
+                                    IReplacementCollectionFactory replacementCollectionFactory,
+                                    IMultiPathRenderizer multiPathRenderizer)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
@@ -96,6 +99,7 @@ namespace L2Data2Code.BaseGenerator.Services
             this.pathRenderizer = pathRenderizer ?? throw new ArgumentNullException(nameof(pathRenderizer));
             this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             this.replacementCollectionFactory = replacementCollectionFactory ?? throw new ArgumentNullException(nameof(replacementCollectionFactory));
+            this.multiPathRenderizer = multiPathRenderizer;
 
             referencedTables = new();
             templateFiles = new();
@@ -238,7 +242,7 @@ namespace L2Data2Code.BaseGenerator.Services
 
             var templatesPath = templateService.GetPath(Template);
 
-            if (!templateFiles.Any())
+            if (templateFiles.Count == 0)
             {
                 LoadTemplateFiles();
             }
@@ -249,7 +253,8 @@ namespace L2Data2Code.BaseGenerator.Services
                 outputBaseDir = CodeGeneratorDto.DefaultOutputPath;
             }
 
-            return templateFiles.Keys
+            var replacementList = templateFiles.Keys
+                .Where(f => !multiPathRenderizer.CanApplyMultiPath(f))
                 .Select(templateFile =>
                 {
                     ReplacementResult replacementResult;
@@ -269,7 +274,7 @@ namespace L2Data2Code.BaseGenerator.Services
                         fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
                         var commentLine = GetCommentLine(fileExtension);
 
-                        bool isBinaryFile = Path.GetFileName(templateFile).StartsWith('!');
+                        var isBinaryFile = Path.GetFileName(templateFile).StartsWith('!');
                         rawContent = templateFiles[templateFile];
                         replacementResult = new(
                             Path.GetFileName(filePath),
@@ -285,7 +290,37 @@ namespace L2Data2Code.BaseGenerator.Services
                     return replacementResult;
                 })
             .Where(result => result != null)
-            .ToArray();
+            .ToList();
+
+            var multiFileReplacement = templateFiles.Keys
+                .Where(multiPathRenderizer.CanApplyMultiPath)
+                .SelectMany(templateFile =>
+                {
+                    List<ReplacementResult> result = [];
+                    var files = multiPathRenderizer.ApplyMultiPath(templateFile, templateFiles[templateFile], replacement);
+
+                    foreach (var filename in files.Keys)
+                    {
+                        var filePath = Path.Combine(outputBaseDir, filename.Replace(templatesPath, ""));
+                        var fileExtension = Path.GetExtension(filename.Replace(".template", string.Empty));
+                        var commentLine = GetCommentLine(fileExtension);
+                        var isBinaryFile = Path.GetFileName(templateFile).StartsWith('!');
+                        var rawContent = files[filename];
+
+                        result.Add(new ReplacementResult(
+                            Path.GetFileName(filePath),
+                            filePath,
+                            filePath.Replace(outputBaseDir, ""),
+                            () => rawContent));
+                    }
+
+                    return result;
+                })
+                .ToList();
+
+            replacementList.AddRange(multiFileReplacement);
+
+            return [.. replacementList];
         }
 
         private void LoadTemplateFiles()
