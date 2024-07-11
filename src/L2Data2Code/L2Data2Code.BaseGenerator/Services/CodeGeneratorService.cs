@@ -49,6 +49,8 @@ namespace L2Data2Code.BaseGenerator.Services
             { ".sln", commentCmdStyle },
             { ".md", commentMdStyle },
             { ".resx", commentXmlStyle },
+            { ".xaml", commentXmlStyle },
+            { ".axaml", commentXmlStyle },
         };
 
         private static readonly Dictionary<string, Regex> markByExtension = new()
@@ -62,6 +64,8 @@ namespace L2Data2Code.BaseGenerator.Services
             { ".sln", CmdMarkPartRegex() },
             { ".md", MdMarkPartRegex() },
             { ".resx", XmlMarkPartRegex() },
+            { ".xaml", XmlMarkPartRegex() },
+            { ".axaml", XmlMarkPartRegex() },
         };
 
 
