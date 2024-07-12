@@ -301,7 +301,6 @@ namespace L2Data2CodeUI.Shared.Adapters
 
                 if (!options.GeneateOnlyJson)
                 {
-                    gitService.GitAdd(path);
                     messageService.Info(Messages.AddedCodeToGit);
                     lastTemplate.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                 }
