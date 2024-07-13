@@ -1,3 +1,7 @@
+### 3.3.19
+
+- Renew helper `IncreaseVersion increment VersionVar` where `increment` must be between -100 and 100, and `VersionVar` is a var name with version number. By default, `increment` is 1 and `VersionVar` is the value of var `Version`
+
 ### 3.3.18
 
 - Added `Setting.RemoveFolderExceptions`, an list of directory names that will not be removed even if `RemoveFolders` is `true`
@@ -24,7 +28,7 @@
 - Upgrade all Avalaonia packages to 11.0.11
 - Upgrade all HandleBars packages to 2.4.4
 - Move PostCommands execution after internal commit
-- New helper IncreaseVersion [increment = 1]
+- New helper `IncreaseVersion [increment = 1]`
 
 ### 3.3.11
 

@@ -89,23 +89,62 @@ namespace L2Data2Code.BaseHandleBars
             return left == right;
         }
 
-        [HandlebarsWriter(WriterType.Value)]
-        public string IncreaseVersion(int increment = 0)
+        [HandlebarsWriter(WriterType.String)]
+        public string IncreaseVersion(int increment = 0, string versionValue = null)
         {
-            var result = string.Empty;
-            if (values.TryGetValue("Version", out var value) && value is string version)
+            increment = increment == 0 ? 1 : increment;
+            if (increment > 100 || increment < -100)
             {
-                result = version;
-                var parts = version.Split('.');
-
-                if (parts.Length >= 3)
-                {
-                    parts[2] = (int.Parse(parts[2]) + (increment < 1 ? 1 : increment)).ToString();
-                    result = string.Join(".", parts);
-                }
+                throw new ArgumentException("Increment must be between -100 and 100");
             }
+            versionValue ??= (values.TryGetValue("Version", out var value) && value is string version ? version : string.Empty);
+            var result = versionValue;
+
+            var parts = versionValue.Split('.');
+
+            if (parts.Length >= 3)
+            {
+                int[] numbers = [int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2])];
+
+                numbers[2] += increment;
+                CheckLessThan0(numbers);
+                CheckGreaterThan99(numbers);
+
+                parts[2] = (int.Parse(parts[2]) + increment).ToString();
+                result = string.Join(".", numbers.Select(n => n.ToString()));
+            }
+
             return result;
         }
 
+        private static void CheckLessThan0(int[] numbers)
+        {
+            if (numbers[2] < 0)
+            {
+                numbers[2] += 100;
+                numbers[1] -= 1;
+            }
+
+            if (numbers[1] < 0)
+            {
+                numbers[1] += 100;
+                numbers[0] -= 1;
+            }
+        }
+
+        private static void CheckGreaterThan99(int[] numbers)
+        {
+            if (numbers[2] > 99)
+            {
+                numbers[2] -= 100;
+                numbers[1] += 1;
+            }
+
+            if (numbers[1] > 99)
+            {
+                numbers[1] -= 100;
+                numbers[0] += 1;
+            }
+        }
     }
 }
