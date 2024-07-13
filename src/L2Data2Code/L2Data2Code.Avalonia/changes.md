@@ -1,3 +1,8 @@
+### 3.3.18
+
+- Added `Setting.RemoveFolderExceptions`, an list of directory names that will not be removed even if `RemoveFolders` is `true`
+- Added `FinalConditions` to `Global`
+
 ### 3.3.16
 
 - Added management for extensions `.xaml` and `.axaml` as `.xml`

@@ -203,6 +203,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 Module = SelectedModule.Name,
                 GenerateReferenced = baseOptions.GenerateReferenced,
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
+                RemoveFolderExceptions = SelectedSetting?.RemoveFolderExceptions,
                 OutputPath = baseOptions.OutputPath.AddPathSeparator(),
                 CreatedFromSchemaName = outputSchemaName,
                 UserVariables = string.Concat(
@@ -244,7 +245,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 try
                 {
-                    EmptyOutputPath(path);
+                    EmptyOutputPath(path, options.RemoveFolderExceptions);
                 }
                 catch (Exception ex)
                 {
@@ -429,8 +430,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
         }
 
-        private static void EmptyOutputPath(string path)
+        private static void EmptyOutputPath(string path, List<string> removeFolderExceptions)
         {
+            removeFolderExceptions ??= [];
             if (!Directory.Exists(path))
             {
                 return;
@@ -443,10 +445,40 @@ namespace L2Data2CodeUI.Shared.Adapters
                 file.Delete();
             }
 
-            foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
+            if (removeFolderExceptions.Count > 0)
             {
-                dir.Delete(true);
+                foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".") && !removeFolderExceptions.Any(r => d.FullName.EndsWith(r))))
+                {
+                    if (RemoveFoldersWithExceptions(dir.FullName, removeFolderExceptions))
+                    {
+                        dir.Delete(true);
+                    }
+                }
             }
+            else
+            {
+                foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
+                {
+                    dir.Delete(true);
+                }
+            }
+
+        }
+
+        private static bool RemoveFoldersWithExceptions(string path, List<string> removeFolderExceptions)
+        {
+            DirectoryInfo directory = new(path);
+
+            foreach (var dir in directory.GetDirectories().Where(d => !removeFolderExceptions.Any(r => d.FullName.EndsWith(r))))
+            {
+                if (RemoveFoldersWithExceptions(dir.FullName, removeFolderExceptions))
+                {
+                    dir.Delete(true);
+                }
+            }
+
+            return directory.GetDirectories().Length == 0;
+
         }
 
         private (string OutputPath, string SolutionType) GetSavePathFromSelectedTemplate()

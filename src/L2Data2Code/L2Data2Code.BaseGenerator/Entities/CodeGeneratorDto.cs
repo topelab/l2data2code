@@ -63,6 +63,10 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// </summary>
         public bool RemoveFolders { get; set; }
         /// <summary>
+        /// Remove folder excepions
+        /// </summary>
+        public List<string> RemoveFolderExceptions { get; set; }
+        /// <summary>
         /// Created from schema name
         /// </summary>
         public string CreatedFromSchemaName { get; set; }
