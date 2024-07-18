@@ -14,6 +14,8 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsView { get; internal set; }
         public bool IsUpdatable { get; internal set; }
         public bool MultiplePKColumns { get; private set; }
+        public bool HasOnlyOnePKColumn { get; private set; }
+        public bool IdentifiableById { get; private set; }
         public string Description { get; private set; }
         public string FieldDescriptor { get; private set; }
         public string FirstPK { get; private set; }
@@ -37,6 +39,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             EnumValues = table.EnumValues;
             IsUpdatable = table.IsUpdatable;
             MultiplePKColumns = table.PK.Count() > 1;
+            HasOnlyOnePKColumn = table.PK.Count() == 1;
             Description = table.Description;
 
             CreateCampos(table);
@@ -77,6 +80,11 @@ namespace L2Data2Code.BaseGenerator.Entities
                 if (string.IsNullOrEmpty(FieldDescriptor) && column.IsPK && column.PkOrder == 1)
                 {
                     FirstPK = campo.Name;
+                }
+                if (column.IsPK && HasOnlyOnePKColumn && campo.Type == "int")
+                {
+                    campo.Name = "Id";
+                    IdentifiableById = true;
                 }
 
                 Columns.Add(campo);

@@ -35,6 +35,8 @@ namespace L2Data2Code.BaseGenerator.Services
                 FirstPK = table.FirstPK,
                 UseSpanish = schemaService.GetLang(options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
+                HasOnlyOnePKColumn = table.HasOnlyOnePKColumn,
+                IdentifiableById = table.IdentifiableById,
             };
 
             var properties =

@@ -1,3 +1,7 @@
+### 3.3.20
+
+- Added properties `IdentifiableById`, `HasOnlyOnePKColumn` and `IsIdentifiable` to `Entity`
+
 ### 3.3.19
 
 - Renew helper `IncreaseVersion increment VersionVar` where `increment` must be between -100 and 100, and `VersionVar` is a var name with version number. By default, `increment` is 1 and `VersionVar` is the value of var `Version`

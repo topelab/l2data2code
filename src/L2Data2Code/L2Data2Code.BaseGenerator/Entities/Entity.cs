@@ -89,6 +89,18 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// Has entity multiple PK columns?
         /// </summary>
         public bool MultiplePKColumns { get; set; }
+        /// <summary>
+        /// Is entity identificable by "Id"
+        /// </summary>
+        public bool IdentifiableById { get; internal set; }
+        /// <summary>
+        /// Has entity PK with only one field?
+        /// </summary>
+        public bool HasOnlyOnePKColumn { get; internal set; }
+        /// <summary>
+        /// Is entity identifiable by any PK?
+        /// </summary>
+        public bool IsIdentifiable => HasOnlyOnePKColumn || MultiplePKColumns;
 
         /// <summary>
         /// Entity name
