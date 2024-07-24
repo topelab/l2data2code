@@ -6,7 +6,7 @@
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationIcon>Assets\l2data2code-v3.ico</ApplicationIcon>
-    <Version>3.3.20</Version>
+    <Version>3.3.21</Version>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
@@ -31,17 +31,17 @@
     <TrimmableAssembly Include="Avalonia.Themes.Default" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.11" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.11" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.11" />
+    <PackageReference Include="Avalonia" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.0" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.11" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.11" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.11" />
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.11" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.1.0" />
     <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
-    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.5.5" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseHandleBars\L2Data2Code.BaseHandleBars.csproj" />

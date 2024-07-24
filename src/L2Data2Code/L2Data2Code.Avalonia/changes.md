@@ -1,3 +1,19 @@
+### 3.3.21
+
+- Upgrade topelab.core.resolver.microsoft to 1.6.1
+- Upgrade Handlebars.Net.Helpers to 2.4.5
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.5
+- Upgrade Handlebars.Net.Helpers.Json to 2.4.5
+- Upgrade MySql.Data to 9.0.0
+- Upgrade Avalonia to 11.1.0
+- Upgrade Avalonia.Controls.DataGrid to 11.1.0
+- Upgrade Avalonia.Desktop to 11.1.0
+- Upgrade Avalonia.Themes.Simple to 11.1.0
+- Upgrade Avalonia.Diagnostics to 11.1.0
+- Upgrade Avalonia.ReactiveUI to 11.1.0
+- Upgrade Avalonia.Themes.Fluent to 11.1.0
+- Upgrade topelab.core.resolver to 1.6.1
+
 ### 3.3.20
 
 - Added properties `IdentifiableById`, `HasOnlyOnePKColumn` and `IsIdentifiable` to `Entity`
