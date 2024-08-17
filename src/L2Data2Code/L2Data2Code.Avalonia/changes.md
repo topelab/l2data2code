@@ -1,3 +1,8 @@
+### 3.3.22
+
+- Upgrade Avalonia to 11.1.3
+- Upgrade MessageBox to 3.1.6
+
 ### 3.3.21
 
 - Upgrade topelab.core.resolver.microsoft to 1.6.1
