@@ -1,23 +1,29 @@
+### 3.3.25
+
+- Updating topelab.core.resolver.microsoft to 1.7.0
+- Updating topelab.core.resolver to 1.7.0
+- Updating NLog to 5.3.4
+
 ### 3.3.22
 
-- Upgrade Avalonia to 11.1.3
-- Upgrade MessageBox to 3.1.6
+- Updating Avalonia to 11.1.3
+- Updating MessageBox to 3.1.6
 
 ### 3.3.21
 
-- Upgrade topelab.core.resolver.microsoft to 1.6.1
-- Upgrade Handlebars.Net.Helpers to 2.4.5
-- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.5
-- Upgrade Handlebars.Net.Helpers.Json to 2.4.5
-- Upgrade MySql.Data to 9.0.0
-- Upgrade Avalonia to 11.1.0
-- Upgrade Avalonia.Controls.DataGrid to 11.1.0
-- Upgrade Avalonia.Desktop to 11.1.0
-- Upgrade Avalonia.Themes.Simple to 11.1.0
-- Upgrade Avalonia.Diagnostics to 11.1.0
-- Upgrade Avalonia.ReactiveUI to 11.1.0
-- Upgrade Avalonia.Themes.Fluent to 11.1.0
-- Upgrade topelab.core.resolver to 1.6.1
+- Updating topelab.core.resolver.microsoft to 1.6.1
+- Updating Handlebars.Net.Helpers to 2.4.5
+- Updating Handlebars.Net.Helpers.Humanizer to 2.4.5
+- Updating Handlebars.Net.Helpers.Json to 2.4.5
+- Updating MySql.Data to 9.0.0
+- Updating Avalonia to 11.1.0
+- Updating Avalonia.Controls.DataGrid to 11.1.0
+- Updating Avalonia.Desktop to 11.1.0
+- Updating Avalonia.Themes.Simple to 11.1.0
+- Updating Avalonia.Diagnostics to 11.1.0
+- Updating Avalonia.ReactiveUI to 11.1.0
+- Updating Avalonia.Themes.Fluent to 11.1.0
+- Updating topelab.core.resolver to 1.6.1
 
 ### 3.3.20
 
@@ -50,8 +56,8 @@
 
 ### 3.3.12
 
-- Upgrade all Avalaonia packages to 11.0.11
-- Upgrade all HandleBars packages to 2.4.4
+- Updating all Avalaonia packages to 11.0.11
+- Updating all HandleBars packages to 2.4.4
 - Move PostCommands execution after internal commit
 - New helper `IncreaseVersion [increment = 1]`
 
@@ -80,7 +86,7 @@
 ### 3.3.6
 
 - Fixed some bugs on PostgreSQL schema reader
-- Upgrade Handlebars
+- Updating Handlebars
 
 ### 3.3.5
 
@@ -99,28 +105,28 @@
 
 ### 3.3.3
 
-- Upgrade Avalonia to 11.0.9
-- Upgrade Avalonia.Controls.DataGrid to 11.0.9
-- Upgrade Avalonia.Desktop to 11.0.9
-- Upgrade Avalonia.Themes.Simple to 11.0.9
-- Upgrade Avalonia.Diagnostics to 11.0.9
-- Upgrade Avalonia.ReactiveUI to 11.0.9
-- Upgrade Avalonia.Themes.Fluent to 11.0.9
+- Updating Avalonia to 11.0.9
+- Updating Avalonia.Controls.DataGrid to 11.0.9
+- Updating Avalonia.Desktop to 11.0.9
+- Updating Avalonia.Themes.Simple to 11.0.9
+- Updating Avalonia.Diagnostics to 11.0.9
+- Updating Avalonia.ReactiveUI to 11.0.9
+- Updating Avalonia.Themes.Fluent to 11.0.9
 
 
 ### 3.3.2
 
-- Upgrade topelab.core.resolver.microsoft to 1.5.4
-- Upgrade topelab.core.resolver to 1.5.4
+- Updating topelab.core.resolver.microsoft to 1.5.4
+- Updating topelab.core.resolver to 1.5.4
 - Fix refresh on data source selected
 
 ### 3.3.1
 
-- Upgrade NLog to 5.2.8
-- Upgrade Handlebars.Net.Helpers to 2.4.1
-- Upgrade MySql.Data to 8.3.0
-- Upgrade System.Data.SqlClient to 4.8.6
-- Upgrade Avalonia to 11.0.7
+- Updating NLog to 5.2.8
+- Updating Handlebars.Net.Helpers to 2.4.1
+- Updating MySql.Data to 8.3.0
+- Updating System.Data.SqlClient to 4.8.6
+- Updating Avalonia to 11.0.7
 
 ### 3.3.0
 
@@ -297,32 +303,32 @@
 
 ### 3.2.3
 
-- Upgrade Material.Icons.Avalonia to 2.1.0
+- Updating Material.Icons.Avalonia to 2.1.0
 - Removed WPF and MAUI projects, focalize on AvaloniaUI only
 
 ### 3.2.2
 
-- Upgrade Handlebars.Net.Helpers to 2.4.1.2
-- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.1.2
-- Upgrade Handlebars.Net.Helpers.Json to 2.4.1.2
+- Updating Handlebars.Net.Helpers to 2.4.1.2
+- Updating Handlebars.Net.Helpers.Humanizer to 2.4.1.2
+- Updating Handlebars.Net.Helpers.Json to 2.4.1.2
 
 ### 3.2.1
 
-- Upgrade topelab.core.resolver.microsoft to 1.5.3
-- Upgrade NLog to 5.2.7
-- Upgrade Avalonia to 11.0.6
-- Upgrade Avalonia.Controls.DataGrid to 11.0.6
-- Upgrade Avalonia.Desktop to 11.0.6
-- Upgrade Avalonia.Themes.Simple to 11.0.6
-- Upgrade Avalonia.Diagnostics to 11.0.6
-- Upgrade Avalonia.ReactiveUI to 11.0.6
-- Upgrade Avalonia.Themes.Fluent to 11.0.6
-- Upgrade topelab.core.resolver to 1.5.3
+- Updating topelab.core.resolver.microsoft to 1.5.3
+- Updating NLog to 5.2.7
+- Updating Avalonia to 11.0.6
+- Updating Avalonia.Controls.DataGrid to 11.0.6
+- Updating Avalonia.Desktop to 11.0.6
+- Updating Avalonia.Themes.Simple to 11.0.6
+- Updating Avalonia.Diagnostics to 11.0.6
+- Updating Avalonia.ReactiveUI to 11.0.6
+- Updating Avalonia.Themes.Fluent to 11.0.6
+- Updating topelab.core.resolver to 1.5.3
 
 
 ### 3.2.0
 
-- Upgrade to .NET 8
+- Updating to .NET 8
 
 ### 3.1.6
 
@@ -344,12 +350,12 @@
 
 ### 3.0.5
 
-- Upgrade topelab.core.resolver.microsoft to 1.4.13
-- Upgrade Material.Icons.Avalonia to 2.0.1
-- Upgrade NLog to 5.2.0
-- Upgrade System.Data.SQLite.Core to 1.0.118
-- Upgrade System.Management to 7.0.2
-- Upgrade topelab.core.resolver to 1
+- Updating topelab.core.resolver.microsoft to 1.4.13
+- Updating Material.Icons.Avalonia to 2.0.1
+- Updating NLog to 5.2.0
+- Updating System.Data.SQLite.Core to 1.0.118
+- Updating System.Management to 7.0.2
+- Updating topelab.core.resolver to 1
 
 ### 3.0.4
 
@@ -357,14 +363,14 @@
 
 ### 3.0.3
 
-- Upgrade Topelab.Core.Resolver to 1.4.12
-- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.12
-- Upgrade NLog to 5.1.4
-- Upgrade Avalonia to 0.10.21
-- Upgrade Avalonia.Controls.DataGrid to 0.10.21
-- Upgrade Avalonia.Desktop to 0.10.21
-- Upgrade Avalonia.Diagnostics to 0.10.21
-- Upgrade Avalonia.ReactiveUI to 0.10.21
+- Updating Topelab.Core.Resolver to 1.4.12
+- Updating Topelab.Core.Resolver.Microsoft to 1.4.12
+- Updating NLog to 5.1.4
+- Updating Avalonia to 0.10.21
+- Updating Avalonia.Controls.DataGrid to 0.10.21
+- Updating Avalonia.Desktop to 0.10.21
+- Updating Avalonia.Diagnostics to 0.10.21
+- Updating Avalonia.ReactiveUI to 0.10.21
 
 
 ### 3.0.2
@@ -382,10 +388,10 @@
 
 ### 2.13.12
 
-- Upgrade Topelab.Core.Resolver to 1.4.10
-- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.10
-- Upgrade Handlebars.Net to 2.1.3
-- Upgrade NLog to 5.1.2
+- Updating Topelab.Core.Resolver to 1.4.10
+- Updating Topelab.Core.Resolver.Microsoft to 1.4.10
+- Updating Handlebars.Net to 2.1.3
+- Updating NLog to 5.1.2
 
 ### 2.13.11
 
@@ -393,8 +399,8 @@
 
 ### 2.13.10
 
-- Upgrade NLog to 5.1.1
-- Upgrade MySql.Data to 8.0.32
+- Updating NLog to 5.1.1
+- Updating MySql.Data to 8.0.32
 
 ### 2.13.9
 
@@ -402,24 +408,24 @@
 
 ### 2.13.8
 
-- Upgrade Topelab.Core.Resolver to 1.4.8
+- Updating Topelab.Core.Resolver to 1.4.8
 - Added dependencies on commands
 
 ### 2.13.7
 
-- Upgrade Topelab.Core.Resolver to 1.4.7
-- Upgrade Topelab.Core.Resolver.Microsoft to 1.4.7
-- Upgrade Handlebars.Net.Helpers to 2.3.12
-- Upgrade Handlebars.Net.Helpers.Humanizer to 2.3.12
-- Upgrade Newtonsoft.Json to 13.0.2
-- Upgrade Handlebars.Net.Helpers.Json to 2.3.12
-- Upgrade NLog to 5.1.0
-- Upgrade System.Data.SQLite.Core to 1.0.117
+- Updating Topelab.Core.Resolver to 1.4.7
+- Updating Topelab.Core.Resolver.Microsoft to 1.4.7
+- Updating Handlebars.Net.Helpers to 2.3.12
+- Updating Handlebars.Net.Helpers.Humanizer to 2.3.12
+- Updating Newtonsoft.Json to 13.0.2
+- Updating Handlebars.Net.Helpers.Json to 2.3.12
+- Updating NLog to 5.1.0
+- Updating System.Data.SQLite.Core to 1.0.117
 
 
 ### 2.13.6
 
-- Upgrade Topelab.Core.Resolver to 1.4.5
+- Updating Topelab.Core.Resolver to 1.4.5
 
 ### 2.13.5
 
@@ -427,7 +433,7 @@
 
 ### 2.13.4
 
-- Upgrade to .NET 7.0
+- Updating to .NET 7.0
 
 ### 2.13.3
 
@@ -479,11 +485,11 @@
   - {{JoinWithHeaderFooter separator header footer}}: Takes an array a join with a separator starting with a header and ending with a footer.
   - *separator, header and footer* are strings
 - Mustache add *IsFirst* and *IsLast* to nodes at JObject[] objects
-- Upgrade NLog to 5.0.1 from 5.0.0
+- Updating NLog to 5.0.1 from 5.0.0
 
 ### 2.11.0
 
-- Upgrade to Topelab.Core 1.4.0
+- Updating to Topelab.Core 1.4.0
 - Changed version numbering
 
 ### 2.10.522.531
@@ -503,7 +509,7 @@
 ### 2.10.222.225
 
 - Fix functionality for GenerateOnlyJson
-- Upgrade NLog
+- Updating NLog
 
 ### 2.10.122.123
 
