@@ -1,3 +1,20 @@
+### 3.3.26
+
+- Upgrade Topelab.Core.Resolver to 1.7.1
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.7.1
+- Upgrade Handlebars.Net.Helpers to 2.4.6
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.6
+- Upgrade Handlebars.Net.Helpers.Json to 2.4.6
+- Upgrade System.Data.SQLite.Core to 1.0.119
+- Upgrade Avalonia to 11.1.4
+- Upgrade MessageBox.Avalonia to 3.1.6.13
+- Upgrade Avalonia.Controls.DataGrid to 11.1.4
+- Upgrade Avalonia.Desktop to 11.1.4
+- Upgrade Avalonia.Themes.Simple to 11.1.4
+- Upgrade Avalonia.Diagnostics to 11.1.4
+- Upgrade Avalonia.ReactiveUI to 11.1.4
+- Upgrade Avalonia.Themes.Fluent to 11.1.4
+
 ### 3.3.25
 
 - Updating topelab.core.resolver.microsoft to 1.7.0
