@@ -1,3 +1,7 @@
+### 3.3.27
+
+- Fix `IsAutoIncrement` on table columns from a PostgreSQL database
+
 ### 3.3.26
 
 - Upgrade Topelab.Core.Resolver to 1.7.1
