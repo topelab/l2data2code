@@ -1,3 +1,18 @@
+### 3.4.0
+
+- Upgrade to .NET 9.0
+- Upgrade to Topelab.Core.Resolver to 1.8.0
+- Upgrade to Topelab.Core.Resolver.Microsoft to 1.8.0
+- Upgrade to System.Management to 9.0.0
+- Upgrade to System.Data.SqlClient to 4.9.0
+- Upgrade to Avalonia to 11.2.1
+- Upgrade to Avalonia.Controls.DataGrid to 11.2.1
+- Upgrade to Avalonia.Desktop to 11.2.1
+- Upgrade to Avalonia.Themes.Simple to 11.2.1
+- Upgrade to Avalonia.Diagnostics to 11.2.1
+- Upgrade to Avalonia.ReactiveUI to 11.2.1
+- Upgrade to Avalonia.Themes.Fluent to 11.2.1
+
 ### 3.3.27
 
 - Fix `IsAutoIncrement` on table columns from a PostgreSQL database
