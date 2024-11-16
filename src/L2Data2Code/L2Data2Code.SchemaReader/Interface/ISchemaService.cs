@@ -39,7 +39,7 @@ namespace L2Data2Code.SchemaReader.Interface
         /// Get schema dictionary from file
         /// </summary>
         /// <param name="schemaName">Schema name key</param>
-        Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName);
+        Dictionary<string, string> GetSchemaDictionaryFromFile(string schemaName, string templatePath);
         /// <summary>
         /// Get connection sting
         /// </summary>

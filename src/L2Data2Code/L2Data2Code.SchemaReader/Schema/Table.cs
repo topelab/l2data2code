@@ -86,6 +86,13 @@ namespace L2Data2Code.SchemaReader.Schema
             return Columns.Single(x => string.Compare(x.Name, columnName, true) == 0);
         }
 
+        /// <summary>Try to get the column or null if not exist</summary>
+        /// <param name="columnName">Name of the column.</param>
+        public Column TryGetColumn(string columnName)
+        {
+            return Columns.FirstOrDefault(x => string.Compare(x.Name, columnName, true) == 0);
+        }
+
         /// <summary>Gets the <see cref="Column"/> with the specified column name.</summary>
         /// <value>The <see cref="Column"/>.</value>
         /// <param name="columnName">Name of the column.</param>

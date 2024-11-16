@@ -2,6 +2,7 @@ using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace L2Data2Code.BaseGenerator.Entities
@@ -19,6 +20,11 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// Name
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Remove folder exceptions
+        /// </summary>
+        public List<string> RemoveFolderExceptions { get; set; } = [];
 
         /// <summary>
         /// Vars configuration

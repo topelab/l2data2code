@@ -26,15 +26,15 @@
             Padding="10">
                 <TextBlock Text="{x:Static str:Strings.MessageBoard}"
                            HorizontalAlignment="Center"
-                           FontSize="15"
-                           FontWeight="ExtraBlack"/>
+                           FontSize="18"
+                           FontWeight="Bold"/>
         </Border>
         <ListBox ItemsSource="{Binding AllMessages}"
                  Margin="10,0"
                  DockPanel.Dock="Top"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 FontSize="10"
+                 FontSize="12"
                  Background="Transparent">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">

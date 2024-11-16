@@ -136,10 +136,11 @@ namespace L2Data2Code.SharedContext.Main
                 generatorAdapter.SetCurrentTemplate(mainWindowVM.SelectedTemplate);
 
                 mainWindowVM.Settings.Clear();
+                generatorAdapter.GetSettings(mainWindowVM.SelectedTemplate, mainWindowVM.SelectedDataSource).ToList().ForEach(t => mainWindowVM.Settings.Add(t));
                 mainWindowVM.SelectedSetting = mainWindowVM.Settings.FirstOrDefault();
 
                 mainWindowVM.VarsVisible = mainWindowVM.SelectedSetting != null;
-                mainWindowVM.EmptyFolders = mainWindowVM.SelectedTemplate.RemoveFolders;
+                mainWindowVM.EmptyFolders = bool.TryParse(mainWindowVM.SelectedDataSource?.Vars?[nameof(TemplateConfiguration.RemoveFolders)], out var hasToRemoveFolders) ? hasToRemoveFolders : mainWindowVM.SelectedTemplate.RemoveFolders;
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
             });

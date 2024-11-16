@@ -29,8 +29,8 @@
                     Padding="10">
                 <TextBlock Text="{x:Static str:Strings.Tables}"
                            HorizontalAlignment="Center"
-                           FontSize="15"
-                           FontWeight="ExtraBlack"/>
+                           FontSize="18"
+                           FontWeight="Bold"/>
             </Border>
             <CheckBox IsChecked="{Binding SelectAllTables}"
                       DockPanel.Dock="Top"
@@ -73,8 +73,8 @@
                     Padding="10">
                 <TextBlock Text="{x:Static str:Strings.Views}"
                            HorizontalAlignment="Center"
-                           FontSize="15"
-                           FontWeight="ExtraBlack"/>
+                           FontSize="18"
+                           FontWeight="Bold"/>
             </Border>
             <CheckBox IsChecked="{Binding SelectAllViews}"
                       DockPanel.Dock="Top"

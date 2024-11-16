@@ -56,8 +56,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 FilePath = templatePath,
                 Global = new Global
                 {
-                    Vars = globalsConfiguration.Vars.ToSemiColonSeparatedString(),
-                    FinalVars = string.Empty
+                    Vars = globalsConfiguration.Vars.ToSemiColonSeparatedString()
                 }
             };
 
@@ -110,7 +109,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 }
             }
 
-            library.Global.FinalVars += globalsConfiguration.FinalVars.ToSemiColonSeparatedString();
+            library.Global.FinalVars = string.Concat(globalsConfiguration.FinalVars.ToNestedSemiColonSeparatedString(), string.Concat(globalsConfiguration.FinalConditions));
 
             return library;
         }

@@ -174,9 +174,9 @@ namespace L2Data2CodeUI.Shared.Adapters
                 var dataSourceSettings = selectedDataSource == null ? null : selectedDataSource.Settings;
                 var dataSourceSelectableSettings = dataSourceSettings == null
                         ? []
-                        : allSettings.Where(s => dataSourceSettings.AllKeys.Contains(s.Key));
+                        : dataSourceSettings.AllKeys.Select(k => allSettings.FirstOrDefault(s => s.Key == k)).Where(r => r is not null);
 
-                selectedSettings = selectedDataSource == null
+                selectedSettings = selectedDataSource == null || !dataSourceSelectableSettings.Any()
                     ? selectedTemplate.Settings
                     : dataSourceSelectableSettings;
 
@@ -203,6 +203,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 Module = SelectedModule.Name,
                 GenerateReferenced = baseOptions.GenerateReferenced,
                 RemoveFolders = baseOptions.RemoveFolders && !baseOptions.GeneateOnlyJson,
+                RemoveFolderExceptions = SelectedSetting?.RemoveFolderExceptions,
                 OutputPath = baseOptions.OutputPath.AddPathSeparator(),
                 CreatedFromSchemaName = outputSchemaName,
                 UserVariables = string.Concat(
@@ -244,7 +245,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 try
                 {
-                    EmptyOutputPath(path);
+                    EmptyOutputPath(path, options.RemoveFolderExceptions);
                 }
                 catch (Exception ex)
                 {
@@ -267,9 +268,13 @@ namespace L2Data2CodeUI.Shared.Adapters
                     return;
                 }
 
+                Template lastTemplate = null;
                 var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
 
-                var isFirst = true;
+                if (!options.GeneateOnlyJson)
+                {
+                    template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+                }
 
                 while (template != null)
                 {
@@ -287,29 +292,21 @@ namespace L2Data2CodeUI.Shared.Adapters
                     options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
                     options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
 
-                    if (isFirst && !options.GeneateOnlyJson)
-                    {
-                        template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
-                        isFirst = false;
-                    }
-
                     codeGeneratorService.Initialize(options, library, CompiledVars);
                     codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
                                                        template.IsGeneral ? null : _alternativeDictionary);
 
-                    if (options.LastPass && !options.GeneateOnlyJson)
-                    {
-                        template.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
-                    }
-
+                    lastTemplate = template;
                     template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(template.NextResource, StringComparison.CurrentCultureIgnoreCase));
                 }
 
                 if (!options.GeneateOnlyJson)
                 {
-                    gitService.GitAdd(path);
                     messageService.Info(Messages.AddedCodeToGit);
+                    lastTemplate.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
                 }
+
+                TryWriteDescriptions();
             }
             catch (CodeGeneratorException ex)
             {
@@ -433,8 +430,9 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
         }
 
-        private static void EmptyOutputPath(string path)
+        private static void EmptyOutputPath(string path, List<string> removeFolderExceptions)
         {
+            removeFolderExceptions ??= [];
             if (!Directory.Exists(path))
             {
                 return;
@@ -447,10 +445,40 @@ namespace L2Data2CodeUI.Shared.Adapters
                 file.Delete();
             }
 
-            foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
+            if (removeFolderExceptions.Count > 0)
             {
-                dir.Delete(true);
+                foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".") && !removeFolderExceptions.Any(r => d.FullName.EndsWith(r))))
+                {
+                    if (RemoveFoldersWithExceptions(dir.FullName, removeFolderExceptions))
+                    {
+                        dir.Delete(true);
+                    }
+                }
             }
+            else
+            {
+                foreach (var dir in directory.GetDirectories().Where(d => !d.Name.StartsWith(".")))
+                {
+                    dir.Delete(true);
+                }
+            }
+
+        }
+
+        private static bool RemoveFoldersWithExceptions(string path, List<string> removeFolderExceptions)
+        {
+            DirectoryInfo directory = new(path);
+
+            foreach (var dir in directory.GetDirectories().Where(d => !removeFolderExceptions.Any(r => d.FullName.EndsWith(r))))
+            {
+                if (RemoveFoldersWithExceptions(dir.FullName, removeFolderExceptions))
+                {
+                    dir.Delete(true);
+                }
+            }
+
+            return directory.GetDirectories().Length == 0;
+
         }
 
         private (string OutputPath, string SolutionType) GetSavePathFromSelectedTemplate()
@@ -513,7 +541,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             var templatePath = Path.Combine(basePath, SelectedTemplate.Path);
 
             schemaName = SelectedDataSource.Schema;
-            _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName);
+            _alternativeDictionary = schemaService.GetSchemaDictionaryFromFile(schemaName, templatePath);
             outputSchemaName = SelectedDataSource.OutputSchema;
             schemaReader = schemaFactory.Create(schemaOptionsFactory.Create(templatePath, SchemasConfiguration, schemaName, writer));
             if (schemaReader == null)
@@ -536,13 +564,31 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 tables = schemaReader.ReadSchema(new SchemaReaderOptions(schemaService.ShouldRemoveWord1(schemaName), _alternativeDictionary))
                     ?? new Tables();
-
                 messageService.Clear(MessageCodes.READ_SCHEMA);
             }
             catch (Exception ex)
             {
                 messageService.Error($"GeneratorAdapter.SetupTables() : {ex.Message}", Messages.ErrorReadingSchema, MessageCodes.READ_SCHEMA);
                 tables = new Tables();
+            }
+        }
+
+        private void TryWriteDescriptions()
+        {
+            if (SchemasConfiguration[schemaName].WriteDescriptionsFile)
+            {
+                var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
+                var templatePath = Path.Combine(basePath, SelectedTemplate.Path);
+                var descriptionFilePath = Path.Combine(templatePath, $"dataSource\\{schemaName.ToSlug()}-descriptions.txt");
+
+                var result = string.Join("\n",
+                    tables.Values
+                    .SelectMany(t => t.Columns)
+                    .OrderBy(c => c.TableName)
+                    .ThenBy(c => c.Name)
+                    .Select(c => string.Concat(string.Concat(c.TableName, ".", c.Name).PadRight(69), c.Description)));
+
+                File.WriteAllText(descriptionFilePath, string.Concat(result, "\n"));
             }
         }
 

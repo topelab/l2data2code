@@ -7,6 +7,7 @@ namespace L2Data2Code.BaseGenerator.Entities
     {
         public string Table { get; set; }
         public string Name { get; set; }
+        public string ShortName { get; set; }
         public string Type { get; set; }
         public bool IsNull { get; set; }
         public int Size { get; set; }

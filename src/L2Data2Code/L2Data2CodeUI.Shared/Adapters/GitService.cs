@@ -51,7 +51,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             {
                 Key = "git commit",
                 Directory = path,
-                Exec = "git add -A && git commit -a -m \"Automated internal commit by L2Data2CodeWPF\"",
+                Exec = "git add -A && git commit -a -m \"Automated internal commit by L2Data2Code for previous modifications\"",
                 ShowMessages = false,
                 ShowMessageWhenExitCodeNotZero = false
             };

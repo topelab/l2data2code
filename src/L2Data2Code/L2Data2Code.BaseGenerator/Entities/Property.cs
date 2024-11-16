@@ -10,6 +10,7 @@ namespace L2Data2Code.BaseGenerator.Entities
     {
         public Entity Entity { get; set; }
         public string Name { get; set; }
+        public string ShortName { get; set; }
         public string IdOrName => IsEntityId() ? Constants.ID : Name;
         public string Table { get; set; }
         public bool Nullable { get; set; }
@@ -99,6 +100,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 Entity = Entity,
                 Table = Table,
                 Name = Name,
+                ShortName = ShortName,
                 Nullable = Nullable,
                 PrimaryKey = PrimaryKey,
                 InitialValue = InitialValue,

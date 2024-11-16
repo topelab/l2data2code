@@ -35,6 +35,8 @@ namespace L2Data2Code.BaseGenerator.Services
                 FirstPK = table.FirstPK,
                 UseSpanish = schemaService.GetLang(options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
+                HasOnlyOnePKColumn = table.HasOnlyOnePKColumn,
+                IdentifiableById = table.IdentifiableById,
             };
 
             var properties =
@@ -48,6 +50,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             Entity = entity,
                             Table = table.TableName,
                             Name = name,
+                            ShortName = column.ShortName,
                             Nullable = column.IsNull,
                             PrimaryKey = column.PrimaryKey,
                             IsFirst = isFirst,
@@ -127,6 +130,13 @@ namespace L2Data2Code.BaseGenerator.Services
             replacement.ForeignKeyColumns = filteredColumns
                     .Where(p => p.IsForeignKey)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.DistinctForeignKeyColumnsByType = filteredColumns
+                    .Where(p => p.IsForeignKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .Where(p => p.Entity.Name != p.Type)
+                    .DistinctBy(p => p.Type)
                     .ToArray();
 
             replacement.NotRelatedColumns = filteredColumns
