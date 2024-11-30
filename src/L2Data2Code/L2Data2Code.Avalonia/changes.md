@@ -1,3 +1,19 @@
+### 3.4.1
+
+- Upgrade Topelab.Core.Resolver to 1.8.1
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.1
+- Upgrade Handlebars.Net.Helpers to 2.4.7
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.7
+- Upgrade Handlebars.Net.Helpers.Json to 2.4.7
+- Upgrade Npgsql to 9.0.1
+- Upgrade Avalonia to 11.2.2
+- Upgrade Avalonia.Controls.DataGrid to 11.2.2
+- Upgrade Avalonia.Desktop to 11.2.2
+- Upgrade Avalonia.Themes.Simple to 11.2.2
+- Upgrade Avalonia.Diagnostics to 11.2.2
+- Upgrade Avalonia.ReactiveUI to 11.2.2
+- Upgrade Avalonia.Themes.Fluent to 11.2.2
+
 ### 3.4.0
 
 - Upgrade to .NET 9.0

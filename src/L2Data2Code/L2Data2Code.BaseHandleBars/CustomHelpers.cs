@@ -146,5 +146,7 @@ namespace L2Data2Code.BaseHandleBars
                 numbers[0] += 1;
             }
         }
+
+        public Category Category => (Category)999;
     }
 }
