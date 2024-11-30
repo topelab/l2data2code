@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-        <Version>3.4.0</Version>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.1.35" />
-        <PackageReference Include="MySql.Data" Version="9.1.0" />
-        <PackageReference Include="Npgsql" Version="8.0.5" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
-        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-        <PackageReference Include="System.Text.Json" Version="9.0.0" />
-        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\L2Data2Code.SharedLib\L2Data2Code.SharedLib.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <Version>3.4.1</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="MySql.Data" Version="9.1.0" />
+    <PackageReference Include="Npgsql" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\L2Data2Code.SharedLib\L2Data2Code.SharedLib.csproj" />
+  </ItemGroup>
 </Project>
