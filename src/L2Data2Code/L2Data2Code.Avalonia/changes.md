@@ -1,3 +1,7 @@
+### 3.4.2
+
+- Upgrade Npgsql to 9.0.2
+
 ### 3.4.1
 
 - Upgrade Topelab.Core.Resolver to 1.8.1
