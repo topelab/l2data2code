@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <Version>3.4.1</Version>
+    <Version>3.4.2</Version>
     <RestoreAdditionalProjectSources>
             https://nuget.pkg.github.com/topelab/index.json
         </RestoreAdditionalProjectSources>
