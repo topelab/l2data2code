@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <Version>3.4.2</Version>
+    <Version>3.4.3</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Private.Uri" Version="4.3.2" />
