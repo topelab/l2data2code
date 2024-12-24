@@ -1,3 +1,15 @@
+### 3.4.3
+
+- Upgrade Topelab.Core.Resolver to 1.8.2
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.2
+- Upgrade Avalonia to 11.2.3
+- Upgrade Avalonia.Controls.DataGrid to 11.2.3
+- Upgrade Avalonia.Desktop to 11.2.3
+- Upgrade Avalonia.Themes.Simple to 11.2.3
+- Upgrade Avalonia.Diagnostics to 11.2.3
+- Upgrade Avalonia.ReactiveUI to 11.2.3
+- Upgrade Avalonia.Themes.Fluent to 11.2.3
+
 ### 3.4.2
 
 - Upgrade Npgsql to 9.0.2
