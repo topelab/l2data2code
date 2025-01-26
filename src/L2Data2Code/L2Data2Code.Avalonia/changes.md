@@ -1,3 +1,17 @@
+### 3.4.4
+
+- Fix `EnumTables` to get distinct name values ordered by id
+- Upgrade System.Text.Json to 9.0.1
+- Upgrade Topelab.Core.Resolver to 1.8.3
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.3
+- Upgrade Handlebars.Net.Helpers to 2.4.10
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.4.10
+- Upgrade Handlebars.Net.Helpers.Json to 2.4.10
+- Upgrade Microsoft.Data.SqlClient to 6.0.1
+- Upgrade Material.Icons.Avalonia to 2.2.0
+- Upgrade MySql.Data to 9.2.0
+- Upgrade System.Management to 9.0.1
+
 ### 3.4.3
 
 - Upgrade Topelab.Core.Resolver to 1.8.2
