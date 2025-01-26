@@ -19,7 +19,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Description { get; private set; }
         public string FieldDescriptor { get; private set; }
         public string FirstPK { get; private set; }
-        public bool IsEnum => EnumValues?.Any() ?? false;
+        public bool IsEnum => EnumValues.Count > 0;
 
         public List<EntityColumn> Columns = new();
         public List<Relation> OneToMany = new();
@@ -36,7 +36,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             TableName = table.Name;
             TableType = table.Type;
             IsView = table.IsView;
-            EnumValues = table.EnumValues;
+            EnumValues = GetEnumTableValues(table);
             IsUpdatable = table.IsUpdatable;
             MultiplePKColumns = table.PK.Count() > 1;
             HasOnlyOnePKColumn = table.PK.Count() == 1;
@@ -46,6 +46,12 @@ namespace L2Data2Code.BaseGenerator.Entities
             CreateIndexes(table);
             CreateOneToManyRelations(table);
             CreateManyToOneRelations(table);
+        }
+
+        private List<EnumTableValue> GetEnumTableValues(Table table)
+        {
+            var values = table.EnumValues.OrderBy(r => r.Id).ToList();
+            return values.DistinctBy(r => r.Name).OrderBy(r => r.Id).ToList();
         }
 
         private void CreateCampos(Table table)
