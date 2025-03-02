@@ -80,6 +80,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value
                                 : options.AlternativeDescriptions.TryGetValue(tbl.Name, out var alternativeValue) ? alternativeValue : null;
+                            tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -109,6 +110,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
+                            tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
 
                             result.Add(tbl.Name, tbl);
                         }

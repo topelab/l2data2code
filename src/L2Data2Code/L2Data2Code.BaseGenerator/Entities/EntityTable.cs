@@ -19,6 +19,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Description { get; private set; }
         public string FieldDescriptor { get; private set; }
         public string FirstPK { get; private set; }
+        public bool IsWeakEntity { get; private set; }
         public bool IsEnum => EnumValues.Count > 0;
 
         public List<EntityColumn> Columns = new();
@@ -41,6 +42,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             MultiplePKColumns = table.PK.Count() > 1;
             HasOnlyOnePKColumn = table.PK.Count() == 1;
             Description = table.Description;
+            IsWeakEntity = table.IsWeakEntity;
 
             CreateCampos(table);
             CreateIndexes(table);

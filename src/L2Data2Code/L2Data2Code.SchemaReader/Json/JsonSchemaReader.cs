@@ -61,6 +61,7 @@ namespace L2Data2Code.SchemaReader.Json
                 item.CleanName = nameResolver.ResolveTableName(item.Name).PascalCamelCase(false);
                 item.Type = nameResolver.ResolveTableType(item.Name);
                 item.ClassName = item.CleanName.ToSingular();
+                item.IsWeakEntity = nameResolver.IsWeakEntity(item.Name);
                 foreach (var column in item.Columns)
                 {
                     column.Table = item;

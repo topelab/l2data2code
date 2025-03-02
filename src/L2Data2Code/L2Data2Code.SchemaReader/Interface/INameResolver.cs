@@ -7,5 +7,6 @@ namespace L2Data2Code.SchemaReader.Interface
         string ResolveTableName(string originalTableName);
         string ResolveTableType(string originalTableName);
         (string id, string name) ResolveEnumTables(string originalTableName);
+        bool IsWeakEntity(string originalTableName);
     }
 }

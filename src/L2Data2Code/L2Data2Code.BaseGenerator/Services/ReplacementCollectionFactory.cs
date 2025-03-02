@@ -172,7 +172,7 @@ namespace L2Data2Code.BaseGenerator.Services
             replacement.MultiplePKColumns = replacement.PrimaryKeys.Length > 1;
 
             var primaryKeys = properties.Where(p => p.PrimaryKey);
-            replacement.IsWeakEntity = primaryKeys.Count() != 1 || primaryKeys.None(p => p.IsEntityId());
+            replacement.IsWeakEntity = table.IsWeakEntity || primaryKeys.Count() != 1 || primaryKeys.None(p => p.IsEntityId());
 
             return GetDictionaryDataFromReplacement(replacement);
         }

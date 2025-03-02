@@ -1,3 +1,7 @@
+### 3.4.6
+
+- Add `IsWeakEntity` to Replacement
+
 ### 3.4.4
 
 - Fix `EnumTables` to get distinct name values ordered by id

@@ -140,6 +140,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : (fromViews ? (string)row["DESCRIPTION"] : string.Empty);
+                tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
 
                 result.Add(tbl.Name, tbl);
             }

@@ -87,6 +87,7 @@ namespace L2Data2Code.SchemaReader.Object
                 Name = typeName,
                 Type = nameResolver.ResolveTableType(typeName),
                 CleanName = nameResolver.ResolveTableName(typeName),
+                IsWeakEntity = nameResolver.IsWeakEntity(typeName),
                 SourceDB = "object"
             };
             table.Columns = LoadColumnsFromProperties(nameSpace, type, table, alternativeDescriptions);

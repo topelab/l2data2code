@@ -11,6 +11,8 @@ namespace L2Data2Code.SchemaReader.Schema
         private Dictionary<string, string> _columnNames = null;
         private Dictionary<string , string> _tableTypes = null;
         private Dictionary<string , string> _enumTables = null;
+        private readonly List<string> _weakEntities = [];
+
         private readonly IBasicConfiguration<SchemaConfiguration> schemas;
 
         public NameResolver(IBasicConfiguration<SchemaConfiguration> schemas)
@@ -24,6 +26,11 @@ namespace L2Data2Code.SchemaReader.Schema
             _columnNames = GetRenames(schemas[schemaName]?.RenameColumns);
             _tableTypes = GetRenames(schemas[schemaName]?.TableTypes);
             _enumTables = GetRenames(schemas[schemaName]?.EnumTables);
+            var weakEntities = schemas[schemaName]?.WeakEntities;
+            if (weakEntities != null)
+            {
+                _weakEntities.AddRange(weakEntities.Split(';'));
+            }
         }
 
         public string ResolveTableName(string originalTableName) =>
@@ -49,6 +56,8 @@ namespace L2Data2Code.SchemaReader.Schema
             }
             return result;
         }
+
+        public bool IsWeakEntity(string originalTableName) => _weakEntities.Contains(originalTableName);
 
         private static Dictionary<string, string> GetRenames(string renameDescriptions)
         {

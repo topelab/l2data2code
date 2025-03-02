@@ -72,6 +72,11 @@ namespace L2Data2Code.SchemaReader.Schema
         public string EnumValue { get; set; }
         public string EnumName { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is weak entity.
+        /// </summary>
+        public bool IsWeakEntity { get; set; }
+
         public bool IsEnum => EnumValue.NotEmpty() && EnumName.NotEmpty();
 
         /// <summary>Gets the pk.</summary>
