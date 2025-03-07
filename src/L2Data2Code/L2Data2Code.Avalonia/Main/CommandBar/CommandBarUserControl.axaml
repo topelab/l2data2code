@@ -50,7 +50,7 @@
                     ToolTip.Tip="{Binding OpenCmdToolTip}"
                     Command="{Binding OpenVSCommand}"
                     CommandParameter="{Binding SlnFile}">
-                <materialIcons:MaterialIcon Kind="CodeBraces"/>
+                <materialIcons:MaterialIcon Kind="Visualstudio"/>
             </Button>
                 <Button Classes="Flat Mine"
                     ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
