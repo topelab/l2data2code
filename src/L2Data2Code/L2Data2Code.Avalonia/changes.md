@@ -1,3 +1,38 @@
+### 3.4.7
+
+- Add `IsBigTable` and `FilterByColumns` to Replacement. This can be used to filter columns on big tables. On Schemes, must define a `BigTables` section, like this:
+
+```json
+{
+  "Schemes": {
+    "CalendarPostgreSQL": {
+      "ConnectionString": "Host=localhost:5432;Database=DATABASE;User ID=USER;Password=PASS",
+      "Provider": "Npgsql",
+      "TableNameLanguage": "es",
+      "RemoveFirstWordOnColumnNames": false,
+      "DescriptionsFile": "dataSource\\calendarios-descriptions.txt",
+      "WriteDescriptionsFile": true,
+      "EnumTables": "TipoFestivo=Id,TipoFestivo;TipoJornada=Id,Nombre",
+      "WeakEntities": "CalendarioDetalle;TipoJornadaCalendario;TipoJornadaSemana",
+      "BigTables": {
+        "Municipio" : {
+          "ColumnsFilter": [ "IdCA", "IdProvincia" ]
+        },
+        "FiestaLocal" : {
+          "ColumnsFilter": [ "IdMunicipio", "Anyo", "Municipio" ]
+        },
+        "FiestaNacional" : {
+          "ColumnsFilter": [ "Fecha" ]
+        },
+        "FiestaAutonomica" : {
+          "ColumnsFilter": [ "IdCa", "Fecha" ]
+        }
+      }
+    }
+  }
+}
+```
+
 ### 3.4.6
 
 - Add `IsWeakEntity` to Replacement

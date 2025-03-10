@@ -81,6 +81,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value
                                 : options.AlternativeDescriptions.TryGetValue(tbl.Name, out var alternativeValue) ? alternativeValue : null;
                             tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                            tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -111,6 +112,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
                             tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                            tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -200,6 +202,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true)
         {
+            var filteredColumns = nameResolver.GetBigTableColumns(tbl.Name);
 
             using var cmd = connection.CreateCommand();
             cmd.CommandText = COLUMNS_SQL;
@@ -240,6 +243,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     {
                         col.DefaultValue += "m";
                     }
+                    col.IsFilter = filteredColumns.Contains(col.Name);
 
                     result.Add(col);
                 }

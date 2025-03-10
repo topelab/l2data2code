@@ -61,6 +61,8 @@ namespace L2Data2Code.SchemaReader.MySql
 
                         tbl.Indexes = GetIndexes(tbl.Name);
                         tbl.EnumValues = GetEnumValues(tbl);
+                        tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                        tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
                     }
                 }
                 catch (Exception x)
@@ -149,6 +151,7 @@ namespace L2Data2Code.SchemaReader.MySql
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true, Dictionary<string, string> alternativeDescriptions = null)
         {
             List<Column> result = new();
+            var filteredColumns = nameResolver.GetBigTableColumns(tbl.Name);
 
             var schema = new string[4] { null, null, tbl.Name, null };
 
@@ -173,6 +176,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 col.IsComputed = tbl.IsView;
                 col.DefaultValue = row["COLUMN_DEFAULT"].IfNull<string>(null) == null ? null : ((string)row["COLUMN_DEFAULT"]).RemoveOuter('(', ')').RemoveOuter('\'');
                 col.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(col.FullName, out var value) ? value : null;
+                col.IsFilter = filteredColumns.Contains(col.Name);
                 result.Add(col);
             }
 

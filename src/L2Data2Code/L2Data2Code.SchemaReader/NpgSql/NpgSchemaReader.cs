@@ -169,6 +169,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : string.Empty;
                 tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
 
                 result.Add(tbl.Name, tbl);
             }

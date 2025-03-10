@@ -77,6 +77,11 @@ namespace L2Data2Code.SchemaReader.Schema
         /// </summary>
         public bool IsWeakEntity { get; set; }
 
+        /// <summary>
+        /// Indicates if the table is a big table
+        /// </summary>
+        public bool IsBigTable { get; set; }
+
         public bool IsEnum => EnumValue.NotEmpty() && EnumName.NotEmpty();
 
         /// <summary>Gets the pk.</summary>

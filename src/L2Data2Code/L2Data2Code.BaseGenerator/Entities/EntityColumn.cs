@@ -31,6 +31,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string DefaultValue { get; set; }
         public bool HasDefaultValue => !string.IsNullOrWhiteSpace(DefaultValue);
         public bool HasRelation { get; set; }
+        public bool IsFilter { get; set; }
 
         public string GetDefaultValue()
         {

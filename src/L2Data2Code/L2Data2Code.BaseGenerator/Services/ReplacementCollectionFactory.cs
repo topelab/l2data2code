@@ -81,6 +81,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             DbFromField = column.DbFromField,
                             DbToField = column.DbToField,
                             HasRelation = column.HasRelation,
+                            IsFilter = column.IsFilter,
                         };
                         return property;
                     }).ToArray();
@@ -107,6 +108,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 GenerateBase = false,
                 Vars = internalVars,
                 CanCreateDB = schemaService.CanCreateDB(options.CreatedFromSchemaName),
+                IsBigTable = table.IsBigTable,
             };
 
             var filteredColumns = properties
@@ -162,6 +164,11 @@ namespace L2Data2Code.BaseGenerator.Services
 
             replacement.NotPrimaryKeys = filteredColumns
                     .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.FilterByColumns = filteredColumns
+                    .Where(p => p.IsFilter)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 

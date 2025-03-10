@@ -14,6 +14,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
         public List<Column> GetColumns(NpgsqlConnection connection, Table table, SchemaReaderOptions options, INameResolver nameResolver)
         {
             List<Column> result = [];
+            var filteredColumns = nameResolver.GetBigTableColumns(table.Name);
 
             string[] schema = [connection.Database, NpgSchemaReader.DefaultDBSchema, table.Name, null];
 
@@ -42,6 +43,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 {
                     col.DefaultValue += "m";
                 }
+                col.IsFilter = filteredColumns.Contains(col.Name);
                 result.Add(col);
             }
 

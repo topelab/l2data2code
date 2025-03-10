@@ -62,6 +62,8 @@ namespace L2Data2Code.SchemaReader.Json
                 item.Type = nameResolver.ResolveTableType(item.Name);
                 item.ClassName = item.CleanName.ToSingular();
                 item.IsWeakEntity = nameResolver.IsWeakEntity(item.Name);
+                item.IsBigTable = nameResolver.IsBigTable(item.Name);
+                var filteredColumns = nameResolver.GetBigTableColumns(item.Name);
                 foreach (var column in item.Columns)
                 {
                     column.Table = item;
@@ -70,6 +72,7 @@ namespace L2Data2Code.SchemaReader.Json
                     {
                         column.DefaultValue += "m";
                     }
+                    column.IsFilter = filteredColumns.Contains(column.Name);
                 }
                 ResolveKeys(item.InnerKeys, tablesInfo);
                 ResolveKeys(item.OuterKeys, tablesInfo);

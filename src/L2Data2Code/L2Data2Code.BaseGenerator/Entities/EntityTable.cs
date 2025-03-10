@@ -20,6 +20,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string FieldDescriptor { get; private set; }
         public string FirstPK { get; private set; }
         public bool IsWeakEntity { get; private set; }
+        public bool IsBigTable { get; private set; }
         public bool IsEnum => EnumValues.Count > 0;
 
         public List<EntityColumn> Columns = new();
@@ -27,6 +28,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public List<Relation> ManyToOne = new();
         public List<EntityIndex> Indexes = new();
         public List<EnumTableValue> EnumValues = new();
+        public List<EntityColumn> FilterByColumns = [];
 
         public int NumeroCamposPK { get; set; }
 
@@ -43,6 +45,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             HasOnlyOnePKColumn = table.PK.Count() == 1;
             Description = table.Description;
             IsWeakEntity = table.IsWeakEntity;
+            IsBigTable = table.IsBigTable;
 
             CreateCampos(table);
             CreateIndexes(table);
@@ -79,6 +82,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     IsAutoIncrement = column.IsAutoIncrement,
                     IsComputed = column.IsComputed,
                     DefaultValue = column.DefaultValue,
+                    IsFilter = column.IsFilter,
                 };
 
                 if (campo.Name == $"Nombre{table.ClassName}" || campo.Name == $"{table.ClassName}Name" || campo.Name == "Name" || campo.Name == "Nombre")

@@ -7,11 +7,12 @@ namespace L2Data2Code.SchemaReader.Schema
 {
     public class NameResolver : INameResolver
     {
-        private Dictionary<string, string> _tableNames = null;
-        private Dictionary<string, string> _columnNames = null;
-        private Dictionary<string , string> _tableTypes = null;
-        private Dictionary<string , string> _enumTables = null;
-        private readonly List<string> _weakEntities = [];
+        private Dictionary<string, string> tableNames = null;
+        private Dictionary<string, string> columnNames = null;
+        private Dictionary<string , string> tableTypes = null;
+        private Dictionary<string , string> enumTables = null;
+        private Dictionary<string , List<string>> bigTables = null;
+        private readonly List<string> weakEntities = [];
 
         private readonly IBasicConfiguration<SchemaConfiguration> schemas;
 
@@ -22,33 +23,30 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public void Initialize(string schemaName)
         {
-            _tableNames = GetRenames(schemas[schemaName]?.RenameTables);
-            _columnNames = GetRenames(schemas[schemaName]?.RenameColumns);
-            _tableTypes = GetRenames(schemas[schemaName]?.TableTypes);
-            _enumTables = GetRenames(schemas[schemaName]?.EnumTables);
-            var weakEntities = schemas[schemaName]?.WeakEntities;
-            if (weakEntities != null)
-            {
-                _weakEntities.AddRange(weakEntities.Split(';'));
-            }
+            tableNames = GetRenames(schemas[schemaName]?.RenameTables);
+            columnNames = GetRenames(schemas[schemaName]?.RenameColumns);
+            tableTypes = GetRenames(schemas[schemaName]?.TableTypes);
+            enumTables = GetRenames(schemas[schemaName]?.EnumTables);
+            bigTables = GetBigTables(schemas[schemaName]?.BigTables);
+            weakEntities.AddRange(GetSemiColonEntries(schemas[schemaName]?.WeakEntities));
         }
 
         public string ResolveTableName(string originalTableName) =>
-            _tableNames.TryGetValue(originalTableName, out var value) ? value : originalTableName;
+            tableNames.TryGetValue(originalTableName, out var value) ? value : originalTableName;
 
         public string ResolveColumnName(string originalTableName, string originalColumnName)
         {
             var key = $"{originalTableName}.{originalColumnName}";
-            return _columnNames.TryGetValue(key, out var value) ? value : _columnNames.TryGetValue(originalColumnName, out var value1) ? value1 : originalColumnName;
+            return columnNames.TryGetValue(key, out var value) ? value : columnNames.TryGetValue(originalColumnName, out var value1) ? value1 : originalColumnName;
         }
 
         public string ResolveTableType(string originalTableName) =>
-            _tableTypes.TryGetValue(originalTableName, out var value) ? value : string.Empty;
+            tableTypes.TryGetValue(originalTableName, out var value) ? value : string.Empty;
 
         public (string id, string name) ResolveEnumTables(string originalTableName)
         {
             (string id, string name) result = (null, null);
-            if (_enumTables.TryGetValue(originalTableName, out var value) && value.Contains(','))
+            if (enumTables.TryGetValue(originalTableName, out var value) && value.Contains(','))
             {
                 var colums = value.Split(',');
                 result.id = colums[0];
@@ -57,7 +55,11 @@ namespace L2Data2Code.SchemaReader.Schema
             return result;
         }
 
-        public bool IsWeakEntity(string originalTableName) => _weakEntities.Contains(originalTableName);
+        public bool IsWeakEntity(string originalTableName) => weakEntities.Contains(originalTableName);
+
+        public bool IsBigTable(string originalTableName) => bigTables.ContainsKey(originalTableName);
+
+        public List<string> GetBigTableColumns(string originalTableName) => bigTables.TryGetValue(originalTableName, out var value) ? value : [];
 
         private static Dictionary<string, string> GetRenames(string renameDescriptions)
         {
@@ -71,6 +73,29 @@ namespace L2Data2Code.SchemaReader.Schema
                 }
             }
             return renames;
+        }
+
+        private static Dictionary<string, List<string>> GetBigTables(List<BigTable> bigTables)
+        {
+            Dictionary<string, List<string>> result = new();
+            if (bigTables != null)
+            {
+                foreach (var bigTable in bigTables)
+                {
+                    result.Add(bigTable.Key, bigTable.ColumnsFilter);
+                }
+            }   
+            return result;
+        }
+
+        private static List<string> GetSemiColonEntries(string semiColonEntries)
+        {
+            List<string> entities = [];
+            if (semiColonEntries != null)
+            {
+                entities.AddRange(semiColonEntries.Split(';', System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries));
+            }
+            return entities;
         }
 
     }
