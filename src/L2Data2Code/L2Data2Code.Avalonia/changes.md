@@ -1,3 +1,7 @@
+### 3.4.8
+
+- New `IsBig` and `IsSmall` to Replacement, to reflect IsBigTables an IsWeakEntity.
+
 ### 3.4.7
 
 - Add `IsBigTable` and `FilterByColumns` to Replacement. This can be used to filter columns on big tables. On Schemes, must define a `BigTables` section, like this:

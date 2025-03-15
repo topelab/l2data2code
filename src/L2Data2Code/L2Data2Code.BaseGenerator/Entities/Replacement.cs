@@ -48,6 +48,8 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsWeakEntity { get; set; }
         public bool IsBigTable { get; set; }
         public bool HasValues => EnumValues?.Any() ?? false;
+        public bool IsBig => IsBigTable && !IsWeakEntity;
+        public bool IsSmall => !IsBigTable && !IsWeakEntity;
 
         public ICollection<string> Keys => ((IDictionary<string, object>)Vars).Keys;
 
