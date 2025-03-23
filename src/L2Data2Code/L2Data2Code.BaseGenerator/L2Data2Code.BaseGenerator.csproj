@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <Version>3.4.8</Version>
+    <TargetFrameworks>net9.0</TargetFrameworks>
+    <Version>3.4.9</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="9.0.2" />
+    <PackageReference Include="System.Text.Json" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.SchemaReader\L2Data2Code.SchemaReader.csproj" />

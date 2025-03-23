@@ -172,6 +172,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             if (relatedColumn is not null)
             {
                 relatedColumn.HasRelation = true;
+                relatedColumn.Join = item.Table;
             }
         }
 

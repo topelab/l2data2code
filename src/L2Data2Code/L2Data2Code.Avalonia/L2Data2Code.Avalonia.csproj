@@ -6,7 +6,7 @@
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationIcon>Assets\l2data2code-v3.ico</ApplicationIcon>
-    <Version>3.4.8</Version>
+    <Version>3.4.9</Version>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
@@ -39,10 +39,10 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.5" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.2.5" />
-    <PackageReference Include="Material.Icons.Avalonia" Version="2.3.0" />
+    <PackageReference Include="Material.Icons.Avalonia" Version="2.3.1" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.2" />
-    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.8.4" />
+    <PackageReference Include="System.Text.Json" Version="9.0.3" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="1.8.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseHandleBars\L2Data2Code.BaseHandleBars.csproj" />

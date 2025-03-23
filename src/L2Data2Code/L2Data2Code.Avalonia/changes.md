@@ -1,6 +1,10 @@
+### 3.4.9
+
+- When field has a relation, the property `HasRelation` is set to `true` and the property `Join` is set to table witch is related
+
 ### 3.4.8
 
-- New `IsBig` and `IsSmall` to Replacement, to reflect IsBigTables an IsWeakEntity.
+- New `IsBig` and `IsSmall` to Replacement, where IsBig = *IsBigTables and not IsWeakEntity* and IsSmall = *not IsBigTables and not IsWeakEntity*
 
 ### 3.4.7
 
