@@ -42,11 +42,14 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Join { get; set; }
         public string FromField { get; set; }
         public string ToField { get; set; }
+        public string ToFieldDescriptor { get; set; }
         public string DbJoin { get; set; }
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
         public bool HasRelation { get; set; }
         public bool IsFilter { get; set; }
+        public string FilterType { get; internal set; }
+        public string FilterSubType { get; internal set; }
         public string FirstSample
         {
             get
@@ -130,9 +133,12 @@ namespace L2Data2Code.BaseGenerator.Entities
                 FromField = FromField,
                 DbFromField = DbFromField,
                 ToField = ToField,
+                ToFieldDescriptor = ToFieldDescriptor,
                 DbToField = DbToField,
                 HasRelation = HasRelation,
-                IsFilter = IsFilter
+                IsFilter = IsFilter,
+                FilterType = FilterType,
+                FilterSubType = FilterSubType
             };
         }
 

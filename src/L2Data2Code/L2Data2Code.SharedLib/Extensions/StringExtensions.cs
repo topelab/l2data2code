@@ -266,9 +266,13 @@ namespace L2Data2Code.SharedLib.Extensions
         /// <returns></returns>
         public static string Piece(this string text, int part, char separator = ',', string defaultValue = "")
         {
+            string result = defaultValue;
             var values = text.Split(separator);
-            part = part > values.Length - 1 ? values.Length - 1 : part < 0 ? 0 : part;
-            return text.IsEmpty() ? defaultValue : values[part].IfEmpty(defaultValue).Trim();
+            if (part < values.Length && part >= 0)
+            {
+                result = values[part].IfEmpty(defaultValue).Trim();
+            }
+            return result;
         }
 
         /// <summary>

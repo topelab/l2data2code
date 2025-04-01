@@ -25,6 +25,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Join { get; set; }
         public string FromField { get; set; }
         public string ToField { get; set; }
+        public string ToFieldDescriptor { get; set; }
         public string DbJoin { get; set; }
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
@@ -32,6 +33,9 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool HasDefaultValue => !string.IsNullOrWhiteSpace(DefaultValue);
         public bool HasRelation { get; set; }
         public bool IsFilter { get; set; }
+        public string FilterType { get; internal set; }
+        public string FilterSubType { get; internal set; }
+        public string FilterSpecification { get; internal set; }
 
         public string GetDefaultValue()
         {

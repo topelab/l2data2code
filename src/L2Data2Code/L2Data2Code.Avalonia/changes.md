@@ -1,3 +1,20 @@
+### 3.4.10
+
+Enhance entity filtering and add FieldIdentity property
+
+- Added `FieldIdentity` property to the `Entity` class.
+- Introduced `FilterType` and `FilterSpecification` properties in `EntityColumn` and `Property` classes.
+- Updated `EntityTable` to initialize and set `FieldIdentity` based on primary key order.
+- Implemented `TrySetFilterType` method for determining filter types.
+- Modified `ReplacementCollectionFactory` to include new properties.
+- Added `DescriptionTables` property to `SchemaConfiguration`.
+- Changed `INameResolver` to return structured filtering information.
+- Implemented `TrySetFilterColumn` method in `SchemaReader`.
+- Created `ColumnFilter` class for encapsulating filter details.
+- Updated schema reader classes to utilize new filtering logic.
+- Refactored `NameResolver` to manage new properties effectively.
+
+
 ### 3.4.9
 
 - When field has a relation, the property `HasRelation` is set to `true` and the property `Join` is set to table witch is related

@@ -32,6 +32,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 Name = table.ClassName,
                 Type = table.TableType,
                 FieldDescriptor = table.FieldDescriptor,
+                FieldIdentity = table.FieldIdentity,
                 FirstPK = table.FirstPK,
                 UseSpanish = schemaService.GetLang(options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
@@ -77,11 +78,13 @@ namespace L2Data2Code.BaseGenerator.Services
                             Join = column.Join,
                             FromField = column.FromField,
                             ToField = column.ToField,
+                            ToFieldDescriptor = column.ToFieldDescriptor,
                             DbJoin = column.DbJoin,
                             DbFromField = column.DbFromField,
                             DbToField = column.DbToField,
                             HasRelation = column.HasRelation,
                             IsFilter = column.IsFilter,
+                            FilterType = column.FilterType,
                         };
                         return property;
                     }).ToArray();

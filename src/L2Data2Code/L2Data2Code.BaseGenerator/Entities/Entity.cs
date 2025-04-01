@@ -26,6 +26,10 @@ namespace L2Data2Code.BaseGenerator.Entities
         /// </summary>
         public string FieldDescriptor { get; set; }
         /// <summary>
+        /// Field identity for entity
+        /// </summary>
+        public string FieldIdentity { get; set; }
+        /// <summary>
         /// First primary key for entity
         /// </summary>
         public string FirstPK { get; set; }

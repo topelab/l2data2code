@@ -16,6 +16,7 @@ namespace L2Data2Code.SchemaReader.Configuration
         public string RenameColumns { get; set; }
         public string TableTypes { get; set; }
         public string EnumTables { get; set; }
+        public string DescriptionTables { get; set; }
         public bool CanCreateDB { get; set; } = false;
         public bool NormalizedNames { get; set; } = false;
         public string OverrideDataBaseId { get; set; }

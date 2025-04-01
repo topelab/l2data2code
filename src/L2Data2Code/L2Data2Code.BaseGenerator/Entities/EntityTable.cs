@@ -18,6 +18,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IdentifiableById { get; private set; }
         public string Description { get; private set; }
         public string FieldDescriptor { get; private set; }
+        public string FieldIdentity { get; private set; }
         public string FirstPK { get; private set; }
         public bool IsWeakEntity { get; private set; }
         public bool IsBigTable { get; private set; }
@@ -46,6 +47,8 @@ namespace L2Data2Code.BaseGenerator.Entities
             Description = table.Description;
             IsWeakEntity = table.IsWeakEntity;
             IsBigTable = table.IsBigTable;
+            FieldDescriptor = table.DescriptionColumn;
+            FieldIdentity = table.DescriptionId;
 
             CreateCampos(table);
             CreateIndexes(table);
@@ -83,24 +86,55 @@ namespace L2Data2Code.BaseGenerator.Entities
                     IsComputed = column.IsComputed,
                     DefaultValue = column.DefaultValue,
                     IsFilter = column.IsFilter,
+                    FilterType = column.FilterType,
+                    FilterSpecification = column.FilterSpecification,
                 };
 
-                if (campo.Name == $"Nombre{table.ClassName}" || campo.Name == $"{table.ClassName}Name" || campo.Name == "Name" || campo.Name == "Nombre")
+                TrySetFilterType(campo);
+
+                if (FieldDescriptor.IsEmpty() && (campo.Name == $"Nombre{table.ClassName}" || campo.Name == $"{table.ClassName}Name" || campo.Name == "Name" || campo.Name == "Nombre"))
                 {
                     FieldDescriptor = campo.Name;
                 }
-                if (string.IsNullOrEmpty(FieldDescriptor) && column.IsPK && column.PkOrder == 1)
-                {
-                    FirstPK = campo.Name;
-                }
-                if (column.IsPK && HasOnlyOnePKColumn && campo.Type == "int")
+                if (column.IsPK && HasOnlyOnePKColumn && campo.IsNumeric)
                 {
                     campo.Name = "Id";
                     IdentifiableById = true;
                 }
+                if (column.IsPK && column.PkOrder == 1)
+                {
+                    FirstPK = campo.Name;
+                    if (FieldIdentity.IsEmpty())
+                    {
+                        FieldIdentity = campo.Name;
+                    }
+                }
 
                 Columns.Add(campo);
                 NumeroCamposPK += campo.PrimaryKey ? 1 : 0;
+            }
+        }
+
+        private static void TrySetFilterType(EntityColumn column)
+        {
+            if (column.IsFilter)
+            {
+                if (column.FilterType.IsEmpty())
+                {
+                    column.FilterType = column.Type switch
+                    {
+                        "DateTime" or "DateTime?" => "DateRange",
+                        "TimeSpan" or "TimeSpan?" => "TimeRange",
+                        "int" or "int?" or "long" or "long?" or "float" or "float?" or "double" or "double?" or "decimal" or "decimal?" => $"NumericRange",
+                        "string" => "Text",
+                        _ => throw new System.NotSupportedException($"Not supported filter type on Column {column.Table}.{column.Name} with type {column.Type}"),
+                    };
+                }
+
+                if (column.FilterSubType == null && column.FilterType == "NumericRange")
+                {
+                    column.FilterSubType = $"<{column.Type}>";
+                }
             }
         }
 
@@ -173,6 +207,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             {
                 relatedColumn.HasRelation = true;
                 relatedColumn.Join = item.Table;
+                relatedColumn.ToField = item.Column;
             }
         }
 

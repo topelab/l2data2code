@@ -205,10 +205,15 @@ namespace L2Data2Code.BaseGenerator.Services
                 }
 
                 var lastTable = processTables.Last();
+                var entityTables = processTables.Select(t => new EntityTable(t)).ToDictionary(t => t.TableName, t => t);
+
                 foreach (var table in processTables)
                 {
                     logger.Info($"Processing table {table.Name}");
-                    EntityTable tabla = new(table);
+                    EntityTable tabla = entityTables[table.Name];
+                    SetFilterSpecification(entityTables, tabla);
+                    SetFieldDescriptors(entityTables, tabla);
+
                     if (!Options.GeneateOnlyJson)
                     {
                         var results = GenerarCodigos(tabla);
@@ -232,6 +237,33 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 logger.Error($"Processing files: {ex.Message}");
                 throw;
+            }
+        }
+
+        private static void SetFilterSpecification(Dictionary<string, EntityTable> entityTables, EntityTable tabla)
+        {
+            foreach (var column in tabla.Columns.Where(c => c.FilterSpecification.NotEmpty()))
+            {
+                var referenceTable = entityTables.Values.FirstOrDefault(t => t.TableName.Equals(column.FilterSpecification, StringComparison.OrdinalIgnoreCase));
+                if (referenceTable != null)
+                {
+                    column.HasRelation = true;
+                    column.Join = referenceTable.Name;
+                    column.ToField = referenceTable.FieldIdentity;
+                    column.ToFieldDescriptor = referenceTable.FieldDescriptor;
+                }
+            }
+        }
+
+        private static void SetFieldDescriptors(Dictionary<string, EntityTable> entityTables, EntityTable tabla)
+        {
+            foreach (var column in tabla.Columns.Where(c => c.HasRelation && c.ToFieldDescriptor.IsEmpty()))
+            {
+                var referenceTable = entityTables.Values.FirstOrDefault(t => t.ClassName.Equals(column.Join, StringComparison.OrdinalIgnoreCase));
+                if (referenceTable != null)
+                {
+                    column.ToFieldDescriptor = referenceTable.FieldDescriptor;
+                }
             }
         }
 

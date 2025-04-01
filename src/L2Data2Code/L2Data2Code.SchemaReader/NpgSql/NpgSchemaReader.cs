@@ -68,6 +68,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                         tbl.Columns = columnsGetter.GetColumns(connection, tbl, options, nameResolver);
 
                         var PrimaryKey = GetPK(tbl.Name, indexes);
+                        var filteredColumns = nameResolver.GetBigTableColumns(tbl.Name);
 
                         foreach (var col in tbl.Columns)
                         {
@@ -76,6 +77,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                                 col.IsPK = true;
                                 col.PkOrder = PrimaryKey[col.Name];
                             }
+                            TrySetFilterColumn(filteredColumns, col);
                         }
 
                         tbl.Indexes = indexes.Where(i => i.TableName == tbl.Name && !i.IsPrimary).ToList();
@@ -166,6 +168,7 @@ namespace L2Data2Code.SchemaReader.NpgSql
                 tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                 (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
+                (tbl.DescriptionId, tbl.DescriptionColumn) = nameResolver.ResolveDescriptionTables(tbl.Name);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : string.Empty;
                 tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);

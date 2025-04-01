@@ -1,3 +1,4 @@
+using L2Data2Code.SchemaReader.Configuration;
 using System.Collections.Generic;
 
 namespace L2Data2Code.SchemaReader.Interface
@@ -11,6 +12,7 @@ namespace L2Data2Code.SchemaReader.Interface
         (string id, string name) ResolveEnumTables(string originalTableName);
         bool IsWeakEntity(string originalTableName);
         bool IsBigTable(string originalTableName);
-        List<string> GetBigTableColumns(string originalTableName);
+        Dictionary<string, ColumnFilter> GetBigTableColumns(string originalTableName);
+        (string id, string name) ResolveDescriptionTables(string originalTableName);
     }
 }

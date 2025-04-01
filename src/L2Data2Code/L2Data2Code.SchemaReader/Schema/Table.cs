@@ -71,6 +71,8 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public string EnumValue { get; set; }
         public string EnumName { get; set; }
+        public string DescriptionId { get; set; }
+        public string DescriptionColumn { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is weak entity.

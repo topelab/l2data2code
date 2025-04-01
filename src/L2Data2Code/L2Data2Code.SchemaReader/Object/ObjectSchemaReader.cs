@@ -113,8 +113,8 @@ namespace L2Data2Code.SchemaReader.Object
                     IsNullable = IsNullable(item.PropertyType),
                     IsNumeric = item.PropertyType.IsNumericType(),
                     Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(table.Name, out var value) ? value : null,
-                    IsFilter = filteredColumns.Contains(item.Name)
                 };
+                TrySetFilterColumn(filteredColumns, column);
                 columns.Add(column);
             }
             return columns;
