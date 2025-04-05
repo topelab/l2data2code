@@ -84,7 +84,11 @@ namespace L2Data2Code.BaseGenerator.Services
                             DbToField = column.DbToField,
                             HasRelation = column.HasRelation,
                             IsFilter = column.IsFilter,
+                            IsRangeFilter = column.FilterType?.EndsWith("Range", StringComparison.OrdinalIgnoreCase) ?? false,
+                            IsComboFilter = column.FilterType?.Equals("Combo", StringComparison.OrdinalIgnoreCase) ?? false,
+                            IsTextFilter = column.FilterType?.Equals("Text", StringComparison.OrdinalIgnoreCase) ?? false,
                             FilterType = column.FilterType,
+                            FilterPrimitive = column.FilterPrimitive,
                         };
                         return property;
                     }).ToArray();
@@ -145,7 +149,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     .ToArray();
 
             replacement.NotRelatedColumns = filteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey && !p.HasRelation)
+                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey && (p.IsFilter || !p.HasRelation))
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 

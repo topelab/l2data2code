@@ -1,3 +1,16 @@
+### 3.4.11
+
+- Updated version numbers across multiple .csproj files to 3.4.11.
+- Added diagnostic rules in .editorconfig for CA1822.
+- Introduced `FilterPrimitive` property in `EntityColumn.cs`.
+- Changed access modifiers from `private` to `internal` in `EntityTable.cs`.
+- Created `EntityTablesFactory` class to manage `EntityTable` creation.
+- Refactored `CodeGeneratorService` to use `IEntityTablesFactory`.
+- Added new filtering properties in the `Property` class.
+- Streamlined constructor and error handling in `SchemaReader`.
+- Overall improvements to code structure, maintainability, and functionality.
+
+
 ### 3.4.10
 
 Enhance entity filtering and add FieldIdentity property

@@ -1,4 +1,5 @@
 using L2Data2Code.BaseGenerator.Configuration;
+using L2Data2Code.BaseGenerator.Entities;
 using L2Data2Code.BaseGenerator.Interfaces;
 using L2Data2Code.BaseGenerator.Services;
 using L2Data2Code.SharedLib.Configuration;
@@ -27,6 +28,7 @@ namespace L2Data2Code.BaseGenerator
                 .AddSingleton<ICodeGeneratorService, CodeGeneratorService>()
                 .AddSingleton<ITemplateService, TemplateService>()
                 .AddSingleton<IReplacementCollectionFactory, ReplacementCollectionFactory>()
+                .AddSingleton<IEntityTablesFactory, EntityTablesFactory>()
                 ;
         }
 

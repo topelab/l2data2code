@@ -35,6 +35,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsFilter { get; set; }
         public string FilterType { get; internal set; }
         public string FilterSubType { get; internal set; }
+        public string FilterPrimitive { get; internal set; }
         public string FilterSpecification { get; internal set; }
 
         public string GetDefaultValue()

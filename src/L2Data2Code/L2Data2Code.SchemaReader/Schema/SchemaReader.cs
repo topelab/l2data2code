@@ -1,29 +1,24 @@
-using L2Data2Code.SchemaReader.Interface;
+﻿using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using System.Collections.Generic;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
-    public abstract class SchemaReader : ISchemaReader
+    public abstract class SchemaReader(StringBuilderWriter outputWriter) : ISchemaReader
     {
-        private readonly StringBuilderWriter _outputWriter;
         public abstract Tables ReadSchema(SchemaReaderOptions schemaReaderOptions);
-        protected SchemaReader(StringBuilderWriter outputWriter)
-        {
-            _outputWriter = outputWriter;
-        }
 
         public void WriteLine(string msg)
         {
-            _outputWriter.WriteLine(msg);
+            outputWriter.WriteLine(msg);
         }
 
         public void HasErrorMessage(bool setError)
         {
-            _outputWriter.ContainsErrorMessage = setError;
+            outputWriter.ContainsErrorMessage = setError;
         }
 
-        public bool HasErrorMessage() => _outputWriter.ContainsErrorMessage;
+        public bool HasErrorMessage() => outputWriter.ContainsErrorMessage;
 
         public virtual bool CanConnect() => true;
 
@@ -42,7 +37,6 @@ namespace L2Data2Code.SchemaReader.Schema
                 column.FilterSpecification = null;
             }
         }
-
     }
 
 }

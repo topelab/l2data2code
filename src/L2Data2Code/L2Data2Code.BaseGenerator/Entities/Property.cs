@@ -48,7 +48,11 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string DbToField { get; set; }
         public bool HasRelation { get; set; }
         public bool IsFilter { get; set; }
+        public bool IsRangeFilter { get; set; }
+        public bool IsComboFilter { get; set; }
+        public bool IsTextFilter { get; set; }
         public string FilterType { get; internal set; }
+        public string FilterPrimitive { get; internal set; }
         public string FilterSubType { get; internal set; }
         public string FirstSample
         {
@@ -137,7 +141,11 @@ namespace L2Data2Code.BaseGenerator.Entities
                 DbToField = DbToField,
                 HasRelation = HasRelation,
                 IsFilter = IsFilter,
+                IsRangeFilter = IsRangeFilter,
+                IsComboFilter = IsComboFilter,
+                IsTextFilter = IsTextFilter,
                 FilterType = FilterType,
+                FilterPrimitive = FilterPrimitive,
                 FilterSubType = FilterSubType
             };
         }

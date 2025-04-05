@@ -23,6 +23,7 @@ namespace L2Data2Code.BaseGenerator.Services
         private readonly IMustacheRenderizer mustacheRenderizer;
         private readonly IConditionalPathRenderizer pathRenderizer;
         private readonly IMultiPathRenderizer multiPathRenderizer;
+        private readonly IEntityTablesFactory entityTablesFactory;
         private readonly IFileService fileService;
         private readonly ISchemaService schemaService;
         private readonly ITemplateService templateService;
@@ -85,6 +86,7 @@ namespace L2Data2Code.BaseGenerator.Services
         /// <param name="fileService">File service</param>
         /// <param name="replacementCollectionFactory">Replacement collection factory</param>
         /// <param name="multiPathRenderizer">Multi file renderizer</param>
+        /// <param name="entityTablesFactory">Entity tables factory</param>
         public CodeGeneratorService(IMustacheRenderizer mustacheRenderizer,
                                     ISchemaService schemaService,
                                     ILogger logger,
@@ -93,7 +95,8 @@ namespace L2Data2Code.BaseGenerator.Services
                                     IConditionalPathRenderizer pathRenderizer,
                                     IFileService fileService,
                                     IReplacementCollectionFactory replacementCollectionFactory,
-                                    IMultiPathRenderizer multiPathRenderizer)
+                                    IMultiPathRenderizer multiPathRenderizer,
+                                    IEntityTablesFactory entityTablesFactory)
         {
             this.mustacheRenderizer = mustacheRenderizer ?? throw new ArgumentNullException(nameof(mustacheRenderizer));
             this.schemaService = schemaService ?? throw new ArgumentNullException(nameof(schemaService));
@@ -104,7 +107,7 @@ namespace L2Data2Code.BaseGenerator.Services
             this.fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             this.replacementCollectionFactory = replacementCollectionFactory ?? throw new ArgumentNullException(nameof(replacementCollectionFactory));
             this.multiPathRenderizer = multiPathRenderizer;
-
+            this.entityTablesFactory = entityTablesFactory ?? throw new ArgumentNullException(nameof(entityTablesFactory));
             referencedTables = new();
             templateFiles = new();
             internalVars = new();
@@ -204,25 +207,20 @@ namespace L2Data2Code.BaseGenerator.Services
                         .OrderBy(t => t.Name);
                 }
 
-                var lastTable = processTables.Last();
-                var entityTables = processTables.Select(t => new EntityTable(t)).ToDictionary(t => t.TableName, t => t);
+                var entityTables = entityTablesFactory.Create(processTables);
+                var lastTable = entityTables.Values.Last();
 
-                foreach (var table in processTables)
+                foreach (var tabla in entityTables.Values)
                 {
-                    logger.Info($"Processing table {table.Name}");
-                    EntityTable tabla = entityTables[table.Name];
-                    SetFilterSpecification(entityTables, tabla);
-                    SetFieldDescriptors(entityTables, tabla);
-
+                    logger.Info($"Processing table {tabla.TableName}");
                     if (!Options.GeneateOnlyJson)
                     {
                         var results = GenerarCodigos(tabla);
-                        SaveFiles(results, table == lastTable);
+                        SaveFiles(results, tabla == lastTable);
                     }
-                    logger.Info($"Table {table.Name} has been processed");
-                    onTableProcessed?.Invoke(table.Name);
+                    logger.Info($"Table {tabla.TableName} has been processed");
+                    onTableProcessed?.Invoke(tabla.TableName);
                 }
-
                 if (Options.GenerateJsonInfo && Options.JsonGeneratedPath.NotEmpty() && Options.LastPass)
                 {
                     var fileName = $"{Options.JsonGeneratedPath.AddPathSeparator()}{Options.SchemaName.ToSlug()}-dbinfo.json";
@@ -237,33 +235,6 @@ namespace L2Data2Code.BaseGenerator.Services
             {
                 logger.Error($"Processing files: {ex.Message}");
                 throw;
-            }
-        }
-
-        private static void SetFilterSpecification(Dictionary<string, EntityTable> entityTables, EntityTable tabla)
-        {
-            foreach (var column in tabla.Columns.Where(c => c.FilterSpecification.NotEmpty()))
-            {
-                var referenceTable = entityTables.Values.FirstOrDefault(t => t.TableName.Equals(column.FilterSpecification, StringComparison.OrdinalIgnoreCase));
-                if (referenceTable != null)
-                {
-                    column.HasRelation = true;
-                    column.Join = referenceTable.Name;
-                    column.ToField = referenceTable.FieldIdentity;
-                    column.ToFieldDescriptor = referenceTable.FieldDescriptor;
-                }
-            }
-        }
-
-        private static void SetFieldDescriptors(Dictionary<string, EntityTable> entityTables, EntityTable tabla)
-        {
-            foreach (var column in tabla.Columns.Where(c => c.HasRelation && c.ToFieldDescriptor.IsEmpty()))
-            {
-                var referenceTable = entityTables.Values.FirstOrDefault(t => t.ClassName.Equals(column.Join, StringComparison.OrdinalIgnoreCase));
-                if (referenceTable != null)
-                {
-                    column.ToFieldDescriptor = referenceTable.FieldDescriptor;
-                }
             }
         }
 
