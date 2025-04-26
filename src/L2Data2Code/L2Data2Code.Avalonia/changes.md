@@ -1,3 +1,7 @@
+### 3.4.12
+
+- Added `ToFieldType` on `ForeignKeyColumn` to get the field type of the column
+
 ### 3.4.11
 
 - Updated version numbers across multiple .csproj files to 3.4.11.

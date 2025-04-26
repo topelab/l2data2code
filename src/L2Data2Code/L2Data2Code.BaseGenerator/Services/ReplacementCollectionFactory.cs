@@ -78,6 +78,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             Join = column.Join,
                             FromField = column.FromField,
                             ToField = column.ToField,
+                            ToFieldType = column.ToFieldType,
                             ToFieldDescriptor = column.ToFieldDescriptor,
                             DbJoin = column.DbJoin,
                             DbFromField = column.DbFromField,

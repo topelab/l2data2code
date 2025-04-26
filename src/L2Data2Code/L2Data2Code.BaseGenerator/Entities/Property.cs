@@ -95,6 +95,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         }
 
         public bool IsNameDifferentToColumnName { get => !ColumnName.Equals(Name); }
+        public string ToFieldType { get; internal set; }
 
         public object Clone()
         {
@@ -137,6 +138,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 FromField = FromField,
                 DbFromField = DbFromField,
                 ToField = ToField,
+                ToFieldType = ToFieldType,
                 ToFieldDescriptor = ToFieldDescriptor,
                 DbToField = DbToField,
                 HasRelation = HasRelation,

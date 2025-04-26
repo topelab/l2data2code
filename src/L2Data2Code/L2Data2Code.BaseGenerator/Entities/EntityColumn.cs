@@ -25,6 +25,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Join { get; set; }
         public string FromField { get; set; }
         public string ToField { get; set; }
+        public string ToFieldType { get; internal set; }
         public string ToFieldDescriptor { get; set; }
         public string DbJoin { get; set; }
         public string DbFromField { get; set; }

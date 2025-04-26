@@ -203,11 +203,11 @@ namespace L2Data2Code.BaseGenerator.Entities
                     DbToField = item.DbColumn,
                 };
                 entityTable.Columns.Add(campo);
-                SetRelated(item, entityTable);
+                SetRelated(item, entityTable, campo);
             }
         }
 
-        private void SetRelated(Relation item, EntityTable entityTable)
+        private void SetRelated(Relation item, EntityTable entityTable, EntityColumn campo)
         {
             var relatedColumn = entityTable.Columns.Where(c => c.Name == item.RelatedColumn).FirstOrDefault();
             if (relatedColumn is not null)
@@ -215,6 +215,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 relatedColumn.HasRelation = true;
                 relatedColumn.Join = item.Table;
                 relatedColumn.ToField = item.Column;
+                campo.ToFieldType = relatedColumn.Type;
             }
         }
 
