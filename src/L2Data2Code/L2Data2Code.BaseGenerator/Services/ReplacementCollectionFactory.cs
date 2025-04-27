@@ -78,7 +78,8 @@ namespace L2Data2Code.BaseGenerator.Services
                             Join = column.Join,
                             FromField = column.FromField,
                             ToField = column.ToField,
-                            ToFieldType = column.ToFieldType,
+                            ToFieldType = column.ToFieldType?.Trim('?'),
+                            ToFieldIsNullable = column.ToFieldType?.EndsWith('?') ?? false,
                             ToFieldDescriptor = column.ToFieldDescriptor,
                             DbJoin = column.DbJoin,
                             DbFromField = column.DbFromField,
@@ -150,7 +151,7 @@ namespace L2Data2Code.BaseGenerator.Services
                     .ToArray();
 
             replacement.NotRelatedColumns = filteredColumns
-                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey && (p.IsFilter || !p.HasRelation))
+                    .Where(p => !p.IsForeignKey && !p.IsCollection && !p.PrimaryKey && !p.HasRelation)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 

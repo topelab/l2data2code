@@ -22,6 +22,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             {
                 SetFilterSpecification(result, table);
                 SetFieldDescriptors(result, table);
+                SetRelationsTypes(result, table);
             }
 
             return result;
@@ -261,6 +262,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     FromField = item.RelatedColumn,
                     DbFromField = item.DbRelatedColumn,
                     ToField = item.Column,
+                    // ToFieldType = entityTable.Columns.FirstOrDefault(c => c.ColumnName == item.Column)?.Type,
                     DbToField = item.DbColumn,
                 };
                 entityTable.Columns.Add(campo);
@@ -290,6 +292,18 @@ namespace L2Data2Code.BaseGenerator.Entities
                 if (referenceTable != null)
                 {
                     column.ToFieldDescriptor = referenceTable.FieldDescriptor;
+                }
+            }
+        }
+
+        private void SetRelationsTypes(Dictionary<string, EntityTable> entityTables, EntityTable tabla)
+        {
+            foreach (var column in tabla.Columns.Where(c => c.IsCollection))
+            {
+                var referenceTable = entityTables.Values.FirstOrDefault(t => t.ClassName.Equals(column.Join, StringComparison.OrdinalIgnoreCase));
+                if (referenceTable != null)
+                {
+                    column.ToFieldType = referenceTable.Columns.FirstOrDefault(c => c.Name == column.ToField)?.Type;
                 }
             }
         }

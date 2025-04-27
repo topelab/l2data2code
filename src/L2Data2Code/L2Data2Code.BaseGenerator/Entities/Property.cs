@@ -96,6 +96,8 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         public bool IsNameDifferentToColumnName { get => !ColumnName.Equals(Name); }
         public string ToFieldType { get; internal set; }
+        public bool ToFieldIsNullable { get; internal set; }
+        public string ToFieldPostName => ToFieldIsNullable ? "Nullable" : "";
 
         public object Clone()
         {
@@ -139,6 +141,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 DbFromField = DbFromField,
                 ToField = ToField,
                 ToFieldType = ToFieldType,
+                ToFieldIsNullable = ToFieldIsNullable,
                 ToFieldDescriptor = ToFieldDescriptor,
                 DbToField = DbToField,
                 HasRelation = HasRelation,
