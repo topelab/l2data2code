@@ -181,10 +181,16 @@ namespace L2Data2Code.BaseGenerator.Services
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 
+            replacement.ManualRelatedColumns = filteredColumns
+                    .Where(p => p.IsFilter && p.HasRelation && p.ShortName.NotEmpty() && !p.IsForeignKey && !p.IsCollection)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
             replacement.HasCollections = filteredColumns.Any(p => p.IsCollection);
             replacement.HasForeignKeys = filteredColumns.Any(p => p.IsForeignKey);
-            replacement.HasNotPrimaryKeyColumns = replacement.NotPrimaryKeys.Any();
-            replacement.HasPrimaryKeyColumns = replacement.PrimaryKeys.Any();
+            replacement.HasManualRelatedColumns = replacement.ManualRelatedColumns.Length > 0;
+            replacement.HasNotPrimaryKeyColumns = replacement.NotPrimaryKeys.Length > 0;
+            replacement.HasPrimaryKeyColumns = replacement.PrimaryKeys.Length > 0;
             replacement.MultiplePKColumns = replacement.PrimaryKeys.Length > 1;
 
             var primaryKeys = properties.Where(p => p.PrimaryKey);

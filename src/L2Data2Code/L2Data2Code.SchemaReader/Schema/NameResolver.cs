@@ -31,6 +31,7 @@ namespace L2Data2Code.SchemaReader.Schema
             enumTables = GetRenames(schemas[schemaName]?.EnumTables);
             descriptionTables = GetRenames(schemas[schemaName]?.DescriptionTables);
             bigTables = GetBigTables(schemas[schemaName]?.BigTables);
+            weakEntities.Clear();
             weakEntities.AddRange(GetSemiColonEntries(schemas[schemaName]?.WeakEntities));
         }
 

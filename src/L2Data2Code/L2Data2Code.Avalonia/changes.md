@@ -1,3 +1,10 @@
+### 3.4.13
+
+- Added `ManualRelatedColumns` and `HasManualRelatedColumns` to the `Replacement` class.
+- Introduced `ToFieldType` in `ForeignKeyColumn` for field type retrieval.
+- Modified `ReplacementCollectionFactory` to improve handling of related columns.
+- Cleared and repopulated `weakEntities` in `NameResolver` for accurate tracking.
+
 ### 3.4.12
 
 - Added `ToFieldType` on `ForeignKeyColumn` to get the field type of the column

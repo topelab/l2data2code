@@ -277,9 +277,12 @@ namespace L2Data2Code.BaseGenerator.Entities
                 if (referenceTable != null)
                 {
                     column.HasRelation = true;
+                    column.FromField = column.Name;
                     column.Join = referenceTable.Name;
+                    column.ShortName = referenceTable.Name;
                     column.ToField = referenceTable.FieldIdentity;
                     column.ToFieldDescriptor = referenceTable.FieldDescriptor;
+                    column.ToFieldType = referenceTable.Columns.FirstOrDefault(c => c.Name == column.ToField)?.Type;
                 }
             }
         }
