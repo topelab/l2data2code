@@ -1,3 +1,23 @@
+### 3.4.14
+
+- Upgrade System.Text.Json to 9.0.4
+- Upgrade Topelab.Core.Resolver to 1.8.6
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.6
+- Upgrade Handlebars.Net.Helpers to 2.5.0
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.5.0
+- Upgrade Handlebars.Net.Helpers.Json to 2.5.0
+- Upgrade MySql.Data to 9.3.0
+- Upgrade System.Management to 9.0.4
+- Upgrade Avalonia to 11.3.0
+- Upgrade Material.Icons.Avalonia to 2.4.1
+- Upgrade Avalonia.Controls.DataGrid to 11.3.0
+- Upgrade Avalonia.Desktop to 11.3.0
+- Upgrade Avalonia.Themes.Simple to 11.3.0
+- Upgrade Avalonia.Diagnostics to 11.3.0
+- Upgrade Avalonia.ReactiveUI to 11.3.0
+- Upgrade Avalonia.Themes.Fluent to 11.3.0
+- Upgrade Microsoft.Data.SqlClient to 6.0.2
+
 ### 3.4.13
 
 - Added `ManualRelatedColumns` and `HasManualRelatedColumns` to the `Replacement` class.

@@ -1,6 +1,5 @@
 using HandlebarsDotNet;
 using HandlebarsDotNet.Helpers;
-using HandlebarsDotNet.Helpers.Enums;
 using HandlebarsDotNet.Helpers.Helpers;
 using L2Data2Code.SharedLib.Extensions;
 using L2Data2Code.SharedLib.Interfaces;
@@ -21,16 +20,16 @@ namespace L2Data2Code.BaseHandleBars
         public HandleBarsRenderizer()
         {
             values = new Dictionary<string, object>();
+            handlebars = Handlebars.CreateSharedEnvironment();
+            handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
             helpers = new Dictionary<string, IHelpers>
             {
                 { "Custom", new CustomHelpers(handlebars, values) }
             };
 
             templateCache = new Dictionary<int, HandlebarsTemplate<object, object>>();
-            handlebars = Handlebars.CreateSharedEnvironment();
-            handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
-            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = false; options.Categories = new[] { (Category)999 }; options.CustomHelpers = helpers; });
+            HandlebarsHelpers.Register(handlebars, options => { options.CustomHelpers = helpers; });
         }
 
         public string Render(string template, object view)
