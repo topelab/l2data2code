@@ -16,7 +16,7 @@ namespace L2Data2Code.BaseHandleBars
     {
         private readonly IDictionary<string, object> values;
 
-        public CustomHelpers(IHandlebars context, IDictionary<string, object> values) : base(context, new HandlebarsHelpersOptions() { UseCategoryPrefix = false, Categories = [(Category)999] })
+        public CustomHelpers(IHandlebars context, IDictionary<string, object> values) : base(context, new HandlebarsHelpersOptions())
         {
             this.values = values;
         }

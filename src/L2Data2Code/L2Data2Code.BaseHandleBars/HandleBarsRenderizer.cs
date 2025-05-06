@@ -24,12 +24,12 @@ namespace L2Data2Code.BaseHandleBars
             handlebars.Configuration.AliasProviders.Add(AliasProviderFactory.Create());
             helpers = new Dictionary<string, IHelpers>
             {
-                { "Custom", new CustomHelpers(handlebars, values) }
+                { "My", new CustomHelpers(handlebars, values) }
             };
 
             templateCache = new Dictionary<int, HandlebarsTemplate<object, object>>();
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
-            HandlebarsHelpers.Register(handlebars, options => { options.CustomHelpers = helpers; });
+            HandlebarsHelpers.Register(handlebars, options => { options.PrefixSeparator = "-"; options.CustomHelpers = helpers; });
         }
 
         public string Render(string template, object view)

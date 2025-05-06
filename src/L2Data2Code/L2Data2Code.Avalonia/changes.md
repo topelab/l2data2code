@@ -1,3 +1,7 @@
+### 3.4.15
+
+- Custom helpers must be prefixed with `My-` in the template.
+
 ### 3.4.14
 
 - Upgrade System.Text.Json to 9.0.4
