@@ -8,9 +8,12 @@ namespace L2Data2Code.BaseGenerator.Entities
 {
     internal class EntityTablesFactory : IEntityTablesFactory
     {
+        private readonly Dictionary<(string, string), string> columnsRenames = [];
+
         public Dictionary<string, EntityTable> Create(IEnumerable<Table> tables)
         {
             Dictionary<string, EntityTable> result = new();
+            columnsRenames.Clear();
 
             foreach (var table in tables)
             {
@@ -99,6 +102,8 @@ namespace L2Data2Code.BaseGenerator.Entities
                 }
                 if (column.IsPK && entityTable.HasOnlyOnePKColumn && campo.IsNumeric)
                 {
+                    columnsRenames.Add((entityTable.ClassName, campo.Name), "Id");
+
                     campo.Name = "Id";
                     entityTable.IdentifiableById = true;
                 }
@@ -200,7 +205,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     DbJoin = item.DbTable,
                     FromField = item.RelatedColumn,
                     DbFromField = item.DbRelatedColumn,
-                    ToField = item.Column,
+                    ToField = columnsRenames.TryGetValue((item.Table, item.Column), out var newName) ? newName : item.Column,
                     DbToField = item.DbColumn,
                 };
                 entityTable.Columns.Add(campo);
@@ -215,7 +220,7 @@ namespace L2Data2Code.BaseGenerator.Entities
             {
                 relatedColumn.HasRelation = true;
                 relatedColumn.Join = item.Table;
-                relatedColumn.ToField = item.Column;
+                relatedColumn.ToField = columnsRenames.TryGetValue((item.Table, item.Column), out var newName) ? newName : item.Column;
                 campo.ToFieldType = relatedColumn.Type;
             }
         }
@@ -271,7 +276,7 @@ namespace L2Data2Code.BaseGenerator.Entities
 
         private void SetFilterSpecification(Dictionary<string, EntityTable> entityTables, EntityTable tabla)
         {
-            foreach (var column in tabla.Columns.Where(c => c.FilterSpecification.NotEmpty()))
+            foreach (var column in tabla.Columns.Where(c => !c.HasRelation && c.FilterSpecification.NotEmpty()))
             {
                 var referenceTable = entityTables.Values.FirstOrDefault(t => t.TableName.Equals(column.FilterSpecification, StringComparison.OrdinalIgnoreCase));
                 if (referenceTable != null)
