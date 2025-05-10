@@ -278,8 +278,8 @@ namespace L2Data2Code.BaseGenerator.Entities
                 {
                     column.HasRelation = true;
                     column.FromField = column.Name;
-                    column.Join = referenceTable.Name;
-                    column.ShortName = referenceTable.Name;
+                    column.Join = referenceTable.ClassName;
+                    column.ShortName = referenceTable.ClassName;
                     column.ToField = referenceTable.FieldIdentity;
                     column.ToFieldDescriptor = referenceTable.FieldDescriptor;
                     column.ToFieldType = referenceTable.Columns.FirstOrDefault(c => c.Name == column.ToField)?.Type;

@@ -38,6 +38,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public Property[] NotPrimaryKeys { get; set; }
         public Property[] NotRelatedColumns { get; set; }
         public Property[] FilterByColumns { get; set; }
+        public Property[] DistinctFilterByColumns { get; set; }
         public Property[] ManualRelatedColumns { get; set; }
         public EntityIndex[] Indexes { get; set; }
         public EnumTableValue[] EnumValues { get; set; }

@@ -29,7 +29,7 @@ namespace L2Data2Code.BaseHandleBars
 
             templateCache = new Dictionary<int, HandlebarsTemplate<object, object>>();
             HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; });
-            HandlebarsHelpers.Register(handlebars, options => { options.PrefixSeparator = "-"; options.CustomHelpers = helpers; });
+            HandlebarsHelpers.Register(handlebars, options => { options.UseCategoryPrefix = true; options.PrefixSeparator = "-"; options.CustomHelpers = helpers; });
         }
 
         public string Render(string template, object view)

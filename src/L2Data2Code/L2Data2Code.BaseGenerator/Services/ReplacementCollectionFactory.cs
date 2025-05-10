@@ -181,6 +181,12 @@ namespace L2Data2Code.BaseGenerator.Services
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 
+            replacement.DistinctFilterByColumns = filteredColumns
+                    .Where(p => p.IsFilter)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .DistinctBy(p => p.FilterType)
+                    .ToArray();
+
             replacement.ManualRelatedColumns = filteredColumns
                     .Where(p => p.IsFilter && p.HasRelation && p.ShortName.NotEmpty() && !p.IsForeignKey && !p.IsCollection)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
