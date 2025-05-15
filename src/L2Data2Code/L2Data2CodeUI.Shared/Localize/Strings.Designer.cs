@@ -322,6 +322,15 @@ namespace L2Data2CodeUI.Shared.Localize {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run.
+        /// </summary>
+        public static string Run {
+            get {
+                return ResourceManager.GetString("Run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save at....
         /// </summary>
         public static string SaveAt {

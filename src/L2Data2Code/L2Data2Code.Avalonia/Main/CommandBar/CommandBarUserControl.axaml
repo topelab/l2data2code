@@ -52,6 +52,12 @@
                     CommandParameter="{Binding SlnFile}">
                 <materialIcons:MaterialIcon Kind="Visualstudio"/>
             </Button>
+            <Button Classes="Flat Mine"
+                    ToolTip.Tip="{x:Static str:Strings.Run}"
+                    Command="{Binding RunActionCommand}"
+                    CommandParameter="{Binding RunAction}">
+                <materialIcons:MaterialIcon Kind="Play"/>
+            </Button>
                 <Button Classes="Flat Mine"
                     ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
                     IsVisible="{Binding HaveVSCodeInstalled}"

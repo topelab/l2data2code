@@ -87,9 +87,10 @@ namespace L2Data2Code.BaseGenerator.Services
                             HasRelation = column.HasRelation,
                             IsFilter = column.IsFilter,
                             IsRangeFilter = column.FilterType?.EndsWith("Range", StringComparison.OrdinalIgnoreCase) ?? false,
-                            IsComboFilter = column.FilterType?.Equals("Combo", StringComparison.OrdinalIgnoreCase) ?? false,
+                            IsComboFilter = column.FilterType?.Replace("Auto", "", StringComparison.OrdinalIgnoreCase)?.Equals("Combo", StringComparison.OrdinalIgnoreCase) ?? false,
                             IsTextFilter = column.FilterType?.Equals("Text", StringComparison.OrdinalIgnoreCase) ?? false,
-                            FilterType = column.FilterType,
+                            FilterType = column.FilterType?.Replace("Auto", "", StringComparison.OrdinalIgnoreCase),
+                            FilterTypeAuto = column.FilterType?.StartsWith("Auto", StringComparison.OrdinalIgnoreCase) == true ? "Auto" : null,
                             FilterPrimitive = column.FilterPrimitive,
                         };
                         return property;

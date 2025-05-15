@@ -1,3 +1,8 @@
+### 3.4.18
+
+- Added Run button (RunApplication variable must be declared in template settings, at DataSources variables level) to run the application after generation.
+- Added support for AutoCombo, and auto-complete combo box in AvaloniaUI.
+
 ### 3.4.15
 
 - Custom helpers must be prefixed with `My-` in the template.

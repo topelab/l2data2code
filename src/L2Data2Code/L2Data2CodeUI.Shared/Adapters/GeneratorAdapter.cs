@@ -115,6 +115,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         public ITemplatesConfiguration TemplatesConfiguration { get; }
         public IGlobalsConfiguration GlobalsConfiguration { get; }
         public string OutputPath { get; set; }
+        public string RunApplication => CompiledVars.TryGetValue(nameof(RunApplication), out var runApplication) ? runApplication as string : null;
         public DataSourceConfiguration SelectedDataSource { get; private set; }
         public ModuleConfiguration SelectedModule { get; private set; }
         public TemplateConfiguration SelectedTemplate { get; private set; }

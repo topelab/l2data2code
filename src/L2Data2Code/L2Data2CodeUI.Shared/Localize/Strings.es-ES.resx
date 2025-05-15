@@ -204,6 +204,9 @@
   <data name="RelatedTables" xml:space="preserve">
     <value>Tablas relacionadas</value>
   </data>
+  <data name="Run" xml:space="preserve">
+    <value>Ejecutar</value>
+  </data>
   <data name="SaveAt" xml:space="preserve">
     <value>Guardar en...</value>
   </data>

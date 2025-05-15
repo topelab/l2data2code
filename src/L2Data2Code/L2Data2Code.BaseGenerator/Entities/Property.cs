@@ -52,6 +52,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool IsComboFilter { get; set; }
         public bool IsTextFilter { get; set; }
         public string FilterType { get; internal set; }
+        public string FilterTypeAuto { get; internal set; }
         public string FilterPrimitive { get; internal set; }
         public string FilterSubType { get; internal set; }
         public string FirstSample
@@ -150,6 +151,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 IsComboFilter = IsComboFilter,
                 IsTextFilter = IsTextFilter,
                 FilterType = FilterType,
+                FilterTypeAuto = FilterTypeAuto,
                 FilterPrimitive = FilterPrimitive,
                 FilterSubType = FilterSubType
             };

@@ -146,6 +146,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 {
                     "Text" => "string",
                     "Combo" => "DescriptionDTO",
+                    "AutoCombo" => "DescriptionDTO",
                     _ => string.Concat(column.FilterType, column.FilterSubType),
                 };
             }

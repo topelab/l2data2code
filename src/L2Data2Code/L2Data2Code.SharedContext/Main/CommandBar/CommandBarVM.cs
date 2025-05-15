@@ -12,6 +12,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         private IDelegateCommand openVSCodeCommand;
         private IDelegateCommand openPSCommand;
         private IDelegateCommand openVarsWindowCommand;
+        private IDelegateCommand runActionCommand;
         private bool changeButtons;
         private bool showVarsWindow;
         private bool haveVSCodeInstalled;
@@ -20,6 +21,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         private string slnFile;
         private bool canShowVSButton;
         private string openCmdToolTip;
+        private string runAction;
 
         public CommandBarVM()
         {
@@ -32,7 +34,8 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
                                 IDelegateCommand openVSCommand,
                                 IDelegateCommand openVSCodeCommand,
                                 IDelegateCommand openPSCommand,
-                                IDelegateCommand openVarsWindowCommand)
+                                IDelegateCommand openVarsWindowCommand,
+                                IDelegateCommand runActionCommand)
         {
             this.openFolderCommand = openFolderCommand;
             this.editTemplateCommand = editTemplateCommand;
@@ -41,6 +44,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
             this.openVSCodeCommand = openVSCodeCommand;
             this.openPSCommand = openPSCommand;
             this.openVarsWindowCommand = openVarsWindowCommand;
+            this.runActionCommand = runActionCommand;
         }
 
         internal void RefreshCommands()
@@ -52,6 +56,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
             openVSCodeCommand.RaiseCanExecuteChanged();
             openPSCommand.RaiseCanExecuteChanged();
             openVarsWindowCommand.RaiseCanExecuteChanged();
+            runActionCommand.RaiseCanExecuteChanged();
         }
 
         public bool ChangeButtons { get => changeButtons; internal set => SetProperty(ref changeButtons, value); }
@@ -60,6 +65,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         public bool HavePSInstalled { get => havePSInstalled; internal set => SetProperty(ref havePSInstalled, value); }
         public string VSCodePath { get => vSCodePath; internal set => SetProperty(ref vSCodePath, value); }
         public string SlnFile { get => slnFile; internal set => SetProperty(ref slnFile, value); }
+        public string RunAction { get => runAction; internal set => SetProperty(ref runAction, value); }
         public bool CanShowVSButton { get => canShowVSButton; internal set => SetProperty(ref canShowVSButton, value); }
         public string OpenCmdToolTip { get => openCmdToolTip; internal set => SetProperty(ref openCmdToolTip, value); }
 
@@ -112,5 +118,12 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         /// The open vars window.
         /// </value>
         public IDelegateCommand OpenVarsWindowCommand => openVarsWindowCommand;
+        /// <summary>
+        /// Gets the command that executes the associated action.
+        /// </summary>
+        /// <remarks>Use this command to invoke the associated action in response to user interaction or
+        /// other events. Ensure that the command is properly initialized and its execution logic is defined before
+        /// invoking it.</remarks>
+        public IDelegateCommand RunActionCommand => runActionCommand;
     }
 }
