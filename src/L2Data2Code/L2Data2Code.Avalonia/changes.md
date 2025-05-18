@@ -1,3 +1,11 @@
+### 3.4.19
+
+- Adjusted index column handling in `SQLiteSchemaReader.cs` to fix an off-by-one error.
+- Upgrade System.Text.Json to 9.0.5
+- Upgrade Topelab.Core.Resolver to 1.8.7
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.7
+- Upgrade System.Management to 9.0.5
+
 ### 3.4.18
 
 - Added Run button (RunApplication variable must be declared in template settings, at DataSources variables level) to run the application after generation.

@@ -228,7 +228,7 @@ namespace L2Data2Code.SchemaReader.MySql
 
             foreach (var row in databaseIndexColumns.Where(r => (string)r["INDEX_NAME"] == indexName))
             {
-                result.Add(row["COLUMN_NAME"].ToString(), Convert.ToInt32(row["ORDINAL_POSITION"]));
+                result.Add(row["COLUMN_NAME"].ToString(), Convert.ToInt32(row["ORDINAL_POSITION"]) + 1);
             }
 
             return result;
