@@ -139,6 +139,21 @@ namespace L2Data2Code.SchemaReader.Schema
         public string DefaultValue { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is filter by.
+        /// </summary>
+        public bool IsFilter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter type.
+        /// </summary>
+        public string FilterType { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the filter specification.
+        /// </summary>
+        public string FilterSpecification { get; internal set; }
+
+        /// <summary>
         /// Gets the full name.
         /// </summary>
         /// <value>

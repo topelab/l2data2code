@@ -22,6 +22,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         string GeneratorVersion { get; set; }
         string InputSourceType { get; }
         string OutputPath { get; set; }
+        string RunApplication { get; }
         DataSourceConfiguration SelectedDataSource { get; }
         ModuleConfiguration SelectedModule { get; }
         TemplateConfiguration SelectedTemplate { get; }

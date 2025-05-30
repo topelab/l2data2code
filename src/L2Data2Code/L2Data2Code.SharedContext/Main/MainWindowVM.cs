@@ -21,6 +21,7 @@ namespace L2Data2Code.SharedContext.Main
         private bool _havePSInstalled;
         private bool _haveVSCodeInstalled;
         private string _outputPath;
+        private string _runApplication;
         private bool _runningGenerateCode = false;
         private DataSourceConfiguration selectedDataSource;
         private ModuleConfiguration selectedModule;
@@ -86,6 +87,12 @@ namespace L2Data2Code.SharedContext.Main
         {
             get { return _outputPath; }
             set { SetProperty(ref _outputPath, value); }
+        }
+
+        public string RunApplication
+        {
+            get { return _runApplication; }
+            set { SetProperty(ref _runApplication, value); }
         }
 
         public bool PauseTimer { get; set; }

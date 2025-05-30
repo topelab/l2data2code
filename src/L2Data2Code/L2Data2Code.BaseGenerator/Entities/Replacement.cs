@@ -37,15 +37,22 @@ namespace L2Data2Code.BaseGenerator.Entities
         public Property[] PrimaryKeys { get; set; }
         public Property[] NotPrimaryKeys { get; set; }
         public Property[] NotRelatedColumns { get; set; }
+        public Property[] FilterByColumns { get; set; }
+        public Property[] DistinctFilterByColumns { get; set; }
+        public Property[] ManualRelatedColumns { get; set; }
         public EntityIndex[] Indexes { get; set; }
         public EnumTableValue[] EnumValues { get; set; }
         public bool HasCollections { get; set; }
         public bool HasForeignKeys { get; set; }
+        public bool HasManualRelatedColumns { get; set; }
         public bool HasNotPrimaryKeyColumns { get; set; }
         public bool HasPrimaryKeyColumns { get; set; }
         public bool MultiplePKColumns { get; set; }
         public bool IsWeakEntity { get; set; }
+        public bool IsBigTable { get; set; }
         public bool HasValues => EnumValues?.Any() ?? false;
+        public bool IsBig => IsBigTable && !IsWeakEntity;
+        public bool IsSmall => !IsBigTable && !IsWeakEntity;
 
         public ICollection<string> Keys => ((IDictionary<string, object>)Vars).Keys;
 

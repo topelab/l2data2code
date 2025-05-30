@@ -46,6 +46,7 @@ namespace L2Data2Code.SharedContext
                 .AddTransient<ILoadTablesCommandFactory, LoadTablesCommandFactory>()
                 .AddTransient<ISetDataItemsCommandFactory, SetDataItemsCommand>()
                 .AddTransient<ISetDataItemCommandFactory, SetDataItemCommandFactory>()
+                .AddTransient<IRunActionCommandFactory, RunActionCommandFactory>()
                 ;
         }
     }

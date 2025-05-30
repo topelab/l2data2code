@@ -2,6 +2,7 @@ using HandlebarsDotNet;
 using HandlebarsDotNet.Helpers.Attributes;
 using HandlebarsDotNet.Helpers.Enums;
 using HandlebarsDotNet.Helpers.Helpers;
+using HandlebarsDotNet.Helpers.Options;
 using L2Data2Code.SharedLib.Extensions;
 using System;
 using System.Collections;
@@ -15,7 +16,7 @@ namespace L2Data2Code.BaseHandleBars
     {
         private readonly IDictionary<string, object> values;
 
-        public CustomHelpers(IHandlebars context, IDictionary<string, object> values) : base(context)
+        public CustomHelpers(IHandlebars context, IDictionary<string, object> values) : base(context, new HandlebarsHelpersOptions())
         {
             this.values = values;
         }

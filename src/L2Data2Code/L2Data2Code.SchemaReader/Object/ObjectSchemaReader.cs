@@ -87,6 +87,8 @@ namespace L2Data2Code.SchemaReader.Object
                 Name = typeName,
                 Type = nameResolver.ResolveTableType(typeName),
                 CleanName = nameResolver.ResolveTableName(typeName),
+                IsWeakEntity = nameResolver.IsWeakEntity(typeName),
+                IsBigTable = nameResolver.IsBigTable(typeName),
                 SourceDB = "object"
             };
             table.Columns = LoadColumnsFromProperties(nameSpace, type, table, alternativeDescriptions);
@@ -99,6 +101,8 @@ namespace L2Data2Code.SchemaReader.Object
             foreach (var item in type.GetProperties().Where(p => CanBeCollectected(p.PropertyType)))
             {
                 var typeName = GetFriendlyTypeName(item.PropertyType, nameSpace);
+                var filteredColumns = nameResolver.GetBigTableColumns(table.Name);
+
                 Column column = new()
                 {
                     Table = table,
@@ -108,8 +112,9 @@ namespace L2Data2Code.SchemaReader.Object
                     PropertyType = typeName.Replace("Nullable<", string.Empty).Replace(">", string.Empty),
                     IsNullable = IsNullable(item.PropertyType),
                     IsNumeric = item.PropertyType.IsNumericType(),
-                    Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(table.Name, out var value) ? value : null
+                    Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(table.Name, out var value) ? value : null,
                 };
+                TrySetFilterColumn(filteredColumns, column);
                 columns.Add(column);
             }
             return columns;

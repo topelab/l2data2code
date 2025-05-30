@@ -71,6 +71,18 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public string EnumValue { get; set; }
         public string EnumName { get; set; }
+        public string DescriptionId { get; set; }
+        public string DescriptionColumn { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is weak entity.
+        /// </summary>
+        public bool IsWeakEntity { get; set; }
+
+        /// <summary>
+        /// Indicates if the table is a big table
+        /// </summary>
+        public bool IsBigTable { get; set; }
 
         public bool IsEnum => EnumValue.NotEmpty() && EnumName.NotEmpty();
 

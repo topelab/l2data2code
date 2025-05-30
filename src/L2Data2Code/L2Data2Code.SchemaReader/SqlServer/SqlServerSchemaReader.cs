@@ -77,9 +77,12 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                             (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
+                            (tbl.DescriptionId, tbl.DescriptionColumn) = nameResolver.ResolveDescriptionTables(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value
                                 : options.AlternativeDescriptions.TryGetValue(tbl.Name, out var alternativeValue) ? alternativeValue : null;
+                            tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                            tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -107,8 +110,11 @@ namespace L2Data2Code.SchemaReader.SqlServer
                             tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                             tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                             (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
+                            (tbl.DescriptionId, tbl.DescriptionColumn) = nameResolver.ResolveDescriptionTables(tbl.Name);
                             tbl.ClassName = tbl.CleanName.ToSingular();
                             tbl.Description = columnsDescriptions.TryGetValue(tbl.Name, out var value) ? value : null;
+                            tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                            tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
 
                             result.Add(tbl.Name, tbl);
                         }
@@ -198,6 +204,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
 
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true)
         {
+            var filteredColumns = nameResolver.GetBigTableColumns(tbl.Name);
 
             using var cmd = connection.CreateCommand();
             cmd.CommandText = COLUMNS_SQL;
@@ -238,6 +245,7 @@ namespace L2Data2Code.SchemaReader.SqlServer
                     {
                         col.DefaultValue += "m";
                     }
+                    TrySetFilterColumn(filteredColumns, col);
 
                     result.Add(col);
                 }

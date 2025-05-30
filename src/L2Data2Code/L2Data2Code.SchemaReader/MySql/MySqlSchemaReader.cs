@@ -144,8 +144,11 @@ namespace L2Data2Code.SchemaReader.MySql
                 tbl.CleanName = RemoveTablePrefixes(nameResolver.ResolveTableName(tbl.Name)).PascalCamelCase(false);
                 tbl.Type = nameResolver.ResolveTableType(tbl.Name);
                 (tbl.EnumValue, tbl.EnumName) = nameResolver.ResolveEnumTables(tbl.Name);
+                (tbl.DescriptionId, tbl.DescriptionColumn) = nameResolver.ResolveDescriptionTables(tbl.Name);
                 tbl.ClassName = tbl.CleanName.ToSingular();
                 tbl.Description = alternativeDescriptions != null && alternativeDescriptions.TryGetValue(tbl.Name, out var value) ? value : (fromViews ? string.Empty : (string)row["TABLE_COMMENT"]);
+                tbl.IsWeakEntity = nameResolver.IsWeakEntity(tbl.Name);
+                tbl.IsBigTable = nameResolver.IsBigTable(tbl.Name);
 
                 result.Add(tbl.Name, tbl);
             }
@@ -154,6 +157,7 @@ namespace L2Data2Code.SchemaReader.MySql
         private List<Column> LoadColumns(Table tbl, bool removeFirstWord = true, Dictionary<string, string> alternativeDescriptions = null)
         {
             List<Column> result = new();
+            var filteredColumns = nameResolver.GetBigTableColumns(tbl.Name);
 
             var schema = new string[4] { null, connection.Database, tbl.Name, null };
 
@@ -183,6 +187,7 @@ namespace L2Data2Code.SchemaReader.MySql
                 {
                     col.DefaultValue += "m";
                 }
+                TrySetFilterColumn(filteredColumns, col);
                 result.Add(col);
             }
 

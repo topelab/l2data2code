@@ -13,6 +13,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
         private readonly IOpenVSCodeCommandFactory openVSCodeCommandFactory;
         private readonly IOpenPSCommandFactory openPSCommandFactory;
         private readonly IOpenVarsWindowCommandFactory openVarsWindowCommandFactory;
+        private readonly IRunActionCommandFactory runActionCommandFactory;
 
         public CommandBarFactory(ICommandBarChangeListener bindManager,
                                  IOpenFolderCommandFactory openFolderCommandFactory,
@@ -21,7 +22,8 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
                                  IOpenVSCommandFactory openVSCommandFactory,
                                  IOpenVSCodeCommandFactory openVSCodeCommandFactory,
                                  IOpenPSCommandFactory openPSCommandFactory,
-                                 IOpenVarsWindowCommandFactory openVarsWindowCommandFactory)
+                                 IOpenVarsWindowCommandFactory openVarsWindowCommandFactory,
+                                 IRunActionCommandFactory runActionCommandFactory)
         {
             this.bindManager = bindManager ?? throw new ArgumentNullException(nameof(bindManager));
             this.openFolderCommandFactory = openFolderCommandFactory ?? throw new ArgumentNullException(nameof(openFolderCommandFactory));
@@ -31,6 +33,7 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
             this.openVSCodeCommandFactory = openVSCodeCommandFactory ?? throw new ArgumentNullException(nameof(openVSCodeCommandFactory));
             this.openPSCommandFactory = openPSCommandFactory ?? throw new ArgumentNullException(nameof(openPSCommandFactory));
             this.openVarsWindowCommandFactory = openVarsWindowCommandFactory ?? throw new ArgumentNullException(nameof(openVarsWindowCommandFactory));
+            this.runActionCommandFactory = runActionCommandFactory ?? throw new ArgumentNullException(nameof(runActionCommandFactory));
         }
 
         public CommandBarVM Create(MainWindowVM mainVM)
@@ -42,7 +45,8 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
                                      openVSCommandFactory.Create(),
                                      openVSCodeCommandFactory.Create(),
                                      openPSCommandFactory.Create(),
-                                     openVarsWindowCommandFactory.Create());
+                                     openVarsWindowCommandFactory.Create(),
+                                     runActionCommandFactory.Create());
             bindManager.Start(mainVM, commandBarVM);
 
             return commandBarVM;

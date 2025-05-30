@@ -1,3 +1,128 @@
+### 3.4.19
+
+- Adjusted index column handling in `SQLiteSchemaReader.cs` to fix an off-by-one error.
+- Upgrade System.Text.Json to 9.0.5
+- Upgrade Topelab.Core.Resolver to 1.8.7
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.7
+- Upgrade System.Management to 9.0.5
+
+### 3.4.18
+
+- Added Run button (RunApplication variable must be declared in template settings, at DataSources variables level) to run the application after generation.
+- Added support for AutoCombo, and auto-complete combo box in AvaloniaUI.
+
+### 3.4.15
+
+- Custom helpers must be prefixed with `My-` in the template.
+
+### 3.4.14
+
+- Upgrade System.Text.Json to 9.0.4
+- Upgrade Topelab.Core.Resolver to 1.8.6
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.6
+- Upgrade Handlebars.Net.Helpers to 2.5.0
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.5.0
+- Upgrade Handlebars.Net.Helpers.Json to 2.5.0
+- Upgrade MySql.Data to 9.3.0
+- Upgrade System.Management to 9.0.4
+- Upgrade Avalonia to 11.3.0
+- Upgrade Material.Icons.Avalonia to 2.4.1
+- Upgrade Avalonia.Controls.DataGrid to 11.3.0
+- Upgrade Avalonia.Desktop to 11.3.0
+- Upgrade Avalonia.Themes.Simple to 11.3.0
+- Upgrade Avalonia.Diagnostics to 11.3.0
+- Upgrade Avalonia.ReactiveUI to 11.3.0
+- Upgrade Avalonia.Themes.Fluent to 11.3.0
+- Upgrade Microsoft.Data.SqlClient to 6.0.2
+
+### 3.4.13
+
+- Added `ManualRelatedColumns` and `HasManualRelatedColumns` to the `Replacement` class.
+- Introduced `ToFieldType` in `ForeignKeyColumn` for field type retrieval.
+- Modified `ReplacementCollectionFactory` to improve handling of related columns.
+- Cleared and repopulated `weakEntities` in `NameResolver` for accurate tracking.
+
+### 3.4.12
+
+- Added `ToFieldType` on `ForeignKeyColumn` to get the field type of the column
+
+### 3.4.11
+
+- Updated version numbers across multiple .csproj files to 3.4.11.
+- Added diagnostic rules in .editorconfig for CA1822.
+- Introduced `FilterPrimitive` property in `EntityColumn.cs`.
+- Changed access modifiers from `private` to `internal` in `EntityTable.cs`.
+- Created `EntityTablesFactory` class to manage `EntityTable` creation.
+- Refactored `CodeGeneratorService` to use `IEntityTablesFactory`.
+- Added new filtering properties in the `Property` class.
+- Streamlined constructor and error handling in `SchemaReader`.
+- Overall improvements to code structure, maintainability, and functionality.
+
+
+### 3.4.10
+
+Enhance entity filtering and add FieldIdentity property
+
+- Added `FieldIdentity` property to the `Entity` class.
+- Introduced `FilterType` and `FilterSpecification` properties in `EntityColumn` and `Property` classes.
+- Updated `EntityTable` to initialize and set `FieldIdentity` based on primary key order.
+- Implemented `TrySetFilterType` method for determining filter types.
+- Modified `ReplacementCollectionFactory` to include new properties.
+- Added `DescriptionTables` property to `SchemaConfiguration`.
+- Changed `INameResolver` to return structured filtering information.
+- Implemented `TrySetFilterColumn` method in `SchemaReader`.
+- Created `ColumnFilter` class for encapsulating filter details.
+- Updated schema reader classes to utilize new filtering logic.
+- Refactored `NameResolver` to manage new properties effectively.
+
+
+### 3.4.9
+
+- When field has a relation, the property `HasRelation` is set to `true` and the property `Join` is set to table witch is related
+
+### 3.4.8
+
+- New `IsBig` and `IsSmall` to Replacement, where IsBig = *IsBigTables and not IsWeakEntity* and IsSmall = *not IsBigTables and not IsWeakEntity*
+
+### 3.4.7
+
+- Add `IsBigTable` and `FilterByColumns` to Replacement. This can be used to filter columns on big tables. On Schemes, must define a `BigTables` section, like this:
+
+```json
+{
+  "Schemes": {
+    "CalendarPostgreSQL": {
+      "ConnectionString": "Host=localhost:5432;Database=DATABASE;User ID=USER;Password=PASS",
+      "Provider": "Npgsql",
+      "TableNameLanguage": "es",
+      "RemoveFirstWordOnColumnNames": false,
+      "DescriptionsFile": "dataSource\\calendarios-descriptions.txt",
+      "WriteDescriptionsFile": true,
+      "EnumTables": "TipoFestivo=Id,TipoFestivo;TipoJornada=Id,Nombre",
+      "WeakEntities": "CalendarioDetalle;TipoJornadaCalendario;TipoJornadaSemana",
+      "BigTables": {
+        "Municipio" : {
+          "ColumnsFilter": [ "IdCA", "IdProvincia" ]
+        },
+        "FiestaLocal" : {
+          "ColumnsFilter": [ "IdMunicipio", "Anyo", "Municipio" ]
+        },
+        "FiestaNacional" : {
+          "ColumnsFilter": [ "Fecha" ]
+        },
+        "FiestaAutonomica" : {
+          "ColumnsFilter": [ "IdCa", "Fecha" ]
+        }
+      }
+    }
+  }
+}
+```
+
+### 3.4.6
+
+- Add `IsWeakEntity` to Replacement
+
 ### 3.4.4
 
 - Fix `EnumTables` to get distinct name values ordered by id

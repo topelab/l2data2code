@@ -86,6 +86,9 @@ namespace L2Data2Code.SharedContext.Main.CommandBar
                         WatchOutputPath();
                     }
                     break;
+                case nameof(MainWindowVM.RunApplication):
+                    controlVM.RunAction = mainVM.RunApplication;
+                    break;
                 case nameof(MainWindowVM.RunningGenerateCode):
                     if (!mainVM.RunningGenerateCode)
                     {

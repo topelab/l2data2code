@@ -42,10 +42,19 @@ namespace L2Data2Code.BaseGenerator.Entities
         public string Join { get; set; }
         public string FromField { get; set; }
         public string ToField { get; set; }
+        public string ToFieldDescriptor { get; set; }
         public string DbJoin { get; set; }
         public string DbFromField { get; set; }
         public string DbToField { get; set; }
         public bool HasRelation { get; set; }
+        public bool IsFilter { get; set; }
+        public bool IsRangeFilter { get; set; }
+        public bool IsComboFilter { get; set; }
+        public bool IsTextFilter { get; set; }
+        public string FilterType { get; internal set; }
+        public string FilterTypeAuto { get; internal set; }
+        public string FilterPrimitive { get; internal set; }
+        public string FilterSubType { get; internal set; }
         public string FirstSample
         {
             get
@@ -87,6 +96,9 @@ namespace L2Data2Code.BaseGenerator.Entities
         }
 
         public bool IsNameDifferentToColumnName { get => !ColumnName.Equals(Name); }
+        public string ToFieldType { get; internal set; }
+        public bool ToFieldIsNullable { get; internal set; }
+        public string ToFieldPostName => ToFieldIsNullable ? "Nullable" : "";
 
         public object Clone()
         {
@@ -129,8 +141,19 @@ namespace L2Data2Code.BaseGenerator.Entities
                 FromField = FromField,
                 DbFromField = DbFromField,
                 ToField = ToField,
+                ToFieldType = ToFieldType,
+                ToFieldIsNullable = ToFieldIsNullable,
+                ToFieldDescriptor = ToFieldDescriptor,
                 DbToField = DbToField,
                 HasRelation = HasRelation,
+                IsFilter = IsFilter,
+                IsRangeFilter = IsRangeFilter,
+                IsComboFilter = IsComboFilter,
+                IsTextFilter = IsTextFilter,
+                FilterType = FilterType,
+                FilterTypeAuto = FilterTypeAuto,
+                FilterPrimitive = FilterPrimitive,
+                FilterSubType = FilterSubType
             };
         }
 

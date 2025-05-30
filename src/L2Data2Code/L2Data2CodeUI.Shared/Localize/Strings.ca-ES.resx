@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -203,6 +203,9 @@
   </data>
   <data name="RelatedTables" xml:space="preserve">
     <value>Taules relacionades</value>
+  </data>
+  <data name="Run" xml:space="preserve">
+    <value>Executar</value>
   </data>
   <data name="SaveAt" xml:space="preserve">
     <value>Guardar a ...</value>

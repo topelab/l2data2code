@@ -61,6 +61,10 @@ namespace L2Data2Code.SchemaReader.Json
                 item.CleanName = nameResolver.ResolveTableName(item.Name).PascalCamelCase(false);
                 item.Type = nameResolver.ResolveTableType(item.Name);
                 item.ClassName = item.CleanName.ToSingular();
+                item.IsWeakEntity = nameResolver.IsWeakEntity(item.Name);
+                item.IsBigTable = nameResolver.IsBigTable(item.Name);
+                var filteredColumns = nameResolver.GetBigTableColumns(item.Name);
+                (item.DescriptionId, item.DescriptionColumn) = nameResolver.ResolveDescriptionTables(item.Name);
                 foreach (var column in item.Columns)
                 {
                     column.Table = item;
@@ -69,6 +73,7 @@ namespace L2Data2Code.SchemaReader.Json
                     {
                         column.DefaultValue += "m";
                     }
+                    TrySetFilterColumn(filteredColumns, column);
                 }
                 ResolveKeys(item.InnerKeys, tablesInfo);
                 ResolveKeys(item.OuterKeys, tablesInfo);
@@ -107,12 +112,11 @@ namespace L2Data2Code.SchemaReader.Json
             var referenceParts = reference.Split(".");
             var tableName = referenceParts[0].ToUpper();
             var columnName = referenceParts[1].ToUpper();
-            if (!tables.ContainsKey(tableName))
+            if (!tables.TryGetValue(tableName, out var table))
             {
                 return null;
             }
 
-            var table = tables[tableName];
             var findedColumn = table.Columns.FirstOrDefault(c => c.Name.Equals(columnName, StringComparison.CurrentCultureIgnoreCase));
             return findedColumn;
         }

@@ -1,9 +1,11 @@
 using L2Data2Code.BaseGenerator.Configuration;
 using L2Data2Code.SharedContext.Base;
 using L2Data2Code.SharedContext.Main.Interfaces;
+using L2Data2Code.SharedLib.Extensions;
 using L2Data2CodeUI.Shared.Adapters;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 namespace L2Data2Code.SharedContext.Main
@@ -122,6 +124,7 @@ namespace L2Data2Code.SharedContext.Main
                 mainWindowVM.EmptyFolders = bool.TryParse(mainWindowVM.SelectedDataSource.Vars?[nameof(TemplateConfiguration.RemoveFolders)], out var hasToRemoveFolders) ? hasToRemoveFolders : mainWindowVM.SelectedTemplate.RemoveFolders;
 
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
+                mainWindowVM.RunApplication = GetRunApplication(generatorAdapter.OutputPath, generatorAdapter.RunApplication);
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
                 mainWindowVM.GenerateOnlyJsonVisible = initialGenerateOnlyJsonVisible && generatorAdapter.InputSourceType != "json" && generatorAdapter.InputSourceType != "fake";
                 mainWindowVM.TablePanelVM.LoadingTables = false;
@@ -142,6 +145,7 @@ namespace L2Data2Code.SharedContext.Main
                 mainWindowVM.VarsVisible = mainWindowVM.SelectedSetting != null;
                 mainWindowVM.EmptyFolders = bool.TryParse(mainWindowVM.SelectedDataSource?.Vars?[nameof(TemplateConfiguration.RemoveFolders)], out var hasToRemoveFolders) ? hasToRemoveFolders : mainWindowVM.SelectedTemplate.RemoveFolders;
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
+                mainWindowVM.RunApplication = GetRunApplication(generatorAdapter.OutputPath, generatorAdapter.RunApplication);
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
             });
         }
@@ -152,6 +156,7 @@ namespace L2Data2Code.SharedContext.Main
             {
                 generatorAdapter.SetCurrentModule(mainWindowVM.SelectedModule);
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
+                mainWindowVM.RunApplication = GetRunApplication(generatorAdapter.OutputPath, generatorAdapter.RunApplication);
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
                 mainWindowVM.AppType = generatorAdapter.AppType;
             });
@@ -164,9 +169,26 @@ namespace L2Data2Code.SharedContext.Main
                 generatorAdapter.SetCurrentSetting(mainWindowVM.SelectedSetting);
                 mainWindowVM.SelectedModule = generatorAdapter.SelectedModule;
                 mainWindowVM.OutputPath = generatorAdapter.OutputPath;
+                mainWindowVM.RunApplication = GetRunApplication(generatorAdapter.OutputPath, generatorAdapter.RunApplication);
                 mainWindowVM.SlnFile = generatorAdapter.SlnFile;
                 mainWindowVM.AppType = generatorAdapter.AppType;
             });
+        }
+
+        private string GetRunApplication(string outputPath, string runApplication)
+        {
+            if (string.IsNullOrEmpty(outputPath) || string.IsNullOrEmpty(runApplication))
+            {
+                return null;
+            }
+            if (runApplication.Contains(outputPath))
+            {
+                return runApplication;
+            }
+            else
+            {
+                return string.Concat(outputPath, runApplication.TrimStart(Path.DirectorySeparatorChar));
+            }
         }
     }
 }

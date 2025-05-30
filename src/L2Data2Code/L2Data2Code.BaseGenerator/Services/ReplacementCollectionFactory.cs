@@ -32,6 +32,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 Name = table.ClassName,
                 Type = table.TableType,
                 FieldDescriptor = table.FieldDescriptor,
+                FieldIdentity = table.FieldIdentity,
                 FirstPK = table.FirstPK,
                 UseSpanish = schemaService.GetLang(options.CreatedFromSchemaName).Equals("es", StringComparison.CurrentCultureIgnoreCase),
                 MultiplePKColumns = table.MultiplePKColumns,
@@ -77,10 +78,20 @@ namespace L2Data2Code.BaseGenerator.Services
                             Join = column.Join,
                             FromField = column.FromField,
                             ToField = column.ToField,
+                            ToFieldType = column.ToFieldType?.Trim('?'),
+                            ToFieldIsNullable = column.ToFieldType?.EndsWith('?') ?? false,
+                            ToFieldDescriptor = column.ToFieldDescriptor,
                             DbJoin = column.DbJoin,
                             DbFromField = column.DbFromField,
                             DbToField = column.DbToField,
                             HasRelation = column.HasRelation,
+                            IsFilter = column.IsFilter,
+                            IsRangeFilter = column.FilterType?.EndsWith("Range", StringComparison.OrdinalIgnoreCase) ?? false,
+                            IsComboFilter = column.FilterType?.Replace("Auto", "", StringComparison.OrdinalIgnoreCase)?.Equals("Combo", StringComparison.OrdinalIgnoreCase) ?? false,
+                            IsTextFilter = column.FilterType?.Equals("Text", StringComparison.OrdinalIgnoreCase) ?? false,
+                            FilterType = column.FilterType?.Replace("Auto", "", StringComparison.OrdinalIgnoreCase),
+                            FilterTypeAuto = column.FilterType?.StartsWith("Auto", StringComparison.OrdinalIgnoreCase) == true ? "Auto" : null,
+                            FilterPrimitive = column.FilterPrimitive,
                         };
                         return property;
                     }).ToArray();
@@ -107,6 +118,7 @@ namespace L2Data2Code.BaseGenerator.Services
                 GenerateBase = false,
                 Vars = internalVars,
                 CanCreateDB = schemaService.CanCreateDB(options.CreatedFromSchemaName),
+                IsBigTable = table.IsBigTable,
             };
 
             var filteredColumns = properties
@@ -165,14 +177,31 @@ namespace L2Data2Code.BaseGenerator.Services
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 
+            replacement.FilterByColumns = filteredColumns
+                    .Where(p => p.IsFilter)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
+            replacement.DistinctFilterByColumns = filteredColumns
+                    .Where(p => p.IsFilter)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .DistinctBy(p => p.FilterType)
+                    .ToArray();
+
+            replacement.ManualRelatedColumns = filteredColumns
+                    .Where(p => p.IsFilter && p.HasRelation && p.ShortName.NotEmpty() && !p.IsForeignKey && !p.IsCollection)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .ToArray();
+
             replacement.HasCollections = filteredColumns.Any(p => p.IsCollection);
             replacement.HasForeignKeys = filteredColumns.Any(p => p.IsForeignKey);
-            replacement.HasNotPrimaryKeyColumns = replacement.NotPrimaryKeys.Any();
-            replacement.HasPrimaryKeyColumns = replacement.PrimaryKeys.Any();
+            replacement.HasManualRelatedColumns = replacement.ManualRelatedColumns.Length > 0;
+            replacement.HasNotPrimaryKeyColumns = replacement.NotPrimaryKeys.Length > 0;
+            replacement.HasPrimaryKeyColumns = replacement.PrimaryKeys.Length > 0;
             replacement.MultiplePKColumns = replacement.PrimaryKeys.Length > 1;
 
             var primaryKeys = properties.Where(p => p.PrimaryKey);
-            replacement.IsWeakEntity = primaryKeys.Count() != 1 || primaryKeys.None(p => p.IsEntityId());
+            replacement.IsWeakEntity = table.IsWeakEntity || primaryKeys.Count() != 1 || primaryKeys.None(p => p.IsEntityId());
 
             return GetDictionaryDataFromReplacement(replacement);
         }
