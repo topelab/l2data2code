@@ -1,3 +1,8 @@
+### 3.5.1
+
+- Fix Scheme2Json with default values for arguments
+- Added `HasRelatedColumns` to Replacement class
+
 ### 3.4.19
 
 - Adjusted index column handling in `SQLiteSchemaReader.cs` to fix an off-by-one error.

@@ -196,6 +196,7 @@ namespace L2Data2Code.BaseGenerator.Services
             replacement.HasCollections = filteredColumns.Any(p => p.IsCollection);
             replacement.HasForeignKeys = filteredColumns.Any(p => p.IsForeignKey);
             replacement.HasManualRelatedColumns = replacement.ManualRelatedColumns.Length > 0;
+            replacement.HasRelatedColumns = replacement.HasForeignKeys || replacement.HasManualRelatedColumns;
             replacement.HasNotPrimaryKeyColumns = replacement.NotPrimaryKeys.Length > 0;
             replacement.HasPrimaryKeyColumns = replacement.PrimaryKeys.Length > 0;
             replacement.MultiplePKColumns = replacement.PrimaryKeys.Length > 1;

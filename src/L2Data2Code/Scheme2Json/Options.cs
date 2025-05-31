@@ -12,7 +12,7 @@ namespace Scheme2Json
         /// <summary>
         /// Output path
         /// </summary>
-        [Option('o', "output", Required = true, HelpText = "Set output path")]
+        [Option('o', "output", Required = false, HelpText = "Set output path")]
         public string OutputPath { get; set; }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Scheme2Json
         {
             get
             {
-                yield return new Example("Normal scenario", new Options { OutputPath = @"c:\arc\dl", Schema = "demo" });
+                yield return new Example("Normal scenario", new Options { Schema = "demo" });
             }
         }
     }
