@@ -6,7 +6,9 @@
              xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="L2Data2Code.Avalonia.Main.CommandBar.CommandBarUserControl">
+             x:Class="L2Data2Code.Avalonia.Main.CommandBar.CommandBarUserControl"
+             xmlns:vm="using:L2Data2Code.SharedContext.Main.CommandBar"
+             x:DataType="vm:CommandBarVM">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,7 +18,7 @@
             <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <UserControl.Styles>
         <Style Selector="Button.Mine">
             <Setter Property="Padding" Value="2" />
@@ -27,7 +29,7 @@
             <Setter Property="Width" Value="24" />
         </Style>
     </UserControl.Styles>
-    
+
     <Grid RowDefinitions="Auto" ColumnDefinitions="Auto">
         <StackPanel Orientation="Horizontal" Margin="5">
             <Button Classes="Flat Mine"
@@ -58,11 +60,11 @@
                     CommandParameter="{Binding RunAction}">
                 <materialIcons:MaterialIcon Kind="Play"/>
             </Button>
-                <Button Classes="Flat Mine"
-                    ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
-                    IsVisible="{Binding HaveVSCodeInstalled}"
-                    Command="{Binding OpenVSCodeCommand}"
-                    CommandParameter="{Binding SlnFile}">
+            <Button Classes="Flat Mine"
+                ToolTip.Tip="{x:Static str:Strings.OpenVSC}"
+                IsVisible="{Binding HaveVSCodeInstalled}"
+                Command="{Binding OpenVSCodeCommand}"
+                CommandParameter="{Binding SlnFile}">
                 <materialIcons:MaterialIcon Kind="VsCode"/>
             </Button>
             <Button Classes="Flat Mine"

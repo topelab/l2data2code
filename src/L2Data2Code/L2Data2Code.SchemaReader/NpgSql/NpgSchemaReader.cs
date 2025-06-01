@@ -2,6 +2,7 @@ using L2Data2Code.SchemaReader.Interface;
 using L2Data2Code.SchemaReader.Lib;
 using L2Data2Code.SchemaReader.Schema;
 using L2Data2Code.SharedLib.Extensions;
+using MySqlX.XDevAPI.Common;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,27 @@ namespace L2Data2Code.SchemaReader.NpgSql
             this.indexesGetter = indexesGetter ?? throw new ArgumentNullException(nameof(indexesGetter));
 
             this.nameResolver.Initialize(options.SchemaName);
+        }
+
+        public override bool CanConnect()
+        {
+            var result = false;
+            try
+            {
+                using var testConnection = new NpgsqlConnection(connectionString);
+                testConnection.Open();
+                if (testConnection.State == ConnectionState.Open)
+                {
+                    testConnection.Close();
+                    result = true;
+                }
+            }
+            catch (Exception)
+            {
+                result = false;
+            }
+
+            return result;
         }
 
         public override Tables ReadSchema(SchemaReaderOptions options)
