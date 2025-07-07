@@ -1,3 +1,21 @@
+### 3.5.2
+
+- Upgrade System.Text.Json to 9.0.6
+- Upgrade Topelab.Core.Resolver to 1.8.8
+- Upgrade Topelab.Core.Resolver.Microsoft to 1.8.8
+- Upgrade Handlebars.Net.Helpers to 2.5.2
+- Upgrade Handlebars.Net.Helpers.Humanizer to 2.5.2
+- Upgrade Handlebars.Net.Helpers.Json to 2.5.2
+- Upgrade NLog to 6.0.1
+- Upgrade System.Management to 9.0.6
+- Upgrade Avalonia to 11.3.2
+- Upgrade Avalonia.Controls.DataGrid to 11.3.2
+- Upgrade Avalonia.Desktop to 11.3.2
+- Upgrade Avalonia.Themes.Simple to 11.3.2
+- Upgrade Avalonia.Diagnostics to 11.3.2
+- Upgrade Avalonia.ReactiveUI to 11.3.2
+- Upgrade Avalonia.Themes.Fluent to 11.3.2
+
 ### 3.5.1
 
 - Fix Scheme2Json with default values for arguments
