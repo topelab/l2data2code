@@ -59,9 +59,6 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="avalonia-changes.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="images\datasource-section.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
