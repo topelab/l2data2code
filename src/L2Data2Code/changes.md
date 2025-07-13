@@ -1,3 +1,7 @@
+## 3.5.4 - L2Data2Code.Avalonia
+
+- Fix show errors on Command execution
+
 ## 3.5.3
 
 - Updating System.Text.Json to 9.0.7

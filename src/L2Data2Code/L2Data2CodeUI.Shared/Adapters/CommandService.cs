@@ -4,11 +4,11 @@ using L2Data2Code.SharedLib.Interfaces;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -49,12 +49,14 @@ namespace L2Data2CodeUI.Shared.Adapters
             var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Key));
             StringBuilder outputData = new();
+            ConcurrentBag<string> outputBag = new();
 
             void ErrorDataReceived(object s, DataReceivedEventArgs e)
             {
                 if (e.Data != null)
                 {
-                    messageService.Error(e.Data, $"{string.Format(Messages.ParametrizedErrorMessage, command.Key)}: {e.Data}", MessageCodes.RUN_COMMAND);
+                    messageService.Info(e.Data);
+                    outputData.AppendLine(e.Data);
                 }
             }
 
@@ -66,7 +68,6 @@ namespace L2Data2CodeUI.Shared.Adapters
                     {
                         messageService.Info(e.Data);
                     }
-                    outputData.AppendLine(e.Data);
                 }
             }
 
