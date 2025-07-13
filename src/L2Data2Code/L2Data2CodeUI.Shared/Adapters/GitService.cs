@@ -95,6 +95,44 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
         }
 
+        /// <summary>
+        /// Executes a Git pull operation in the specified directory.
+        /// </summary>
+        /// <remarks>This method performs a Git fetch followed by a Git pull, updating the local
+        /// repository with changes from the remote. Ensure that the specified directory is a valid Git
+        /// repository.</remarks>
+        /// <param name="path">The file system path to the directory where the Git pull operation will be executed. Must not be null or
+        /// empty.</param>
+        public void GitPull(string path)
+        {
+            if (HasGitRemote(path))
+            {
+                Command command = new()
+                {
+                    Key = "git pull",
+                    Directory = path,
+                    Exec = "git fetch && git pull",
+                    ShowMessages = false,
+                    ShowMessageWhenExitCodeNotZero = true
+                };
+                GitAction(command);
+            }
+        }
+
+        private bool HasGitRemote(string path)
+        {
+            Command command = new()
+            {
+                Key = "git remote",
+                Directory = path,
+                Exec = "git remote",
+                ShowMessages = false,
+                ShowMessageWhenExitCodeNotZero = false
+            };
+            GitAction(command);
+            return commandService.GetOutput(command.Key) == "origin";
+        }
+
         private void GitAction(Command command)
         {
             if (!Directory.Exists(command.Directory))

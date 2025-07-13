@@ -14,5 +14,6 @@ namespace L2Data2CodeUI.Shared.Adapters
         /// <param name="command">The command.</param>
         /// <param name="compiledVars">The compiled vars.</param>
         void Exec(Command command, Dictionary<string, object> compiledVars = null);
+        string GetOutput(string key);
     }
 }

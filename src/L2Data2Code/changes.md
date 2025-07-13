@@ -1,3 +1,7 @@
+## 3.5.5 - L2Data2Code.Avalonia
+
+- If code has git remote, try to pull before run commands
+
 ## 3.5.4 - L2Data2Code.Avalonia
 
 - Fix show errors on Command execution

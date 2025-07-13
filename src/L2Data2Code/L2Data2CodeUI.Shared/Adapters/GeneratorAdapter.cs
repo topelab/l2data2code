@@ -204,6 +204,7 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             var path = $"{options.OutputPath}";
             gitService.GitCommit(path);
+            gitService.GitPull(path);
 
             var canRun = CanConnectToSource() && CanSerializeOptions(options) && TryRemoveFolders(options, path);
 
