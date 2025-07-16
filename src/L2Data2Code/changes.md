@@ -1,3 +1,8 @@
+## 3.5.6
+
+- Updating Topelab.Core.Resolver to 1.8.10
+- Updating Topelab.Core.Resolver.Microsoft to 1.8.10
+
 ## 3.5.5 - L2Data2Code.Avalonia
 
 - If code has git remote, try to pull before run commands
