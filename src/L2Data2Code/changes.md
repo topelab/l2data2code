@@ -1,3 +1,10 @@
+## 3.5.9
+
+- Updating Topelab.Core.Resolver to 1.9.0
+- Updating Topelab.Core.Resolver.Microsoft to 1.9.0
+- Updating MySql.Data to 9.4.0
+- Updating NLog to 6.0.2
+
 ## 3.5.8
 
 - Updating Topelab.Core.Resolver to 1.8.12
