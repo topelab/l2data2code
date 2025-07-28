@@ -1,3 +1,7 @@
+## 3.5.10
+
+- Updating Microsoft.Data.SqlClient to 6.1.0
+
 ## 3.5.9
 
 - Updating Topelab.Core.Resolver to 1.9.0
