@@ -1,3 +1,17 @@
+## 3.5.11
+
+- Updating System.Text.Json to 9.0.8
+- Updating Topelab.Core.Resolver to 1.9.1
+- Updating Topelab.Core.Resolver.Microsoft to 1.9.1
+- Updating System.Management to 9.0.8
+- Updating Avalonia to 11.3.3
+- Updating Avalonia.Controls.DataGrid to 11.3.3
+- Updating Avalonia.Desktop to 11.3.3
+- Updating Avalonia.Themes.Simple to 11.3.3
+- Updating Avalonia.Diagnostics to 11.3.3
+- Updating Avalonia.ReactiveUI to 11.3.3
+- Updating Avalonia.Themes.Fluent to 11.3.3
+
 ## 3.5.10
 
 - Updating Microsoft.Data.SqlClient to 6.1.0
