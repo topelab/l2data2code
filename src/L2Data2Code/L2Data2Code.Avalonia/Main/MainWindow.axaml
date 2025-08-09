@@ -9,6 +9,8 @@
         xmlns:tp="using:L2Data2Code.Avalonia.Main.TablePanel"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L2Data2Code.Avalonia.Main.MainWindow"
+        xmlns:vm="using:L2Data2Code.SharedContext.Main"
+        x:DataType="vm:MainWindowVM"
         Icon="/Assets/l2data2code-v3.ico"
         Title="Avalonia.L2Data2Code"
         Width="1024"

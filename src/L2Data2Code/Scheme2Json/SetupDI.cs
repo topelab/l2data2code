@@ -1,3 +1,5 @@
+using L2Data2Code.SchemaReader.Interface;
+using L2Data2Code.SchemaReader.Schema;
 using Topelab.Core.Resolver.Entities;
 
 namespace Scheme2Json
@@ -17,6 +19,7 @@ namespace Scheme2Json
                 .AddCollection(L2Data2Code.SharedLib.SetupDI.Register())
                 .AddCollection(L2Data2Code.BaseGenerator.SetupDI.Register())
                 .AddCollection(L2Data2Code.SchemaReader.SetupDI.Register())
+                .AddTransient<ISchema2JsonFactory, Schema2JsonFactory>()
                 ;
         }
     }

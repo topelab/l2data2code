@@ -4,11 +4,11 @@ using L2Data2Code.SharedLib.Interfaces;
 using L2Data2CodeUI.Shared.Dto;
 using L2Data2CodeUI.Shared.Localize;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace L2Data2CodeUI.Shared.Adapters
 {
@@ -19,7 +19,8 @@ namespace L2Data2CodeUI.Shared.Adapters
     {
         private readonly IMessageService messageService;
         private readonly IMustacheRenderizer mustacheRenderizer;
-        private static readonly Dictionary<string, bool> resultExecution = new();
+        private static readonly Dictionary<string, bool> resultExecution = [];
+        private static readonly Dictionary<string, string> resultOutput = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandService"/> class.
@@ -48,13 +49,15 @@ namespace L2Data2CodeUI.Shared.Adapters
             var directorio = compiledVars != null ? mustacheRenderizer.RenderPath(command.Directory, compiledVars) : command.Directory;
             var exec = compiledVars != null ? mustacheRenderizer.RenderPath(command.Exec, compiledVars) : command.Exec;
             messageService.Info(string.Format(Messages.ParametrizedStartingProcess, command.Key));
+            StringBuilder errorOutput = new();
             StringBuilder outputData = new();
 
             void ErrorDataReceived(object s, DataReceivedEventArgs e)
             {
                 if (e.Data != null)
                 {
-                    messageService.Error(e.Data, $"{string.Format(Messages.ParametrizedErrorMessage, command.Key)}: {e.Data}", MessageCodes.RUN_COMMAND);
+                    messageService.Info(e.Data);
+                    errorOutput.AppendLine(e.Data);
                 }
             }
 
@@ -94,9 +97,11 @@ namespace L2Data2CodeUI.Shared.Adapters
                     process.BeginOutputReadLine();
                     process.BeginErrorReadLine();
                     process.WaitForExit();
+                    resultOutput[command.Key] = outputData.ToString().ReplaceEndOfLine("\n").Trim('\n');
+
                     if (process.ExitCode > 0 && command.ShowMessageWhenExitCodeNotZero)
                     {
-                        messageService.Error(string.Format(Messages.ParametrizedErrorMessage, command.Key), outputData.ToString(), MessageCodes.RUN_COMMAND);
+                        messageService.Error(string.Format(Messages.ParametrizedErrorMessage, command.Key), errorOutput.ToString(), MessageCodes.RUN_COMMAND);
                     }
                     if (process.ExitCode == 0 && command.ShowMessageWhenExitCodeZero)
                     {
@@ -117,6 +122,15 @@ namespace L2Data2CodeUI.Shared.Adapters
                     process.OutputDataReceived -= DataReceived;
                 }
             }
+        }
+
+        public string GetOutput(string key)
+        {
+            if (resultOutput.TryGetValue(key, out var output))
+            {
+                return output;
+            }
+            return string.Empty;
         }
     }
 }

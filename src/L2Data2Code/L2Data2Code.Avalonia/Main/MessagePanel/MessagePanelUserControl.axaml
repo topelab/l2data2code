@@ -7,7 +7,9 @@
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:conv="clr-namespace:L2Data2Code.Avalonia.Converters;assembly=L2Data2Code.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="L2Data2Code.Avalonia.Main.MessagePanel.MessagePanelUserControl">
+             x:Class="L2Data2Code.Avalonia.Main.MessagePanel.MessagePanelUserControl"
+             xmlns:vm="using:L2Data2Code.SharedContext.Main.MessagePanel"
+             x:DataType="vm:MessagePanelVM">
 
     <UserControl.Resources>
         <ResourceDictionary>

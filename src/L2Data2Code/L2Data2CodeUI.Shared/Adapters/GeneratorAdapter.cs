@@ -120,7 +120,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         public ModuleConfiguration SelectedModule { get; private set; }
         public TemplateConfiguration SelectedTemplate { get; private set; }
         public Setting SelectedSetting { get; private set; }
-        public string SlnFile => slnFiles?.FirstOrDefault() ?? $"{OutputPath?.TrimPathSeparator()}\\{SelectedModule}.sln".ToLower();
+        public string SlnFile => slnFiles?.FirstOrDefault();
         public string SolutionType { get; set; }
         public Tables Tables { get => tables ?? new Tables(); }
         public Dictionary<string, object> CompiledVars { get; private set; } = new Dictionary<string, object>();
@@ -198,7 +198,137 @@ namespace L2Data2CodeUI.Shared.Adapters
 
             var basePath = SettingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var templatePath = SelectedTemplate.Path;
-            CodeGeneratorDto options = new()
+            var options = CreateCodeGeneratorDTO(baseOptions, basePath, templatePath);
+
+            logger.Info("Starting generation");
+
+            var path = $"{options.OutputPath}";
+            gitService.GitCommit(path);
+            gitService.GitPull(path);
+
+            var canRun = CanConnectToSource() && CanSerializeOptions(options) && TryRemoveFolders(options, path);
+
+            if (canRun)
+            {
+                try
+                {
+                    if (!ProcessTemplateFlow(baseOptions, options, path))
+                    {
+                        return;
+                    }
+
+                    TryWriteDescriptions();
+                }
+                catch (CodeGeneratorException ex)
+                {
+                    messageService.Info(ex.LastError, MessageCodes.RUN_GENERATOR);
+                    gitService.GitReset(path);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    messageService.Error($"{nameof(GeneratorAdapter)}.{nameof(Run)}(...) - {Messages.ErrorGeneratingCode} : {ex.Message}", Messages.ErrorGeneratingCode, MessageCodes.RUN_GENERATOR);
+                    gitService.GitReset(path);
+                    return;
+                }
+
+                messageService.Clear(MessageCodes.RUN_GENERATOR);
+                messageService.Clear(MessageCodes.FIND_SERVICE);
+                messageService.Info(Messages.CodeGeneratedOK);
+            }
+        }
+
+        private bool ProcessTemplateFlow(CodeGeneratorDto baseOptions, CodeGeneratorDto options, string path)
+        {
+            HashSet<string> processedTemplates = new();
+            var library = templateService.TryLoad(options.TemplatePath, options.TemplateResource);
+
+            if (library == null)
+            {
+                var msg = string.Format(Messages.ErrorResourceNotFound, options.TemplateResource, options.TemplatePath);
+                messageService.Error(msg, msg, MessageCodes.RUN_GENERATOR);
+                gitService.GitReset(path);
+                return false;
+            }
+
+            Template lastTemplate = null;
+            var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
+
+            if (!options.GeneateOnlyJson)
+            {
+                template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+            }
+
+            while (template != null)
+            {
+                if (processedTemplates.Contains(template.ResourcesFolder))
+                {
+                    break;
+                }
+                processedTemplates.Add(template.ResourcesFolder);
+
+                options.Template = template.Name;
+                options.TemplateResource = template.ResourcesFolder;
+                options.LastPass = template.NextResource.IsEmpty();
+                options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
+                options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
+                options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
+                options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
+
+                codeGeneratorService.Initialize(options, library, CompiledVars);
+                codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
+                                                   template.IsGeneral ? null : _alternativeDictionary);
+
+                lastTemplate = template;
+                template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(template.NextResource, StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            if (!options.GeneateOnlyJson)
+            {
+                messageService.Info(Messages.AddedCodeToGit);
+                lastTemplate.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
+            }
+
+            return true;
+        }
+
+        private bool CanSerializeOptions(CodeGeneratorDto options)
+        {
+            try
+            {
+                logger.Info($"Options running: {JsonConvert.SerializeObject(options)}");
+            }
+            catch (Exception ex)
+            {
+                messageService.Error($"GeneratorAdapter.Run(...) - {Messages.ErrorSerializingOptions}: {ex.Message}", Messages.ErrorSerializingOptions, MessageCodes.RUN_GENERATOR);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryRemoveFolders(CodeGeneratorDto options, string path)
+        {
+            if (options.RemoveFolders)
+            {
+                try
+                {
+                    EmptyOutputPath(path, options.RemoveFolderExceptions);
+                }
+                catch (Exception ex)
+                {
+                    messageService.Error($"GeneratorAdapter.Run(...) - Removing folders : {ex.Message}", Messages.ErrorRemovingFolders, MessageCodes.RUN_GENERATOR);
+                    gitService.GitReset(path);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private CodeGeneratorDto CreateCodeGeneratorDTO(CodeGeneratorDto baseOptions, string basePath, string templatePath)
+        {
+            return new()
             {
                 Area = SelectedDataSource.Area,
                 Module = SelectedModule.Name,
@@ -220,111 +350,6 @@ namespace L2Data2CodeUI.Shared.Adapters
                 EndOfLine = SettingsConfiguration[nameof(CodeGeneratorDto.EndOfLine)] ?? Environment.NewLine,
                 SchemasConfiguration = SchemasConfiguration,
             };
-
-            logger.Info("Starting generation");
-
-
-            if (!CheckConnection())
-            {
-                return;
-            }
-
-            try
-            {
-                logger.Info($"Options running: {JsonConvert.SerializeObject(options)}");
-            }
-            catch (Exception ex)
-            {
-                messageService.Error($"GeneratorAdapter.Run(...) - {Messages.ErrorSerializingOptions}: {ex.Message}", Messages.ErrorSerializingOptions, MessageCodes.RUN_GENERATOR);
-                return;
-            }
-
-            var path = $"{options.OutputPath}";
-            gitService.GitCommit(path);
-
-            if (options.RemoveFolders)
-            {
-                try
-                {
-                    EmptyOutputPath(path, options.RemoveFolderExceptions);
-                }
-                catch (Exception ex)
-                {
-                    messageService.Error($"GeneratorAdapter.Run(...) - Removing folders : {ex.Message}", Messages.ErrorRemovingFolders, MessageCodes.RUN_GENERATOR);
-                    gitService.GitReset(path);
-                    return;
-                }
-            }
-
-            try
-            {
-                HashSet<string> processedTemplates = new();
-                var library = templateService.TryLoad(options.TemplatePath, options.TemplateResource);
-
-                if (library == null)
-                {
-                    var msg = string.Format(Messages.ErrorResourceNotFound, options.TemplateResource, options.TemplatePath);
-                    messageService.Error(msg, msg, MessageCodes.RUN_GENERATOR);
-                    gitService.GitReset(path);
-                    return;
-                }
-
-                Template lastTemplate = null;
-                var template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(options.TemplateResource, StringComparison.CurrentCultureIgnoreCase));
-
-                if (!options.GeneateOnlyJson)
-                {
-                    template.PreCommands.ForEach(c => commandService.Exec(c, CompiledVars));
-                }
-
-                while (template != null)
-                {
-                    if (processedTemplates.Contains(template.ResourcesFolder))
-                    {
-                        break;
-                    }
-                    processedTemplates.Add(template.ResourcesFolder);
-
-                    options.Template = template.Name;
-                    options.TemplateResource = template.ResourcesFolder;
-                    options.LastPass = template.NextResource.IsEmpty();
-                    options.SchemaName = template.IsGeneral ? schemaNameToFake : schemaName;
-                    options.TableList = template.IsGeneral ? new List<string>() { "first_table" } : baseOptions.TableList;
-                    options.GenerateJsonInfo = !template.IsGeneral && bool.TryParse(SettingsConfiguration["generateJsonInfo"], out var result) && result;
-                    options.JsonGeneratedPath = SettingsConfiguration[nameof(options.JsonGeneratedPath)];
-
-                    codeGeneratorService.Initialize(options, library, CompiledVars);
-                    codeGeneratorService.ProcessTables(template.IsGeneral ? null : (t) => messageService.Info(string.Format(Messages.TableProcessed, t)),
-                                                       template.IsGeneral ? null : _alternativeDictionary);
-
-                    lastTemplate = template;
-                    template = library.Templates.FirstOrDefault(t => t.ResourcesFolder.Equals(template.NextResource, StringComparison.CurrentCultureIgnoreCase));
-                }
-
-                if (!options.GeneateOnlyJson)
-                {
-                    messageService.Info(Messages.AddedCodeToGit);
-                    lastTemplate.PostCommands.ForEach(c => commandService.Exec(c, CompiledVars));
-                }
-
-                TryWriteDescriptions();
-            }
-            catch (CodeGeneratorException ex)
-            {
-                messageService.Info(ex.LastError, MessageCodes.RUN_GENERATOR);
-                gitService.GitReset(path);
-                return;
-            }
-            catch (Exception ex)
-            {
-                messageService.Error($"GeneratorAdapter.Run(...) - {Messages.ErrorGeneratingCode} : {ex.Message}", Messages.ErrorGeneratingCode, MessageCodes.RUN_GENERATOR);
-                gitService.GitReset(path);
-                return;
-            }
-
-            messageService.Clear(MessageCodes.RUN_GENERATOR);
-            messageService.Clear(MessageCodes.FIND_SERVICE);
-            messageService.Info(Messages.CodeGeneratedOK);
         }
 
         public void SetCurrentDataSource(DataSourceConfiguration selectedDataSource)
@@ -407,7 +432,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             OnConfigurationChanged?.Invoke();
         }
 
-        private bool CheckConnection()
+        private bool CanConnectToSource()
         {
             try
             {
@@ -426,7 +451,7 @@ namespace L2Data2CodeUI.Shared.Adapters
             }
             catch (Exception ex)
             {
-                messageService.Error($"GeneratorAdapter.CheckConnection(): {ex.Message}", Messages.ErrorDb, MessageCodes.CONNECTION);
+                messageService.Error($"{nameof(GeneratorAdapter)}.{nameof(CanConnectToSource)}(): {ex.Message}", Messages.ErrorDb, MessageCodes.CONNECTION);
                 return false;
             }
         }
@@ -550,7 +575,7 @@ namespace L2Data2CodeUI.Shared.Adapters
                 messageService.Error($"GeneratorAdapter.SetupInitial(): {LogService.LastError}", LogService.LastError, MessageCodes.READ_SCHEMA);
                 return;
             }
-            CheckConnection();
+            CanConnectToSource();
         }
 
         private void SetupTables()

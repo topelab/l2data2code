@@ -5,6 +5,7 @@ using L2Data2Code.SharedLib.Configuration;
 using L2Data2Code.SharedLib.Extensions;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace L2Data2Code.SchemaReader.Schema
 {
@@ -38,12 +39,33 @@ namespace L2Data2Code.SchemaReader.Schema
 
         public void Create(string outputPath, string schema)
         {
+            outputPath ??= settingsConfiguration["JsonGeneratedPath"];
             var templateBasePath = settingsConfiguration[ConfigurationLabels.TEMPLATES_BASE_PATH].AddPathSeparator();
             var schemaOptions = schemaOptionsFactory.Create(templateBasePath, schemasConfiguration, schema, new StringBuilderWriter());
             var tables = schemaService.Read(schemaOptions);
             var fileName = $"{outputPath.AddPathSeparator()}{schema.ToSlug()}-dbinfo.json";
 
             schemaService.GenerateJsonInfo(tables.Values, fileName);
+        }
+
+        public bool IsValidSchema(string schemaName, out string error)
+        {
+            error = null;
+
+            if (string.IsNullOrEmpty(schemaName))
+            {
+                error = "Schema name cannot be null or empty.";
+            }
+            else
+            {
+                var schemes = schemasConfiguration.GetKeys();
+                if (!schemes.Contains(schemaName))
+                {
+                    error = $"Schema name '{schemaName}' not found in configuration.";
+                }
+
+            }
+            return error is null;
         }
     }
 }

@@ -45,6 +45,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public bool HasCollections { get; set; }
         public bool HasForeignKeys { get; set; }
         public bool HasManualRelatedColumns { get; set; }
+        public bool HasRelatedColumns { get; internal set; }
         public bool HasNotPrimaryKeyColumns { get; set; }
         public bool HasPrimaryKeyColumns { get; set; }
         public bool MultiplePKColumns { get; set; }

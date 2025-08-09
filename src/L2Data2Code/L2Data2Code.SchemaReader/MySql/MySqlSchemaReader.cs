@@ -25,6 +25,27 @@ namespace L2Data2Code.SchemaReader.MySql
             this.nameResolver.Initialize(options.SchemaName);
         }
 
+        public override bool CanConnect()
+        {
+            var result = false;
+            try
+            {
+                using var testConnection = new MySqlConnection(connectionString);
+                testConnection.Open();
+                if (testConnection.State == ConnectionState.Open)
+                {
+                    testConnection.Close();
+                    result = true;
+                }
+            }
+            catch (Exception)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
         public override Tables ReadSchema(SchemaReaderOptions options)
         {
             Tables result = new();

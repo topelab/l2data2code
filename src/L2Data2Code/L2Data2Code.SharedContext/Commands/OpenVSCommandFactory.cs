@@ -17,7 +17,7 @@ namespace L2Data2Code.SharedContext.Commands
 
         protected override bool CanExecute(string slnFile)
         {
-            return slnFile != null && slnFile.ToLower().EndsWith(".sln") && File.Exists(slnFile);
+            return slnFile != null && File.Exists(slnFile);
         }
 
         protected override void Execute(string slnFile)

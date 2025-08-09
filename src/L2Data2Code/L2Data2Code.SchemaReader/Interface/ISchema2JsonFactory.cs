@@ -3,5 +3,6 @@ namespace L2Data2Code.SchemaReader.Interface
     public interface ISchema2JsonFactory
     {
         void Create(string outputPath, string schema);
+        bool IsValidSchema(string schemaName, out string error);
     }
 }

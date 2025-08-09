@@ -5,6 +5,8 @@
         xmlns:str="clr-namespace:L2Data2CodeUI.Shared.Localize;assembly=L2Data2CodeUI.Shared"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L2Data2Code.Avalonia.Main.Vars.VarsWindow"
+        xmlns:vm="using:L2Data2Code.SharedContext.Main.Vars"
+        x:DataType="vm:VarsVM"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Title="Vars"

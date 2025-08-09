@@ -26,20 +26,23 @@ namespace L2Data2Code.SchemaReader
 
             IsLoaded = true;
 
-            return new ResolveInfoCollection()
+            var result = new ResolveInfoCollection()
                 .AddSingleton<IBasicConfiguration<SchemaConfiguration>, SchemasConfiguration>()
                 .AddSingleton<ISchemaOptionsFactory, SchemaOptionsFactory>()
                 .AddSingleton<ISchemaService, SchemaService>()
                 .AddSingleton<INameResolver, NameResolver>()
-                .AddSingleton<ISchemaFactory, SchemaFactory>()
+                .AddSingleton<ISchemaFactory, SchemaFactory>();
+
+            result = result
                 .AddTransient<ISchemaReader, SqlServerSchemaReader>(nameof(SqlServerSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, MySqlSchemaReader>(nameof(MySqlSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, FakeSchemaReader>(nameof(FakeSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, JsonSchemaReader>(nameof(JsonSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, ObjectSchemaReader>(nameof(ObjectSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
                 .AddTransient<ISchemaReader, SQLiteSchemaReader>(nameof(SQLiteSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
-                .AddTransient<ISchemaReader, NpgSchemaReader>(nameof(NpgSchemaReader), typeof(INameResolver), typeof(ISchemaOptions))
+                .AddTransient<ISchemaReader, NpgSchemaReader>(nameof(NpgSchemaReader), typeof(INameResolver), typeof(ISchemaOptions));
 
+            return result
                 .AddTransient<IForeignKeysGetter<NpgsqlConnection>, NpgForeignKeysGetter>()
                 .AddTransient<IColumnsGetter<NpgsqlConnection>, NpgColumnsGetter>()
                 .AddTransient<IColumnDescriptionsGetter<NpgsqlConnection>, NpgColumnDescriptionsGetter>()
