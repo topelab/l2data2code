@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/00-GeneratorLayer/">
+    <Project Path="L2Data2Code.BaseGenerator/L2Data2Code.BaseGenerator.csproj" />
+    <Project Path="L2Data2Code.BaseHandleBars/L2Data2Code.BaseHandleBars.csproj" />
+    <Project Path="L2Data2Code.SharedLib/L2Data2Code.SharedLib.csproj" />
+    <Project Path="L2Data2CodeUI.Shared/L2Data2CodeUI.Shared.csproj" />
+  </Folder>
+  <Folder Name="/01-DataLayer/">
+    <Project Path="L2Data2Code.SchemaReader/L2Data2Code.SchemaReader.csproj" />
+  </Folder>
+  <Folder Name="/99-Presentation/">
+    <Project Path="HandleBarsCLI/HandleBarsCLI.csproj" />
+    <Project Path="L2Data2Code.Avalonia/L2Data2Code.Avalonia.csproj" />
+    <Project Path="L2Data2Code.CLIBase/L2Data2Code.CLIBase.csproj" />
+    <Project Path="L2Data2Code.SharedContext/L2Data2Code.SharedContext.csproj" />
+    <Project Path="Scheme2Json/Scheme2Json.csproj" />
+  </Folder>
+  <Folder Name="/_Info/">
+    <File Path="../../README.md" />
+    <File Path=".editorconfig" />
+    <File Path="changes.md" />
+    <File Path="version.txt" />
+  </Folder>
+</Solution>

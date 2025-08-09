@@ -120,7 +120,7 @@ namespace L2Data2CodeUI.Shared.Adapters
         public ModuleConfiguration SelectedModule { get; private set; }
         public TemplateConfiguration SelectedTemplate { get; private set; }
         public Setting SelectedSetting { get; private set; }
-        public string SlnFile => slnFiles?.FirstOrDefault() ?? $"{OutputPath?.TrimPathSeparator()}\\{SelectedModule}.sln".ToLower();
+        public string SlnFile => slnFiles?.FirstOrDefault();
         public string SolutionType { get; set; }
         public Tables Tables { get => tables ?? new Tables(); }
         public Dictionary<string, object> CompiledVars { get; private set; } = new Dictionary<string, object>();

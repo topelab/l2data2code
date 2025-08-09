@@ -1,3 +1,8 @@
+## 3.5.12
+
+- Adapted to `slnx` format for Visual Studio 2022 and later
+- **Breaking change**: Templates must be updated to generate code using `slnx` format. The `SolutionType` variable must be set to `vs,*.slnx` in templates settings file.
+
 ## 3.5.11
 
 - Updating System.Text.Json to 9.0.8
