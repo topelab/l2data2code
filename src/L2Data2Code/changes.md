@@ -1,3 +1,19 @@
+## 3.5.13
+
+- Updating System.Text.Json to 9.0.9
+- Updating Topelab.Core.Resolver to 1.9.2
+- Updating Topelab.Core.Resolver.Microsoft to 1.9.2
+- Updating Microsoft.Data.SqlClient to 6.1.1
+- Updating Avalonia to 11.3.5
+- Updating Avalonia.Controls.DataGrid to 11.3.5
+- Updating Avalonia.Desktop to 11.3.5
+- Updating Avalonia.Themes.Simple to 11.3.5
+- Updating Avalonia.Diagnostics to 11.3.5
+- Updating Avalonia.ReactiveUI to 11.3.5
+- Updating Avalonia.Themes.Fluent to 11.3.5
+- Updating NLog to 6.0.4
+- Updating System.Management to 9.0.9
+
 ## 3.5.12
 
 - Adapted to `slnx` format for Visual Studio 2022 and later
