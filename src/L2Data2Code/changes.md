@@ -1,3 +1,17 @@
+## 3.5.14
+
+- Updating Handlebars.Net.Helpers to 2.5.3
+- Updating Handlebars.Net.Helpers.Humanizer to 2.5.3
+- Updating Newtonsoft.Json to 13.0.4
+- Updating Handlebars.Net.Helpers.Json to 2.5.3
+- Updating Avalonia to 11.3.6
+- Updating Avalonia.Controls.DataGrid to 11.3.6
+- Updating Avalonia.Desktop to 11.3.6
+- Updating Avalonia.Themes.Simple to 11.3.6
+- Updating Avalonia.Diagnostics to 11.3.6
+- Updating Avalonia.ReactiveUI to 11.3.6
+- Updating Avalonia.Themes.Fluent to 11.3.6
+
 ## 3.5.13
 
 - Updating System.Text.Json to 9.0.9
