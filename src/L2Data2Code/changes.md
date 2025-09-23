@@ -1,3 +1,7 @@
+## 3.6.0-rc1
+
+- Preparing to .NET 10
+
 ## 3.5.14
 
 - Updating Handlebars.Net.Helpers to 2.5.3
