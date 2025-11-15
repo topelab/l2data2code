@@ -1,5 +1,5 @@
 using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using NLog;
 using System;
 

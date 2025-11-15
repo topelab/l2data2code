@@ -1,3 +1,7 @@
+## 3.6.0
+
+- Final changes to .NET 10
+
 ## 3.6.0-rc1
 
 - Preparing to .NET 10
@@ -13,7 +17,7 @@
 - Updating Avalonia.Desktop to 11.3.6
 - Updating Avalonia.Themes.Simple to 11.3.6
 - Updating Avalonia.Diagnostics to 11.3.6
-- Updating Avalonia.ReactiveUI to 11.3.6
+- Updating ReactiveUI.Avalonia to 11.3.6
 - Updating Avalonia.Themes.Fluent to 11.3.6
 
 ## 3.5.13
@@ -27,7 +31,7 @@
 - Updating Avalonia.Desktop to 11.3.5
 - Updating Avalonia.Themes.Simple to 11.3.5
 - Updating Avalonia.Diagnostics to 11.3.5
-- Updating Avalonia.ReactiveUI to 11.3.5
+- Updating ReactiveUI.Avalonia to 11.3.5
 - Updating Avalonia.Themes.Fluent to 11.3.5
 - Updating NLog to 6.0.4
 - Updating System.Management to 9.0.9
@@ -48,7 +52,7 @@
 - Updating Avalonia.Desktop to 11.3.3
 - Updating Avalonia.Themes.Simple to 11.3.3
 - Updating Avalonia.Diagnostics to 11.3.3
-- Updating Avalonia.ReactiveUI to 11.3.3
+- Updating ReactiveUI.Avalonia to 11.3.3
 - Updating Avalonia.Themes.Fluent to 11.3.3
 
 ## 3.5.10
@@ -103,7 +107,7 @@
 - Upgrade Avalonia.Desktop to 11.3.2
 - Upgrade Avalonia.Themes.Simple to 11.3.2
 - Upgrade Avalonia.Diagnostics to 11.3.2
-- Upgrade Avalonia.ReactiveUI to 11.3.2
+- Upgrade ReactiveUI.Avalonia to 11.3.2
 - Upgrade Avalonia.Themes.Fluent to 11.3.2
 
 ## 3.5.1 - L2Data2Code.Avalonia
@@ -144,7 +148,7 @@
 - Upgrade Avalonia.Desktop to 11.3.0
 - Upgrade Avalonia.Themes.Simple to 11.3.0
 - Upgrade Avalonia.Diagnostics to 11.3.0
-- Upgrade Avalonia.ReactiveUI to 11.3.0
+- Upgrade ReactiveUI.Avalonia to 11.3.0
 - Upgrade Avalonia.Themes.Fluent to 11.3.0
 - Upgrade Microsoft.Data.SqlClient to 6.0.2
 
@@ -258,7 +262,7 @@ Enhance entity filtering and add FieldIdentity property
 - Upgrade Avalonia.Desktop to 11.2.3
 - Upgrade Avalonia.Themes.Simple to 11.2.3
 - Upgrade Avalonia.Diagnostics to 11.2.3
-- Upgrade Avalonia.ReactiveUI to 11.2.3
+- Upgrade ReactiveUI.Avalonia to 11.2.3
 - Upgrade Avalonia.Themes.Fluent to 11.2.3
 
 ## 3.4.2
@@ -278,7 +282,7 @@ Enhance entity filtering and add FieldIdentity property
 - Upgrade Avalonia.Desktop to 11.2.2
 - Upgrade Avalonia.Themes.Simple to 11.2.2
 - Upgrade Avalonia.Diagnostics to 11.2.2
-- Upgrade Avalonia.ReactiveUI to 11.2.2
+- Upgrade ReactiveUI.Avalonia to 11.2.2
 - Upgrade Avalonia.Themes.Fluent to 11.2.2
 
 ## 3.4.0
@@ -293,7 +297,7 @@ Enhance entity filtering and add FieldIdentity property
 - Upgrade to Avalonia.Desktop to 11.2.1
 - Upgrade to Avalonia.Themes.Simple to 11.2.1
 - Upgrade to Avalonia.Diagnostics to 11.2.1
-- Upgrade to Avalonia.ReactiveUI to 11.2.1
+- Upgrade to ReactiveUI.Avalonia to 11.2.1
 - Upgrade to Avalonia.Themes.Fluent to 11.2.1
 
 ## 3.3.27
@@ -314,7 +318,7 @@ Enhance entity filtering and add FieldIdentity property
 - Upgrade Avalonia.Desktop to 11.1.4
 - Upgrade Avalonia.Themes.Simple to 11.1.4
 - Upgrade Avalonia.Diagnostics to 11.1.4
-- Upgrade Avalonia.ReactiveUI to 11.1.4
+- Upgrade ReactiveUI.Avalonia to 11.1.4
 - Upgrade Avalonia.Themes.Fluent to 11.1.4
 
 ## 3.3.25
@@ -340,7 +344,7 @@ Enhance entity filtering and add FieldIdentity property
 - Updating Avalonia.Desktop to 11.1.0
 - Updating Avalonia.Themes.Simple to 11.1.0
 - Updating Avalonia.Diagnostics to 11.1.0
-- Updating Avalonia.ReactiveUI to 11.1.0
+- Updating ReactiveUI.Avalonia to 11.1.0
 - Updating Avalonia.Themes.Fluent to 11.1.0
 - Updating topelab.core.resolver to 1.6.1
 
@@ -417,7 +421,7 @@ Enhance entity filtering and add FieldIdentity property
 - Update Avalonia.Desktop to 11.0.10
 - Update Avalonia.Themes.Simple to 11.0.10
 - Update Avalonia.Diagnostics to 11.0.10
-- Update Avalonia.ReactiveUI to 11.0.10
+- Update ReactiveUI.Avalonia to 11.0.10
 - Update Avalonia.Themes.Fluent to 11.0.10
 - Update topelab.core.resolver to 1.5.5
 
@@ -429,7 +433,7 @@ Enhance entity filtering and add FieldIdentity property
 - Updating Avalonia.Desktop to 11.0.9
 - Updating Avalonia.Themes.Simple to 11.0.9
 - Updating Avalonia.Diagnostics to 11.0.9
-- Updating Avalonia.ReactiveUI to 11.0.9
+- Updating ReactiveUI.Avalonia to 11.0.9
 - Updating Avalonia.Themes.Fluent to 11.0.9
 
 
@@ -640,7 +644,7 @@ Enhance entity filtering and add FieldIdentity property
 - Updating Avalonia.Desktop to 11.0.6
 - Updating Avalonia.Themes.Simple to 11.0.6
 - Updating Avalonia.Diagnostics to 11.0.6
-- Updating Avalonia.ReactiveUI to 11.0.6
+- Updating ReactiveUI.Avalonia to 11.0.6
 - Updating Avalonia.Themes.Fluent to 11.0.6
 - Updating topelab.core.resolver to 1.5.3
 
@@ -689,7 +693,7 @@ Enhance entity filtering and add FieldIdentity property
 - Updating Avalonia.Controls.DataGrid to 0.10.21
 - Updating Avalonia.Desktop to 0.10.21
 - Updating Avalonia.Diagnostics to 0.10.21
-- Updating Avalonia.ReactiveUI to 0.10.21
+- Updating ReactiveUI.Avalonia to 0.10.21
 
 
 ## 3.0.2
