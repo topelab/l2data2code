@@ -1,3 +1,16 @@
+## 3.6.1
+
+- Updating Npgsql to 10.0.0
+- Updating Avalonia to 11.3.9
+- Updating Avalonia.Controls.DataGrid to 11.3.9
+- Updating Avalonia.Desktop to 11.3.9
+- Updating Avalonia.Themes.Simple to 11.3.9
+- Updating Avalonia.Diagnostics to 11.3.9
+- Updating Avalonia.Themes.Fluent to 11.3.9
+- Updating MessageBox.Avalonia to 3.3.1
+- Updating NLog to 6.0.7
+- Updating System.Management to 10.0.1
+
 ## 3.6.0
 
 - Final changes to .NET 10
