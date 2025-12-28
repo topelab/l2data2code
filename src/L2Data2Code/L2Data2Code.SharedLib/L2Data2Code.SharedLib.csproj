@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>3.6.1</Version>
+    <Version>3.6.2</Version>
     <RestoreAdditionalProjectSources>
             https://nuget.pkg.github.com/topelab/index.json
         </RestoreAdditionalProjectSources>

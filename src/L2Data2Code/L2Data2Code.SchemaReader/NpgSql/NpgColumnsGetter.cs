@@ -63,11 +63,15 @@ namespace L2Data2Code.SchemaReader.NpgSql
                     sysType = "char";
                     break;
                 case "date":
+                    sysType = "DateOnly";
+                    break;
                 case "timestamp with time zone":
                 case "timestamp without time zone":
                     sysType = "DateTime";
                     break;
                 case "time":
+                    sysType = "TimeOnly";
+                    break;
                 case "interval":
                 case "time with time zone":
                 case "time without time zone":

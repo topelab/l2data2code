@@ -1,3 +1,8 @@
+## 3.6.2
+
+- Fix Npgsql `Date` type mapping to `DateOnly`
+- Fix management of `DateOnly` and `TimeOnly` types
+
 ## 3.6.1
 
 - Updating Npgsql to 10.0.0

@@ -43,6 +43,10 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             return Type switch
             {
+                "DateOnly?" => HasDefaultValue ? DefaultValue : "null",
+                "DateOnly" => HasDefaultValue ? DefaultValue : "new DateOnly(1,1,1)",
+                "TimeOnly?" => HasDefaultValue ? DefaultValue : "null",
+                "TimeOnly" => HasDefaultValue ? DefaultValue : "new TimeOnly(0,0,0)",
                 "DateTime?" => HasDefaultValue ? DefaultValue : "null",
                 "DateTime" => HasDefaultValue ? DefaultValue : "new DateTime(1,1,1)",
                 "TimeSpan?" => HasDefaultValue ? DefaultValue : "null",
@@ -71,6 +75,8 @@ namespace L2Data2Code.BaseGenerator.Entities
         {
             return Type switch
             {
+                nameof(DateOnly) => "new DateOnly(1,1,1)",
+                nameof(TimeOnly) => "new TimeOnly(0,0,0)",
                 nameof(DateTime) => "new DateTime(1,1,1)",
                 nameof(TimeSpan) => "TimeSpan.Zero",
                 "bool" => "false",
@@ -88,49 +94,6 @@ namespace L2Data2Code.BaseGenerator.Entities
                 _ => "null",
             };
         }
-
-
-        public string GetCSharpType()
-        {
-            return Type switch
-            {
-                Constants.DataBase.Binary
-                or Constants.DataBase.Varbinary
-                or Constants.DataBase.Image => "byte[]",
-
-                Constants.DataBase.Date
-                or Constants.DataBase.Datetime
-                or Constants.DataBase.Timestamp => "DateTime" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Time => "TimeSpan" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Bit => "bool" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Money
-                or Constants.DataBase.Numeric
-                or Constants.DataBase.Decimal => "decimal" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Float => "double" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Bigint => "long" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Int => "int" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Smallint => "short" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Tinyint => "byte" + (IsNull ? "?" : string.Empty),
-
-                Constants.DataBase.Char
-                or Constants.DataBase.Text
-                or Constants.DataBase.Varchar
-                or Constants.DataBase.Nchar
-                or Constants.DataBase.Nvarchar
-                or Constants.DataBase.Ntext => "string",
-
-                _ => Type,
-            };
-        }
-
     }
 
 }
