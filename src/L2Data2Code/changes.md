@@ -1,3 +1,18 @@
+## 3.6.3
+
+- Updating Topelab.Core.Resolver to 2.0.2
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.2
+- Updating MySql.Data to 9.6.0
+- Updating Avalonia to 11.3.11
+- Updating Avalonia.Controls.DataGrid to 11.3.11
+- Updating Avalonia.Desktop to 11.3.11
+- Updating Avalonia.Themes.Simple to 11.3.11
+- Updating Avalonia.Diagnostics to 11.3.11
+- Updating Avalonia.Themes.Fluent to 11.3.11
+- Updating System.Management to 10.0.2
+- Updating Microsoft.Data.SqlClient to 6.1.4
+- Updating NLog to 6.1.0
+
 ## 3.6.2
 
 - Fix Npgsql `Date` type mapping to `DateOnly`
