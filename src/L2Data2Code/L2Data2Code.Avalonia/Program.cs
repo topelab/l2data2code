@@ -30,6 +30,6 @@ namespace L2Data2Code
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
-                .UseReactiveUI();
+                .UseReactiveUI(r => { });
     }
 }

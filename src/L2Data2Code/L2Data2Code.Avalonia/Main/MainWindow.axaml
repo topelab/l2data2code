@@ -28,12 +28,19 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <Window.Styles>
+        <Style Selector="materialIcons|MaterialIcon">
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Width" Value="50" />
+        </Style>
+    </Window.Styles>
+
     <Grid ColumnDefinitions="40*, 30*, 10"
           RowDefinitions="45, *">
 
         <StackPanel Orientation="Horizontal">
             <Image Source="/Assets/l2data2code-v3.ico" Width="24" Height="24" Margin="10" />
-            <TextBlock Margin="15" Text="{Binding $parent[Window].Title} " />
+            <TextBlock Margin="15" Text="{Binding $parent[Window].Title}" />
             <cb:CommandBarUserControl IsEnabled="{Binding !Working}" DataContext="{Binding CommandBarVM}" Grid.Row="1" Grid.ColumnSpan="3" />
         </StackPanel>
 
@@ -147,9 +154,9 @@
                         CommandParameter="{Binding}"
                         Height="72"
                         Margin="0, 10"
-                        Content="{materialIcons:MaterialIconExt Kind=RunFast, Size=64}"
+                        Content="{materialIcons:MaterialIconExt Kind=RunFast}"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         ToolTip.Tip="{x:Static str:Strings.Generate}" />
             </Grid>
             <mp:MessagePanelUserControl DataContext="{Binding MessagePanelVM}" Grid.Row="1" />

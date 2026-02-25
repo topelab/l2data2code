@@ -1,3 +1,17 @@
+## 3.6.4
+
+- Updating Topelab.Core.Resolver to 2.0.3
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.3
+- Updating Avalonia to 11.3.12
+- Updating Material.Icons.Avalonia to 3.0.0
+- Updating System.Management to 10.0.3
+- Updating Avalonia.Controls.DataGrid to 11.3.12
+- Updating Avalonia.Desktop to 11.3.12
+- Updating Avalonia.Themes.Simple to 11.3.12
+- Updating Avalonia.Diagnostics to 11.3.12
+- Updating Avalonia.Themes.Fluent to 11.3.12
+- Updating ReactiveUI.Avalonia to 11.4.3
+
 ## 3.6.3
 
 - Updating Topelab.Core.Resolver to 2.0.2
