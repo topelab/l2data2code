@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>3.6.4</Version>
+    <Version>3.6.5</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="MySql.Data" Version="9.6.0" />
     <PackageReference Include="Npgsql" Version="10.0.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />

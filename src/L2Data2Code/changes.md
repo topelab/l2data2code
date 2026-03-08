@@ -1,3 +1,11 @@
+## 3.6.5
+
+- Updating Topelab.Core.Resolver to 2.0.4
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.4
+- Updating ReactiveUI.Avalonia to 11.4.7
+- Updating Dapper to 2.1.72
+- Updating NLog to 6.1.1
+
 ## 3.6.4
 
 - Updating Topelab.Core.Resolver to 2.0.3
