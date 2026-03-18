@@ -1,3 +1,12 @@
+## 3.6.6
+
+- Updating Microsoft.Data.SqlClient to 7.0.0
+- Updating ReactiveUI.Avalonia to 11.4.12
+- Updating System.Management to 10.0.5
+- Updating Npgsql to 10.0.2
+- Updating Topelab.Core.Adapters to 1.12.6
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.5
+
 ## 3.6.5
 
 - Updating Topelab.Core.Resolver to 2.0.4
