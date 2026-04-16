@@ -7,7 +7,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationIcon>Assets\l2data2code-v3.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>3.6.6</Version>
+    <Version>3.6.7</Version>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
@@ -32,17 +32,17 @@
     <TrimmableAssembly Include="Avalonia.Themes.Default" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
+    <PackageReference Include="Avalonia" Version="12.0.1" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.1" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.12" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.14" />
     <PackageReference Include="ReactiveUI.Avalonia" Version="11.4.12" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.12" />
-    <PackageReference Include="Material.Icons.Avalonia" Version="3.0.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.1" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.1" />
+    <PackageReference Include="Material.Icons.Avalonia" Version="3.0.2" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.3.1.1" />
-    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="2.0.5" />
+    <PackageReference Include="Topelab.Core.Resolver.Microsoft" Version="2.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\L2Data2Code.BaseHandleBars\L2Data2Code.BaseHandleBars.csproj" />

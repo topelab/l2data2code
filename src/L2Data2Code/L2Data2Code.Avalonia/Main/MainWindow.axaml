@@ -17,7 +17,7 @@
         Height="860"
         TransparencyLevelHint="AcrylicBlur"
         Background="#80000000"
-        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaToDecorationsHint="False"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
@@ -38,12 +38,7 @@
     <Grid ColumnDefinitions="40*, 30*, 10"
           RowDefinitions="45, *">
 
-        <StackPanel Orientation="Horizontal">
-            <Image Source="/Assets/l2data2code-v3.ico" Width="24" Height="24" Margin="10" />
-            <TextBlock Margin="15" Text="{Binding $parent[Window].Title}" />
-            <cb:CommandBarUserControl IsEnabled="{Binding !Working}" DataContext="{Binding CommandBarVM}" Grid.Row="1" Grid.ColumnSpan="3" />
-        </StackPanel>
-
+        <cb:CommandBarUserControl IsEnabled="{Binding !Working}" DataContext="{Binding CommandBarVM}" />
 
         <Grid Grid.Row="1"
               RowDefinitions="Auto, 200*"
