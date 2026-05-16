@@ -1,3 +1,19 @@
+## 3.6.8
+
+- Upgrade Topelab.Core.Resolver to 2.0.7
+- Upgrade Topelab.Core.Resolver.Microsoft to 2.0.7
+- Upgrade Avalonia to 12.0.3
+- Upgrade MessageBox.Avalonia to 12.0.0
+- Upgrade ReactiveUI.Avalonia to 12.0.1
+- Upgrade MySql.Data to 9.7.0
+- Upgrade Microsoft.Data.SqlClient to 7.0.1
+- Upgrade NLog to 6.1.3
+- Upgrade Avalonia.Desktop to 12.0.3
+- Upgrade Avalonia.Themes.Fluent to 12.0.3
+- Upgrade Avalonia.Themes.Simple to 12.0.3
+- Upgrade Avalonia.Diagnostics to 11.3.15
+- Upgrade System.Management to 10.0.8
+
 ## 3.6.7
 
 - Upgrade Topelab.Core.Resolver to 2.0.6
