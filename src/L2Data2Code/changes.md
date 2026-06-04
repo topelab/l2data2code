@@ -1,3 +1,16 @@
+## 3.6.9
+
+- Upgrade Topelab.Core.Resolver to 2.0.8
+- Upgrade Topelab.Core.Resolver.Microsoft to 2.0.8
+- Upgrade Dapper to 2.1.79
+- Upgrade Avalonia to 12.0.4
+- Upgrade Avalonia.Themes.Simple to 12.0.4
+- Upgrade Avalonia.Diagnostics to 11.3.17
+- Upgrade Npgsql to 10.0.3
+- Upgrade Avalonia.Desktop to 12.0.4
+- Upgrade Avalonia.Themes.Fluent to 12.0.4
+- Upgrade ReactiveUI.Avalonia to 12.0.2
+
 ## 3.6.8
 
 - Upgrade Topelab.Core.Resolver to 2.0.7
