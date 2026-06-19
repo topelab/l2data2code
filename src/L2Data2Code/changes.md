@@ -1,3 +1,10 @@
+## Version 3.6.10 (HandleBarsCLI), 3.6.10 (L2Data2Code.Avalonia), 3.6.10 (L2Data2Code.BaseGenerator), 3.6.10 (L2Data2Code.BaseHandleBars), 3.6.10 (L2Data2Code.CLIBase), 3.6.10 (L2Data2Code.SchemaReader), 3.6.10 (L2Data2Code.SharedContext), 3.6.10 (L2Data2Code.SharedLib), 3.6.10 (L2Data2CodeUI.Shared), 3.6.10 (Scheme2Json)
+
+- Updating Topelab.Core.Resolver to 2.0.9
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.9
+- Updating ReactiveUI.Avalonia to 12.0.3
+- Updating System.Management to 10.0.9
+
 ## 3.6.9
 
 - Upgrade Topelab.Core.Resolver to 2.0.8
