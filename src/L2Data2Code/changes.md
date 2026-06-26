@@ -1,3 +1,15 @@
+## Version 3.6.11
+
+- Updating Topelab.Core.Resolver to 2.0.10
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.10
+- Updating Avalonia to 12.0.5
+- Updating Avalonia.Controls.DataGrid to 12.0.1
+- Updating Avalonia.Desktop to 12.0.5
+- Updating Avalonia.Themes.Simple to 12.0.5
+- Updating Avalonia.Diagnostics to 11.3.18
+- Updating Avalonia.Themes.Fluent to 12.0.5
+- Updating Microsoft.Data.SqlClient to 7.0.2
+
 ## Version 3.6.10 (HandleBarsCLI), 3.6.10 (L2Data2Code.Avalonia), 3.6.10 (L2Data2Code.BaseGenerator), 3.6.10 (L2Data2Code.BaseHandleBars), 3.6.10 (L2Data2Code.CLIBase), 3.6.10 (L2Data2Code.SchemaReader), 3.6.10 (L2Data2Code.SharedContext), 3.6.10 (L2Data2Code.SharedLib), 3.6.10 (L2Data2CodeUI.Shared), 3.6.10 (Scheme2Json)
 
 - Updating Topelab.Core.Resolver to 2.0.9
