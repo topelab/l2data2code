@@ -68,6 +68,7 @@ namespace L2Data2Code.BaseGenerator.Services
                             ColumnNameOrName = normalizeNames ? name : column.ColumnName,
                             IsAutoIncrement = column.IsAutoIncrement,
                             IsComputed = column.IsComputed,
+                            ComputedExpression = column.ComputedExpression?.Replace("\"", "\\\""),
                             PkOrder = column.PkOrder,
                             MultiplePKColumns = table.MultiplePKColumns,
                             Precision = column.Precision,

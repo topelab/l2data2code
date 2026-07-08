@@ -1,3 +1,7 @@
+## Version 3.6.12
+
+- Added `ComputedExpression` to Replacement class, to allow computed columns in data sources (only PostgreSQL and JSON for now). This property can be used in templates to generate code for computed columns.
+
 ## Version 3.6.11
 
 - Updating Topelab.Core.Resolver to 2.0.10

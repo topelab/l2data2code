@@ -10,12 +10,14 @@ namespace L2Data2Code.SchemaReader.NpgSql
     {
         private record DescriptionsDTO(string TableName,
                                      string ColumnName,
-                                     string Description);
+                                     string Description,
+                                     string ComputedExpression);
 
         private const string ALL_COLUMNS_DESCRIPTIONS = """
             SELECT c.table_name as "TableName", c.column_name as "ColumnName",
                 COL_DESCRIPTION(CONCAT(c.table_schema, '."', 
-                c.table_name,'"')::regclass, ordinal_position) as "Description"
+                c.table_name,'"')::regclass, ordinal_position) as "Description",
+            c.generation_expression as "ComputedExpression"
             FROM information_schema.columns as c
             JOIN information_schema.tables as t
                 ON t.table_catalog = c.table_catalog
@@ -29,13 +31,19 @@ namespace L2Data2Code.SchemaReader.NpgSql
         {
             var descriptions = connection.Query<DescriptionsDTO>(ALL_COLUMNS_DESCRIPTIONS);
 
-            foreach (var description in descriptions.Where(d => !string.IsNullOrEmpty(d.Description)))
+            foreach (var description in descriptions.Where(d => !string.IsNullOrEmpty(d.Description) || !string.IsNullOrEmpty(d.ComputedExpression)))
             {
                 if (tables.TryGetValue(description.TableName, out var table)
-                    && table.TryGetColumn(description.ColumnName) is Column column
-                    && string.IsNullOrEmpty(column.Description))
+                    && table.TryGetColumn(description.ColumnName) is Column column)
                 {
-                    column.Description = description.Description;
+                    if (!string.IsNullOrEmpty(description.Description))
+                    {
+                        column.Description = description.Description;
+                    }
+                    if (!string.IsNullOrEmpty(description.ComputedExpression))
+                    {
+                        column.ComputedExpression = description.ComputedExpression;
+                    }
                 }
             }
         }

@@ -88,6 +88,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                     PkOrder = column.PkOrder,
                     IsAutoIncrement = column.IsAutoIncrement,
                     IsComputed = column.IsComputed,
+                    ComputedExpression = column.ComputedExpression,
                     DefaultValue = column.DefaultValue,
                     IsFilter = column.IsFilter,
                     FilterType = column.FilterType,

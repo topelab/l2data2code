@@ -94,6 +94,11 @@ namespace L2Data2Code.SchemaReader.Schema
         public bool IsComputed { get; set; }
 
         /// <summary>
+        /// Gets or sets the computed expression.
+        /// </summary>
+        public string ComputedExpression { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Column"/> is ignore.
         /// </summary>
         /// <value>

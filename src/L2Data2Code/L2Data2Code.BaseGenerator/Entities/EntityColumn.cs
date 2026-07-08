@@ -22,6 +22,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public int PkOrder { get; internal set; }
         public bool IsAutoIncrement { get; internal set; }
         public bool IsComputed { get; internal set; }
+        public string ComputedExpression { get; internal set; }
         public string Join { get; set; }
         public string FromField { get; set; }
         public string ToField { get; set; }

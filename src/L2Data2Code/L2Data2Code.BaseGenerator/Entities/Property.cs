@@ -33,6 +33,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public int PkOrder { get; set; }
         public bool IsAutoIncrement { get; set; }
         public bool IsComputed { get; set; }
+        public string ComputedExpression { get; set; }
         public bool MultiplePKColumns { get; set; }
         public int Precision { get; set; }
         public int Scale { get; set; }
@@ -121,6 +122,7 @@ namespace L2Data2Code.BaseGenerator.Entities
                 Type = Type,
                 OverrideDbType = OverrideDbType,
                 Description = Description,
+                ComputedExpression = ComputedExpression,
                 IsFirst = isFirst,
                 IsLast = isLast,
                 IsCollection = IsCollection,
