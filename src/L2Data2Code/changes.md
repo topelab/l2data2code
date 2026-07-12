@@ -1,3 +1,14 @@
+## Version 3.6.13
+
+- Updating Topelab.Core.Resolver to 2.0.11
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.11
+- Updating Avalonia to 12.1.0
+- Updating Avalonia.Controls.DataGrid to 12.1.0
+- Updating Avalonia.Desktop to 12.1.0
+- Updating Avalonia.Themes.Fluent to 12.1.0
+- Updating Avalonia.Themes.Simple to 12.1.0
+- Updating NLog to 6.1.4
+
 ## Version 3.6.12
 
 - Added `ComputedExpression` to Replacement class, to allow computed columns in data sources (only PostgreSQL and JSON for now). This property can be used in templates to generate code for computed columns.
