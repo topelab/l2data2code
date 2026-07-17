@@ -1,3 +1,9 @@
+## Version 3.6.14
+
+- Updating Topelab.Core.Resolver to 2.0.12
+- Updating Topelab.Core.Resolver.Microsoft to 2.0.12
+- Updating System.Management to 10.0.10
+
 ## Version 3.6.13
 
 - Updating Topelab.Core.Resolver to 2.0.11
