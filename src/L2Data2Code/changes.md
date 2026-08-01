@@ -1,3 +1,12 @@
+## Version 3.6.15
+
+- Updated Avalonia                12.1.0 -> 12.1.1
+- Updated Avalonia.Desktop        12.1.0 -> 12.1.1
+- Updated Avalonia.Themes.Fluent  12.1.0 -> 12.1.1
+- Updated Avalonia.Themes.Simple  12.1.0 -> 12.1.1
+- Updated ReactiveUI.Avalonia     12.0.3 -> 12.1.0
+- Updated MySql.Data  9.7.0 -> 26.7.0
+
 ## Version 3.6.14
 
 - Updating Topelab.Core.Resolver to 2.0.12
