@@ -1,3 +1,12 @@
+## Version 3.6.16
+
+- Updated Topelab.Core.Resolver.Microsoft  2.0.12 -> 2.0.13
+- Updated Avalonia.Controls.DataGrid       12.1.0 -> 12.1.2
+- Updated ReactiveUI.Avalonia              12.1.0 -> 12.1.1
+- Updated Topelab.Core.Resolver.Microsoft  2.0.12 -> 2.0.13
+- Updated Topelab.Core.Resolver  2.0.12 -> 2.0.13
+- Updated Topelab.Core.Resolver.Microsoft  2.0.12 -> 2.0.13
+
 ## Version 3.6.15
 
 - Updated Avalonia                12.1.0 -> 12.1.1

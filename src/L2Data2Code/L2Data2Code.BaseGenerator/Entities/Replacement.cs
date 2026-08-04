@@ -31,6 +31,7 @@ namespace L2Data2Code.BaseGenerator.Entities
         public Property[] Columns { get; set; }
         public Property[] PersistedColumns { get; set; }
         public Property[] ForeignKeyColumns { get; set; }
+        public Property[] ForeignKeyColumnsTypes { get; set; }
         public Property[] DistinctForeignKeyColumnsByType { get; set; }
         public Property[] Collections { get; set; }
         public Property[] NotPrimaryKeyColumns { get; set; }

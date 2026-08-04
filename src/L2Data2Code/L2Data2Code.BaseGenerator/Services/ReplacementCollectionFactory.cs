@@ -145,6 +145,12 @@ namespace L2Data2Code.BaseGenerator.Services
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
                     .ToArray();
 
+            replacement.ForeignKeyColumnsTypes = filteredColumns
+                    .Where(p => p.IsForeignKey)
+                    .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
+                    .DistinctBy(p => p.Type)
+                    .ToArray();
+
             replacement.DistinctForeignKeyColumnsByType = filteredColumns
                     .Where(p => p.IsForeignKey)
                     .Select((param, index, isFirst, isLast) => param.Clone(isFirst, isLast))
